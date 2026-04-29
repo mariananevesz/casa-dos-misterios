@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sala — Algoritmos</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+  <section class="tela">
+
+    <section class="hud">
+      <section class="hud__info">
+        <span class="hud__icone">🛋️</span>
+        <section>
+          <p class="hud__titulo">Sala — Algoritmos</p>
+          <p class="hud__subtitulo">Mini-jogo 1</p>
+        </section>
+      </section>
+      <span class="badge badge--laranja">⭐ 0 pts</span>
+    </section>
+
+    <section class="balao">
+      <span class="balao__emoji">📺</span>
+      <p class="balao__texto">Olá, explorador! Coloque os blocos na ordem certa para levar o personagem até a estrela! Arraste os blocos para a sequência!</p>
+    </section>
+
+    <section class="sala-grid">
+
+      <section class="painel">
+        <p class="painel__label">Grade do Jogo</p>
+        <section class="grade">
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula">⭐</span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula grade__celula--ativa">🧒</span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+          <span class="grade__celula"></span>
+        </section>
+      </section>
+
+      <section class="painel">
+        <p class="painel__label">Blocos Disponíveis</p>
+        <section class="blocos">
+          <span class="bloco bloco--laranja">⬆ Cima</span>
+          <span class="bloco bloco--laranja">⬇ Baixo</span>
+          <span class="bloco bloco--laranja">⬅ Esq</span>
+          <span class="bloco bloco--laranja">➡ Dir</span>
+          <span class="bloco bloco--ambar">↩ Repetir</span>
+        </section>
+      </section>
+
+    </section>
+
+    <section class="painel painel--tracejado">
+      <p class="painel__label">Minha Sequência</p>
+      <section class="blocos">
+        <span class="bloco bloco--laranja">⬆ Cima</span>
+        <span class="bloco bloco--laranja">⬆ Cima</span>
+        <span class="bloco bloco--laranja">➡ Dir</span>
+        <span class="bloco bloco--vazio">+ bloco</span>
+      </section>
+    </section>
+
+    <section class="btn-grupo">
+      <button class="btn btn--laranja">Executar</button>
+      <button class="btn btn--outline">🗑</button>
+    </section>
+
+  </section>
+
+  <script src="../js/plataforma.js"></script>
+
+</body>
+</html>

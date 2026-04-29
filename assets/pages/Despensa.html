@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Despensa — Estoque Inteligente</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+  <section class="tela tela--marrom">
+
+    <section class="hud">
+      <section class="hud__info">
+        <span class="hud__icone">📦</span>
+        <section>
+          <p class="hud__titulo hud__titulo--marrom">Despensa — Estoque Inteligente</p>
+          <p class="hud__subtitulo hud__subtitulo--marrom">Mini-jogo 4</p>
+        </section>
+      </section>
+      <span class="badge badge--marrom">⭐ 55 pts</span>
+    </section>
+
+    <section class="balao balao--marrom">
+      <span class="balao__emoji">🍌</span>
+      <p class="balao__texto balao__texto--marrom">Ei! Minha despensa está uma bagunça! Arraste cada item para a prateleira certa. Agora organize <strong style="color: var(--laranja);">por tamanho</strong>: do menor para o maior!</p>
+    </section>
+
+    <!-- Níveis: 3 níveis (Fácil, Médio, Difícil) conforme seção 6 do manual -->
+    <section class="niveis">
+      <span class="nivel nivel--ok">Fácil ✓</span>
+      <span class="nivel nivel--ativo">Médio ←</span>
+      <span class="nivel nivel--bloq">Difícil</span>
+    </section>
+
+    <section class="painel">
+      <p class="painel__label">Itens para Organizar — arraste para a prateleira certa</p>
+      <section class="itens-grid">
+
+        <article class="item-card">
+          <span class="item-card__emoji" style="font-size: 28px;">🍇</span>
+          <p class="item-card__nome">Uva</p>
+          <p class="item-card__tam">pequena</p>
+        </article>
+
+        <article class="item-card">
+          <span class="item-card__emoji" style="font-size: 38px;">🍉</span>
+          <p class="item-card__nome">Melancia</p>
+          <p class="item-card__tam">grande</p>
+        </article>
+
+        <article class="item-card">
+          <span class="item-card__emoji" style="font-size: 32px;">🍎</span>
+          <p class="item-card__nome">Maçã</p>
+          <p class="item-card__tam">média</p>
+        </article>
+
+        <article class="item-card">
+          <span class="item-card__emoji" style="font-size: 22px;">🫐</span>
+          <p class="item-card__nome">Mirtilo</p>
+          <p class="item-card__tam">menor</p>
+        </article>
+
+        <article class="item-card">
+          <span class="item-card__emoji" style="font-size: 34px;">🍌</span>
+          <p class="item-card__nome">Banana</p>
+          <p class="item-card__tam">média</p>
+        </article>
+
+      </section>
+    </section>
+
+    <section class="painel">
+      <p class="painel__label">Prateleira — do menor para o maior</p>
+
+      <section class="prateleira">
+        <span class="prateleira__slot prateleira__slot--ok">
+          🫐
+          <span style="font-size: 9px; display: block; color: #085041; margin-top: 2px;">1º</span>
+        </span>
+        <span class="prateleira__slot">2º</span>
+        <span class="prateleira__slot">3º</span>
+        <span class="prateleira__slot">4º</span>
+        <span class="prateleira__slot">5º</span>
+      </section>
+
+      <section class="prateleira__legenda">
+        <span class="prateleira__leg-txt">menor</span>
+        <span style="flex: 1;"></span>
+        <span class="prateleira__leg-txt">maior</span>
+      </section>
+    </section>
+
+    <section class="btn-grupo">
+      <button class="btn btn--marrom">Confirmar organização</button>
+      <button class="btn btn--outline">🗑</button>
+    </section>
+
+  </section>
+
+  <script src="../js/plataforma.js"></script>
+
+</body>
+</html>

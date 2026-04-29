@@ -1,0 +1,33 @@
+{
+  "miniJogo": "Cozinha — Verdadeiro ou Falso",
+  "habilidadeBNCC": "EF03CO01",
+  "instrucaoInstrutor": "Olá, chef! Vou te dizer uma frase. Você decide: é Verdadeiro ou Falso? Preste atenção nas palavras!",
+  "dica": "Dica: fique de olho nas palavras não, nunca e sempre!",
+  "perguntas": [
+    {
+      "id": 1,
+      "frase": "O sol nasce de manhã.",
+      "resposta": true
+    },
+    {
+      "id": 2,
+      "frase": "O cachorro nunca late.",
+      "resposta": false
+    },
+    {
+      "id": 3,
+      "frase": "O cachorro não é um animal.",
+      "resposta": false
+    },
+    {
+      "id": 4,
+      "frase": "A água molha.",
+      "resposta": true
+    },
+    {
+      "id": 5,
+      "frase": "Pássaros sempre vivem debaixo da água.",
+      "resposta": false
+    }
+  ]
+}

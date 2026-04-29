@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa da Casa — A Casa dos Mistérios Lógicos</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+  <section class="tela">
+
+    <section class="hud">
+      <button class="btn btn--outline" style="flex:0; padding: 6px 14px; font-size: 13px;" onclick="window.location.href='../../index.html'">← Voltar</button>
+      <h1 style="font-size: 17px; font-weight: 600; color: var(--marrom-medio);">Escolha um cômodo</h1>
+      <span class="badge badge--laranja">⭐ 40 pts</span>
+    </section>
+
+    <section class="mapa-grid">
+
+      <article class="comodo-card comodo-card--laranja" onclick="window.location.href='Sala.html'">
+        <span class="comodo-card__tag comodo-card__tag--verde">Tutorial</span>
+        <p class="comodo-card__icone">🛋️</p>
+        <p class="comodo-card__nome">Sala</p>
+        <p class="comodo-card__skill comodo-card__skill--laranja">Algoritmos</p>
+        <section class="progresso">
+          <span class="progresso__bolinha progresso__bolinha--ok"></span>
+          <span class="progresso__bolinha progresso__bolinha--ok"></span>
+          <span class="progresso__bolinha progresso__bolinha--meio"></span>
+        </section>
+      </article>
+
+      <article class="comodo-card comodo-card--roxo" onclick="window.location.href='Quarto.html'">
+        <p class="comodo-card__icone">🛏️</p>
+        <p class="comodo-card__nome">Quarto</p>
+        <p class="comodo-card__skill comodo-card__skill--roxo">Depuração</p>
+        <section class="progresso">
+          <span class="progresso__bolinha progresso__bolinha--ok"></span>
+          <span class="progresso__bolinha progresso__bolinha--meio"></span>
+          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
+        </section>
+      </article>
+
+      <article class="comodo-card comodo-card--verde" onclick="window.location.href='Cozinha.html'">
+        <p class="comodo-card__icone">🍳</p>
+        <p class="comodo-card__nome">Cozinha</p>
+        <p class="comodo-card__skill comodo-card__skill--verde">Verdadeiro ou Falso</p>
+        <section class="progresso">
+          <span class="progresso__bolinha progresso__bolinha--meio"></span>
+          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
+          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
+        </section>
+      </article>
+
+      <article class="comodo-card comodo-card--bloq">
+        <p class="comodo-card__icone">🔒</p>
+        <p class="comodo-card__nome">Despensa</p>
+        <p class="comodo-card__skill comodo-card__skill--cinza">Padrões</p>
+        <p class="comodo-card__bloq-aviso">Complete a Cozinha</p>
+      </article>
+
+    </section>
+
+    <section class="dica dica--ambar">
+      <span class="dica__emoji">📺</span>
+      <p class="dica__texto dica__texto--ambar">Dica: Complete cada cômodo para desbloquear o próximo!</p>
+    </section>
+
+  </section>
+
+  <script src="../js/plataforma.js"></script>
+
+</body>
+</html>

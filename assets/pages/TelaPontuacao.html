@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pontuação — A Casa dos Mistérios Lógicos</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+  <section class="tela">
+
+    <p style="font-size: 11px; font-weight: 600; color: var(--cinza); letter-spacing: 1px; text-align: center; text-transform: uppercase; margin-bottom: 1rem;">Resultado Final</p>
+
+    <section class="resultado-header">
+      <p class="resultado-header__icone">🏆</p>
+      <h1 class="resultado-header__titulo">Parabéns, explorador!</h1>
+      <p class="resultado-header__sub">Você completou a Casa dos Mistérios!</p>
+    </section>
+
+    <section class="pontuacao-total">
+      <p class="pontuacao-total__label">Pontuação total</p>
+      <p class="pontuacao-total__numero" id="pontuacao-final">85</p>
+      <p class="pontuacao-total__de">de 100 pontos</p>
+    </section>
+
+    <section class="pontuacao-grid">
+
+      <article class="pontuacao-card pontuacao-card--laranja">
+        <p class="pontuacao-card__icone">🛋️</p>
+        <p class="pontuacao-card__nome pontuacao-card__nome--laranja">Sala</p>
+        <p class="pontuacao-card__pts pontuacao-card__pts--laranja">20 pts</p>
+      </article>
+
+      <article class="pontuacao-card pontuacao-card--roxo">
+        <p class="pontuacao-card__icone">🛏️</p>
+        <p class="pontuacao-card__nome pontuacao-card__nome--roxo">Quarto</p>
+        <p class="pontuacao-card__pts pontuacao-card__pts--roxo">18 pts</p>
+      </article>
+
+      <article class="pontuacao-card pontuacao-card--verde">
+        <p class="pontuacao-card__icone">🍳</p>
+        <p class="pontuacao-card__nome pontuacao-card__nome--verde">Cozinha</p>
+        <p class="pontuacao-card__pts pontuacao-card__pts--verde">25 pts</p>
+      </article>
+
+      <article class="pontuacao-card pontuacao-card--marrom">
+        <p class="pontuacao-card__icone">📦</p>
+        <p class="pontuacao-card__nome pontuacao-card__nome--marrom">Despensa</p>
+        <p class="pontuacao-card__pts pontuacao-card__pts--marrom">22 pts</p>
+      </article>
+
+    </section>
+
+    <section class="dica dica--ambar">
+      <span class="dica__emoji">📺</span>
+      <p class="dica__texto dica__texto--ambar">Você foi incrível! Errou pouquinho, mas aprendeu muito. Continue assim!</p>
+    </section>
+
+    <section class="btn-grupo">
+      <button class="btn btn--laranja" onclick="window.location.href='../../index.html'">Jogar novamente</button>
+      <button class="btn" style="background: var(--branco); color: var(--marrom-medio); border: 2px solid var(--laranja-borda);" onclick="window.location.href='../../index.html'">Menu principal</button>
+    </section>
+
+  </section>
+
+  <script src="../js/plataforma.js"></script>
+  <script>
+    // Ao carregar a tela de pontuação, envia o score final para a plataforma.
+    // O valor do elemento #pontuacao-final deve ser preenchido pela lógica de
+    // jogo antes de redirecionar para esta tela (ex: via sessionStorage ou query param).
+    window.addEventListener('DOMContentLoaded', function () {
+      const scoreEl = document.getElementById('pontuacao-final');
+      const score = parseInt(scoreEl.textContent, 10) || 0;
+      sendFinalScore({
+        score: score,
+        difficulty: getPlatformDifficulty()
+      });
+    });
+  </script>
+
+</body>
+</html>

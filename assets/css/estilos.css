@@ -1,0 +1,638 @@
+/* =============================================
+   A Casa dos Mistérios Lógicos — estilos.css
+   Paleta: tons quentes, estilo cartoon infantil
+   ============================================= */
+
+/* ---------- Variáveis ---------- */
+:root {
+  --laranja:        #D85A30;
+  --laranja-claro:  #F0997B;
+  --laranja-fundo:  #FAECE7;
+  --laranja-borda:  #F5C4B3;
+  --ambar:          #EF9F27;
+  --ambar-claro:    #FAC775;
+  --ambar-fundo:    #FAEEDA;
+  --roxo:           #534AB7;
+  --roxo-claro:     #7F77DD;
+  --roxo-fundo:     #EEEDFE;
+  --roxo-borda:     #AFA9EC;
+  --verde:          #1D9E75;
+  --verde-claro:    #5DCAA5;
+  --verde-fundo:    #E1F5EE;
+  --verde-borda:    #9FE1CB;
+  --marrom:         #4A1B0C;
+  --marrom-medio:   #712B13;
+  --marrom-fundo:   #FDF5EE;
+  --cinza:          #888780;
+  --cinza-claro:    #D3D1C7;
+  --cinza-fundo:    #F1EFE8;
+  --vermelho:       #E24B4A;
+  --vermelho-fundo: #FCEBEB;
+  --texto-escuro:   #2C2C2A;
+  --texto-medio:    #5F5E5A;
+  --branco:         #FFFFFF;
+  --raio:           12px;
+  --raio-lg:        16px;
+  --raio-pill:      999px;
+  --sombra:         0 2px 12px rgba(216, 90, 48, 0.10);
+}
+
+/* ---------- Reset e Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #FFF3EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+  color: var(--texto-escuro);
+}
+
+/* ---------- Container principal ---------- */
+.tela {
+  width: 100%;
+  max-width: 480px;
+  background: var(--branco);
+  border-radius: var(--raio-lg);
+  border: 2px solid var(--laranja-borda);
+  padding: 1.5rem;
+  box-shadow: var(--sombra);
+}
+
+.tela--roxa   { background: #F5F0FF; border-color: var(--roxo-borda); }
+.tela--verde  { background: #F0FBF7; border-color: var(--verde-claro); }
+.tela--marrom { background: var(--marrom-fundo); border-color: var(--laranja-borda); }
+
+/* ---------- HUD (cabeçalho da tela) ---------- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.hud__info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud__icone {
+  font-size: 22px;
+}
+
+.hud__titulo {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--laranja);
+}
+
+.hud__titulo--roxo  { color: #3C3489; }
+.hud__titulo--verde { color: #085041; }
+.hud__titulo--marrom{ color: var(--marrom); }
+
+.hud__subtitulo {
+  font-size: 11px;
+  color: var(--cinza);
+}
+
+.hud__subtitulo--roxo  { color: var(--roxo); }
+.hud__subtitulo--verde { color: #0F6E56; }
+.hud__subtitulo--marrom{ color: var(--marrom-medio); }
+
+.badge {
+  border-radius: var(--raio-pill);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge--laranja { background: var(--ambar-fundo);  color: #854F0B; }
+.badge--roxo    { background: var(--roxo-fundo);   color: #3C3489; }
+.badge--verde   { background: var(--verde-fundo);  color: #085041; }
+.badge--marrom  { background: var(--laranja-fundo);color: var(--marrom); }
+
+/* ---------- Balão instrutor ---------- */
+.balao {
+  background: var(--branco);
+  border: 2px solid var(--laranja-borda);
+  border-radius: var(--raio);
+  padding: 10px 14px;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.balao--roxo  { border-color: var(--roxo-borda); }
+.balao--verde { border-color: var(--verde-claro); }
+.balao--marrom{ border-color: var(--laranja-borda); }
+
+.balao__emoji { font-size: 26px; flex-shrink: 0; }
+
+.balao__texto {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #854F0B;
+}
+
+.balao__texto--roxo  { color: #3C3489; }
+.balao__texto--verde { color: #085041; }
+.balao__texto--marrom{ color: var(--marrom-medio); }
+
+/* ---------- Painel / card interno ---------- */
+.painel {
+  background: var(--branco);
+  border: 1.5px solid var(--laranja-borda);
+  border-radius: var(--raio);
+  padding: 10px;
+  margin-bottom: 1rem;
+}
+
+.painel--roxo      { border-color: var(--roxo-borda); }
+.painel--verde     { border-color: var(--verde-claro); }
+.painel--tracejado { border-style: dashed; }
+
+.painel__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cinza);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Blocos de comando (drag) ---------- */
+.blocos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 38px;
+  align-items: center;
+}
+
+.bloco {
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
+.bloco--laranja { background: var(--laranja);    color: var(--branco); }
+.bloco--ambar   { background: var(--ambar);      color: var(--branco); }
+.bloco--roxo    { background: var(--roxo-claro); color: var(--branco); }
+.bloco--erro    { background: var(--vermelho);   color: var(--branco); }
+
+.bloco__tag-erro {
+  background: rgba(255,255,255,0.3);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10px;
+}
+
+.bloco--vazio {
+  border: 2px dashed var(--cinza-claro);
+  background: transparent;
+  color: var(--cinza-claro);
+  cursor: default;
+}
+
+/* ---------- Grade do jogo (sala) ---------- */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+
+.grade__celula {
+  aspect-ratio: 1;
+  background: var(--cinza-fundo);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.grade__celula--ativa { background: var(--ambar-claro); }
+
+/* ---------- Botões principais ---------- */
+.btn-grupo {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--raio);
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+  transition: opacity 0.15s;
+}
+
+.btn:hover  { opacity: 0.88; }
+.btn:active { opacity: 0.75; }
+
+.btn--laranja { background: var(--laranja);    color: var(--branco); }
+.btn--roxo    { background: var(--roxo);       color: var(--branco); }
+.btn--verde   { background: var(--verde);      color: var(--branco); }
+.btn--marrom  { background: var(--laranja);    color: var(--branco); }
+
+.btn--outline {
+  background: var(--laranja-fundo);
+  color: var(--marrom-medio);
+  border: 1.5px solid var(--laranja-borda);
+  flex: 0;
+  padding: 12px 16px;
+}
+
+.btn--outline-roxo {
+  background: var(--roxo-fundo);
+  color: #3C3489;
+  border: 1.5px solid var(--roxo-borda);
+  flex: 0;
+  padding: 12px 16px;
+}
+
+/* ---------- Tela inicial: botões de menu ---------- */
+.menu-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.btn--menu-principal {
+  border: none;
+  border-radius: var(--raio);
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.15s;
+}
+
+.btn--menu-principal:hover { opacity: 0.88; }
+
+.btn--menu-laranja  { background: var(--laranja);  color: var(--branco); }
+.btn--menu-ambar    { background: var(--ambar);     color: var(--branco); }
+.btn--menu-outline  { background: var(--branco); color: var(--marrom-medio); border: 2px solid var(--laranja-borda); }
+
+/* ---------- Mapa: cards de cômodo ---------- */
+.mapa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.comodo-card {
+  background: var(--branco);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid var(--laranja-borda);
+  transition: transform 0.15s;
+}
+
+.comodo-card:hover { transform: translateY(-2px); }
+
+.comodo-card--laranja { border-color: var(--ambar-claro); }
+.comodo-card--roxo    { border-color: var(--roxo-borda); }
+.comodo-card--verde   { border-color: var(--verde-claro); }
+.comodo-card--bloq    { border: 2px dashed var(--cinza-claro); background: var(--cinza-fundo); opacity: 0.75; cursor: not-allowed; }
+
+.comodo-card__tag {
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 8px;
+}
+
+.comodo-card__tag--verde { background: #97C459; color: #27500A; }
+
+.comodo-card__icone  { font-size: 36px; margin-bottom: 6px; }
+.comodo-card__nome   { font-weight: 600; font-size: 14px; color: var(--texto-escuro); }
+.comodo-card__skill  { font-size: 11px; margin-top: 2px; }
+
+.comodo-card__skill--laranja { color: var(--ambar); }
+.comodo-card__skill--roxo    { color: var(--roxo); }
+.comodo-card__skill--verde   { color: var(--verde); }
+.comodo-card__skill--cinza   { color: var(--cinza); }
+
+.comodo-card__bloq-aviso { font-size: 10px; color: var(--cinza); margin-top: 8px; }
+
+/* Bolinhas de progresso */
+.progresso {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.progresso__bolinha {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.progresso__bolinha--ok    { background: #97C459; }
+.progresso__bolinha--meio  { background: #C0DD97; }
+.progresso__bolinha--vazio { background: var(--cinza-claro); }
+
+/* ---------- Dica / alerta ---------- */
+.dica {
+  border-radius: var(--raio);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.dica--ambar   { background: var(--ambar-fundo); }
+.dica--roxo    { background: var(--roxo-fundo);  }
+.dica--verde   { background: var(--verde-fundo); }
+.dica--erro    { background: var(--vermelho-fundo); }
+
+.dica__emoji { font-size: 18px; flex-shrink: 0; }
+
+.dica__texto {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.dica__texto--ambar { color: #854F0B; }
+.dica__texto--roxo  { color: #3C3489; }
+.dica__texto--verde { color: #085041; }
+.dica__texto--erro  { color: #A32D2D; }
+
+/* ---------- Pontuação ---------- */
+.pontuacao-total {
+  background: var(--laranja);
+  border-radius: var(--raio-lg);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.pontuacao-total__label  { font-size: 13px; color: var(--laranja-borda); margin-bottom: 4px; }
+.pontuacao-total__numero { font-size: 48px; font-weight: 700; color: var(--branco); line-height: 1; }
+.pontuacao-total__de     { font-size: 13px; color: var(--laranja-borda); margin-top: 4px; }
+
+.pontuacao-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.pontuacao-card {
+  background: var(--branco);
+  border-radius: var(--raio);
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.pontuacao-card--laranja { border: 1.5px solid var(--ambar-claro); }
+.pontuacao-card--roxo    { border: 1.5px solid var(--roxo-borda); }
+.pontuacao-card--verde   { border: 1.5px solid var(--verde-claro); }
+.pontuacao-card--marrom  { border: 1.5px solid var(--laranja-borda); }
+
+.pontuacao-card__icone { font-size: 18px; }
+.pontuacao-card__nome  { font-size: 11px; font-weight: 600; margin-top: 4px; }
+.pontuacao-card__pts   { font-size: 13px; font-weight: 600; }
+
+.pontuacao-card__nome--laranja { color: var(--marrom-medio); }
+.pontuacao-card__nome--roxo    { color: #3C3489; }
+.pontuacao-card__nome--verde   { color: #085041; }
+.pontuacao-card__nome--marrom  { color: #71231E; }
+
+.pontuacao-card__pts--laranja  { color: var(--laranja); }
+.pontuacao-card__pts--roxo     { color: var(--roxo); }
+.pontuacao-card__pts--verde    { color: var(--verde); }
+.pontuacao-card__pts--marrom   { color: var(--laranja); }
+
+/* ---------- Tela Cozinha: botões V/F ---------- */
+.vf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.btn-vf {
+  border: none;
+  border-radius: var(--raio);
+  padding: 18px 0;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+
+.btn-vf:hover  { opacity: 0.88; }
+.btn-vf__emoji { font-size: 28px; }
+
+.btn-vf--verde   { background: var(--verde);    color: var(--branco); }
+.btn-vf--vermelho{ background: var(--vermelho); color: var(--branco); }
+
+/* Bolinhas de progresso centralizadas (cozinha) */
+.progresso--centro {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* Caixa de pergunta (cozinha) */
+.pergunta-box {
+  background: var(--branco);
+  border: 2px solid var(--verde-claro);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.pergunta-box__numero { font-size: 11px; font-weight: 600; color: var(--cinza); text-transform: uppercase; margin-bottom: 10px; }
+.pergunta-box__frase  { font-size: 16px; font-weight: 600; color: #085041; line-height: 1.5; margin-bottom: 0.5rem; }
+.pergunta-box__aviso  { font-size: 12px; color: var(--cinza); }
+
+/* ---------- Despensa: itens e prateleira ---------- */
+.itens-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.item-card {
+  background: var(--ambar-fundo);
+  border: 2px dashed var(--ambar);
+  border-radius: var(--raio);
+  padding: 10px 14px;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+}
+
+.item-card__emoji  { display: block; }
+.item-card__nome   { font-size: 10px; color: var(--ambar); margin-top: 3px; font-weight: 600; }
+.item-card__tam    { font-size: 9px;  color: var(--cinza); }
+
+.prateleira {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  border-bottom: 3px solid #8B6347;
+  padding-bottom: 4px;
+  min-height: 70px;
+}
+
+.prateleira__slot {
+  border: 2px dashed var(--cinza-claro);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  min-width: 50px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--cinza-claro);
+}
+
+.prateleira__slot--ok {
+  background: var(--verde-fundo);
+  border: 2px solid var(--verde-claro);
+  color: #085041;
+}
+
+.prateleira__legenda {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.prateleira__leg-txt {
+  font-size: 9px;
+  color: var(--cinza-claro);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Níveis de dificuldade */
+.niveis {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.nivel {
+  border-radius: var(--raio-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nivel--ok     { background: #97C459; color: #27500A; }
+.nivel--ativo  { background: var(--laranja); color: var(--branco); }
+.nivel--bloq   { background: var(--cinza-fundo); color: var(--cinza); }
+
+/* ---------- Cabeçalho da tela inicial ---------- */
+.inicio-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.inicio-header__icone  { font-size: 52px; margin-bottom: 0.25rem; }
+.inicio-header__titulo { font-size: 24px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.inicio-header__sub    { font-size: 13px; color: var(--ambar); }
+
+.inicio-comodos {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.inicio-comodo { text-align: center; }
+.inicio-comodo__icone  { font-size: 22px; }
+.inicio-comodo__label  { font-size: 10px; color: var(--ambar); margin-top: 2px; }
+.inicio-comodo__label--cinza { color: var(--cinza); }
+
+.inicio-rodape {
+  font-size: 11px;
+  color: var(--cinza-claro);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* ---------- Resultado final ---------- */
+.resultado-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.resultado-header__icone   { font-size: 56px; margin-bottom: 0.5rem; }
+.resultado-header__titulo  { font-size: 22px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.resultado-header__sub     { font-size: 13px; color: var(--ambar); }
+
+/* ---------- Configurações (ícone topo direito) ---------- */
+.btn-config {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--ambar-fundo);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1.5px solid var(--ambar-claro);
+  cursor: pointer;
+}
+
+/* Tela inicial: precisa de position relative no .tela */
+.tela--relativa { position: relative; }
+
+/* ---------- Sala: grid de dois painéis lado a lado ---------- */
+.sala-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+}

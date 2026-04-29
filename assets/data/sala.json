@@ -1,0 +1,19 @@
+{
+  "miniJogo": "Sala — Algoritmos",
+  "habilidadeBNCC": "EF02CO02",
+  "instrucaoInstrutor": "Olá, explorador! Coloque os blocos na ordem certa para levar o personagem até a estrela! Arraste os blocos para a sequência!",
+  "grade": {
+    "colunas": 4,
+    "linhas": 4,
+    "posicaoInicial": { "linha": 1, "coluna": 0 },
+    "posicaoAlvo": { "linha": 0, "coluna": 2 }
+  },
+  "blocosDisponiveis": [
+    { "id": "cima",    "rotulo": "⬆ Cima",    "tipo": "direcao" },
+    { "id": "baixo",   "rotulo": "⬇ Baixo",   "tipo": "direcao" },
+    { "id": "esq",     "rotulo": "⬅ Esq",     "tipo": "direcao" },
+    { "id": "dir",     "rotulo": "➡ Dir",     "tipo": "direcao" },
+    { "id": "repetir", "rotulo": "↩ Repetir", "tipo": "controle" }
+  ],
+  "sequenciaCorreta": ["cima", "cima", "dir"]
+}

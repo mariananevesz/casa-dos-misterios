@@ -1,0 +1,46 @@
+{
+  "miniJogo": "Despensa — Estoque Inteligente",
+  "habilidadeBNCC": "EF02CO01",
+  "instrucaoInstrutor": "Ei! Minha despensa está uma bagunça! Arraste cada item para a prateleira certa.",
+  "niveis": [
+    {
+      "nivel": "Fácil",
+      "criterio": "cor",
+      "instrucao": "Organize por cor: do mais claro para o mais escuro.",
+      "itens": [
+        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "atributo": "roxo"    },
+        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "atributo": "verde"   },
+        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "atributo": "vermelho"},
+        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "atributo": "azul"    },
+        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "atributo": "amarelo" }
+      ],
+      "ordemCorreta": ["banana", "melancia", "maca", "uva", "mirtilo"]
+    },
+    {
+      "nivel": "Médio",
+      "criterio": "tamanho",
+      "instrucao": "Organize por tamanho: do menor para o maior.",
+      "itens": [
+        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "tamanho": 2 },
+        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "tamanho": 5 },
+        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "tamanho": 3 },
+        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "tamanho": 1 },
+        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "tamanho": 3 }
+      ],
+      "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+    },
+    {
+      "nivel": "Difícil",
+      "criterio": "categoria",
+      "instrucao": "Organize seguindo as regras: frutas cítricas primeiro, depois as demais, do menor para o maior dentro de cada grupo.",
+      "itens": [
+        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "categoria": "fruta-comum",  "tamanho": 2 },
+        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "categoria": "fruta-comum",  "tamanho": 5 },
+        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "categoria": "fruta-comum",  "tamanho": 3 },
+        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "categoria": "fruta-comum",  "tamanho": 1 },
+        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "categoria": "fruta-comum",  "tamanho": 3 }
+      ],
+      "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+    }
+  ]
+}

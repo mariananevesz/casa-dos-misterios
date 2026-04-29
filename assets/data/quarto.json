@@ -1,0 +1,14 @@
+{
+  "miniJogo": "Quarto — Depuração",
+  "habilidadeBNCC": "EF02CO02",
+  "instrucaoInstrutor": "Oi! Minha rotina matinal está toda errada! Encontre os erros na sequência e arraste os blocos para a ordem correta!",
+  "dica": "Dica: há 1 bloco repetido e 1 fora de ordem!",
+  "sequenciaComErros": [
+    { "id": "tenis",   "rotulo": "👟 Calçar o tênis",   "erro": true  },
+    { "id": "dentes",  "rotulo": "🦷 Escovar os dentes", "erro": false },
+    { "id": "tenis",   "rotulo": "👟 Calçar o tênis",   "erro": true  },
+    { "id": "roupa",   "rotulo": "👕 Vestir a roupa",    "erro": false },
+    { "id": "cafe",    "rotulo": "🍳 Tomar café",        "erro": false }
+  ],
+  "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+}

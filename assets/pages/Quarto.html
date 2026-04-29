@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quarto — Depuração</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+</head>
+<body>
+
+  <section class="tela tela--roxa">
+
+    <section class="hud">
+      <section class="hud__info">
+        <span class="hud__icone">🛏️</span>
+        <section>
+          <p class="hud__titulo hud__titulo--roxo">Quarto — Depuração</p>
+          <p class="hud__subtitulo hud__subtitulo--roxo">Mini-jogo 2</p>
+        </section>
+      </section>
+      <span class="badge badge--roxo">⭐ 20 pts</span>
+    </section>
+
+    <section class="balao balao--roxo">
+      <span class="balao__emoji">⏰</span>
+      <p class="balao__texto balao__texto--roxo">Oi! Minha rotina matinal está toda errada! Encontre os erros na sequência e arraste os blocos para a ordem correta!</p>
+    </section>
+
+    <section class="painel painel--roxo">
+      <p class="painel__label">Sequência com Erros — encontre o que está errado!</p>
+      <section class="blocos">
+        <span class="bloco bloco--erro">
+          👟 Calçar o tênis
+          <span class="bloco__tag-erro">!</span>
+        </span>
+        <span class="bloco bloco--roxo">🦷 Escovar os dentes</span>
+        <span class="bloco bloco--erro">
+          👟 Calçar o tênis
+          <span class="bloco__tag-erro">!</span>
+        </span>
+        <span class="bloco bloco--roxo">👕 Vestir a roupa</span>
+        <span class="bloco bloco--roxo">🍳 Tomar café</span>
+      </section>
+      <section class="dica dica--erro" style="margin-top: 8px; margin-bottom: 0;">
+        <span class="dica__emoji">🔍</span>
+        <p class="dica__texto dica__texto--erro">Dica: há 1 bloco repetido e 1 fora de ordem!</p>
+      </section>
+    </section>
+
+    <section class="painel painel--roxo painel--tracejado">
+      <p class="painel__label">Sequência Corrigida — monte a ordem certa aqui</p>
+      <section class="blocos">
+        <span class="bloco bloco--roxo">🦷 Escovar os dentes</span>
+        <span class="bloco bloco--roxo">👕 Vestir a roupa</span>
+        <span class="bloco bloco--vazio">+ bloco</span>
+        <span class="bloco bloco--vazio">+ bloco</span>
+      </section>
+    </section>
+
+    <section class="btn-grupo">
+      <button class="btn btn--roxo">Verificar sequência</button>
+      <button class="btn btn--outline-roxo">🗑</button>
+    </section>
+
+  </section>
+
+  <script src="../js/plataforma.js"></script>
+
+</body>
+</html>
