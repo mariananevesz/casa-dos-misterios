@@ -8,79 +8,458 @@
 </head>
 <body>
 
-  <section class="tela">
+  <section class="tela" id="tela-principal">
 
+    <!-- HUD -->
     <section class="hud">
       <section class="hud__info">
-        <span class="hud__icone">🛋️</span>
+        <img src="../img/icone-sala.png" alt="Sala" class="hud__icone-img">
         <section>
           <p class="hud__titulo">Sala — Algoritmos</p>
-          <p class="hud__subtitulo">Mini-jogo 1</p>
+          <p class="hud__subtitulo" id="fase-label">Mini-jogo 1</p>
         </section>
       </section>
-      <span class="badge badge--laranja">⭐ 0 pts</span>
+      <span class="badge badge--laranja" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
-    <section class="balao">
-      <span class="balao__emoji">📺</span>
-      <p class="balao__texto">Olá, explorador! Coloque os blocos na ordem certa para levar o personagem até a estrela! Arraste os blocos para a sequência!</p>
+    <!-- Mascote Logi -->
+    <section class="balao" aria-label="Instruções do Logi">
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
+      <p class="balao__texto" id="logi-texto">Carregando…</p>
     </section>
 
+    <!-- Indicador de fase -->
+    <section class="niveis" id="indicador-fases" aria-label="Progresso de fases"></section>
+
+    <!-- Grade + Blocos disponíveis -->
     <section class="sala-grid">
-
       <section class="painel">
         <p class="painel__label">Grade do Jogo</p>
-        <section class="grade">
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula">⭐</span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula grade__celula--ativa">🧒</span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-          <span class="grade__celula"></span>
-        </section>
+        <section class="grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
       </section>
 
       <section class="painel">
         <p class="painel__label">Blocos Disponíveis</p>
-        <section class="blocos">
-          <span class="bloco bloco--laranja">⬆ Cima</span>
-          <span class="bloco bloco--laranja">⬇ Baixo</span>
-          <span class="bloco bloco--laranja">⬅ Esq</span>
-          <span class="bloco bloco--laranja">➡ Dir</span>
-          <span class="bloco bloco--ambar">↩ Repetir</span>
-        </section>
+        <section class="blocos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
       </section>
-
     </section>
 
-    <section class="painel painel--tracejado">
+    <!-- Sequência do jogador -->
+    <section class="painel painel--tracejado"
+             id="painel-sequencia"
+             aria-dropeffect="move">
       <p class="painel__label">Minha Sequência</p>
-      <section class="blocos">
-        <span class="bloco bloco--laranja">⬆ Cima</span>
-        <span class="bloco bloco--laranja">⬆ Cima</span>
-        <span class="bloco bloco--laranja">➡ Dir</span>
-        <span class="bloco bloco--vazio">+ bloco</span>
-      </section>
+      <section class="blocos" id="sequencia-player" role="listbox" aria-label="Sequência montada" aria-live="polite"></section>
     </section>
 
+    <!-- Feedback -->
+    <section id="feedback-area" aria-live="polite" style="display:none;" class="dica dica--erro">
+      <img src="../img/dica.png" alt="" class="dica-img">
+      <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
+    </section>
+
+    <!-- Botões -->
     <section class="btn-grupo">
-      <button class="btn btn--laranja">Executar</button>
-      <button class="btn btn--outline">🗑</button>
+      <button class="btn btn--laranja" id="btn-executar" aria-label="Executar sequência">Executar</button>
+      <button class="btn btn--outline" id="btn-limpar" aria-label="Limpar sequência">Limpar</button>
     </section>
 
   </section>
 
+  <!-- Modal de conclusão -->
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+    <section class="modal">
+      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
+      <p class="modal-sub" id="modal-sub">Você criou um algoritmo com passos!</p>
+      <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
+      <p class="modal-pts" id="modal-pts"></p>
+      <section class="btn-grupo" style="margin-top:1rem;">
+        <button class="btn btn--laranja" id="btn-proxima-fase" style="display:none;">Próxima fase</button>
+        <button class="btn btn--outline" id="btn-mapa" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+      </section>
+    </section>
+  </div>
+
   <script src="../js/plataforma.js"></script>
+  <script src="../js/gameState.js"></script>
+  <script src="../js/audio.js"></script>
+  <script>
+  /* ===== SALA — lógica do jogo ===== */
+
+  /* Dados embutidos — fallback quando fetch não está disponível (file://) */
+  const SALA_INLINE = {"miniJogo":"Sala — Algoritmos","habilidadeBNCC":"EF02CO02","instrucaoLogi":"Olá, explorador! Coloque os blocos na ordem certa para levar o personagem até a estrela!","fases":[{"id":1,"titulo":"Fase 1 — Primeiros passos","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":1,"coluna":0},"posicaoAlvo":{"linha":0,"coluna":2}},"sequenciaCorreta":["cima","dir","dir"],"maxBlocos":6},{"id":2,"titulo":"Fase 2 — Caminho mais longo","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":3,"coluna":0},"posicaoAlvo":{"linha":0,"coluna":3}},"sequenciaCorreta":["cima","cima","cima","dir","dir","dir"],"maxBlocos":8},{"id":3,"titulo":"Fase 3 — Volta por cima","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":3,"coluna":3},"posicaoAlvo":{"linha":0,"coluna":0}},"sequenciaCorreta":["cima","cima","cima","esq","esq","esq"],"maxBlocos":8}],"blocosDisponiveis":[{"id":"cima","rotulo":"Cima","tipo":"direcao","img":"../img/seta-cima.png"},{"id":"baixo","rotulo":"Baixo","tipo":"direcao","img":"../img/seta-baixo.png"},{"id":"esq","rotulo":"Esq","tipo":"direcao","img":"../img/seta-esq.png"},{"id":"dir","rotulo":"Dir","tipo":"direcao","img":"../img/seta-dir.png"},{"id":"repetir","rotulo":"Repetir","tipo":"controle","img":"../img/repetir.png"}]};
+
+  let gameData     = null;
+  let faseAtual    = 0;
+  let sequencia    = [];
+  let animando     = false;
+  let erros        = 0;
+  let touchBloco   = null;
+
+  const MOVES = { cima: [-1,0], baixo: [1,0], esq: [0,-1], dir: [0,1] };
+  const FASE_KEY = 'sala_fase';
+
+  /* ---- Inicialização ---- */
+  async function init() {
+    try {
+      gameData = await loadGameData('../data/sala.json');
+    } catch (e) {
+      gameData = SALA_INLINE; // fallback file://
+    }
+    faseAtual = Math.min(
+      parseInt(localStorage.getItem(FASE_KEY) || '0'),
+      gameData.fases.length - 1
+    );
+    renderFase();
+  }
+
+  /* ---- Renderiza a fase atual ---- */
+  function renderFase() {
+    const fase = gameData.fases[faseAtual];
+    document.getElementById('logi-texto').textContent = gameData.instrucaoLogi;
+    document.getElementById('fase-label').textContent = `Fase ${fase.id} de ${gameData.fases.length}`;
+    erros = 0;
+    sequencia = [];
+    buildIndicadorFases();
+    buildGrid(fase);
+    buildBlocos();
+    renderSequencia();
+    document.getElementById('feedback-area').style.display = 'none';
+    atualizarBadge();
+  }
+
+  function buildIndicadorFases() {
+    const el = document.getElementById('indicador-fases');
+    el.innerHTML = '';
+    gameData.fases.forEach((f, i) => {
+      const span = document.createElement('span');
+      const state = gameState.get();
+      if (i < faseAtual)       span.className = 'nivel nivel--ok';
+      else if (i === faseAtual) span.className = 'nivel nivel--ativo';
+      else                      span.className = 'nivel nivel--bloq';
+      span.textContent = `Fase ${f.id}`;
+      el.appendChild(span);
+    });
+  }
+
+  /* ---- Grade ---- */
+  function buildGrid(fase) {
+    const grid = document.getElementById('game-grid');
+    const { linhas, colunas, posicaoInicial, posicaoAlvo } = fase.grade;
+    grid.innerHTML = '';
+    grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
+
+    for (let r = 0; r < linhas; r++) {
+      for (let c = 0; c < colunas; c++) {
+        const cell = document.createElement('span');
+        cell.className = 'grade__celula';
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+
+        if (r === posicaoAlvo.linha && c === posicaoAlvo.coluna) {
+          cell.innerHTML = `<img src="../img/alvo.png" alt="Estrela" class="grade-img" id="celula-alvo-img">`;
+          cell.id = 'celula-alvo';
+        }
+        if (r === posicaoInicial.linha && c === posicaoInicial.coluna) {
+          cell.innerHTML += `<img src="../img/personagem.png" alt="Personagem" class="grade-img grade-personagem" id="personagem">`;
+          cell.classList.add('grade__celula--ativa');
+          cell.id = 'celula-personagem';
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+  }
+
+  function celulaIdx(r, c, colunas) { return r * colunas + c; }
+
+  function getCelulas() { return document.getElementById('game-grid').querySelectorAll('.grade__celula'); }
+
+  /* ---- Blocos disponíveis ---- */
+  function buildBlocos() {
+    const cont = document.getElementById('blocos-disponiveis');
+    cont.innerHTML = '';
+    gameData.blocosDisponiveis.forEach(bloco => {
+      const el = criarBlocoEl(bloco, 'disponivel');
+      cont.appendChild(el);
+    });
+  }
+
+  function criarBlocoEl(bloco, origem) {
+    const el = document.createElement('span');
+    el.className = `bloco ${bloco.tipo === 'controle' ? 'bloco--ambar' : 'bloco--laranja'}`;
+    el.draggable = true;
+    el.dataset.blocoId = bloco.id;
+    el.setAttribute('role', 'option');
+    el.setAttribute('aria-label', bloco.rotulo);
+    el.setAttribute('tabindex', '0');
+    el.innerHTML = `<img src="${bloco.img}" alt="" class="bloco-img"> ${bloco.rotulo}`;
+
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('blocoId', bloco.id);
+      e.dataTransfer.setData('origem', origem);
+    });
+
+    el.addEventListener('touchstart', touchStart, { passive: true });
+    el.addEventListener('touchmove',  touchMove,  { passive: false });
+    el.addEventListener('touchend',   touchEnd,   { passive: true });
+
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        adicionarBloco(bloco.id);
+      }
+    });
+
+    return el;
+  }
+
+  /* ---- Sequência do jogador ---- */
+  function renderSequencia() {
+    const cont = document.getElementById('sequencia-player');
+    cont.innerHTML = '';
+    const fase = gameData.fases[faseAtual];
+
+    sequencia.forEach((bid, idx) => {
+      const bloco = gameData.blocosDisponiveis.find(b => b.id === bid);
+      const el = document.createElement('span');
+      el.className = 'bloco bloco--laranja';
+      el.dataset.idx = idx;
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Clique para remover.`);
+      el.setAttribute('tabindex', '0');
+      el.innerHTML = `<img src="${bloco.img}" alt="" class="bloco-img"> ${bloco.rotulo}`;
+      el.addEventListener('click', () => removerBloco(idx));
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
+      });
+      cont.appendChild(el);
+    });
+
+    if (sequencia.length < (fase.maxBlocos || 8)) {
+      const empty = document.createElement('span');
+      empty.className = 'bloco bloco--vazio';
+      empty.textContent = '+ bloco';
+      empty.setAttribute('aria-label', 'Slot vazio — arraste um bloco aqui');
+      cont.appendChild(empty);
+    }
+
+    // Drag-over na área de sequência
+    cont.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; };
+    cont.ondrop = e => {
+      e.preventDefault();
+      const bid = e.dataTransfer.getData('blocoId');
+      if (bid) adicionarBloco(bid);
+    };
+  }
+
+  function adicionarBloco(bid) {
+    const fase = gameData.fases[faseAtual];
+    if (sequencia.length >= (fase.maxBlocos || 8)) return;
+    sequencia.push(bid);
+    audio.clique();
+    renderSequencia();
+  }
+
+  function removerBloco(idx) {
+    sequencia.splice(idx, 1);
+    renderSequencia();
+  }
+
+  /* ---- Touch drag ---- */
+  let touchGhost = null;
+
+  function touchStart(e) {
+    touchBloco = e.currentTarget.dataset.blocoId;
+    const touch = e.touches[0];
+    touchGhost = e.currentTarget.cloneNode(true);
+    touchGhost.style.cssText = `position:fixed;opacity:0.75;pointer-events:none;z-index:9999;left:${touch.clientX - 30}px;top:${touch.clientY - 20}px;`;
+    document.body.appendChild(touchGhost);
+  }
+
+  function touchMove(e) {
+    e.preventDefault();
+    if (!touchGhost) return;
+    const touch = e.touches[0];
+    touchGhost.style.left = (touch.clientX - 30) + 'px';
+    touchGhost.style.top  = (touch.clientY - 20) + 'px';
+  }
+
+  function touchEnd(e) {
+    if (touchGhost) { touchGhost.remove(); touchGhost = null; }
+    if (!touchBloco) return;
+    const touch = e.changedTouches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    const sequEl = document.getElementById('sequencia-player');
+    if (sequEl && (sequEl === el || sequEl.contains(el))) {
+      adicionarBloco(touchBloco);
+    }
+    touchBloco = null;
+  }
+
+  /* ---- Execução ---- */
+  async function executar() {
+    if (animando || sequencia.length === 0) return;
+    animando = true;
+    document.getElementById('btn-executar').disabled = true;
+    document.getElementById('feedback-area').style.display = 'none';
+
+    const fase = gameData.fases[faseAtual];
+    const { linhas, colunas, posicaoInicial, posicaoAlvo } = fase.grade;
+    let pos = { ...posicaoInicial };
+    const cells = getCelulas();
+
+    for (let i = 0; i < sequencia.length; i++) {
+      const cmd = sequencia[i];
+      await sleep(350);
+
+      let delta;
+      if (cmd === 'repetir' && i > 0) {
+        const prev = sequencia[i - 1];
+        delta = MOVES[prev];
+      } else {
+        delta = MOVES[cmd];
+      }
+
+      if (!delta) continue;
+
+      const nr = pos.linha + delta[0];
+      const nc = pos.coluna + delta[1];
+
+      if (nr < 0 || nr >= linhas || nc < 0 || nc >= colunas) {
+        await bateuNaParede(pos, fase);
+        return;
+      }
+
+      // move visual
+      const deIdx  = celulaIdx(pos.linha, pos.coluna, colunas);
+      const paraIdx = celulaIdx(nr, nc, colunas);
+
+      const isAlvo = cells[deIdx].id === 'celula-alvo';
+      cells[deIdx].innerHTML = isAlvo ? `<img src="../img/alvo.png" alt="Estrela" class="grade-img">` : '';
+      cells[deIdx].classList.remove('grade__celula--ativa');
+
+      cells[paraIdx].innerHTML += `<img src="../img/personagem.png" alt="Personagem" class="grade-img grade-personagem" id="personagem">`;
+      cells[paraIdx].classList.add('grade__celula--ativa');
+      audio.passo();
+
+      pos = { linha: nr, coluna: nc };
+
+      if (pos.linha === posicaoAlvo.linha && pos.coluna === posicaoAlvo.coluna) {
+        await sleep(200);
+        vitoria(fase);
+        return;
+      }
+    }
+
+    // Terminou sem chegar
+    await bateuNaParede(pos, fase);
+  }
+
+  async function bateuNaParede(pos, fase) {
+    erros++;
+    audio.erro();
+    const cells = getCelulas();
+    const idx = celulaIdx(pos.linha, pos.coluna, fase.grade.colunas);
+    cells[idx].classList.add('shake');
+    mostrarFeedback('Ops! O personagem bateu na parede. Tente outra sequência!', 'erro');
+    await sleep(700);
+    cells[idx].classList.remove('shake');
+    buildGrid(fase);
+    sequencia = [];
+    renderSequencia();
+    animando = false;
+    document.getElementById('btn-executar').disabled = false;
+  }
+
+  function vitoria(fase) {
+    audio.acerto();
+    const score = gameState.calcularScore(erros);
+    gameState.setRoomScore('sala', score);
+
+    const proxFase = faseAtual + 1;
+    if (proxFase < gameData.fases.length) {
+      localStorage.setItem(FASE_KEY, proxFase);
+    } else {
+      localStorage.removeItem(FASE_KEY);
+    }
+
+    atualizarBadge(score);
+    exibirModal(score, proxFase < gameData.fases.length, proxFase, fase);
+    animando = false;
+  }
+
+  function exibirModal(score, temProxima, proxFaseIdx, fase) {
+    const estrelas = gameState.getStars(score);
+    document.getElementById('modal-titulo').textContent = score === 25 ? 'Perfeito!' : 'Muito bem!';
+    document.getElementById('modal-sub').textContent =
+      `Você criou um algoritmo com ${fase.sequenciaCorreta.length} passos!`;
+    document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
+
+    const elEstrelas = document.getElementById('modal-estrelas');
+    elEstrelas.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
+      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.className = 'modal-estrela-img';
+      elEstrelas.appendChild(img);
+    }
+
+    const btnProx = document.getElementById('btn-proxima-fase');
+    if (temProxima) {
+      btnProx.style.display = '';
+      btnProx.onclick = () => {
+        faseAtual = proxFaseIdx;
+        document.getElementById('modal-conclusao').style.display = 'none';
+        renderFase();
+      };
+    } else {
+      btnProx.style.display = 'none';
+    }
+
+    document.getElementById('modal-conclusao').style.display = 'flex';
+
+    // beforeunload guard
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
+  }
+
+  /* ---- Helpers ---- */
+  function mostrarFeedback(msg, tipo) {
+    const area = document.getElementById('feedback-area');
+    const txt  = document.getElementById('feedback-texto');
+    area.className = `dica dica--${tipo === 'erro' ? 'erro' : 'ambar'}`;
+    txt.className  = `dica__texto dica__texto--${tipo === 'erro' ? 'erro' : 'ambar'}`;
+    txt.textContent = msg;
+    area.style.display = 'flex';
+  }
+
+  function atualizarBadge(score) {
+    const s = score !== undefined ? score : (gameState.get().scores.sala || 0);
+    document.getElementById('badge-pts').textContent = s + ' pts';
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  /* ---- beforeunload: envia score parcial ---- */
+  function beforeUnloadHandler() {
+    const s = gameState.get().scores.sala;
+    if (s !== null) sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
+  }
+  window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  /* ---- Botões ---- */
+  document.getElementById('btn-executar').addEventListener('click', () => { if (gameData) executar(); });
+  document.getElementById('btn-limpar').addEventListener('click', () => {
+    if (!gameData) return;
+    sequencia = [];
+    renderSequencia();
+    buildGrid(gameData.fases[faseAtual]);
+    document.getElementById('feedback-area').style.display = 'none';
+  });
+
+  init();
+  </script>
 
 </body>
 </html>

@@ -8,97 +8,372 @@
 </head>
 <body>
 
-  <section class="tela tela--marrom">
+  <section class="tela tela--marrom" id="tela-principal">
 
+    <!-- HUD -->
     <section class="hud">
       <section class="hud__info">
-        <span class="hud__icone">📦</span>
+        <img src="../img/icone-despensa.png" alt="Despensa" class="hud__icone-img">
         <section>
           <p class="hud__titulo hud__titulo--marrom">Despensa — Estoque Inteligente</p>
           <p class="hud__subtitulo hud__subtitulo--marrom">Mini-jogo 4</p>
         </section>
       </section>
-      <span class="badge badge--marrom">⭐ 55 pts</span>
+      <span class="badge badge--marrom" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
-    <section class="balao balao--marrom">
-      <span class="balao__emoji">🍌</span>
-      <p class="balao__texto balao__texto--marrom">Ei! Minha despensa está uma bagunça! Arraste cada item para a prateleira certa. Agora organize <strong style="color: var(--laranja);">por tamanho</strong>: do menor para o maior!</p>
+    <!-- Mascote Logi -->
+    <section class="balao balao--marrom" aria-label="Instruções do Logi">
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
+      <p class="balao__texto balao__texto--marrom" id="logi-texto">Carregando…</p>
     </section>
 
-    <!-- Níveis: 3 níveis (Fácil, Médio, Difícil) conforme seção 6 do manual -->
-    <section class="niveis">
-      <span class="nivel nivel--ok">Fácil ✓</span>
-      <span class="nivel nivel--ativo">Médio ←</span>
-      <span class="nivel nivel--bloq">Difícil</span>
-    </section>
+    <!-- Abas de nível -->
+    <section class="niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
 
+    <!-- Itens para organizar -->
     <section class="painel">
-      <p class="painel__label">Itens para Organizar — arraste para a prateleira certa</p>
-      <section class="itens-grid">
-
-        <article class="item-card">
-          <span class="item-card__emoji" style="font-size: 28px;">🍇</span>
-          <p class="item-card__nome">Uva</p>
-          <p class="item-card__tam">pequena</p>
-        </article>
-
-        <article class="item-card">
-          <span class="item-card__emoji" style="font-size: 38px;">🍉</span>
-          <p class="item-card__nome">Melancia</p>
-          <p class="item-card__tam">grande</p>
-        </article>
-
-        <article class="item-card">
-          <span class="item-card__emoji" style="font-size: 32px;">🍎</span>
-          <p class="item-card__nome">Maçã</p>
-          <p class="item-card__tam">média</p>
-        </article>
-
-        <article class="item-card">
-          <span class="item-card__emoji" style="font-size: 22px;">🫐</span>
-          <p class="item-card__nome">Mirtilo</p>
-          <p class="item-card__tam">menor</p>
-        </article>
-
-        <article class="item-card">
-          <span class="item-card__emoji" style="font-size: 34px;">🍌</span>
-          <p class="item-card__nome">Banana</p>
-          <p class="item-card__tam">média</p>
-        </article>
-
-      </section>
+      <p class="painel__label">Itens para organizar — arraste para a prateleira</p>
+      <section class="itens-grid" id="itens-grid" role="listbox" aria-label="Itens disponíveis"></section>
     </section>
 
-    <section class="painel">
-      <p class="painel__label">Prateleira — do menor para o maior</p>
-
-      <section class="prateleira">
-        <span class="prateleira__slot prateleira__slot--ok">
-          🫐
-          <span style="font-size: 9px; display: block; color: #085041; margin-top: 2px;">1º</span>
-        </span>
-        <span class="prateleira__slot">2º</span>
-        <span class="prateleira__slot">3º</span>
-        <span class="prateleira__slot">4º</span>
-        <span class="prateleira__slot">5º</span>
-      </section>
-
+    <!-- Prateleira (destino) -->
+    <section class="painel" id="painel-prateleira" aria-dropeffect="move">
+      <p class="painel__label" id="prateleira-label">Prateleira</p>
+      <section class="prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
       <section class="prateleira__legenda">
-        <span class="prateleira__leg-txt">menor</span>
-        <span style="flex: 1;"></span>
-        <span class="prateleira__leg-txt">maior</span>
+        <span class="prateleira__leg-txt" id="leg-esq">menor</span>
+        <span style="flex:1;"></span>
+        <span class="prateleira__leg-txt" id="leg-dir">maior</span>
       </section>
     </section>
 
+    <!-- Feedback -->
+    <section id="feedback-area" style="display:none;" aria-live="polite">
+      <section class="dica" id="feedback-dica">
+        <img src="../img/dica.png" alt="" class="dica-img">
+        <p class="dica__texto" id="feedback-texto"></p>
+      </section>
+    </section>
+
+    <!-- Botões -->
     <section class="btn-grupo">
-      <button class="btn btn--marrom">Confirmar organização</button>
-      <button class="btn btn--outline">🗑</button>
+      <button class="btn btn--marrom" id="btn-confirmar" aria-label="Confirmar organização">Confirmar organização</button>
+      <button class="btn btn--outline" id="btn-limpar" aria-label="Limpar prateleira">Limpar</button>
     </section>
 
   </section>
 
+  <!-- Modal de conclusão -->
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+    <section class="modal">
+      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <h2 class="modal-titulo" id="modal-titulo">Despensa organizada!</h2>
+      <p class="modal-sub" id="modal-sub"></p>
+      <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
+      <p class="modal-pts" id="modal-pts"></p>
+      <section class="btn-grupo" style="margin-top:1rem;">
+        <button class="btn btn--laranja" id="btn-proximo-nivel" style="display:none;">Próximo nível</button>
+        <button class="btn btn--outline" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+      </section>
+    </section>
+  </div>
+
   <script src="../js/plataforma.js"></script>
+  <script src="../js/gameState.js"></script>
+  <script src="../js/audio.js"></script>
+  <script>
+  /* ===== DESPENSA — lógica do jogo ===== */
+
+  /* Dados embutidos — fallback quando fetch não está disponível (file://) */
+  const DESPENSA_INLINE = {"miniJogo":"Despensa — Estoque Inteligente","habilidadeBNCC":"EF02CO01","instrucaoInstrutor":"Ei! Minha despensa está uma bagunça! Arraste cada item para a prateleira certa.","niveis":[{"nivel":"Fácil","criterio":"cor","instrucao":"Organize por cor: do mais claro para o mais escuro.","itens":[{"id":"uva","nome":"Uva","atributo":"roxo"},{"id":"melancia","nome":"Melancia","atributo":"verde"},{"id":"maca","nome":"Maçã","atributo":"vermelho"},{"id":"mirtilo","nome":"Mirtilo","atributo":"azul"},{"id":"banana","nome":"Banana","atributo":"amarelo"}],"ordemCorreta":["banana","melancia","maca","uva","mirtilo"]},{"nivel":"Médio","criterio":"tamanho","instrucao":"Organize por tamanho: do menor para o maior.","itens":[{"id":"uva","nome":"Uva","tamanho":2},{"id":"melancia","nome":"Melancia","tamanho":5},{"id":"maca","nome":"Maçã","tamanho":3},{"id":"mirtilo","nome":"Mirtilo","tamanho":1},{"id":"banana","nome":"Banana","tamanho":3}],"ordemCorreta":["mirtilo","uva","maca","banana","melancia"]},{"nivel":"Difícil","criterio":"categoria","instrucao":"Organize seguindo as regras: frutas cítricas primeiro, depois as demais, do menor para o maior dentro de cada grupo.","itens":[{"id":"uva","nome":"Uva","categoria":"fruta-comum","tamanho":2},{"id":"melancia","nome":"Melancia","categoria":"fruta-comum","tamanho":5},{"id":"maca","nome":"Maçã","categoria":"fruta-comum","tamanho":3},{"id":"mirtilo","nome":"Mirtilo","categoria":"fruta-comum","tamanho":1},{"id":"banana","nome":"Banana","categoria":"fruta-comum","tamanho":3}],"ordemCorreta":["mirtilo","uva","maca","banana","melancia"]}]};
+
+  let gameData    = null;
+  let nivelIdx    = 0;
+  let prateleira  = [];
+  let erros       = 0;
+  let touchItem   = null;
+  let touchGhost  = null;
+
+  const NIVEL_KEY = 'despensa_nivel';
+
+  const IMGS = {
+    uva:      '../img/fruta-uva.png',
+    melancia: '../img/fruta-melancia.png',
+    maca:     '../img/fruta-maca.png',
+    mirtilo:  '../img/fruta-mirtilo.png',
+    banana:   '../img/fruta-banana.png'
+  };
+
+  async function init() {
+    try {
+      gameData = await loadGameData('../data/despensa.json');
+    } catch(e) {
+      gameData = DESPENSA_INLINE; // fallback file://
+    }
+    nivelIdx = Math.min(
+      parseInt(localStorage.getItem(NIVEL_KEY) || '0'),
+      gameData.niveis.length - 1
+    );
+    renderNivel();
+  }
+
+  /* ---- Renderiza nível atual ---- */
+  function renderNivel() {
+    const nivel = gameData.niveis[nivelIdx];
+    document.getElementById('logi-texto').textContent     = gameData.instrucaoInstrutor + ' ' + nivel.instrucao;
+    document.getElementById('prateleira-label').textContent = nivel.instrucao;
+    prateleira = [];
+    erros = 0;
+
+    // Legenda dinâmica por critério
+    const esq = document.getElementById('leg-esq');
+    const dir = document.getElementById('leg-dir');
+    if (nivel.criterio === 'cor') { esq.textContent = 'mais claro'; dir.textContent = 'mais escuro'; }
+    else if (nivel.criterio === 'tamanho') { esq.textContent = 'menor'; dir.textContent = 'maior'; }
+    else { esq.textContent = 'primeiro'; dir.textContent = 'último'; }
+
+    buildNivelTabs();
+    buildItens(nivel);
+    renderPrateleira(nivel);
+    document.getElementById('feedback-area').style.display = 'none';
+    atualizarBadge();
+  }
+
+  /* ---- Abas de nível ---- */
+  function buildNivelTabs() {
+    const cont = document.getElementById('niveis-tabs');
+    cont.innerHTML = '';
+    gameData.niveis.forEach((n, i) => {
+      const span = document.createElement('span');
+      const state = gameState.get();
+      if (i < nivelIdx)       span.className = 'nivel nivel--ok';
+      else if (i === nivelIdx) span.className = 'nivel nivel--ativo';
+      else                     span.className = 'nivel nivel--bloq';
+      span.textContent = n.nivel + (i < nivelIdx ? ' ✓' : i === nivelIdx ? ' ←' : '');
+      cont.appendChild(span);
+    });
+  }
+
+  /* ---- Itens disponíveis ---- */
+  function buildItens(nivel) {
+    const cont = document.getElementById('itens-grid');
+    cont.innerHTML = '';
+    nivel.itens.forEach(item => {
+      const card = document.createElement('article');
+      card.className = 'item-card';
+      card.draggable = true;
+      card.dataset.itemId = item.id;
+      card.setAttribute('role', 'option');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', `${item.nome} — arraste para a prateleira`);
+      card.innerHTML = `
+        <img src="${IMGS[item.id] || ''}" alt="${item.nome}" class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">
+        <p class="item-card__nome">${item.nome}</p>
+        <p class="item-card__tam">${item.tamanho !== undefined ? 'tamanho ' + item.tamanho : (item.atributo || '')}</p>
+      `;
+
+      card.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('itemId', item.id);
+      });
+      card.addEventListener('touchstart', touchStart, { passive: true });
+      card.addEventListener('touchmove',  touchMove,  { passive: false });
+      card.addEventListener('touchend',   touchEnd,   { passive: true });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarItem(item.id); }
+      });
+
+      cont.appendChild(card);
+    });
+  }
+
+  /* ---- Prateleira ---- */
+  function renderPrateleira(nivel) {
+    if (!nivel) nivel = gameData.niveis[nivelIdx];
+    const total = nivel.itens.length;
+    const cont  = document.getElementById('prateleira');
+    cont.innerHTML = '';
+
+    for (let i = 0; i < total; i++) {
+      const slot = document.createElement('span');
+
+      if (i < prateleira.length) {
+        const id   = prateleira[i];
+        const item = nivel.itens.find(it => it.id === id);
+        slot.className = 'prateleira__slot prateleira__slot--ok';
+        slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        slot.innerHTML = `
+          <img src="${IMGS[id] || ''}" alt="${item?.nome || id}" style="width:28px;height:28px;object-fit:contain;">
+          <span style="font-size:9px;display:block;margin-top:2px;">${i+1}º</span>
+        `;
+        slot.style.cursor = 'pointer';
+        slot.addEventListener('click', () => removerItem(i));
+      } else {
+        slot.className = 'prateleira__slot';
+        slot.textContent = `${i+1}º`;
+        slot.setAttribute('aria-label', `Slot ${i+1} — vazio`);
+      }
+
+      cont.appendChild(slot);
+    }
+
+    // drop na prateleira
+    cont.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+    cont.ondrop     = e => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData('itemId');
+      if (id) adicionarItem(id);
+    };
+  }
+
+  function adicionarItem(id) {
+    const nivel = gameData.niveis[nivelIdx];
+    if (prateleira.length >= nivel.itens.length) return;
+    if (prateleira.includes(id)) return; // já adicionado
+    prateleira.push(id);
+    audio.clique();
+    renderPrateleira(nivel);
+    document.getElementById('feedback-area').style.display = 'none';
+  }
+
+  function removerItem(idx) {
+    prateleira.splice(idx, 1);
+    renderPrateleira(gameData.niveis[nivelIdx]);
+    document.getElementById('feedback-area').style.display = 'none';
+  }
+
+  /* ---- Touch drag ---- */
+  function touchStart(e) {
+    touchItem = e.currentTarget.dataset.itemId;
+    const touch = e.touches[0];
+    touchGhost = e.currentTarget.cloneNode(true);
+    touchGhost.style.cssText = `position:fixed;opacity:0.75;pointer-events:none;z-index:9999;left:${touch.clientX-30}px;top:${touch.clientY-30}px;width:80px;`;
+    document.body.appendChild(touchGhost);
+  }
+  function touchMove(e) {
+    e.preventDefault();
+    if (!touchGhost) return;
+    const touch = e.touches[0];
+    touchGhost.style.left = (touch.clientX - 30) + 'px';
+    touchGhost.style.top  = (touch.clientY - 30) + 'px';
+  }
+  function touchEnd(e) {
+    if (touchGhost) { touchGhost.remove(); touchGhost = null; }
+    if (!touchItem) return;
+    const touch = e.changedTouches[0];
+    const el    = document.elementFromPoint(touch.clientX, touch.clientY);
+    const prat  = document.getElementById('prateleira');
+    if (prat && (prat === el || prat.contains(el))) adicionarItem(touchItem);
+    touchItem = null;
+  }
+
+  /* ---- Confirmação ---- */
+  function confirmar() {
+    const nivel  = gameData.niveis[nivelIdx];
+    const total  = nivel.itens.length;
+    if (prateleira.length < total) {
+      mostrarFeedback('Coloque todos os itens na prateleira primeiro!', 'ambar');
+      return;
+    }
+
+    const correta = nivel.ordemCorreta;
+    let acertos   = 0;
+    prateleira.forEach((id, i) => { if (id === correta[i]) acertos++; });
+
+    if (acertos === total) {
+      audio.acerto();
+      setTimeout(() => nivelConcluido(nivel), 400);
+    } else {
+      erros++;
+      audio.erro();
+      mostrarFeedback(
+        `${acertos} de ${total} na posição certa. Tente novamente!`,
+        'erro'
+      );
+      setTimeout(() => {
+        prateleira = [];
+        renderPrateleira(nivel);
+      }, 1000);
+    }
+  }
+
+  function nivelConcluido(nivel) {
+    const proxNivel = nivelIdx + 1;
+    const temProx   = proxNivel < gameData.niveis.length;
+
+    if (temProx) {
+      localStorage.setItem(NIVEL_KEY, proxNivel);
+    } else {
+      localStorage.removeItem(NIVEL_KEY);
+      const score = gameState.calcularScore(erros);
+      gameState.setRoomScore('despensa', score);
+      atualizarBadge(score);
+      exibirModal(score, false, proxNivel);
+      if (score === 25) audio.conclusao();
+      return;
+    }
+
+    // Avança para próximo nível sem modal
+    audio.desbloqueio();
+    mostrarFeedback(`Nível ${nivel.nivel} concluído! Próximo nível desbloqueado.`, 'ambar');
+    setTimeout(() => {
+      nivelIdx = proxNivel;
+      renderNivel();
+    }, 1200);
+  }
+
+  function exibirModal(score, temProx, proxNivelIdx) {
+    const estrelas = gameState.getStars(score);
+    const elEst = document.getElementById('modal-estrelas');
+    elEst.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
+      img.alt = i < estrelas ? 'Estrela' : '';
+      img.className = 'modal-estrela-img';
+      elEst.appendChild(img);
+    }
+
+    document.getElementById('modal-sub').textContent =
+      'Você organizou todos os níveis da despensa!';
+    document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
+
+    const btnProx = document.getElementById('btn-proximo-nivel');
+    btnProx.style.display = 'none';
+
+    document.getElementById('modal-conclusao').style.display = 'flex';
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
+  }
+
+  function mostrarFeedback(msg, tipo) {
+    const dica = document.getElementById('feedback-dica');
+    const txt  = document.getElementById('feedback-texto');
+    dica.className = `dica dica--${tipo}`;
+    txt.className  = `dica__texto dica__texto--${tipo}`;
+    txt.textContent = msg;
+    document.getElementById('feedback-area').style.display = 'block';
+  }
+
+  function atualizarBadge(score) {
+    const s = score !== undefined ? score : (gameState.get().scores.despensa || 0);
+    document.getElementById('badge-pts').textContent = s + ' pts';
+  }
+
+  function beforeUnloadHandler() {
+    sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
+  }
+  window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
+  document.getElementById('btn-limpar').addEventListener('click', () => {
+    if (!gameData) return;
+    prateleira = [];
+    renderPrateleira(gameData.niveis[nivelIdx]);
+    document.getElementById('feedback-area').style.display = 'none';
+  });
+
+  init();
+  </script>
 
 </body>
 </html>

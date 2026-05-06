@@ -8,57 +8,237 @@
 </head>
 <body>
 
-  <section class="tela tela--verde">
+  <section class="tela tela--verde" id="tela-principal">
 
+    <!-- HUD -->
     <section class="hud">
       <section class="hud__info">
-        <span class="hud__icone">🍳</span>
+        <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img">
         <section>
           <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p>
           <p class="hud__subtitulo hud__subtitulo--verde">Mini-jogo 3</p>
         </section>
       </section>
-      <span class="badge badge--verde">⭐ 40 pts</span>
+      <span class="badge badge--verde" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
-    <section class="balao balao--verde">
-      <span class="balao__emoji">🍳</span>
-      <p class="balao__texto balao__texto--verde">Olá, chef! Vou te dizer uma frase. Você decide: é <strong style="color: var(--verde);">Verdadeiro</strong> ou <strong style="color: var(--vermelho);">Falso</strong>? Preste atenção nas palavras!</p>
+    <!-- Mascote Logi -->
+    <section class="balao balao--verde" aria-label="Instruções do Logi">
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
+      <p class="balao__texto balao__texto--verde" id="logi-texto">Carregando…</p>
     </section>
 
-    <section class="progresso progresso--centro">
-      <span class="progresso__bolinha progresso__bolinha--ok"></span>
-      <span class="progresso__bolinha progresso__bolinha--ok"></span>
-      <span class="progresso__bolinha progresso__bolinha--meio"></span>
-      <span class="progresso__bolinha progresso__bolinha--vazio"></span>
-      <span class="progresso__bolinha progresso__bolinha--vazio"></span>
-    </section>
+    <!-- Progresso -->
+    <section class="progresso progresso--centro" id="progresso-dots" aria-label="Progresso das perguntas"></section>
 
-    <section class="pergunta-box">
-      <p class="pergunta-box__numero">Pergunta 3 de 5</p>
-      <p class="pergunta-box__frase">"O cachorro <u>não</u> é um animal."</p>
+    <!-- Caixa de pergunta -->
+    <section class="pergunta-box" id="pergunta-box" aria-live="polite">
+      <p class="pergunta-box__numero" id="pergunta-numero">Pergunta 1 de 5</p>
+      <p class="pergunta-box__frase"  id="pergunta-frase"></p>
       <p class="pergunta-box__aviso">Leia com atenção antes de responder!</p>
     </section>
 
+    <!-- Botões V/F -->
     <section class="vf-grid">
-      <button class="btn-vf btn-vf--verde">
-        <span class="btn-vf__emoji">✅</span>
+      <button class="btn-vf btn-vf--verde" id="btn-verdadeiro" aria-label="Verdadeiro">
+        <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img">
         Verdadeiro
       </button>
-      <button class="btn-vf btn-vf--vermelho">
-        <span class="btn-vf__emoji">❌</span>
+      <button class="btn-vf btn-vf--vermelho" id="btn-falso" aria-label="Falso">
+        <img src="../img/falso.png" alt="" class="btn-vf__emoji-img">
         Falso
       </button>
     </section>
 
+    <!-- Feedback imediato -->
+    <section id="feedback-area" aria-live="assertive" style="display:none;">
+      <section class="dica" id="feedback-dica">
+        <img src="../img/dica.png" alt="" class="dica-img">
+        <p class="dica__texto" id="feedback-texto"></p>
+      </section>
+    </section>
+
+    <!-- Dica do jogo -->
     <section class="dica dica--verde">
-      <span class="dica__emoji">💡</span>
-      <p class="dica__texto dica__texto--verde">Dica: fique de olho nas palavras <strong>não</strong>, <strong>nunca</strong> e <strong>sempre</strong>!</p>
+      <img src="../img/dica.png" alt="" class="dica-img">
+      <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
     </section>
 
   </section>
 
+  <!-- Modal de conclusão -->
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+    <section class="modal">
+      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
+      <p class="modal-sub" id="modal-sub"></p>
+      <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
+      <p class="modal-pts" id="modal-pts"></p>
+      <section class="btn-grupo" style="margin-top:1rem;">
+        <button class="btn btn--verde" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+      </section>
+    </section>
+  </div>
+
   <script src="../js/plataforma.js"></script>
+  <script src="../js/gameState.js"></script>
+  <script src="../js/audio.js"></script>
+  <script>
+  /* ===== COZINHA — lógica do jogo ===== */
+
+  /* Dados embutidos — fallback quando fetch não está disponível (file://) */
+  const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidadeBNCC":"EF03CO01","instrucaoInstrutor":"Olá! Vou te dizer uma frase. Você decide: é Verdadeiro ou Falso? Preste atenção nas palavras!","dica":"Dica: fique de olho nas palavras não, nunca e sempre!","perguntas":[{"id":1,"frase":"O sol nasce de manhã.","resposta":true},{"id":2,"frase":"O cachorro nunca late.","resposta":false},{"id":3,"frase":"O cachorro não é um animal.","resposta":false},{"id":4,"frase":"A água molha.","resposta":true},{"id":5,"frase":"Pássaros sempre vivem debaixo da água.","resposta":false}]};
+
+  let gameData    = null;
+  let perguntaIdx = 0;
+  let acertos     = 0;
+  let respondendo = false;
+
+  async function init() {
+    try {
+      gameData = await loadGameData('../data/cozinha.json');
+    } catch(e) {
+      gameData = COZINHA_INLINE; // fallback file://
+    }
+    document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+    document.getElementById('dica-texto').textContent = gameData.dica;
+    renderPergunta();
+    atualizarBadge();
+  }
+
+  /* ---- Renderiza pergunta atual ---- */
+  function renderPergunta() {
+    const total = gameData.perguntas.length;
+    const p     = gameData.perguntas[perguntaIdx];
+
+    document.getElementById('pergunta-numero').textContent = `Pergunta ${perguntaIdx + 1} de ${total}`;
+    document.getElementById('pergunta-frase').innerHTML    = destacarNegacoes(p.frase);
+    document.getElementById('feedback-area').style.display = 'none';
+    renderProgresso();
+    habilitarBotoes(true);
+  }
+
+  function destacarNegacoes(frase) {
+    return frase.replace(/\b(não|nunca|sempre|jamais)\b/gi,
+      '<u style="font-weight:700;">$1</u>');
+  }
+
+  /* ---- Bolinhas de progresso ---- */
+  function renderProgresso() {
+    const cont  = document.getElementById('progresso-dots');
+    const total = gameData.perguntas.length;
+    cont.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const span = document.createElement('span');
+      span.className = 'progresso__bolinha ' + (
+        i < perguntaIdx ? 'progresso__bolinha--ok' :
+        i === perguntaIdx ? 'progresso__bolinha--meio' :
+        'progresso__bolinha--vazio'
+      );
+      span.setAttribute('aria-label', `Pergunta ${i+1}: ${
+        i < perguntaIdx ? 'respondida' : i === perguntaIdx ? 'atual' : 'pendente'}`);
+      cont.appendChild(span);
+    }
+  }
+
+  /* ---- Resposta ---- */
+  function responder(escolha) {
+    if (respondendo) return;
+    respondendo = true;
+    habilitarBotoes(false);
+
+    const p  = gameData.perguntas[perguntaIdx];
+    const ok = escolha === p.resposta;
+
+    if (ok) {
+      acertos++;
+      audio.acerto();
+      mostrarFeedback('Correto! Muito bem!', 'verde');
+    } else {
+      audio.erro();
+      mostrarFeedback(
+        `Ops! A resposta correta é ${p.resposta ? 'Verdadeiro' : 'Falso'}.`,
+        'erro'
+      );
+    }
+
+    atualizarBadge();
+
+    setTimeout(() => {
+      perguntaIdx++;
+      respondendo = false;
+      if (perguntaIdx >= gameData.perguntas.length) {
+        conclusao();
+      } else {
+        renderPergunta();
+      }
+    }, 1200);
+  }
+
+  function mostrarFeedback(msg, tipo) {
+    const dica = document.getElementById('feedback-dica');
+    const txt  = document.getElementById('feedback-texto');
+    dica.className = `dica dica--${tipo === 'verde' ? 'verde' : 'erro'}`;
+    txt.className  = `dica__texto dica__texto--${tipo === 'verde' ? 'verde' : 'erro'}`;
+    txt.textContent = msg;
+    document.getElementById('feedback-area').style.display = 'block';
+  }
+
+  function habilitarBotoes(on) {
+    document.getElementById('btn-verdadeiro').disabled = !on;
+    document.getElementById('btn-falso').disabled      = !on;
+  }
+
+  /* ---- Conclusão ---- */
+  function conclusao() {
+    const erros = gameData.perguntas.length - acertos;
+    const score = gameState.calcularScore(erros);
+    gameState.setRoomScore('cozinha', score);
+    atualizarBadge(score);
+
+    const estrelas = gameState.getStars(score);
+    const elEst = document.getElementById('modal-estrelas');
+    elEst.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
+      img.alt = i < estrelas ? 'Estrela' : '';
+      img.className = 'modal-estrela-img';
+      elEst.appendChild(img);
+    }
+
+    document.getElementById('modal-sub').textContent =
+      `Você acertou ${acertos} de ${gameData.perguntas.length} perguntas!`;
+    document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
+    document.getElementById('modal-conclusao').style.display = 'flex';
+
+    if (score === 25) audio.conclusao();
+    window.removeEventListener('beforeunload', beforeUnloadHandler);
+  }
+
+  function atualizarBadge(score) {
+    const pts = score !== undefined
+      ? score
+      : Math.round((acertos / (gameData?.perguntas.length || 5)) * 25);
+    document.getElementById('badge-pts').textContent = pts + ' pts';
+  }
+
+  function beforeUnloadHandler() {
+    sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
+  }
+  window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
+  document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
+
+  document.addEventListener('keydown', e => {
+    if (!gameData) return;
+    if (e.key.toLowerCase() === 'v') responder(true);
+    if (e.key.toLowerCase() === 'f') responder(false);
+  });
+
+  init();
+  </script>
 
 </body>
 </html>

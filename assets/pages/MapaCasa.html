@@ -11,64 +11,156 @@
   <section class="tela">
 
     <section class="hud">
-      <button class="btn btn--outline" style="flex:0; padding: 6px 14px; font-size: 13px;" onclick="window.location.href='../../index.html'">← Voltar</button>
-      <h1 style="font-size: 17px; font-weight: 600; color: var(--marrom-medio);">Escolha um cômodo</h1>
-      <span class="badge badge--laranja">⭐ 40 pts</span>
+      <button class="btn btn--outline" style="flex:0;padding:6px 14px;font-size:13px;"
+              onclick="window.location.href='../../index.html'"
+              aria-label="Voltar ao menu principal">
+        Voltar
+      </button>
+      <h1 style="font-size:17px;font-weight:600;color:var(--marrom-medio);">Escolha um cômodo</h1>
+      <span class="badge badge--laranja" id="badge-total" aria-live="polite">
+        <img src="../img/estrela.png" alt="Estrela" style="width:14px;height:14px;vertical-align:middle;margin-right:2px;">
+        <span id="total-pts">0</span> pts
+      </span>
     </section>
 
-    <section class="mapa-grid">
-
-      <article class="comodo-card comodo-card--laranja" onclick="window.location.href='Sala.html'">
-        <span class="comodo-card__tag comodo-card__tag--verde">Tutorial</span>
-        <p class="comodo-card__icone">🛋️</p>
-        <p class="comodo-card__nome">Sala</p>
-        <p class="comodo-card__skill comodo-card__skill--laranja">Algoritmos</p>
-        <section class="progresso">
-          <span class="progresso__bolinha progresso__bolinha--ok"></span>
-          <span class="progresso__bolinha progresso__bolinha--ok"></span>
-          <span class="progresso__bolinha progresso__bolinha--meio"></span>
-        </section>
-      </article>
-
-      <article class="comodo-card comodo-card--roxo" onclick="window.location.href='Quarto.html'">
-        <p class="comodo-card__icone">🛏️</p>
-        <p class="comodo-card__nome">Quarto</p>
-        <p class="comodo-card__skill comodo-card__skill--roxo">Depuração</p>
-        <section class="progresso">
-          <span class="progresso__bolinha progresso__bolinha--ok"></span>
-          <span class="progresso__bolinha progresso__bolinha--meio"></span>
-          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
-        </section>
-      </article>
-
-      <article class="comodo-card comodo-card--verde" onclick="window.location.href='Cozinha.html'">
-        <p class="comodo-card__icone">🍳</p>
-        <p class="comodo-card__nome">Cozinha</p>
-        <p class="comodo-card__skill comodo-card__skill--verde">Verdadeiro ou Falso</p>
-        <section class="progresso">
-          <span class="progresso__bolinha progresso__bolinha--meio"></span>
-          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
-          <span class="progresso__bolinha progresso__bolinha--vazio"></span>
-        </section>
-      </article>
-
-      <article class="comodo-card comodo-card--bloq">
-        <p class="comodo-card__icone">🔒</p>
-        <p class="comodo-card__nome">Despensa</p>
-        <p class="comodo-card__skill comodo-card__skill--cinza">Padrões</p>
-        <p class="comodo-card__bloq-aviso">Complete a Cozinha</p>
-      </article>
-
-    </section>
+    <section class="mapa-grid" id="mapa-grid" aria-label="Cômodos da casa"></section>
 
     <section class="dica dica--ambar">
-      <span class="dica__emoji">📺</span>
-      <p class="dica__texto dica__texto--ambar">Dica: Complete cada cômodo para desbloquear o próximo!</p>
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote" style="width:28px;height:28px;">
+      <p class="dica__texto dica__texto--ambar">Complete cada cômodo para desbloquear o próximo!</p>
     </section>
 
   </section>
 
   <script src="../js/plataforma.js"></script>
+  <script src="../js/gameState.js"></script>
+  <script>
+
+  const COMODOS = [
+    {
+      id:       'sala',
+      nome:     'Sala',
+      skill:    'Algoritmos',
+      pagina:   'Sala.html',
+      img:      '../img/icone-sala.png',
+      corCard:  'comodo-card--laranja',
+      corSkill: 'comodo-card__skill--laranja',
+      tag:      'Tutorial'
+    },
+    {
+      id:       'quarto',
+      nome:     'Quarto',
+      skill:    'Depuração',
+      pagina:   'Quarto.html',
+      img:      '../img/icone-quarto.png',
+      corCard:  'comodo-card--roxo',
+      corSkill: 'comodo-card__skill--roxo'
+    },
+    {
+      id:       'cozinha',
+      nome:     'Cozinha',
+      skill:    'Verdadeiro ou Falso',
+      pagina:   'Cozinha.html',
+      img:      '../img/icone-cozinha.png',
+      corCard:  'comodo-card--verde',
+      corSkill: 'comodo-card__skill--verde'
+    },
+    {
+      id:       'despensa',
+      nome:     'Despensa',
+      skill:    'Padrões',
+      pagina:   'Despensa.html',
+      img:      '../img/icone-despensa.png',
+      corCard:  'comodo-card--marrom',
+      corSkill: 'comodo-card__skill--marrom'
+    }
+  ];
+
+  function renderMapa() {
+    const state  = gameState.get();
+    const total  = gameState.getTotalScore();
+    document.getElementById('total-pts').textContent = total;
+
+    const grid = document.getElementById('mapa-grid');
+    grid.innerHTML = '';
+
+    COMODOS.forEach((c, idx) => {
+      const desbloqueado = state.unlocked[c.id];
+      const concluido    = state.completed[c.id];
+      const score        = state.scores[c.id];
+      const estrelas     = gameState.getStars(score);
+      const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
+
+      const card = document.createElement('article');
+      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}`);
+
+      if (!desbloqueado) {
+        card.className = 'comodo-card comodo-card--bloq';
+        card.setAttribute('aria-disabled', 'true');
+        card.innerHTML = `
+          <img src="../img/cadeado.png" alt="Bloqueado" class="comodo-card__icone-img">
+          <p class="comodo-card__nome">${c.nome}</p>
+          <p class="comodo-card__skill comodo-card__skill--cinza">${c.skill}</p>
+          <p class="comodo-card__bloq-aviso">Complete ${anterior ? 'o(a) ' + anterior : 'o anterior'}</p>
+        `;
+      } else {
+        card.className = `comodo-card ${c.corCard}`;
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.addEventListener('click', () => { window.location.href = c.pagina; });
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') window.location.href = c.pagina;
+        });
+
+        let tagHtml = '';
+        if (c.tag) tagHtml = `<span class="comodo-card__tag comodo-card__tag--verde">${c.tag}</span>`;
+
+        let estrelasHtml = '';
+        if (concluido) {
+          estrelasHtml = '<section class="modal-estrelas" style="justify-content:center;margin-top:6px;">';
+          for (let i = 0; i < 3; i++) {
+            const src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
+            estrelasHtml += `<img src="${src}" alt="${i < estrelas ? 'Estrela' : ''}" style="width:14px;height:14px;">`;
+          }
+          estrelasHtml += '</section>';
+        } else {
+          estrelasHtml = renderBolinhas(c.id, state);
+        }
+
+        const ptsHtml = score !== null
+          ? `<p style="font-size:11px;font-weight:600;color:var(--cinza);margin-top:2px;">${score} pts</p>`
+          : '';
+
+        card.innerHTML = `
+          ${tagHtml}
+          <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
+          <p class="comodo-card__nome">${c.nome}</p>
+          <p class="comodo-card__skill ${c.corSkill}">${c.skill}</p>
+          ${ptsHtml}
+          ${estrelasHtml}
+        `;
+      }
+
+      grid.appendChild(card);
+    });
+  }
+
+  function renderBolinhas(id, state) {
+    const concluido = state.completed[id];
+    const score     = state.scores[id];
+    // 3 bolinhas representando 0/1/2 etapas
+    const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
+    const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';
+    const v3 = score !== null && score >= 25 ? '--ok'   : '--vazio';
+    return `<section class="progresso">
+      <span class="progresso__bolinha progresso__bolinha${v1}"></span>
+      <span class="progresso__bolinha progresso__bolinha${v2}"></span>
+      <span class="progresso__bolinha progresso__bolinha${v3}"></span>
+    </section>`;
+  }
+
+  renderMapa();
+  </script>
 
 </body>
 </html>

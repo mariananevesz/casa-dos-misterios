@@ -8,38 +8,70 @@
 </head>
 <body>
 
-  <section class="tela tela--relativa">
+  <section class="tela tela--relativa" id="tela-principal">
 
-    <button class="btn-config" aria-label="Configurações">⚙️</button>
+    <!-- Botão de configurações -->
+    <button class="btn-config" id="btn-config"
+            aria-label="Abrir configurações"
+            aria-haspopup="dialog">
+      <img src="assets/img/config.png" alt="Configurações" style="width:20px;height:20px;">
+    </button>
 
+    <!-- Cabeçalho -->
     <section class="inicio-header">
-      <p class="inicio-header__icone">🏠</p>
+      <img src="assets/img/casa.png" alt="Casa dos Mistérios" class="inicio-header__icone-img">
       <h1 class="inicio-header__titulo">A Casa dos Mistérios Lógicos</h1>
       <p class="inicio-header__sub">Explore, pense e aprenda!</p>
     </section>
 
-    <section class="menu-botoes">
-      <button class="btn--menu-principal btn--menu-laranja" onclick="window.location.href='assets/pages/MapaCasa.html'">Jogar</button>
-      <button class="btn--menu-principal btn--menu-ambar">Como jogar</button>
-      <a href="assets/pages/TelaPontuacao.html"><button class="btn--menu-principal btn--menu-outline">Pontuações</button></a>
+    <!-- Mascote Logi de boas-vindas -->
+    <section class="balao" style="margin-bottom:1.25rem;" aria-label="Mensagem do Logi">
+      <img src="assets/img/logi.png" alt="Logi" class="logi-mascote">
+      <p class="balao__texto" id="logi-boas-vindas">
+        Olá! Eu sou o <strong>Logi</strong>, seu guia investigador! Prontos para resolver os mistérios da casa?
+      </p>
     </section>
 
-    <section class="inicio-comodos">
+    <!-- Menu -->
+    <section class="menu-botoes" role="navigation" aria-label="Menu principal">
+      <button class="btn--menu-principal btn--menu-laranja"
+              onclick="window.location.href='assets/pages/MapaCasa.html'"
+              aria-label="Jogar">
+        Jogar
+      </button>
+      <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar"
+              aria-label="Como jogar" aria-haspopup="dialog">
+        Como jogar
+      </button>
+      <button class="btn--menu-principal btn--menu-outline"
+              onclick="window.location.href='assets/pages/TelaPontuacao.html'"
+              aria-label="Ver pontuações">
+        Pontuações
+      </button>
+      <button class="btn--menu-principal btn--menu-outline" id="btn-resetar"
+              aria-label="Reiniciar progresso"
+              style="font-size:12px;color:var(--cinza);">
+        Reiniciar progresso
+      </button>
+    </section>
+
+    <!-- Prévia dos cômodos -->
+    <section class="inicio-comodos" aria-label="Cômodos do jogo">
       <article class="inicio-comodo">
-        <p class="inicio-comodo__icone">🛋️</p>
-        <p class="inicio-comodo__label">Sala</p>
+        <img src="assets/img/icone-sala.png"     alt="Sala"     class="inicio-comodo__icone-img">
+        <p class="inicio-comodo__label" id="lbl-sala">Sala</p>
       </article>
       <article class="inicio-comodo">
-        <p class="inicio-comodo__icone">🛏️</p>
-        <p class="inicio-comodo__label inicio-comodo__label--cinza">Quarto</p>
+        <img src="assets/img/icone-quarto.png"   alt="Quarto"   class="inicio-comodo__icone-img">
+        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-quarto">Quarto</p>
       </article>
       <article class="inicio-comodo">
-        <p class="inicio-comodo__icone">🍳</p>
-        <p class="inicio-comodo__label inicio-comodo__label--cinza">Cozinha</p>
+        <img src="assets/img/icone-cozinha.png"  alt="Cozinha"  class="inicio-comodo__icone-img">
+        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-cozinha">Cozinha</p>
       </article>
       <article class="inicio-comodo">
-        <p class="inicio-comodo__icone">📦</p>
-        <p class="inicio-comodo__label inicio-comodo__label--cinza">Despensa</p>
+        <img src="assets/img/icone-despensa.png" alt="Despensa" class="inicio-comodo__icone-img">
+        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-despensa">Despensa</p>
       </article>
     </section>
 
@@ -47,7 +79,191 @@
 
   </section>
 
+  <!-- ===== Modal Configurações ===== -->
+  <div class="modal-overlay" id="modal-config" role="dialog" aria-modal="true"
+       aria-labelledby="config-titulo" style="display:none;">
+    <section class="modal" style="max-width:340px;">
+      <h2 class="modal-titulo" id="config-titulo" style="margin-bottom:1rem;">Configurações</h2>
+
+      <section class="config-linha">
+        <label class="config-label" for="toggle-contraste">Alto contraste</label>
+        <button class="toggle-btn" id="toggle-contraste" role="switch"
+                aria-checked="false" aria-label="Ativar alto contraste">
+          <span class="toggle-thumb"></span>
+        </button>
+      </section>
+
+      <section class="config-linha" style="margin-top:1rem;">
+        <label class="config-label">Tamanho da fonte</label>
+        <section class="config-fonte-btns">
+          <button class="btn btn--outline" id="btn-fonte-menos"
+                  aria-label="Diminuir tamanho da fonte" style="flex:0;padding:8px 14px;">A−</button>
+          <span id="fonte-valor" style="font-size:13px;font-weight:600;color:var(--texto-escuro);min-width:40px;text-align:center;">100%</span>
+          <button class="btn btn--outline" id="btn-fonte-mais"
+                  aria-label="Aumentar tamanho da fonte" style="flex:0;padding:8px 14px;">A+</button>
+        </section>
+      </section>
+
+      <section class="config-linha" style="margin-top:1rem;">
+        <label class="config-label" for="toggle-som">Efeitos sonoros</label>
+        <button class="toggle-btn" id="toggle-som" role="switch"
+                aria-checked="true" aria-label="Ativar efeitos sonoros">
+          <span class="toggle-thumb"></span>
+        </button>
+      </section>
+
+      <section class="config-linha" style="margin-top:1rem;">
+        <label class="config-label" for="toggle-musica">Música</label>
+        <button class="toggle-btn" id="toggle-musica" role="switch"
+                aria-checked="true" aria-label="Ativar música">
+          <span class="toggle-thumb"></span>
+        </button>
+      </section>
+
+      <section style="margin-top:1.25rem;">
+        <p style="font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
+          Atalhos de teclado
+        </p>
+        <ul style="font-size:11px;color:var(--texto-medio);line-height:2;">
+          <li><kbd>Tab</kbd> — navegar entre elementos</li>
+          <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> — selecionar / confirmar</li>
+          <li><kbd>Delete</kbd> — remover bloco selecionado</li>
+          <li><kbd>V</kbd> / <kbd>F</kbd> — Verdadeiro / Falso (Cozinha)</li>
+        </ul>
+      </section>
+
+      <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
+              id="btn-fechar-config" aria-label="Fechar configurações">
+        Fechar
+      </button>
+    </section>
+  </div>
+
+  <!-- ===== Modal Como Jogar ===== -->
+  <div class="modal-overlay" id="modal-como-jogar" role="dialog" aria-modal="true"
+       aria-labelledby="cj-titulo" style="display:none;">
+    <section class="modal" style="max-width:340px;">
+      <h2 class="modal-titulo" id="cj-titulo" style="margin-bottom:1rem;">Como jogar</h2>
+      <ul style="font-size:13px;line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
+        <li><img src="assets/img/icone-sala.png"     alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Sala</strong> — Monte sequências de blocos para guiar o personagem até a estrela.</li>
+        <li style="margin-top:6px;"><img src="assets/img/icone-quarto.png"   alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Quarto</strong> — Encontre os erros na rotina e reconstrua a ordem correta.</li>
+        <li style="margin-top:6px;"><img src="assets/img/icone-cozinha.png"  alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Cozinha</strong> — Julgue cada frase: Verdadeiro ou Falso?</li>
+        <li style="margin-top:6px;"><img src="assets/img/icone-despensa.png" alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Despensa</strong> — Organize os itens por tamanho, cor ou categoria.</li>
+      </ul>
+      <p style="font-size:12px;color:var(--cinza);margin-top:1rem;">
+        Complete cada cômodo para desbloquear o próximo. Quanto menos erros, mais pontos!
+      </p>
+      <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
+              id="btn-fechar-cj" aria-label="Fechar instruções">
+        Entendi!
+      </button>
+    </section>
+  </div>
+
   <script src="assets/js/plataforma.js"></script>
+  <script src="assets/js/gameState.js"></script>
+  <script>
+  /* ===== index.html — menu principal ===== */
+
+  /* Atualiza labels dos cômodos com status de progresso */
+  function atualizarStatus() {
+    const state = gameState.get();
+    const ids   = ['sala', 'quarto', 'cozinha', 'despensa'];
+    ids.forEach(id => {
+      const el = document.getElementById('lbl-' + id);
+      if (!el) return;
+      if (state.completed[id]) {
+        el.classList.remove('inicio-comodo__label--cinza');
+        el.textContent = el.textContent.replace(' ✓', '') + ' ✓';
+      }
+    });
+  }
+
+  /* ===== Configurações ===== */
+  function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+  function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+
+  document.getElementById('btn-config').addEventListener('click', () => {
+    sincronizarTogglles();
+    abrirModal('modal-config');
+  });
+  document.getElementById('btn-fechar-config').addEventListener('click', () => fecharModal('modal-config'));
+  document.getElementById('btn-como-jogar').addEventListener('click',   () => abrirModal('modal-como-jogar'));
+  document.getElementById('btn-fechar-cj').addEventListener('click',    () => fecharModal('modal-como-jogar'));
+
+  // Fechar ao clicar fora
+  ['modal-config', 'modal-como-jogar'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      if (e.target === e.currentTarget) fecharModal(id);
+    });
+  });
+
+  // Esc fecha modais
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      fecharModal('modal-config');
+      fecharModal('modal-como-jogar');
+    }
+  });
+
+  /* ---- Toggles ---- */
+  function sincronizarTogglles() {
+    const cfg = gameState.getSettings();
+    setToggle('toggle-contraste', cfg.altoContraste);
+    setToggle('toggle-som',       cfg.somAtivado);
+    setToggle('toggle-musica',    cfg.musicaAtivada);
+    document.getElementById('fonte-valor').textContent = cfg.tamanhoFonte + '%';
+  }
+
+  function setToggle(id, on) {
+    const btn = document.getElementById(id);
+    btn.setAttribute('aria-checked', on ? 'true' : 'false');
+    btn.classList.toggle('toggle-btn--on', on);
+  }
+
+  function bindToggle(id, key) {
+    document.getElementById(id).addEventListener('click', () => {
+      const cfg     = gameState.getSettings();
+      const novoVal = !cfg[key];
+      gameState.updateSettings({ [key]: novoVal });
+      setToggle(id, novoVal);
+      aplicarConfiguracoes();
+    });
+  }
+
+  bindToggle('toggle-contraste', 'altoContraste');
+  bindToggle('toggle-som',       'somAtivado');
+  bindToggle('toggle-musica',    'musicaAtivada');
+
+  /* Tamanho de fonte */
+  document.getElementById('btn-fonte-mais').addEventListener('click', () => {
+    const cfg  = gameState.getSettings();
+    const novo = Math.min(cfg.tamanhoFonte + 10, 150);
+    gameState.updateSettings({ tamanhoFonte: novo });
+    document.getElementById('fonte-valor').textContent = novo + '%';
+    aplicarConfiguracoes();
+  });
+  document.getElementById('btn-fonte-menos').addEventListener('click', () => {
+    const cfg  = gameState.getSettings();
+    const novo = Math.max(cfg.tamanhoFonte - 10, 80);
+    gameState.updateSettings({ tamanhoFonte: novo });
+    document.getElementById('fonte-valor').textContent = novo + '%';
+    aplicarConfiguracoes();
+  });
+
+  /* ---- Resetar progresso ---- */
+  document.getElementById('btn-resetar').addEventListener('click', () => {
+    if (confirm('Apagar todo o progresso e recomeçar?')) {
+      gameState.reset();
+      localStorage.removeItem('sala_fase');
+      localStorage.removeItem('despensa_nivel');
+      atualizarStatus();
+    }
+  });
+
+  atualizarStatus();
+  sincronizarTogglles();
+  </script>
 
 </body>
 </html>

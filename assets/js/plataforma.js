@@ -26,6 +26,8 @@ function getPlatformDifficulty() {
 /* -------------------------------------------------------------
    Função obrigatória de envio de score (Seção 8 — verbatim)
    ------------------------------------------------------------- */
+
+/* Guard global: impede envio duplicado mesmo vindo de diferentes páginas */
 let scoreSent = false;
 
 function sendFinalScore({

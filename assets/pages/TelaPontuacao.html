@@ -10,73 +10,120 @@
 
   <section class="tela">
 
-    <p style="font-size: 11px; font-weight: 600; color: var(--cinza); letter-spacing: 1px; text-align: center; text-transform: uppercase; margin-bottom: 1rem;">Resultado Final</p>
+    <p style="font-size:11px;font-weight:600;color:var(--cinza);letter-spacing:1px;text-align:center;text-transform:uppercase;margin-bottom:1rem;">
+      Resultado Final
+    </p>
 
     <section class="resultado-header">
-      <p class="resultado-header__icone">🏆</p>
-      <h1 class="resultado-header__titulo">Parabéns, explorador!</h1>
-      <p class="resultado-header__sub">Você completou a Casa dos Mistérios!</p>
+      <img src="../img/trofeu.png" alt="Troféu" class="resultado-header__icone-img">
+      <h1 class="resultado-header__titulo" id="resultado-titulo">Parabéns, explorador!</h1>
+      <p class="resultado-header__sub"    id="resultado-sub">Você completou a Casa dos Mistérios!</p>
     </section>
 
     <section class="pontuacao-total">
       <p class="pontuacao-total__label">Pontuação total</p>
-      <p class="pontuacao-total__numero" id="pontuacao-final">85</p>
+      <p class="pontuacao-total__numero" id="pontuacao-final">0</p>
       <p class="pontuacao-total__de">de 100 pontos</p>
     </section>
 
-    <section class="pontuacao-grid">
+    <!-- Estrelas globais -->
+    <section class="modal-estrelas" id="estrelas-globais"
+             style="justify-content:center;margin-bottom:1rem;"
+             aria-label="Estrelas conquistadas"></section>
 
-      <article class="pontuacao-card pontuacao-card--laranja">
-        <p class="pontuacao-card__icone">🛋️</p>
-        <p class="pontuacao-card__nome pontuacao-card__nome--laranja">Sala</p>
-        <p class="pontuacao-card__pts pontuacao-card__pts--laranja">20 pts</p>
-      </article>
+    <section class="pontuacao-grid" id="pontuacao-grid" aria-label="Pontuação por cômodo"></section>
 
-      <article class="pontuacao-card pontuacao-card--roxo">
-        <p class="pontuacao-card__icone">🛏️</p>
-        <p class="pontuacao-card__nome pontuacao-card__nome--roxo">Quarto</p>
-        <p class="pontuacao-card__pts pontuacao-card__pts--roxo">18 pts</p>
-      </article>
-
-      <article class="pontuacao-card pontuacao-card--verde">
-        <p class="pontuacao-card__icone">🍳</p>
-        <p class="pontuacao-card__nome pontuacao-card__nome--verde">Cozinha</p>
-        <p class="pontuacao-card__pts pontuacao-card__pts--verde">25 pts</p>
-      </article>
-
-      <article class="pontuacao-card pontuacao-card--marrom">
-        <p class="pontuacao-card__icone">📦</p>
-        <p class="pontuacao-card__nome pontuacao-card__nome--marrom">Despensa</p>
-        <p class="pontuacao-card__pts pontuacao-card__pts--marrom">22 pts</p>
-      </article>
-
-    </section>
-
-    <section class="dica dica--ambar">
-      <span class="dica__emoji">📺</span>
-      <p class="dica__texto dica__texto--ambar">Você foi incrível! Errou pouquinho, mas aprendeu muito. Continue assim!</p>
+    <section class="dica dica--ambar" id="dica-feedback">
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote" style="width:28px;height:28px;">
+      <p class="dica__texto dica__texto--ambar" id="feedback-texto">Continue assim!</p>
     </section>
 
     <section class="btn-grupo">
-      <button class="btn btn--laranja" onclick="window.location.href='../../index.html'">Jogar novamente</button>
-      <button class="btn" style="background: var(--branco); color: var(--marrom-medio); border: 2px solid var(--laranja-borda);" onclick="window.location.href='../../index.html'">Menu principal</button>
+      <button class="btn btn--laranja"
+              onclick="gameState.reset(); localStorage.removeItem('sala_fase'); localStorage.removeItem('despensa_nivel'); window.location.href='../../index.html';"
+              aria-label="Jogar novamente">
+        Jogar novamente
+      </button>
+      <button class="btn"
+              style="background:var(--branco);color:var(--marrom-medio);border:2px solid var(--laranja-borda);"
+              onclick="window.location.href='../../index.html';"
+              aria-label="Voltar ao menu principal">
+        Menu principal
+      </button>
     </section>
 
   </section>
 
   <script src="../js/plataforma.js"></script>
+  <script src="../js/gameState.js"></script>
   <script>
-    // Ao carregar a tela de pontuação, envia o score final para a plataforma.
-    // O valor do elemento #pontuacao-final deve ser preenchido pela lógica de
-    // jogo antes de redirecionar para esta tela (ex: via sessionStorage ou query param).
-    window.addEventListener('DOMContentLoaded', function () {
-      const scoreEl = document.getElementById('pontuacao-final');
-      const score = parseInt(scoreEl.textContent, 10) || 0;
-      sendFinalScore({
-        score: score,
-        difficulty: getPlatformDifficulty()
-      });
+  const COMODOS = [
+    { id:'sala',     nome:'Sala',     img:'../img/icone-sala.png',     cor:'laranja' },
+    { id:'quarto',   nome:'Quarto',   img:'../img/icone-quarto.png',   cor:'roxo'    },
+    { id:'cozinha',  nome:'Cozinha',  img:'../img/icone-cozinha.png',  cor:'verde'   },
+    { id:'despensa', nome:'Despensa', img:'../img/icone-despensa.png', cor:'marrom'  }
+  ];
+
+  function render() {
+    const state  = gameState.get();
+    const total  = gameState.getTotalScore();
+    const concluidos = COMODOS.filter(c => state.completed[c.id]).length;
+
+    document.getElementById('pontuacao-final').textContent = total;
+
+    // Titulo dinâmico
+    if (concluidos === 4)      document.getElementById('resultado-titulo').textContent = 'Parabéns, explorador!';
+    else if (concluidos >= 2)  document.getElementById('resultado-titulo').textContent = 'Bom progresso!';
+    else                       document.getElementById('resultado-titulo').textContent = 'Continue explorando!';
+
+    document.getElementById('resultado-sub').textContent =
+      concluidos === 4
+        ? 'Você completou a Casa dos Mistérios!'
+        : `Você concluiu ${concluidos} de 4 cômodos.`;
+
+    // Estrelas globais
+    const estGlobais = gameState.getStars(total / 4);
+    const elEst = document.getElementById('estrelas-globais');
+    elEst.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.src = i < estGlobais ? '../img/estrela.png' : '../img/estrela-vazia.png';
+      img.alt = i < estGlobais ? 'Estrela' : '';
+      img.style.cssText = 'width:24px;height:24px;';
+      elEst.appendChild(img);
+    }
+
+    // Grid por cômodo
+    const grid = document.getElementById('pontuacao-grid');
+    grid.innerHTML = '';
+    COMODOS.forEach(c => {
+      const pts    = state.scores[c.id];
+      const feito  = state.completed[c.id];
+      const card   = document.createElement('article');
+      card.className = `pontuacao-card pontuacao-card--${c.cor}`;
+      card.setAttribute('aria-label', `${c.nome}: ${pts !== null ? pts + ' pontos' : 'não concluído'}`);
+      card.innerHTML = `
+        <img src="${c.img}" alt="${c.nome}" class="pontuacao-card__icone-img">
+        <p class="pontuacao-card__nome pontuacao-card__nome--${c.cor}">${c.nome}</p>
+        <p class="pontuacao-card__pts pontuacao-card__pts--${c.cor}">
+          ${feito ? pts + ' pts' : '—'}
+        </p>
+      `;
+      grid.appendChild(card);
     });
+
+    // Feedback textual
+    const feedback = document.getElementById('feedback-texto');
+    if (total >= 90)      feedback.textContent = 'Incrível! Você arrasou em todos os cômodos!';
+    else if (total >= 70) feedback.textContent = 'Muito bem! Você aprendeu bastante!';
+    else if (total >= 40) feedback.textContent = 'Bom trabalho! Pratique mais para melhorar!';
+    else                  feedback.textContent = 'Continue tentando — você está aprendendo!';
+
+    // Envia score para a plataforma
+    sendFinalScore({ score: total, difficulty: getPlatformDifficulty() });
+  }
+
+  render();
   </script>
 
 </body>

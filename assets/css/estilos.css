@@ -345,6 +345,7 @@ body {
 .comodo-card__skill--roxo    { color: var(--roxo); }
 .comodo-card__skill--verde   { color: var(--verde); }
 .comodo-card__skill--cinza   { color: var(--cinza); }
+.comodo-card__skill--marrom  { color: var(--marrom-medio); }
 
 .comodo-card__bloq-aviso { font-size: 10px; color: var(--cinza); margin-top: 8px; }
 
@@ -636,3 +637,229 @@ body {
   gap: 10px;
   margin-bottom: 1rem;
 }
+
+/* =============================================================
+   EXTENSÕES — adicionadas na iteração de mecânicas reais
+   ============================================================= */
+
+/* ---------- Imagens substituindo emojis ---------- */
+.hud__icone-img        { width: 24px; height: 24px; object-fit: contain; }
+.logi-mascote          { width: 36px; height: 36px; object-fit: contain; flex-shrink: 0; }
+.bloco-img             { width: 16px; height: 16px; object-fit: contain; }
+.grade-img             { width: 100%; height: 100%; object-fit: contain; }
+.grade-personagem      { position: relative; z-index: 2; }
+.dica-img              { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+.modal-trofeu          { width: 56px; height: 56px; object-fit: contain; margin-bottom: 0.5rem; }
+.modal-estrela-img     { width: 28px; height: 28px; object-fit: contain; }
+.comodo-card__icone-img{ display: block; width: 40px; height: 40px; object-fit: contain; margin: 0 auto 6px; }
+.inicio-header__icone-img { width: 64px; height: 64px; object-fit: contain; margin-bottom: 0.25rem; }
+.inicio-comodo__icone-img { width: 28px; height: 28px; object-fit: contain; }
+.resultado-header__icone-img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 0.5rem; }
+.pontuacao-card__icone-img   { width: 22px; height: 22px; object-fit: contain; }
+.btn-vf__emoji-img     { width: 32px; height: 32px; object-fit: contain; }
+
+/* ---------- Bloco verde (acerto no quarto) ---------- */
+.bloco--verde { background: var(--verde); color: var(--branco); }
+
+/* ---------- Modal overlay + modal box ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--branco);
+  border-radius: var(--raio-lg);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  animation: modalEntrada 0.25s ease;
+}
+
+@keyframes modalEntrada {
+  from { transform: scale(0.88); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.modal-titulo { font-size: 20px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.modal-sub    { font-size: 13px; color: var(--texto-medio); margin-bottom: 0.75rem; }
+.modal-pts    { font-size: 16px; font-weight: 700; color: var(--laranja); margin-top: 0.5rem; }
+
+.modal-estrelas {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+/* ---------- Configurações ---------- */
+.config-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.config-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-escuro);
+}
+
+.config-fonte-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Toggle switch */
+.toggle-btn {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--cinza-claro);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle-btn--on { background: var(--verde); }
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--branco);
+  transition: transform 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-btn--on .toggle-thumb { transform: translateX(20px); }
+
+/* ---------- Animações de personagem ---------- */
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px); }
+  40%     { transform: translateX(5px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX(4px); }
+}
+.shake { animation: shake 0.5s ease; }
+
+@keyframes pular {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-6px); }
+}
+.pular { animation: pular 0.35s ease; }
+
+/* ---------- Focus visible acessível ---------- */
+:focus-visible {
+  outline: 3px solid var(--laranja);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.btn:focus-visible,
+.btn-vf:focus-visible,
+.btn--menu-principal:focus-visible,
+.bloco:focus-visible,
+.comodo-card:focus-visible,
+.item-card:focus-visible {
+  outline: 3px solid var(--laranja);
+  outline-offset: 2px;
+}
+
+/* ---------- Alto contraste ---------- */
+body.alto-contraste {
+  background: #000 !important;
+  color: #fff !important;
+}
+body.alto-contraste .tela,
+body.alto-contraste .tela--roxa,
+body.alto-contraste .tela--verde,
+body.alto-contraste .tela--marrom {
+  background: #111 !important;
+  border-color: #FFD700 !important;
+  color: #fff !important;
+}
+body.alto-contraste .hud__titulo,
+body.alto-contraste .hud__subtitulo,
+body.alto-contraste .balao__texto,
+body.alto-contraste .painel__label,
+body.alto-contraste .dica__texto,
+body.alto-contraste .comodo-card__nome,
+body.alto-contraste .comodo-card__skill,
+body.alto-contraste .pergunta-box__frase,
+body.alto-contraste .pontuacao-total__label {
+  color: #fff !important;
+}
+body.alto-contraste .balao,
+body.alto-contraste .painel,
+body.alto-contraste .pergunta-box,
+body.alto-contraste .dica,
+body.alto-contraste .pontuacao-card,
+body.alto-contraste .modal {
+  background: #1a1a1a !important;
+  border-color: #FFD700 !important;
+}
+body.alto-contraste .btn--laranja,
+body.alto-contraste .btn--roxo,
+body.alto-contraste .btn--verde,
+body.alto-contraste .btn--marrom,
+body.alto-contraste .btn-vf--verde,
+body.alto-contraste .btn--menu-laranja {
+  background: #FFD700 !important;
+  color: #000 !important;
+}
+body.alto-contraste .bloco--laranja,
+body.alto-contraste .bloco--ambar,
+body.alto-contraste .bloco--roxo {
+  background: #FFD700 !important;
+  color: #000 !important;
+}
+body.alto-contraste .bloco--erro {
+  background: #FF4444 !important;
+  color: #fff !important;
+}
+body.alto-contraste .badge {
+  background: #FFD700 !important;
+  color: #000 !important;
+}
+body.alto-contraste :focus-visible {
+  outline-color: #FFD700 !important;
+}
+body.alto-contraste .comodo-card--bloq {
+  opacity: 0.5 !important;
+  border-color: #888 !important;
+}
+
+/* ---------- Kbd (atalhos de teclado) ---------- */
+kbd {
+  display: inline-block;
+  background: var(--cinza-fundo);
+  border: 1px solid var(--cinza-claro);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-family: monospace;
+  color: var(--texto-escuro);
+}
+
+/* ---------- Área de feedback de verificação (quarto) ---------- */
+#feedback-blocos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.5rem;
+}
+
