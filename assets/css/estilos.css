@@ -1,9 +1,3 @@
-/* =============================================
-   A Casa dos Mistérios Lógicos — estilos.css
-   Paleta: tons quentes, estilo cartoon infantil
-   ============================================= */
-
-/* ---------- Variáveis ---------- */
 :root {
   --laranja:        #D85A30;
   --laranja-claro:  #F0997B;
@@ -129,10 +123,30 @@ body {
   border: 2px solid var(--laranja-borda);
   border-radius: var(--raio);
   padding: 10px 14px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   display: flex;
   gap: 10px;
   align-items: flex-start;
+  position: relative;
+}
+
+.balao::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 26px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid var(--laranja-borda);
+}
+
+.balao__nome {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--laranja);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
 }
 
 .balao--roxo  { border-color: var(--roxo-borda); }
@@ -296,8 +310,48 @@ body {
 
 .btn--menu-principal:hover { opacity: 0.88; }
 
-.btn--menu-laranja  { background: var(--laranja);  color: var(--branco); }
-.btn--menu-ambar    { background: var(--ambar);     color: var(--branco); }
+.btn--menu-laranja  { 
+  background: var(--laranja);  
+  color: var(--branco);   
+  box-shadow: 0 4px 0 #993C1D;
+  transform: translateY(0);
+  transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+}
+
+.btn--menu-laranja:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #993C1D;
+}
+
+.btn--menu-laranja:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #993C1D;
+  opacity: 1;
+}
+
+
+.btn--menu-ambar    { 
+  background: var(--ambar);     
+  color: var(--branco); 
+  box-shadow: 0 4px 0 #BA7517;
+  transform: translateY(0);
+  transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+}
+
+.btn--menu-ambar:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #BA7517;
+}
+
+.btn--menu-ambar:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #BA7517;
+  opacity: 1;
+}
+
+
 .btn--menu-outline  { background: var(--branco); color: var(--marrom-medio); border: 2px solid var(--laranja-borda); }
 
 /* ---------- Mapa: cards de cômodo ---------- */
@@ -861,5 +915,61 @@ kbd {
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 0.5rem;
+}
+
+.inicio-header__casas {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.casa-deco {
+  position: relative;
+  width: 14px;
+  height: 10px;
+  background: var(--ambar);
+  border-radius: 2px;
+  animation: piscar 1.8s ease-in-out infinite;
+}
+
+/* telhado */
+.casa-deco::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: var(--ambar);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* porta */
+.casa-deco::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 5px;
+  background: #00000033;
+  border-radius: 1px;
+}
+
+.casa-deco:nth-child(2) { animation-delay: 0.3s; background: var(--laranja-claro); }
+.casa-deco:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes piscar {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.8); }
+}
+
+.inicio-header__subtitulo {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ambar);
+  margin-top: 2px;
 }
 
