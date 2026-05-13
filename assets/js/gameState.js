@@ -15,7 +15,8 @@ const DEFAULT_STATE = {
     tamanhoFonte:  100,
     somAtivado:    true,
     musicaAtivada: true
-  }
+  },
+  blocos: { cozinha: 0 }
 };
 
 const gameState = {
@@ -29,7 +30,8 @@ const gameState = {
         scores:    { ...DEFAULT_STATE.scores,    ...saved.scores },
         completed: { ...DEFAULT_STATE.completed, ...saved.completed },
         unlocked:  { ...DEFAULT_STATE.unlocked,  ...saved.unlocked },
-        settings:  { ...DEFAULT_STATE.settings,  ...saved.settings }
+        settings:  { ...DEFAULT_STATE.settings,  ...saved.settings },
+        blocos:    { ...DEFAULT_STATE.blocos,    ...saved.blocos } 
       };
     } catch {
       return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -76,12 +78,21 @@ const gameState = {
   getSettings() {
     return this._load().settings;
   },
+  
 
   calcularScore(erros) {
     if (erros === 0) return 25;
     if (erros === 1) return 20;
     if (erros === 2) return 15;
     return 10;
+  },
+  
+    getCozinhaBloco() {
+    const state  = this._load();
+    const atual  = state.blocos.cozinha;           // lê bloco atual (0–4)
+    state.blocos.cozinha = (atual + 1) % 5;        // avança para a próxima entrada
+    this._save(state);
+    return atual;                                  // retorna o índice do bloco a exibir
   },
 
   reset() {

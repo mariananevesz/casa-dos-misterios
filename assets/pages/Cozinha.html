@@ -15,7 +15,7 @@
       <section class="hud__info">
         <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img">
         <section>
-          <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p>
+          <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p> 
           <p class="hud__subtitulo hud__subtitulo--verde">Mini-jogo 3</p>
         </section>
       </section>
@@ -24,7 +24,7 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde" aria-label="Instruções do Logi">
-      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote"> 
       <p class="balao__texto balao__texto--verde" id="logi-texto">Carregando…</p>
     </section>
 
@@ -87,12 +87,13 @@
   /* ===== COZINHA — lógica do jogo ===== */
 
   /* Dados embutidos — fallback quando fetch não está disponível (file://) */
-  const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidadeBNCC":"EF03CO01","instrucaoInstrutor":"Olá! Vou te dizer uma frase. Você decide: é Verdadeiro ou Falso? Preste atenção nas palavras!","dica":"Dica: fique de olho nas palavras não, nunca e sempre!","perguntas":[{"id":1,"frase":"O sol nasce de manhã.","resposta":true},{"id":2,"frase":"O cachorro nunca late.","resposta":false},{"id":3,"frase":"O cachorro não é um animal.","resposta":false},{"id":4,"frase":"A água molha.","resposta":true},{"id":5,"frase":"Pássaros sempre vivem debaixo da água.","resposta":false}]};
-
+  // SUBSTITUA a linha inteira do COZINHA_INLINE por:
+const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidadeBNCC":"EF03CO01","instrucaoInstrutor":"Olá, chefinho! Vou te contar uma coisa sobre os alimentos. Você decide: é Verdadeiro ou Falso? Preste atenção nas palavras!","dica":"Dica: fique de olho nas palavras não, nunca, sempre e jamais!","blocos":[{"bloco":1,"perguntas":[{"id":1,"frase":"A banana é uma fruta.","resposta":true,"explicacao":"Sim! A banana é uma fruta muito comum no Brasil."},{"id":2,"frase":"O leite nunca vem da vaca.","resposta":false,"explicacao":"Errado! O leite vem sim da vaca. 'Nunca' tornou a frase falsa."},{"id":3,"frase":"O pão não precisa de farinha para ser feito.","resposta":false,"explicacao":"Errado! O pão precisa de farinha. 'Não' inverteu o sentido."},{"id":4,"frase":"O açúcar deixa os alimentos mais doces.","resposta":true,"explicacao":"Verdade! O açúcar adoça bolos, sucos e sobremesas."},{"id":5,"frase":"A cenoura sempre é um doce.","resposta":false,"explicacao":"Errado! A cenoura é um legume. 'Sempre' não muda isso."}]},{"bloco":2,"perguntas":[{"id":6,"frase":"O sorvete derrete quando fica no calor.","resposta":true,"explicacao":"Verdade! O sorvete é gelado e derrete quando esquenta."},{"id":7,"frase":"O ovo jamais pode ser frito.","resposta":false,"explicacao":"Errado! O ovo pode sim ser frito. 'Jamais' tornou a frase falsa."},{"id":8,"frase":"A maçã pode ser vermelha ou verde.","resposta":true,"explicacao":"Verdade! Existem maçãs de cores diferentes."},{"id":9,"frase":"O sal não é usado para temperar os alimentos.","resposta":false,"explicacao":"Errado! O sal é sim um tempero muito usado na cozinha."},{"id":10,"frase":"O tomate pode ser usado em molhos.","resposta":true,"explicacao":"Verdade! O tomate é muito usado em molhos e saladas."}]},{"bloco":3,"perguntas":[{"id":11,"frase":"O mel é doce.","resposta":true,"explicacao":"Verdade! O mel é um dos alimentos mais doces que existem."},{"id":12,"frase":"O limão nunca é azedo.","resposta":false,"explicacao":"Errado! O limão é azedo sim. 'Nunca' tornou a frase falsa."},{"id":13,"frase":"A laranja não tem suco.","resposta":false,"explicacao":"Errado! A laranja tem muito suco. 'Não' inverteu o sentido."},{"id":14,"frase":"O arroz é cozido na água.","resposta":true,"explicacao":"Verdade! O arroz é cozido na água para ficar macio."},{"id":15,"frase":"O peixe sempre vive na terra.","resposta":false,"explicacao":"Errado! O peixe vive na água, não na terra."}]},{"bloco":4,"perguntas":[{"id":16,"frase":"O feijão é um alimento.","resposta":true,"explicacao":"Verdade! O feijão é um alimento muito nutritivo."},{"id":17,"frase":"O leite jamais pode ser aquecido.","resposta":false,"explicacao":"Errado! O leite pode sim ser aquecido. 'Jamais' tornou a frase falsa."},{"id":18,"frase":"O morango não é uma fruta.","resposta":false,"explicacao":"Errado! O morango é uma fruta deliciosa e vermelha."},{"id":19,"frase":"O milho pode ser cozido ou assado.","resposta":true,"explicacao":"Verdade! O milho fica gostoso das duas formas."},{"id":20,"frase":"A batata sempre cresce nas árvores.","resposta":false,"explicacao":"Errado! A batata cresce embaixo da terra, não nas árvores."}]},{"bloco":5,"perguntas":[{"id":21,"frase":"O abacaxi é uma fruta.","resposta":true,"explicacao":"Verdade! O abacaxi é uma fruta tropical bem saborosa."},{"id":22,"frase":"O chocolate nunca é feito de cacau.","resposta":false,"explicacao":"Errado! O chocolate é feito de cacau sim. 'Nunca' tornou a frase falsa."},{"id":23,"frase":"A alface não é uma verdura.","resposta":false,"explicacao":"Errado! A alface é uma verdura usada em saladas."},{"id":24,"frase":"O queijo é feito a partir do leite.","resposta":true,"explicacao":"Verdade! O leite é o ingrediente principal do queijo."},{"id":25,"frase":"O feijão sempre é uma fruta doce.","resposta":false,"explicacao":"Errado! O feijão é um grão, não uma fruta."}]}]};
   let gameData    = null;
   let perguntaIdx = 0;
   let acertos     = 0;
   let respondendo = false;
+
 
   async function init() {
     try {
@@ -100,7 +101,9 @@
     } catch(e) {
       gameData = COZINHA_INLINE; // fallback file://
     }
-    document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+    const blocoIdx        = gameState.getCozinhaBloco();          // lê e avança o contador
+    gameData.perguntas    = gameData.blocos[blocoIdx].perguntas;  // seleciona o bloco certo
+    document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor; 
     document.getElementById('dica-texto').textContent = gameData.dica;
     renderPergunta();
     atualizarBadge();
@@ -110,9 +113,8 @@
   function renderPergunta() {
     const total = gameData.perguntas.length;
     const p     = gameData.perguntas[perguntaIdx];
-
     document.getElementById('pergunta-numero').textContent = `Pergunta ${perguntaIdx + 1} de ${total}`;
-    document.getElementById('pergunta-frase').innerHTML    = destacarNegacoes(p.frase);
+    document.getElementById('pergunta-frase').innerHTML = destacarPalavrasChaves(destacarNegacoes(p.frase));
     document.getElementById('feedback-area').style.display = 'none';
     renderProgresso();
     habilitarBotoes(true);
@@ -120,6 +122,11 @@
 
   function destacarNegacoes(frase) {
     return frase.replace(/\b(não|nunca|sempre|jamais)\b/gi,
+      '<u style="font-weight:700;">$1</u>');
+  }
+  function destacarPalavrasChaves(frase)
+  {
+    return frase.replace(/\b(fruta|vermelha|verde|doces|calor)\b/gi,
       '<u style="font-weight:700;">$1</u>');
   }
 
@@ -153,13 +160,14 @@
     if (ok) {
       acertos++;
       audio.acerto();
-      mostrarFeedback('Correto! Muito bem!', 'verde');
+      const msg = p.explicacao || 'Correto! Muito bem!';
+      mostrarFeedback(msg, 'verde');
     } else {
       audio.erro();
-      mostrarFeedback(
-        `Ops! A resposta correta é ${p.resposta ? 'Verdadeiro' : 'Falso'}.`,
-        'erro'
-      );
+      const msg = p.explicacao
+        ? `Ops! ${p.explicacao}`
+        : `Ops! A resposta correta é ${p.resposta ? 'Verdadeiro' : 'Falso'}.`;
+      mostrarFeedback(msg, 'erro');
     }
 
     atualizarBadge();
