@@ -88,17 +88,80 @@
   /* ===== SALA — lógica do jogo ===== */
 
   /* Dados embutidos — fallback quando fetch não está disponível (file://) */
-  const SALA_INLINE = {"miniJogo":"Sala — Algoritmos","habilidadeBNCC":"EF02CO02","instrucaoLogi":"Olá, explorador! Coloque os blocos na ordem certa para levar o personagem até a estrela!","fases":[{"id":1,"titulo":"Fase 1 — Primeiros passos","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":1,"coluna":0},"posicaoAlvo":{"linha":0,"coluna":2}},"sequenciaCorreta":["cima","dir","dir"],"maxBlocos":6},{"id":2,"titulo":"Fase 2 — Caminho mais longo","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":3,"coluna":0},"posicaoAlvo":{"linha":0,"coluna":3}},"sequenciaCorreta":["cima","cima","cima","dir","dir","dir"],"maxBlocos":8},{"id":3,"titulo":"Fase 3 — Volta por cima","grade":{"colunas":4,"linhas":4,"posicaoInicial":{"linha":3,"coluna":3},"posicaoAlvo":{"linha":0,"coluna":0}},"sequenciaCorreta":["cima","cima","cima","esq","esq","esq"],"maxBlocos":8}],"blocosDisponiveis":[{"id":"cima","rotulo":"Cima","tipo":"direcao","img":"../img/seta-cima.png"},{"id":"baixo","rotulo":"Baixo","tipo":"direcao","img":"../img/seta-baixo.png"},{"id":"esq","rotulo":"Esq","tipo":"direcao","img":"../img/seta-esq.png"},{"id":"dir","rotulo":"Dir","tipo":"direcao","img":"../img/seta-dir.png"},{"id":"repetir","rotulo":"Repetir","tipo":"controle","img":"../img/repetir.png"}]};
+  const SALA_INLINE = {
+  "miniJogo": "Sala — Algoritmos",
+  "habilidadeBNCC": "EF02CO02",
+  "instrucaoLogi": "Olá, explorador! Clique nos blocos na ordem certa para levar o personagem até a estrela!",
+  "fases": [
+    {
+      "id": 1,
+      "titulo": "Fase 1 — Primeiros passos",
+      "dificuldade": "Fácil",
+      "grade": {
+        "colunas": 4,
+        "linhas": 4,
+        "posicaoInicial": { "linha": 1, "coluna": 0 },
+        "posicaoAlvo": { "linha": 0, "coluna": 2 },
+        "obstaculos": []
+      },
+      "maxBlocos": 6
+    },
+    {
+      "id": 2,
+      "titulo": "Fase 2 — Desvie do Sofá",
+      "dificuldade": "Médio",
+      "grade": {
+        "colunas": 4,
+        "linhas": 4,
+        "posicaoInicial": { "linha": 3, "coluna": 0 },
+        "posicaoAlvo": { "linha": 0, "coluna": 3 },
+        "obstaculos": [
+          { "linha": 2, "coluna": 1 },
+          { "linha": 1, "coluna": 1 }
+        ]
+      },
+      "maxBlocos": 8
+    },
+    {
+      "id": 3,
+      "titulo": "Fase 3 — Use poucos blocos",
+      "dificuldade": "Difícil",
+      "grade": {
+        "colunas": 4,
+        "linhas": 4,
+        "posicaoInicial": { "linha": 3, "coluna": 3 },
+        "posicaoAlvo": { "linha": 0, "coluna": 0 },
+        "obstaculos": []
+      },
+      "maxBlocos": 4,
+      "usarRepetir": true
+    }
+  ],
+  "blocosDisponiveis": [
+    { "id": "cima", "rotulo": "Cima", "tipo": "direcao", "img": "../img/seta-cima.png" },
+    { "id": "baixo", "rotulo": "Baixo", "tipo": "direcao", "img": "../img/seta-baixo.png" },
+    { "id": "esq", "rotulo": "Esq", "tipo": "direcao", "img": "../img/seta-esq.png" },
+    { "id": "dir", "rotulo": "Dir", "tipo": "direcao", "img": "../img/seta-dir.png" },
+    { "id": "repetir2", "rotulo": "Repetir 2x", "tipo": "controle", "img": "../img/repetir.png" },
+    { "id": "repetir3", "rotulo": "Repetir 3x", "tipo": "controle", "img": "../img/repetir.png" }
+  ]
+};
 
-  let gameData     = null;
-  let faseAtual    = 0;
-  let sequencia    = [];
-  let animando     = false;
-  let erros        = 0;
-  let touchBloco   = null;
+let gameData     = null;
+let faseAtual    = 0;
+let sequencia    = [];
+let animando     = false;
+let erros        = 0;
+let touchBloco   = null;
 
-  const MOVES = { cima: [-1,0], baixo: [1,0], esq: [0,-1], dir: [0,1] };
-  const FASE_KEY = 'sala_fase';
+const MOVES = {
+  cima: [-1, 0],
+  baixo: [1, 0],
+  esq: [0, -1],
+  dir: [0, 1]
+};
+
+const FASE_KEY = 'sala_fase';
 
   /* ---- Inicialização ---- */
   async function init() {
@@ -119,6 +182,7 @@
     const fase = gameData.fases[faseAtual];
     document.getElementById('logi-texto').textContent = gameData.instrucaoLogi;
     document.getElementById('fase-label').textContent = `Fase ${fase.id} de ${gameData.fases.length}`;
+    document.getElementById('btn-executar').disabled = false;
     erros = 0;
     sequencia = [];
     buildIndicadorFases();
@@ -146,7 +210,7 @@
   /* ---- Grade ---- */
   function buildGrid(fase) {
     const grid = document.getElementById('game-grid');
-    const { linhas, colunas, posicaoInicial, posicaoAlvo } = fase.grade;
+    const { linhas, colunas, posicaoInicial, posicaoAlvo, obstaculos = [] } = fase.grade;
     grid.innerHTML = '';
     grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
 
@@ -156,6 +220,13 @@
         cell.className = 'grade__celula';
         cell.dataset.r = r;
         cell.dataset.c = c;
+
+        const temObstaculo = obstaculos.some(obs => obs.linha === r && obs.coluna === c);
+
+        if (temObstaculo) {
+          cell.innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+          cell.classList.add('grade__celula--obstaculo');
+        }
 
         if (r === posicaoAlvo.linha && c === posicaoAlvo.coluna) {
           cell.innerHTML = `<img src="../img/alvo.png" alt="Estrela" class="grade-img" id="celula-alvo-img">`;
@@ -204,6 +275,10 @@
     el.addEventListener('touchstart', touchStart, { passive: true });
     el.addEventListener('touchmove',  touchMove,  { passive: false });
     el.addEventListener('touchend',   touchEnd,   { passive: true });
+
+    el.addEventListener('click', () => {
+    adicionarBloco(bloco.id);
+    });
 
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -298,49 +373,93 @@
   }
 
   /* ---- Execução ---- */
-  async function executar() {
-    if (animando || sequencia.length === 0) return;
-    animando = true;
-    document.getElementById('btn-executar').disabled = true;
-    document.getElementById('feedback-area').style.display = 'none';
+async function executar() {
+  if (animando || sequencia.length === 0) return;
 
-    const fase = gameData.fases[faseAtual];
-    const { linhas, colunas, posicaoInicial, posicaoAlvo } = fase.grade;
-    let pos = { ...posicaoInicial };
-    const cells = getCelulas();
+  animando = true;
+  document.getElementById('btn-executar').disabled = true;
+  document.getElementById('feedback-area').style.display = 'none';
 
-    for (let i = 0; i < sequencia.length; i++) {
-      const cmd = sequencia[i];
-      await sleep(350);
+  const fase = gameData.fases[faseAtual];
+  const { linhas, colunas, posicaoInicial, posicaoAlvo, obstaculos = [] } = fase.grade;
 
-      let delta;
-      if (cmd === 'repetir' && i > 0) {
-        const prev = sequencia[i - 1];
-        delta = MOVES[prev];
-      } else {
-        delta = MOVES[cmd];
+  let pos = { ...posicaoInicial };
+  const cells = getCelulas();
+
+  for (let i = 0; i < sequencia.length; i++) {
+    const cmd = sequencia[i];
+
+    let comandosParaExecutar = [];
+
+    if (cmd === 'repetir2' || cmd === 'repetir3') {
+      const anterior = sequencia[i - 1];
+
+      if (!anterior || !MOVES[anterior]) {
+        erros++;
+        mostrarFeedback('Use o bloco Repetir depois de uma seta.', 'erro');
+        await resetarAposErro(fase);
+        return;
       }
 
+      const quantidade = cmd === 'repetir2' ? 2 : 3;
+
+      for (let r = 0; r < quantidade; r++) {
+        comandosParaExecutar.push(anterior);
+      }
+    } else {
+      comandosParaExecutar.push(cmd);
+    }
+
+    for (const movimento of comandosParaExecutar) {
+      await sleep(350);
+
+      const delta = MOVES[movimento];
       if (!delta) continue;
 
       const nr = pos.linha + delta[0];
       const nc = pos.coluna + delta[1];
 
-      if (nr < 0 || nr >= linhas || nc < 0 || nc >= colunas) {
-        await bateuNaParede(pos, fase);
+      const bateuNaBorda = nr < 0 || nr >= linhas || nc < 0 || nc >= colunas;
+      const bateuNoObstaculo = obstaculos.some(obs => obs.linha === nr && obs.coluna === nc);
+
+      if (bateuNaBorda || bateuNoObstaculo) {
+        erros++;
+        audio.erro();
+
+        mostrarFeedback(
+          bateuNoObstaculo
+            ? 'Ops! Tem um obstáculo nesse caminho. Tente corrigir sua sequência!'
+            : 'Ops! O personagem saiu da grade. Tente corrigir sua sequência!',
+          'erro'
+        );
+
+        await resetarAposErro(fase);
         return;
       }
 
-      // move visual
-      const deIdx  = celulaIdx(pos.linha, pos.coluna, colunas);
+      const deIdx = celulaIdx(pos.linha, pos.coluna, colunas);
       const paraIdx = celulaIdx(nr, nc, colunas);
 
-      const isAlvo = cells[deIdx].id === 'celula-alvo';
-      cells[deIdx].innerHTML = isAlvo ? `<img src="../img/alvo.png" alt="Estrela" class="grade-img">` : '';
+      const celulaOrigemEhAlvo =
+        pos.linha === posicaoAlvo.linha && pos.coluna === posicaoAlvo.coluna;
+
+      const celulaOrigemEhObstaculo = obstaculos.some(
+        obs => obs.linha === pos.linha && obs.coluna === pos.coluna
+      );
+
+      if (celulaOrigemEhAlvo) {
+        cells[deIdx].innerHTML = `<img src="../img/alvo.png" alt="Estrela" class="grade-img">`;
+      } else if (celulaOrigemEhObstaculo) {
+        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+      } else {
+        cells[deIdx].innerHTML = '';
+      }
+
       cells[deIdx].classList.remove('grade__celula--ativa');
 
       cells[paraIdx].innerHTML += `<img src="../img/personagem.png" alt="Personagem" class="grade-img grade-personagem" id="personagem">`;
       cells[paraIdx].classList.add('grade__celula--ativa');
+
       audio.passo();
 
       pos = { linha: nr, coluna: nc };
@@ -351,31 +470,35 @@
         return;
       }
     }
-
-    // Terminou sem chegar
-    await bateuNaParede(pos, fase);
   }
 
-  async function bateuNaParede(pos, fase) {
-    erros++;
-    audio.erro();
-    const cells = getCelulas();
-    const idx = celulaIdx(pos.linha, pos.coluna, fase.grade.colunas);
-    cells[idx].classList.add('shake');
-    mostrarFeedback('Ops! O personagem bateu na parede. Tente outra sequência!', 'erro');
-    await sleep(700);
-    cells[idx].classList.remove('shake');
-    buildGrid(fase);
-    sequencia = [];
-    renderSequencia();
-    animando = false;
-    document.getElementById('btn-executar').disabled = false;
-  }
+  erros++;
+  mostrarFeedback('Você ainda não chegou na estrela. Ajuste sua sequência e tente de novo!', 'erro');
+  await resetarAposErro(fase);
+}
+
+  async function resetarAposErro(fase) {
+  await sleep(700);
+
+  buildGrid(fase);
+
+  animando = false;
+  document.getElementById('btn-executar').disabled = false;
+
+  renderSequencia();
+}
+
+  
 
   function vitoria(fase) {
     audio.acerto();
-    const score = gameState.calcularScore(erros);
-    gameState.setRoomScore('sala', score);
+    const scoreFase = gameState.calcularScore(erros);
+    let scoresSala = JSON.parse(localStorage.getItem('sala_scores_fases') || '{}');
+    scoresSala[fase.id] = scoreFase;
+    localStorage.setItem('sala_scores_fases', JSON.stringify(scoresSala));
+    const somaFases = Object.values(scoresSala).reduce((soma, valor) => soma + valor, 0);
+    const totalSala = Math.round(somaFases / gameData.fases.length);
+    gameState.setRoomScore('sala', totalSala);
 
     const proxFase = faseAtual + 1;
     if (proxFase < gameData.fases.length) {
@@ -384,8 +507,8 @@
       localStorage.removeItem(FASE_KEY);
     }
 
-    atualizarBadge(score);
-    exibirModal(score, proxFase < gameData.fases.length, proxFase, fase);
+    atualizarBadge(totalSala);
+    exibirModal(scoreFase, proxFase < gameData.fases.length, proxFase, fase);
     animando = false;
   }
 
@@ -393,7 +516,7 @@
     const estrelas = gameState.getStars(score);
     document.getElementById('modal-titulo').textContent = score === 25 ? 'Perfeito!' : 'Muito bem!';
     document.getElementById('modal-sub').textContent =
-      `Você criou um algoritmo com ${fase.sequenciaCorreta.length} passos!`;
+      `Você levou o personagem até a estrela usando ${sequencia.length} blocos!`;
     document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
 
     const elEstrelas = document.getElementById('modal-estrelas');

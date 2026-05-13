@@ -6,45 +6,57 @@
     {
       "id": 1,
       "titulo": "Fase 1 — Primeiros passos",
+      "dificuldade": "Fácil",
+
       "grade": {
         "colunas": 4,
         "linhas": 4,
         "posicaoInicial": { "linha": 1, "coluna": 0 },
-        "posicaoAlvo":    { "linha": 0, "coluna": 2 }
+        "posicaoAlvo":    { "linha": 0, "coluna": 2 },
+        "obstaculos": []
       },
-      "sequenciaCorreta": ["cima", "dir", "dir"],
       "maxBlocos": 6
     },
     {
       "id": 2,
-      "titulo": "Fase 2 — Caminho mais longo",
+      "titulo": "Fase 2 — Desvie do Sofá",
+      "dificuldade": "Médio", 
+
       "grade": {
         "colunas": 4,
         "linhas": 4,
         "posicaoInicial": { "linha": 3, "coluna": 0 },
-        "posicaoAlvo":    { "linha": 0, "coluna": 3 }
+        "posicaoAlvo":    { "linha": 0, "coluna": 3 },
+        "obstaculos": [
+          { "linha": 2, "coluna": 1 },
+          { "linha": 1,"coluna": 1 }
+        ]
       },
-      "sequenciaCorreta": ["cima", "cima", "cima", "dir", "dir", "dir"],
       "maxBlocos": 8
     },
+
     {
       "id": 3,
-      "titulo": "Fase 3 — Volta por cima",
+      "titulo": "Fase 3 — Use poucos blocos",
+      "dificuldade": "Difícil",
+
       "grade": {
         "colunas": 4,
         "linhas": 4,
         "posicaoInicial": { "linha": 3, "coluna": 3 },
-        "posicaoAlvo":    { "linha": 0, "coluna": 0 }
+        "posicaoAlvo":    { "linha": 0, "coluna": 0 },
+        "obstaculos": []
       },
-      "sequenciaCorreta": ["cima", "cima", "cima", "esq", "esq", "esq"],
-      "maxBlocos": 8
+      "maxBlocos": 4,
+      "usarRepetir": true
     }
   ],
   "blocosDisponiveis": [
-    { "id": "cima",    "rotulo": "Cima",    "tipo": "direcao",  "img": "../img/seta-cima.png" },
-    { "id": "baixo",   "rotulo": "Baixo",   "tipo": "direcao",  "img": "../img/seta-baixo.png" },
-    { "id": "esq",     "rotulo": "Esq",     "tipo": "direcao",  "img": "../img/seta-esq.png" },
-    { "id": "dir",     "rotulo": "Dir",     "tipo": "direcao",  "img": "../img/seta-dir.png" },
-    { "id": "repetir", "rotulo": "Repetir", "tipo": "controle", "img": "../img/repetir.png" }
-  ]
+  { "id": "cima", "rotulo": "Cima", "tipo": "direcao", "img": "../img/seta-cima.png" },
+  { "id": "baixo", "rotulo": "Baixo", "tipo": "direcao", "img": "../img/seta-baixo.png" },
+  { "id": "esq", "rotulo": "Esq", "tipo": "direcao", "img": "../img/seta-esq.png" },
+  { "id": "dir", "rotulo": "Dir", "tipo": "direcao", "img": "../img/seta-dir.png" },
+  { "id": "repetir2", "rotulo": "Repetir 2x", "tipo": "controle", "img": "../img/repetir.png" },
+  { "id": "repetir3", "rotulo": "Repetir 3x", "tipo": "controle", "img": "../img/repetir.png" }
+]
 }
