@@ -1,14 +1,53 @@
 {
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
-  "instrucaoInstrutor": "Oi! Minha rotina matinal está toda errada! Encontre os erros na sequência e arraste os blocos para a ordem correta!",
+  "instrucaoInstrutor": "Oi! Minha rotina está com alguns erros! Encontre o problema, monte a sequência correta e ajude a organizar o quarto.",
   "dica": "Dica: há 1 bloco repetido e 1 fora de ordem!",
-  "sequenciaComErros": [
-    { "id": "tenis",   "rotulo": "👟 Calçar o tênis",   "erro": true  },
-    { "id": "dentes",  "rotulo": "🦷 Escovar os dentes", "erro": false },
-    { "id": "tenis",   "rotulo": "👟 Calçar o tênis",   "erro": true  },
-    { "id": "roupa",   "rotulo": "👕 Vestir a roupa",    "erro": false },
-    { "id": "cafe",    "rotulo": "🍳 Tomar café",        "erro": false }
-  ],
-  "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+ "fases": [
+   {
+      "id": 1,
+      "titulo": "Fase 1 — Um passo fora do lugar",
+      "dificuldade": "Fácil",
+      "dica": "Dica: há 1 bloco fora de ordem.",
+      "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ],
+      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+    },
+
+    {
+      "id": 2,
+      "titulo": "Fase 2 — Tem coisa repetida",
+      "dificuldade": "Médio",
+      "dica": "Dica: há 1 bloco repetido. Use cada ação apenas quando fizer sentido.",
+      "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ],
+      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+    },
+
+    {
+      "id": 3,
+      "titulo": "Fase 3 — Depuração completa",
+      "dificuldade": "Difícil",
+      "dica": "Dica: há bloco repetido, bloco desnecessário e ações fora de ordem.",
+      "sequenciaComErros": [
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
+      ],
+      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+    }
+ ]
 }
