@@ -39,27 +39,31 @@
 
 
     <!-- Menu -->
-    <section class="menu-botoes" role="navigation" aria-label="Menu principal">
-      <button class="btn--menu-principal btn--menu-laranja"
-              onclick="window.location.href='assets/pages/MapaCasa.html'"
-              aria-label="Jogar">
-        Jogar
-      </button>
-      <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar"
-              aria-label="Como jogar" aria-haspopup="dialog">
-        Como jogar
-      </button>
-      <button class="btn--menu-principal btn--menu-outline"
-              onclick="window.location.href='assets/pages/TelaPontuacao.html'"
-              aria-label="Ver pontuações">
-        Pontuações
-      </button>
-      <button class="btn--menu-principal btn--menu-outline" id="btn-resetar"
-              aria-label="Reiniciar progresso"
-              style="font-size:15px;color:var(--cinza);">
-        Reiniciar progresso
-      </button>
-    </section>
+    <button class="btn--menu-principal btn--menu-laranja"
+        onclick="window.location.href='assets/pages/MapaCasa.html'">
+  <span>▶</span>
+  <strong>Jogar</strong>
+
+</button>
+
+<button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
+  <span>📖</span>
+  <strong>Como jogar</strong>
+  
+</button>
+
+<button class="btn--menu-principal btn--menu-outline"
+        onclick="window.location.href='assets/pages/TelaPontuacao.html'">
+  <span>🏆</span>
+  <strong>Pontuações</strong>
+
+</button>
+
+<button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
+  <span>↻</span>
+  <strong>Reiniciar progresso</strong>
+ 
+</button>   
 
     <!-- Prévia dos cômodos -->
     <section class="inicio-comodos" aria-label="Cômodos do jogo">
@@ -70,27 +74,22 @@
       <article class="inicio-comodo">
       <img src="assets/img/icone-sala.png" alt="Sala" class="inicio-comodo__icone-img">
         <p class="inicio-comodo__label" id="lbl-sala">Sala</p>
-         <p class="inicio-comodo_status inicio-comodo_status--bloq" id="status-sala">🔓</p>
       </article>
 
       <article class="inicio-comodo">
         <img src="assets/img/icone-quarto.png"   alt="Quarto"   class="inicio-comodo__icone-img">
         <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-quarto">Quarto</p>
-        <p class="inicio-comodo_status inicio-comodo_status--bloq" id="status-quarto">🔒</p>
-
       </article>
 
       <article class="inicio-comodo">
         <img src="assets/img/icone-cozinha.png"  alt="Cozinha"  class="inicio-comodo__icone-img">
         <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-cozinha">Cozinha</p>
-        <p class="inicio-comodo_status inicio-comodo_status--bloq" id="status-cozinha">🔒</p>
 
       </article>
 
       <article class="inicio-comodo">
         <img src="assets/img/icone-despensa.png" alt="Despensa" class="inicio-comodo__icone-img">
         <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-despensa">Despensa</p>
-        <p class="inicio-comodo_status inicio-comodo_status--bloq" id="status-despensa">🔒</p>
       </article>
     </section>
 

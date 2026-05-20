@@ -56,11 +56,11 @@ body {
 /* ---------- Container principal ---------- */
 .tela {
   width: 100%;
-  max-width: 480px;
+  max-width: 620px;
   background: var(--branco);
   border-radius: var(--raio-lg);
   border: 2px solid var(--laranja-borda);
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-shadow: var(--sombra);
 }
 
@@ -141,7 +141,7 @@ body {
 }
 
 .balao__nome {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--laranja);
   text-transform: uppercase;
@@ -156,7 +156,7 @@ body {
 .balao__emoji { font-size: 26px; flex-shrink: 0; }
 
 .balao__texto {
-  font-size: 12px;
+  font-size: 20px;
   line-height: 1.6;
   color: #854F0B;
 }
@@ -287,72 +287,280 @@ body {
   padding: 12px 16px;
 }
 
-/* ---------- Tela inicial: botões de menu ---------- */
+
+#tela-principal {
+  background:
+    radial-gradient(circle at 15% 90%, rgba(250, 166, 38, 0.12), transparent 22%),
+    radial-gradient(circle at 88% 85%, rgba(250, 166, 38, 0.10), transparent 20%),
+    var(--branco);
+  border: 2px solid var(--ambar-claro);
+  box-shadow: 0 18px 45px rgba(111, 46, 15, 0.12);
+}
+
+/* Cabeçalho da tela inicial */
+.inicio-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.inicio-header__casas {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.casa-deco {
+  position: relative;
+  width: 14px;
+  height: 10px;
+  background: var(--ambar);
+  border-radius: 2px;
+  animation: piscar 1.8s ease-in-out infinite;
+}
+
+.casa-deco::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: var(--ambar);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.casa-deco::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 5px;
+  background: #00000033;
+  border-radius: 1px;
+}
+
+.casa-deco:nth-child(2) {
+  animation-delay: 0.3s;
+  background: var(--laranja-claro);
+}
+
+.casa-deco:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes piscar {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+.inicio-header__titulo {
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--marrom-medio);
+  letter-spacing: -1px;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 3px 0 rgba(250, 166, 38, 0.18);
+}
+
+.inicio-header__subtitulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ambar);
+  margin-top: 2px;
+}
+
+/* Balão do Logi */
+.balao {
+  background: rgba(255, 248, 238, 0.8);
+  border: 2px solid var(--laranja-borda);
+  border-radius: var(--raio);
+  padding: 10px 14px;
+  margin-bottom: 1.25rem;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(111, 46, 15, 0.08);
+}
+
+.logi-mascote {
+  width: 76px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Botões do menu inicial
+   Obs.: funciona tanto se os botões estiverem dentro de .menu-botoes
+   quanto se estiverem soltos dentro de #tela-principal. */
 .menu-botoes {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   width: 100%;
-  max-width: 280px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 1.5rem 0 2rem;
+}
+
+.menu-botoes .btn--menu-principal + .btn--menu-principal,
+#tela-principal > .btn--menu-principal + .btn--menu-principal {
+  margin-top: 18px;
 }
 
 .btn--menu-principal {
+  width: 100%;
+  min-height: 60px;
   border: none;
-  border-radius: var(--raio);
-  padding: 14px 0;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 25px;
+  padding: 0 26px;
+  font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
   text-align: center;
-  transition: opacity 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  box-shadow: 0 4px 0 rgba(111, 46, 15, 0.18);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.btn--menu-principal:hover { opacity: 0.88; }
-
-.btn--menu-laranja  { 
-  background: var(--laranja);  
-  color: var(--branco);   
-  box-shadow: 0 4px 0 #993C1D;
-  transform: translateY(0);
-  transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
-}
-
-.btn--menu-laranja:hover {
+.btn--menu-principal:hover {
   opacity: 1;
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #993C1D;
+  box-shadow: 0 6px 0 rgba(111, 46, 15, 0.22);
 }
 
-.btn--menu-laranja:active {
+.btn--menu-principal:active {
+  opacity: 1;
   transform: translateY(3px);
-  box-shadow: 0 1px 0 #993C1D;
-  opacity: 1;
+  box-shadow: 0 1px 0 rgba(111, 46, 15, 0.22);
 }
 
-
-.btn--menu-ambar    { 
-  background: var(--ambar);     
-  color: var(--branco); 
-  box-shadow: 0 4px 0 #BA7517;
-  transform: translateY(0);
-  transition: transform 0.1s, box-shadow 0.1s, opacity 0.15s;
+.btn--menu-principal strong {
+  flex: 1;
+  text-align: center;
 }
 
-.btn--menu-ambar:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 #BA7517;
+.btn--menu-principal span {
+  width: 32px;
+  font-size: 22px;
 }
 
-.btn--menu-ambar:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #BA7517;
-  opacity: 1;
+.btn--menu-laranja {
+  background: var(--laranja);
+  color: var(--branco);
 }
 
+.btn--menu-ambar {
+  background: var(--ambar);
+  color: var(--branco);
+}
 
-.btn--menu-outline  { background: var(--branco); color: var(--marrom-medio); border: 2px solid var(--laranja-borda); }
+.btn--menu-outline {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--marrom-medio);
+  border: 2px solid var(--laranja-borda);
+}
+
+/* Prévia dos cômodos */
+.inicio-comodos {
+  gap: 12px;
+  margin-top: 1.7rem;
+  padding: 18px 14px 8px;
+}
+
+.inicio-comodos__titulo {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--laranja);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.inicio-comodo {
+  text-align: center;
+  flex: 1;
+  transition: transform 0.15s;
+}
+
+.inicio-comodo:hover {
+  transform: translateY(-4px);
+}
+
+.inicio-comodo__icone-img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  transition: transform 0.15s;
+  filter: drop-shadow(0 8px 8px rgba(111, 46, 15, 0.16));
+}
+
+.inicio-comodo__icone-img:hover {
+  transform: scale(1.1);
+}
+
+.inicio-comodo--bloqueado .inicio-comodo__icone-img {
+  filter: grayscale(1) opacity(0.45);
+  border-style: dashed;
+  border-color: var(--cinza-claro);
+}
+
+.inicio-comodo__label {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ambar);
+  margin-top: 8px;
+}
+
+.inicio-comodo__label--cinza {
+  color: var(--cinza);
+}
+
+.inicio-rodape {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(111, 46, 15, 0.25);
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* Tela inicial: precisa de position relative no .tela */
+.tela--relativa {
+  position: relative;
+}
+
+/* Configurações (ícone topo direito) */
+.btn-config {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--ambar-fundo);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1.5px solid var(--ambar-claro);
+  cursor: pointer;
+}
 
 /* ---------- Mapa: cards de cômodo ---------- */
 .mapa-grid {
@@ -625,82 +833,6 @@ body {
 .nivel--ativo  { background: var(--laranja); color: var(--branco); }
 .nivel--bloq   { background: var(--cinza-fundo); color: var(--cinza); }
 
-/* ---------- Cabeçalho da tela inicial ---------- */
-.inicio-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.inicio-header__icone  { font-size: 52px; margin-bottom: 0.25rem; }
-.inicio-header__titulo { font-size: 24px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
-.inicio-header__sub    { font-size: 13px; color: var(--ambar); }
-
-.inicio-comodos {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 1.5rem;
-  background: var(--laranja-fundo);
-  border: 2px solid var(--raio);
-  padding: 10px 10px 10px;
-  border-radius: 20px;
-}
-
-.inicio-comodos__titulo {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--laranja);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.inicio-comodo { 
-  text-align: center;
-  flex: 1;
-}
-
-.inicio-comodo__icone-img  { 
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  border-radius: 8px;
-  padding: 4px;
-  background: var(--branco);
-  border: 1.5px solid var(--laranja-borda);
-  transition: transform 0.15s;
-}
-
-.inicio-comodo__icone-img:hover {
-  transform: scale(1.1);
-}
-
-/* cômodo bloqueado: ícone acinzentado */
-.inicio-comodo--bloqueado .inicio-comodo__icone-img {
-  filter: grayscale(1) opacity(0.45);
-  border-style: dashed;
-  border-color: var(--cinza-claro);
-}
-
-
-.inicio-comodo__label  { 
-  font-size: 12px; 
-  font-weight: 600;
-  color: var(--ambar); 
-  margin-top: 4px; 
-}
-.inicio-comodo__label--cinza { 
-  color: var(--cinza); 
-}
-
-.inicio-rodape {
-  font-size: 11px;
-  color: var(--cinza-claro);
-  text-align: center;
-  margin-top: 1.5rem;
-}
-
 /* ---------- Resultado final ---------- */
 .resultado-header {
   text-align: center;
@@ -710,26 +842,6 @@ body {
 .resultado-header__icone   { font-size: 56px; margin-bottom: 0.5rem; }
 .resultado-header__titulo  { font-size: 22px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
 .resultado-header__sub     { font-size: 13px; color: var(--ambar); }
-
-/* ---------- Configurações (ícone topo direito) ---------- */
-.btn-config {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: var(--ambar-fundo);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  border: 1.5px solid var(--ambar-claro);
-  cursor: pointer;
-}
-
-/* Tela inicial: precisa de position relative no .tela */
-.tela--relativa { position: relative; }
 
 /* ---------- Sala: grid de dois painéis lado a lado ---------- */
 .sala-grid {
@@ -745,7 +857,6 @@ body {
 
 /* ---------- Imagens substituindo emojis ---------- */
 .hud__icone-img        { width: 24px; height: 24px; object-fit: contain; }
-.logi-mascote          { width: 60px; height: 45px; object-fit: contain; flex-shrink: 0; }
 .bloco-img             { width: 16px; height: 16px; object-fit: contain; }
 .grade-img             { width: 100%; height: 100%; object-fit: contain; }
 .grade-personagem      { position: relative; z-index: 2; }
@@ -754,7 +865,6 @@ body {
 .modal-estrela-img     { width: 28px; height: 28px; object-fit: contain; }
 .comodo-card__icone-img{ display: block; width: 40px; height: 40px; object-fit: contain; margin: 0 auto 6px; }
 .inicio-header__icone-img { width: 64px; height: 64px; object-fit: contain; margin-bottom: 0.25rem; }
-.inicio-comodo__icone-img { width: 28px; height: 28px; object-fit: contain; }
 .resultado-header__icone-img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 0.5rem; }
 .pontuacao-card__icone-img   { width: 22px; height: 22px; object-fit: contain; }
 .btn-vf__emoji-img     { width: 32px; height: 32px; object-fit: contain; }
@@ -962,61 +1072,5 @@ kbd {
   flex-wrap: wrap;
   gap: 6px;
   margin-bottom: 0.5rem;
-}
-
-.inicio-header__casas {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.casa-deco {
-  position: relative;
-  width: 14px;
-  height: 10px;
-  background: var(--ambar);
-  border-radius: 2px;
-  animation: piscar 1.8s ease-in-out infinite;
-}
-
-/* telhado */
-.casa-deco::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: var(--ambar);
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-}
-
-/* porta */
-.casa-deco::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 3px;
-  height: 5px;
-  background: #00000033;
-  border-radius: 1px;
-}
-
-.casa-deco:nth-child(2) { animation-delay: 0.3s; background: var(--laranja-claro); }
-.casa-deco:nth-child(3) { animation-delay: 0.6s; }
-
-@keyframes piscar {
-  0%, 100% { opacity: 1;   transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.8); }
-}
-
-.inicio-header__subtitulo {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ambar);
-  margin-top: 2px;
 }
 
