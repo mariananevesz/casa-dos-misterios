@@ -1074,3 +1074,451 @@ kbd {
   margin-bottom: 0.5rem;
 }
 
+
+/* =============================================================
+   MAPA DA CASA — VISUAL NOVO
+   Obs.: tudo está escopado em .tela--mapa para NÃO mexer no index.
+   ============================================================= */
+
+.tela--mapa {
+  max-width: 920px;
+  width: min(100%, 920px);
+  padding: 1.6rem;
+  border-color: var(--ambar-claro);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 10% 90%, rgba(250, 166, 38, 0.10), transparent 22%),
+    radial-gradient(circle at 92% 88%, rgba(216, 90, 48, 0.08), transparent 20%),
+    var(--branco);
+  box-shadow: 0 18px 45px rgba(111, 46, 15, 0.12);
+}
+
+/* Topo do mapa */
+.tela--mapa .mapa-topo {
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.tela--mapa .mapa-voltar {
+  width: fit-content;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 2px solid var(--laranja-borda);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--marrom-medio);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(111, 46, 15, 0.12);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.tela--mapa .mapa-voltar:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(111, 46, 15, 0.16);
+}
+
+.tela--mapa .mapa-voltar:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(111, 46, 15, 0.16);
+}
+
+.tela--mapa .mapa-voltar span {
+  margin-right: 6px;
+  font-size: 20px;
+}
+
+.tela--mapa .mapa-titulo-area {
+  text-align: center;
+}
+
+.tela--mapa .mapa-titulo-linha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tela--mapa .mapa-titulo-linha span {
+  font-size: 30px;
+  filter: drop-shadow(0 5px 5px rgba(111, 46, 15, 0.16));
+}
+
+.tela--mapa .mapa-titulo-linha h1 {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--marrom-medio);
+  letter-spacing: -1px;
+  text-shadow: 0 3px 0 rgba(250, 166, 38, 0.18);
+}
+
+.tela--mapa .mapa-titulo-area p {
+  margin-top: 0.3rem;
+  color: var(--laranja);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.tela--mapa .mapa-pontos {
+  justify-self: end;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 2px solid var(--laranja-borda);
+  background: rgba(255, 248, 238, 0.9);
+  color: var(--marrom-medio);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  font-size: 18px;
+  box-shadow: 0 4px 0 rgba(111, 46, 15, 0.10);
+}
+
+.tela--mapa .mapa-pontos img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+/* Balão do Logi exclusivo do mapa */
+.tela--mapa .mapa-logi {
+  display: grid;
+  grid-template-columns: 94px 1fr;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.tela--mapa .mapa-logi__img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 10px rgba(111, 46, 15, 0.18));
+}
+
+.tela--mapa .mapa-logi__balao {
+  position: relative;
+  background: rgba(255, 248, 238, 0.86);
+  border: 2px solid var(--laranja-borda);
+  border-radius: 20px;
+  padding: 18px 22px;
+  box-shadow: 0 8px 22px rgba(111, 46, 15, 0.08);
+}
+
+.tela--mapa .mapa-logi__balao::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 36px;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 248, 238, 0.86);
+  border-left: 2px solid var(--laranja-borda);
+  border-bottom: 2px solid var(--laranja-borda);
+  transform: rotate(45deg);
+}
+
+.tela--mapa .mapa-logi__nome {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--laranja);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.tela--mapa .mapa-logi__balao p:last-child {
+  color: var(--marrom-medio);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+/* Cards dos cômodos no mapa */
+.tela--mapa .mapa-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 1.3rem;
+}
+
+.tela--mapa .comodo-card {
+  min-height: 170px;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid var(--laranja-borda);
+  box-shadow: 0 10px 0 rgba(111, 46, 15, 0.08);
+  transition: transform 0.16s, box-shadow 0.16s, opacity 0.16s;
+}
+
+.tela--mapa .comodo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 0 rgba(111, 46, 15, 0.10);
+}
+
+.tela--mapa .comodo-card__imagem-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 45% 55%, rgba(255, 255, 255, 0.95), transparent 58%),
+    rgba(250, 166, 38, 0.12);
+}
+
+.tela--mapa .comodo-card__icone-img {
+  width: 118px;
+  height: 118px;
+  object-fit: contain;
+  margin: 0;
+  filter: drop-shadow(0 10px 8px rgba(111, 46, 15, 0.16));
+}
+
+.tela--mapa .comodo-card__conteudo {
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.tela--mapa .comodo-card__nome {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--marrom-medio);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.tela--mapa .comodo-card__skill {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.tela--mapa .comodo-card__pts {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--marrom);
+  margin-bottom: 8px;
+}
+
+.tela--mapa .comodo-card__pts--vazio {
+  color: var(--cinza);
+  font-size: 12px;
+}
+
+.tela--mapa .comodo-card__acao {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 20px;
+  border-radius: 14px;
+  background: var(--laranja);
+  color: var(--branco);
+  font-size: 15px;
+  font-weight: 900;
+  box-shadow: 0 4px 0 #993C1D;
+}
+
+.tela--mapa .comodo-card--roxo .comodo-card__acao {
+  background: var(--roxo-claro);
+  box-shadow: 0 4px 0 #3C3489;
+}
+
+.tela--mapa .comodo-card--verde .comodo-card__acao {
+  background: var(--verde);
+  box-shadow: 0 4px 0 #0F6E56;
+}
+
+.tela--mapa .comodo-card--marrom .comodo-card__acao {
+  background: var(--ambar);
+  box-shadow: 0 4px 0 #BA7517;
+}
+
+.tela--mapa .comodo-card--laranja { border-color: var(--ambar-claro); }
+.tela--mapa .comodo-card--roxo    { border-color: var(--roxo-borda); }
+.tela--mapa .comodo-card--verde   { border-color: var(--verde-claro); }
+.tela--mapa .comodo-card--marrom  { border-color: var(--laranja-borda); }
+
+.tela--mapa .comodo-card__tag {
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+  font-size: 11px;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.tela--mapa .comodo-card__tag--verde {
+  background: var(--verde-fundo);
+  color: #085041;
+  border: 1px solid var(--verde-borda);
+}
+
+.tela--mapa .comodo-card__estrelas {
+  margin: 0 0 4px;
+  justify-content: flex-start;
+}
+
+.tela--mapa .comodo-card__estrelas img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.tela--mapa .comodo-card__estrelas .estrela-vazia {
+  filter: grayscale(1) opacity(0.3);
+}
+
+.tela--mapa .progresso {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+
+.tela--mapa .progresso__bolinha {
+  width: 12px;
+  height: 12px;
+}
+
+/* Card bloqueado no mapa */
+.tela--mapa .comodo-card--bloq {
+  background: rgba(241, 239, 232, 0.8);
+  border: 2px dashed var(--cinza-claro);
+  opacity: 0.82;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.tela--mapa .comodo-card--bloq:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.tela--mapa .comodo-card--bloq .comodo-card__icone-img {
+  filter: grayscale(1) opacity(0.55);
+}
+
+.tela--mapa .comodo-card--bloq .comodo-card__imagem-box {
+  background: rgba(241, 239, 232, 0.78);
+}
+
+.tela--mapa .comodo-card__bloq-aviso {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cinza);
+  margin-top: 8px;
+}
+
+/* Progresso geral do mapa */
+.tela--mapa .mapa-progresso-geral {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid var(--laranja-borda);
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: rgba(255, 248, 238, 0.72);
+  box-shadow: 0 8px 20px rgba(111, 46, 15, 0.06);
+}
+
+.tela--mapa .mapa-progresso-geral p {
+  color: var(--cinza);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+.tela--mapa .mapa-progresso-geral strong {
+  color: var(--marrom-medio);
+  font-size: 18px;
+}
+
+.tela--mapa .mapa-barra {
+  width: 100%;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--laranja-fundo);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(111, 46, 15, 0.10);
+}
+
+.tela--mapa .mapa-barra span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--ambar), var(--laranja));
+  transition: width 0.3s ease;
+}
+
+/* Responsividade exclusiva do mapa */
+@media (max-width: 760px) {
+  .tela--mapa {
+    padding: 1.1rem;
+  }
+
+  .tela--mapa .mapa-topo {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .tela--mapa .mapa-voltar,
+  .tela--mapa .mapa-pontos {
+    justify-self: center;
+  }
+
+  .tela--mapa .mapa-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tela--mapa .mapa-logi {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .tela--mapa .mapa-logi__balao::before {
+    display: none;
+  }
+
+  .tela--mapa .mapa-progresso-geral {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tela--mapa .mapa-titulo-linha h1 {
+    font-size: 28px;
+  }
+
+  .tela--mapa .comodo-card {
+    grid-template-columns: 1fr;
+  }
+
+  .tela--mapa .comodo-card__conteudo {
+    align-items: center;
+    text-align: center;
+  }
+
+  .tela--mapa .progresso,
+  .tela--mapa .comodo-card__estrelas {
+    justify-content: center;
+  }
+}
+
