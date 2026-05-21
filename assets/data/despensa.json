@@ -1,44 +1,44 @@
 {
   "miniJogo": "Despensa — Estoque Inteligente",
   "habilidadeBNCC": "EF02CO01",
-  "instrucaoInstrutor": "Ei! Minha despensa está uma bagunça! Arraste cada item para a prateleira certa.",
+  "instrucaoInstrutor": "Oi! Minha despensa está uma bagunça!",
   "niveis": [
     {
       "nivel": "Fácil",
-      "criterio": "cor",
-      "instrucao": "Organize por cor: do mais claro para o mais escuro.",
+      "criterio": "selecao-cor",
+      "instrucao": "Clique nas frutas VERMELHAS!",
       "itens": [
-        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "atributo": "roxo"    },
-        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "atributo": "verde"   },
-        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "atributo": "vermelho"},
-        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "atributo": "azul"    },
-        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "atributo": "amarelo" }
+        { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png"    },
+        { "id": "morango", "nome": "Morango", "cor": "vermelho", "img": "../img/morango.png"                   },
+        { "id": "banana",  "nome": "Banana",  "cor": "amarelo",  "img": "../img/banana.png"  },
+        { "id": "uva",     "nome": "Uva",     "cor": "roxo",     "img": "../img/uva.png"     },
+        { "id": "mirtilo", "nome": "Mirtilo", "cor": "azul",     "img": "../img/mirtilo.png" }
       ],
-      "ordemCorreta": ["banana", "melancia", "maca", "uva", "mirtilo"]
+      "corretos": ["maca", "morango"]
     },
     {
       "nivel": "Médio",
       "criterio": "tamanho",
-      "instrucao": "Organize por tamanho: do menor para o maior.",
+      "instrucao": "Arraste por tamanho: do menor para o maior.",
       "itens": [
-        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "tamanho": 2 },
-        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "tamanho": 5 },
-        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "tamanho": 3 },
-        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "tamanho": 1 },
-        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "tamanho": 3 }
+        { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png"      },
+        { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
+        { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maca.png"     },
+        { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png"  },
+        { "id": "banana",   "nome": "Banana",   "tamanho": 3, "img": "../img/banana.png"   }
       ],
       "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
     },
     {
       "nivel": "Difícil",
       "criterio": "categoria",
-      "instrucao": "Organize seguindo as regras: frutas cítricas primeiro, depois as demais, do menor para o maior dentro de cada grupo.",
+      "instrucao": "Organize: frutas cítricas primeiro, depois as demais, do menor ao maior dentro de cada grupo.",
       "itens": [
-        { "id": "uva",      "emoji": "🍇", "nome": "Uva",      "categoria": "fruta-comum",  "tamanho": 2 },
-        { "id": "melancia", "emoji": "🍉", "nome": "Melancia", "categoria": "fruta-comum",  "tamanho": 5 },
-        { "id": "maca",     "emoji": "🍎", "nome": "Maçã",     "categoria": "fruta-comum",  "tamanho": 3 },
-        { "id": "mirtilo",  "emoji": "🫐", "nome": "Mirtilo",  "categoria": "fruta-comum",  "tamanho": 1 },
-        { "id": "banana",   "emoji": "🍌", "nome": "Banana",   "categoria": "fruta-comum",  "tamanho": 3 }
+        { "id": "uva",      "nome": "Uva",      "categoria": "fruta-comum", "tamanho": 2, "img": "../img/uva.png"      },
+        { "id": "melancia", "nome": "Melancia", "categoria": "fruta-comum", "tamanho": 5, "img": "../img/melancia.png" },
+        { "id": "maca",     "nome": "Maçã",     "categoria": "fruta-comum", "tamanho": 3, "img": "../img/maca.png"     },
+        { "id": "mirtilo",  "nome": "Mirtilo",  "categoria": "fruta-comum", "tamanho": 1, "img": "../img/mirtilo.png"  },
+        { "id": "banana",   "nome": "Banana",   "categoria": "fruta-comum", "tamanho": 3, "img": "../img/banana.png"   }
       ],
       "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
     }
