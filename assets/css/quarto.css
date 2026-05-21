@@ -1,0 +1,12 @@
+/* =============================================================
+   quarto.css — Quarto.html (Mini-jogo 2: Depuração)
+   Depende de: base.css
+   ============================================================= */
+
+/* Área de feedback com indicação visual de posições certas/erradas */
+#feedback-blocos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.5rem;
+}

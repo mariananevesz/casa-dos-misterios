@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Despensa — Estoque Inteligente</title>
-  <link rel="stylesheet" href="../css/estilos.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/despensa.css">
 </head>
 <body>
 
@@ -98,11 +99,22 @@
   const NIVEL_KEY = 'despensa_nivel';
 
   const IMGS = {
-    uva:      '../img/fruta-uva.png',
-    melancia: '../img/fruta-melancia.png',
-    maca:     '../img/fruta-maca.png',
-    mirtilo:  '../img/fruta-mirtilo.png',
-    banana:   '../img/fruta-banana.png'
+    uva:      '../img/uva.png',
+    melancia: '../img/melancia.png',
+    maca:     '../img/maça.png',
+    mirtilo:  '../img/mirtilo.png',
+    banana:   '../img/banana.png'
+  };
+
+  /* Cores de fundo para o nível Fácil (critério: cor).
+     Cada fruta recebe um fundo na sua cor característica, do tom mais
+     claro (banana) ao mais escuro (mirtilo), independente da imagem. */
+  const COR_FUNDOS = {
+    banana:   '#FFF9C4',  // amarelo pálido   — mais claro
+    melancia: '#81C784',  // verde médio
+    maca:     '#E57373',  // vermelho médio
+    uva:      '#7E57C2',  // roxo escuro
+    mirtilo:  '#1A237E'   // azul muito escuro — mais escuro
   };
 
   async function init() {
@@ -159,6 +171,9 @@
   function buildItens(nivel) {
     const cont = document.getElementById('itens-grid');
     cont.innerHTML = '';
+    /* Nível tamanho: alinha cards pela base para que a diferença de altura
+       fique evidente — itens menores ficam visivelmente "mais baixos". */
+    cont.style.alignItems = nivel.criterio === 'tamanho' ? 'flex-end' : '';
     nivel.itens.forEach(item => {
       const card = document.createElement('article');
       card.className = 'item-card';
@@ -167,8 +182,19 @@
       card.setAttribute('role', 'option');
       card.setAttribute('tabindex', '0');
       card.setAttribute('aria-label', `${item.nome} — arraste para a prateleira`);
+      let imgHtml;
+      if (nivel.criterio === 'cor') {
+        imgHtml = `<span style="background:${COR_FUNDOS[item.id]};display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:8px;">
+          <img src="${IMGS[item.id] || ''}" alt="${item.nome}" class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">
+        </span>`;
+      } else if (nivel.criterio === 'tamanho') {
+        const px = item.tamanho !== undefined ? 20 + (item.tamanho - 1) * 14 : 40;
+        imgHtml = `<img src="${IMGS[item.id] || ''}" alt="${item.nome}" class="item-card__emoji" style="width:${px}px;height:${px}px;object-fit:contain;display:block;margin:0 auto;">`;
+      } else {
+        imgHtml = `<img src="${IMGS[item.id] || ''}" alt="${item.nome}" class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">`;
+      }
       card.innerHTML = `
-        <img src="${IMGS[item.id] || ''}" alt="${item.nome}" class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">
+        ${imgHtml}
         <p class="item-card__nome">${item.nome}</p>
         <p class="item-card__tam">${item.tamanho !== undefined ? 'tamanho ' + item.tamanho : (item.atributo || '')}</p>
       `;
@@ -202,8 +228,13 @@
         const item = nivel.itens.find(it => it.id === id);
         slot.className = 'prateleira__slot prateleira__slot--ok';
         slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        const slotImgHtml = nivel.criterio === 'cor'
+          ? `<span style="background:${COR_FUNDOS[id]};display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;">
+               <img src="${IMGS[id] || ''}" alt="${item?.nome || id}" style="width:24px;height:24px;object-fit:contain;">
+             </span>`
+          : `<img src="${IMGS[id] || ''}" alt="${item?.nome || id}" style="width:28px;height:28px;object-fit:contain;">`;
         slot.innerHTML = `
-          <img src="${IMGS[id] || ''}" alt="${item?.nome || id}" style="width:28px;height:28px;object-fit:contain;">
+          ${slotImgHtml}
           <span style="font-size:9px;display:block;margin-top:2px;">${i+1}º</span>
         `;
         slot.style.cursor = 'pointer';

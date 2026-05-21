@@ -1,0 +1,88 @@
+/* =============================================================
+   despensa.css — Despensa.html (Mini-jogo 4: Padrões)
+   Depende de: base.css
+   ============================================================= */
+
+/* ---------- Itens para arrastar ---------- */
+.itens-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.item-card {
+  background: var(--ambar-fundo);
+  border: 2px dashed var(--ambar);
+  border-radius: var(--raio);
+  padding: 10px 14px;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+}
+
+.item-card__emoji { display: block; }
+.item-card__nome  { font-size: 10px; color: var(--ambar); margin-top: 3px; font-weight: 600; }
+.item-card__tam   { font-size: 9px;  color: var(--cinza); }
+
+/* ---------- Prateleira (drop target) ---------- */
+.prateleira {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  border-bottom: 3px solid #8B6347;
+  padding-bottom: 4px;
+  min-height: 70px;
+}
+
+.prateleira__slot {
+  border: 2px dashed var(--cinza-claro);
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+  min-width: 50px;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--cinza-claro);
+}
+
+.prateleira__slot--ok {
+  background: var(--verde-fundo);
+  border: 2px solid var(--verde-claro);
+  color: #085041;
+}
+
+.prateleira__legenda {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.prateleira__leg-txt {
+  font-size: 9px;
+  color: var(--cinza-claro);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* ---------- Abas de nível de dificuldade ---------- */
+.niveis {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.nivel {
+  border-radius: var(--raio-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nivel--ok   { background: #97C459;           color: #27500A; }
+.nivel--ativo{ background: var(--laranja);     color: var(--branco); }
+.nivel--bloq { background: var(--cinza-fundo); color: var(--cinza); }

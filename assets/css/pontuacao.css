@@ -1,0 +1,61 @@
+/* =============================================================
+   pontuacao.css — TelaPontuacao.html (resultado final)
+   Depende de: base.css
+   ============================================================= */
+
+/* ---------- Cabeçalho com troféu ---------- */
+.resultado-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.resultado-header__icone  { font-size: 56px; margin-bottom: 0.5rem; }
+.resultado-header__titulo { font-size: 22px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.resultado-header__sub    { font-size: 13px; color: var(--ambar); }
+
+/* ---------- Caixa de pontuação total ---------- */
+.pontuacao-total {
+  background: var(--laranja);
+  border-radius: var(--raio-lg);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.pontuacao-total__label  { font-size: 13px; color: var(--laranja-borda); margin-bottom: 4px; }
+.pontuacao-total__numero { font-size: 48px; font-weight: 700; color: var(--branco); line-height: 1; }
+.pontuacao-total__de     { font-size: 13px; color: var(--laranja-borda); margin-top: 4px; }
+
+/* ---------- Grade de pontos por cômodo ---------- */
+.pontuacao-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.pontuacao-card {
+  background: var(--branco);
+  border-radius: var(--raio);
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.pontuacao-card--laranja { border: 1.5px solid var(--ambar-claro); }
+.pontuacao-card--roxo    { border: 1.5px solid var(--roxo-borda); }
+.pontuacao-card--verde   { border: 1.5px solid var(--verde-claro); }
+.pontuacao-card--marrom  { border: 1.5px solid var(--laranja-borda); }
+
+.pontuacao-card__icone { font-size: 18px; }
+.pontuacao-card__nome  { font-size: 11px; font-weight: 600; margin-top: 4px; }
+.pontuacao-card__pts   { font-size: 13px; font-weight: 600; }
+
+.pontuacao-card__nome--laranja { color: var(--marrom-medio); }
+.pontuacao-card__nome--roxo    { color: #3C3489; }
+.pontuacao-card__nome--verde   { color: #085041; }
+.pontuacao-card__nome--marrom  { color: #71231E; }
+
+.pontuacao-card__pts--laranja  { color: var(--laranja); }
+.pontuacao-card__pts--roxo     { color: var(--roxo); }
+.pontuacao-card__pts--verde    { color: var(--verde); }
+.pontuacao-card__pts--marrom   { color: var(--laranja); }

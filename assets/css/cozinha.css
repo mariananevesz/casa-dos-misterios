@@ -1,0 +1,53 @@
+/* =============================================================
+   cozinha.css — Cozinha.html (Mini-jogo 3: Verdadeiro ou Falso)
+   Depende de: base.css
+   ============================================================= */
+
+/* ---------- Botões Verdadeiro / Falso ---------- */
+.vf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.btn-vf {
+  border: none;
+  border-radius: var(--raio);
+  padding: 18px 0;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+
+.btn-vf:hover { opacity: 0.88; }
+
+.btn-vf__emoji { font-size: 28px; }
+
+.btn-vf--verde    { background: var(--verde);    color: var(--branco); }
+.btn-vf--vermelho { background: var(--vermelho); color: var(--branco); }
+
+/* ---------- Bolinhas de progresso centralizadas ---------- */
+.progresso--centro {
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Caixa de pergunta ---------- */
+.pergunta-box {
+  background: var(--branco);
+  border: 2px solid var(--verde-claro);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.pergunta-box__numero { font-size: 11px; font-weight: 600; color: var(--cinza); text-transform: uppercase; margin-bottom: 10px; }
+.pergunta-box__frase  { font-size: 16px; font-weight: 600; color: #085041; line-height: 1.5; margin-bottom: 0.5rem; }
+.pergunta-box__aviso  { font-size: 12px; color: var(--cinza); }
