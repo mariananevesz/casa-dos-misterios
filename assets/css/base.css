@@ -466,6 +466,17 @@ kbd {
   color: var(--texto-escuro);
 }
 
+/* ---------- Responsividade global ---------- */
+@media (max-width: 560px) {
+  body  { padding: 1rem; }
+  .tela { padding: 1rem; }
+}
+
+@media (max-width: 400px) {
+  body  { padding: 0.6rem; }
+  .tela { padding: 0.85rem; }
+}
+
 /* ---------- Foco visível (acessibilidade) ---------- */
 :focus-visible {
   outline: 3px solid var(--laranja);

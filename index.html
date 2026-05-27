@@ -40,63 +40,52 @@
 
 
     <!-- Menu -->
-    <button class="btn--menu-principal btn--menu-laranja"
-        onclick="window.location.href='assets/pages/MapaCasa.html'">
-  <span>▶</span>
-  <strong>Jogar</strong>
-
-</button>
-
-<button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
-  <span>📖</span>
-  <strong>Como jogar</strong>
-  
-</button>
-
-<button class="btn--menu-principal btn--menu-outline"
-        onclick="window.location.href='assets/pages/TelaPontuacao.html'">
-  <span>🏆</span>
-  <strong>Pontuações</strong>
-
-</button>
-
-<button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
-  <span>↻</span>
-  <strong>Reiniciar progresso</strong>
- 
-</button>   
+    <div class="menu-botoes">
+      <button class="btn--menu-principal btn--menu-laranja"
+              onclick="window.location.href='assets/pages/MapaCasa.html'">
+        <span>▶</span>
+        <strong>Jogar</strong>
+      </button>
+      <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
+        <span>📖</span>
+        <strong>Como jogar</strong>
+      </button>
+      <button class="btn--menu-principal btn--menu-outline"
+              onclick="window.location.href='assets/pages/TelaPontuacao.html'">
+        <span>🏆</span>
+        <strong>Pontuações</strong>
+      </button>
+      <button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
+        <span>↻</span>
+        <strong>Reiniciar progresso</strong>
+      </button>
+    </div>
 
     <!-- Prévia dos cômodos -->
     <section class="inicio-comodos" aria-label="Cômodos do jogo">
-      <div style="width:100%;">
-    <p class="inicio-comodos__titulo">Cômodos da Casa</p>
-    <div style="display:flex; gap:12px; justify-content:center;">
-
-      <article class="inicio-comodo">
-      <img src="assets/img/icone-sala.png" alt="Sala" class="inicio-comodo__icone-img">
-        <p class="inicio-comodo__label" id="lbl-sala">Sala</p>
-      </article>
-
-      <article class="inicio-comodo">
-        <img src="assets/img/icone-quarto.png"   alt="Quarto"   class="inicio-comodo__icone-img">
-        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-quarto">Quarto</p>
-      </article>
-
-      <article class="inicio-comodo">
-        <img src="assets/img/icone-cozinha.png"  alt="Cozinha"  class="inicio-comodo__icone-img">
-        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-cozinha">Cozinha</p>
-
-      </article>
-
-      <article class="inicio-comodo">
-        <img src="assets/img/icone-despensa.png" alt="Despensa" class="inicio-comodo__icone-img">
-        <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-despensa">Despensa</p>
-      </article>
+      <p class="inicio-comodos__titulo">Cômodos da Casa</p>
+      <div class="inicio-comodos__lista">
+        <article class="inicio-comodo">
+          <img src="assets/img/icone-sala.png" alt="Sala" class="inicio-comodo__icone-img">
+          <p class="inicio-comodo__label" id="lbl-sala">Sala</p>
+        </article>
+        <article class="inicio-comodo">
+          <img src="assets/img/icone-quarto.png" alt="Quarto" class="inicio-comodo__icone-img">
+          <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-quarto">Quarto</p>
+        </article>
+        <article class="inicio-comodo">
+          <img src="assets/img/icone-cozinha.png" alt="Cozinha" class="inicio-comodo__icone-img">
+          <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-cozinha">Cozinha</p>
+        </article>
+        <article class="inicio-comodo">
+          <img src="assets/img/icone-despensa.png" alt="Despensa" class="inicio-comodo__icone-img">
+          <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-despensa">Despensa</p>
+        </article>
+      </div>
+      <p class="inicio-rodape">2º e 3º ano do Ensino Fundamental</p>
     </section>
 
-    <p class="inicio-rodape">2º e 3º ano do Ensino Fundamental</p>
-
-  </section>
+  </section><!-- /tela-principal -->
 
   <!-- ===== Modal Configurações ===== -->
   <div class="modal-overlay" id="modal-config" role="dialog" aria-modal="true"

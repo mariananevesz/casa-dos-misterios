@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cozinha — Verdadeiro ou Falso</title>
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/cozinha.css">
+  <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
 
@@ -16,8 +15,8 @@
       <section class="hud__info">
         <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img">
         <section>
-          <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p> 
-          <p class="hud__subtitulo hud__subtitulo--verde">Mini-jogo 3</p>
+          <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p>
+          <p class="hud__subtitulo hud__subtitulo--verde" id="hud-subtitulo">Mini-jogo 3</p>
         </section>
       </section>
       <span class="badge badge--verde" id="badge-pts" aria-live="polite">0 pts</span>
@@ -25,12 +24,15 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote"> 
+      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
       <p class="balao__texto balao__texto--verde" id="logi-texto">Carregando…</p>
     </section>
 
-    <!-- Progresso -->
+    <!-- Progresso (bolinhas da fase atual) -->
     <section class="progresso progresso--centro" id="progresso-dots" aria-label="Progresso das perguntas"></section>
+
+    <!-- Abas de nível (igual à Despensa) -->
+    <section class="niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
 
     <!-- Caixa de pergunta -->
     <section class="pergunta-box" id="pergunta-box" aria-live="polite">
@@ -61,7 +63,7 @@
 
     <!-- Dica do jogo -->
     <section class="dica dica--verde">
-      <img src="../img/logi_exclamacao.png" alt="" class="dica-img">
+      <img src="../img/dica.png" alt="" class="dica-img">
       <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
     </section>
 
@@ -88,63 +90,238 @@
   /* ===== COZINHA — lógica do jogo ===== */
 
   /* Dados embutidos — fallback quando fetch não está disponível (file://) */
-  // SUBSTITUA a linha inteira do COZINHA_INLINE por:
-const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidadeBNCC":"EF03CO01","instrucaoInstrutor":"Olá, chefinho! Vou te contar uma coisa sobre os alimentos. Você decide: é Verdadeiro ou Falso? Preste atenção nas palavras!","dica":"Dica: fique de olho nas palavras não, nunca, sempre e jamais!","blocos":[{"bloco":1,"perguntas":[{"id":1,"frase":"A banana é uma fruta.","resposta":true,"explicacao":"Sim! A banana é uma fruta muito comum no Brasil."},{"id":2,"frase":"O leite nunca vem da vaca.","resposta":false,"explicacao":"Errado! O leite vem sim da vaca. 'Nunca' tornou a frase falsa."},{"id":3,"frase":"O pão não precisa de farinha para ser feito.","resposta":false,"explicacao":"Errado! O pão precisa de farinha. 'Não' inverteu o sentido."},{"id":4,"frase":"O açúcar deixa os alimentos mais doces.","resposta":true,"explicacao":"Verdade! O açúcar adoça bolos, sucos e sobremesas."},{"id":5,"frase":"A cenoura sempre é um doce.","resposta":false,"explicacao":"Errado! A cenoura é um legume. 'Sempre' não muda isso."}]},{"bloco":2,"perguntas":[{"id":6,"frase":"O sorvete derrete quando fica no calor.","resposta":true,"explicacao":"Verdade! O sorvete é gelado e derrete quando esquenta."},{"id":7,"frase":"O ovo jamais pode ser frito.","resposta":false,"explicacao":"Errado! O ovo pode sim ser frito. 'Jamais' tornou a frase falsa."},{"id":8,"frase":"A maçã pode ser vermelha ou verde.","resposta":true,"explicacao":"Verdade! Existem maçãs de cores diferentes."},{"id":9,"frase":"O sal não é usado para temperar os alimentos.","resposta":false,"explicacao":"Errado! O sal é sim um tempero muito usado na cozinha."},{"id":10,"frase":"O tomate pode ser usado em molhos.","resposta":true,"explicacao":"Verdade! O tomate é muito usado em molhos e saladas."}]},{"bloco":3,"perguntas":[{"id":11,"frase":"O mel é doce.","resposta":true,"explicacao":"Verdade! O mel é um dos alimentos mais doces que existem."},{"id":12,"frase":"O limão nunca é azedo.","resposta":false,"explicacao":"Errado! O limão é azedo sim. 'Nunca' tornou a frase falsa."},{"id":13,"frase":"A laranja não tem suco.","resposta":false,"explicacao":"Errado! A laranja tem muito suco. 'Não' inverteu o sentido."},{"id":14,"frase":"O arroz é cozido na água.","resposta":true,"explicacao":"Verdade! O arroz é cozido na água para ficar macio."},{"id":15,"frase":"O peixe sempre vive na terra.","resposta":false,"explicacao":"Errado! O peixe vive na água, não na terra."}]},{"bloco":4,"perguntas":[{"id":16,"frase":"O feijão é um alimento.","resposta":true,"explicacao":"Verdade! O feijão é um alimento muito nutritivo."},{"id":17,"frase":"O leite jamais pode ser aquecido.","resposta":false,"explicacao":"Errado! O leite pode sim ser aquecido. 'Jamais' tornou a frase falsa."},{"id":18,"frase":"O morango não é uma fruta.","resposta":false,"explicacao":"Errado! O morango é uma fruta deliciosa e vermelha."},{"id":19,"frase":"O milho pode ser cozido ou assado.","resposta":true,"explicacao":"Verdade! O milho fica gostoso das duas formas."},{"id":20,"frase":"A batata sempre cresce nas árvores.","resposta":false,"explicacao":"Errado! A batata cresce embaixo da terra, não nas árvores."}]},{"bloco":5,"perguntas":[{"id":21,"frase":"O abacaxi é uma fruta.","resposta":true,"explicacao":"Verdade! O abacaxi é uma fruta tropical bem saborosa."},{"id":22,"frase":"O chocolate nunca é feito de cacau.","resposta":false,"explicacao":"Errado! O chocolate é feito de cacau sim. 'Nunca' tornou a frase falsa."},{"id":23,"frase":"A alface não é uma verdura.","resposta":false,"explicacao":"Errado! A alface é uma verdura usada em saladas."},{"id":24,"frase":"O queijo é feito a partir do leite.","resposta":true,"explicacao":"Verdade! O leite é o ingrediente principal do queijo."},{"id":25,"frase":"O feijão sempre é uma fruta doce.","resposta":false,"explicacao":"Errado! O feijão é um grão, não uma fruta."}]}]};
+  /* Fallback completo — funciona tanto em file:// quanto em http:// */
+  const COZINHA_INLINE = {
+    miniJogo:"Cozinha — Verdadeiro ou Falso", habilidadeBNCC:"EF03CO01",
+    instrucaoInstrutor:"Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
+    dica:"Dica: fique de olho nas palavras não, nunca, jamais e sempre!",
+    blocos:[
+      {id:1,  dificuldade:"Fácil", perguntas:[
+        {id:1,  frase:"O fogão serve para aquecer a comida.",       resposta:true,  explicacao:"Sim! O fogão esquenta e cozinha os alimentos."},
+        {id:2,  frase:"A faca é usada para cortar alimentos.",       resposta:true,  explicacao:"Certo! A faca é um utensílio de corte na cozinha."},
+        {id:3,  frase:"O copo serve para guardar comida sólida.",    resposta:false, explicacao:"Não. O copo serve para beber líquidos, não para guardar comida sólida.", palavraChave:"sólida"}
+      ]},
+      {id:2,  dificuldade:"Fácil", perguntas:[
+        {id:4,  frase:"A geladeira conserva os alimentos frescos.",  resposta:true,  explicacao:"Sim! O frio da geladeira evita que os alimentos estraguem rápido."},
+        {id:5,  frase:"O sal é doce.",                               resposta:false, explicacao:"Não. O sal tem sabor salgado, não doce.", palavraChave:"doce"},
+        {id:6,  frase:"A colher serve para mexer e servir alimentos.", resposta:true, explicacao:"Correto! A colher é um utensílio muito usado na cozinha."}
+      ]},
+      {id:3,  dificuldade:"Fácil", perguntas:[
+        {id:7,  frase:"A panela não serve para cozinhar.",            resposta:false, explicacao:"Errado. A panela é feita exatamente para cozinhar alimentos."},
+        {id:8,  frase:"O açúcar é doce.",                            resposta:true,  explicacao:"Sim! O açúcar tem sabor doce."},
+        {id:9,  frase:"O limão não tem sabor doce.",                  resposta:true,  explicacao:"Verdade! O limão é azedo, não doce.", palavraChave:"doce"}
+      ]},
+      {id:4,  dificuldade:"Fácil", perguntas:[
+        {id:10, frase:"O queijo é feito do leite.",                   resposta:true,  explicacao:"Sim! O queijo é produzido a partir do leite."},
+        {id:11, frase:"O ovo não pode ser cozido.",                   resposta:false, explicacao:"Errado! O ovo pode ser cozido de várias formas.", palavraChave:"cozido"},
+        {id:12, frase:"O pão é feito de areia.",                      resposta:false, explicacao:"Não! O pão é feito de farinha, água e outros ingredientes.", palavraChave:"areia"}
+      ]},
+      {id:5,  dificuldade:"Fácil", perguntas:[
+        {id:13, frase:"O vinagre tem sabor azedo.",                   resposta:true,  explicacao:"Sim! O vinagre é bem azedo."},
+        {id:14, frase:"A geladeira não esquenta os alimentos.",       resposta:true,  explicacao:"Correto! A geladeira resfria, não esquenta.", palavraChave:"esquenta"},
+        {id:15, frase:"O arroz não precisa de água para cozinhar.",   resposta:false, explicacao:"Errado! O arroz é sempre cozido com água.", palavraChave:"água"}
+      ]},
+      {id:6,  dificuldade:"Médio", perguntas:[
+        {id:16, frase:"O sal não tempera a comida.",                  resposta:false, explicacao:"Errado! O sal é um dos temperos mais usados na cozinha.", palavraChave:"tempera"},
+        {id:17, frase:"A água não molha.",                            resposta:false, explicacao:"Errado! A água molha tudo que toca.", palavraChave:"molha"},
+        {id:18, frase:"A cenoura não é uma fruta.",                   resposta:true,  explicacao:"Verdade! A cenoura é um legume, não uma fruta.", palavraChave:"fruta"}
+      ]},
+      {id:7,  dificuldade:"Médio", perguntas:[
+        {id:19, frase:"O fogão não serve para guardar alimentos.",    resposta:true,  explicacao:"Correto! Para guardar alimentos usamos a geladeira ou armários.", palavraChave:"guardar"},
+        {id:20, frase:"O açúcar não é amargo.",                       resposta:true,  explicacao:"Verdade! O açúcar é doce, não amargo.", palavraChave:"amargo"},
+        {id:21, frase:"A colher não é usada para comer sopa.",        resposta:false, explicacao:"Errado! A colher é o utensílio certo para tomar sopa.", palavraChave:"sopa"}
+      ]},
+      {id:8,  dificuldade:"Médio", perguntas:[
+        {id:22, frase:"O feijão não precisa ser cozido antes de comer.", resposta:false, explicacao:"Errado! O feijão cru não pode ser comido; precisa ser cozido.", palavraChave:"cozido"},
+        {id:23, frase:"O limão não é doce.",                          resposta:true,  explicacao:"Verdade! O limão tem sabor azedo, não doce.", palavraChave:"doce"},
+        {id:24, frase:"A faca não é usada para comer sopa.",          resposta:true,  explicacao:"Correto! Para sopa usamos a colher, não a faca."}
+      ]},
+      {id:9,  dificuldade:"Médio", perguntas:[
+        {id:25, frase:"O pão não é feito de farinha.",                resposta:false, explicacao:"Errado! O pão é feito principalmente de farinha de trigo.", palavraChave:"farinha"},
+        {id:26, frase:"O chocolate não é salgado.",                   resposta:true,  explicacao:"Verdade! O chocolate tem sabor doce, não salgado.", palavraChave:"salgado"},
+        {id:27, frase:"A panela não pode ficar no fogo direto.",      resposta:false, explicacao:"Errado! A panela é feita para ir ao fogo.", palavraChave:"fogo"}
+      ]},
+      {id:10, dificuldade:"Médio", perguntas:[
+        {id:28, frase:"A manteiga não é feita do leite.",             resposta:false, explicacao:"Errado! A manteiga é produzida a partir da gordura do leite.", palavraChave:"leite"},
+        {id:29, frase:"O garfo não é usado para comer arroz.",        resposta:false, explicacao:"Errado! O garfo pode ser usado para comer arroz."},
+        {id:30, frase:"A frigideira não serve para assar bolos.",     resposta:true,  explicacao:"Verdade! Para assar bolos usamos o forno, não a frigideira.", palavraChave:"forno"}
+      ]},
+      {id:11, dificuldade:"Médio", perguntas:[
+        {id:31, frase:"A colher nunca é usada na cozinha.",           resposta:false, explicacao:"Errado! A colher é usada o tempo todo na cozinha."},
+        {id:32, frase:"O sal nunca é uma fruta.",                     resposta:true,  explicacao:"Verdade! O sal é um tempero mineral, jamais uma fruta.", palavraChave:"fruta"},
+        {id:33, frase:"A geladeira nunca esquenta os alimentos.",     resposta:true,  explicacao:"Correto! A geladeira só resfria, nunca esquenta.", palavraChave:"esquenta"}
+      ]},
+      {id:12, dificuldade:"Médio", perguntas:[
+        {id:34, frase:"O arroz nunca é cozido com água.",             resposta:false, explicacao:"Errado! O arroz é quase sempre cozido com água.", palavraChave:"água"},
+        {id:35, frase:"O vinagre jamais tem sabor doce.",             resposta:true,  explicacao:"Verdade! O vinagre tem sabor azedo, jamais doce.", palavraChave:"doce"},
+        {id:36, frase:"A faca jamais serve para cozinhar.",           resposta:true,  explicacao:"Correto! A faca serve para cortar, não para cozinhar.", palavraChave:"cozinhar"}
+      ]},
+      {id:13, dificuldade:"Médio", perguntas:[
+        {id:37, frase:"O bolo jamais vai ao forno.",                  resposta:false, explicacao:"Errado! O bolo precisa ir ao forno para assar.", palavraChave:"forno"},
+        {id:38, frase:"O sal nunca deixa a comida com sabor salgado.", resposta:false, explicacao:"Errado! O sal é exatamente o que deixa a comida salgada.", palavraChave:"salgado"},
+        {id:39, frase:"A panela nunca é usada como colher.",          resposta:true,  explicacao:"Verdade! A panela serve para cozinhar, não para comer."}
+      ]},
+      {id:14, dificuldade:"Médio", perguntas:[
+        {id:40, frase:"O leite jamais é usado em receitas.",          resposta:false, explicacao:"Errado! O leite é ingrediente de muitas receitas.", palavraChave:"receitas"},
+        {id:41, frase:"O pão nunca é feito de chocolate puro.",       resposta:true,  explicacao:"Correto! O pão tradicional é feito de farinha, não de chocolate puro.", palavraChave:"chocolate"},
+        {id:42, frase:"O ovo jamais pode ser cozido.",                resposta:false, explicacao:"Errado! O ovo cozido é muito comum na cozinha.", palavraChave:"cozido"}
+      ]},
+      {id:15, dificuldade:"Médio", perguntas:[
+        {id:43, frase:"A água nunca vira vapor quando aquecida.",     resposta:false, explicacao:"Errado! Quando aquecida o suficiente, a água vira vapor.", palavraChave:"vapor"},
+        {id:44, frase:"A geladeira jamais é usada para assar bolos.", resposta:true,  explicacao:"Correto! Para assar bolos usamos o forno, não a geladeira.", palavraChave:"assar"},
+        {id:45, frase:"O feijão nunca é servido com arroz.",          resposta:false, explicacao:"Errado! Arroz com feijão é um prato muito comum no Brasil!", palavraChave:"arroz"}
+      ]},
+      {id:16, dificuldade:"Difícil", perguntas:[
+        {id:46, frase:"A comida sempre fica fria no fogão.",          resposta:false, explicacao:"Errado! O fogão aquece a comida, não a resfria.", palavraChave:"fria"},
+        {id:47, frase:"O cozinheiro sempre precisa de ingredientes para cozinhar.", resposta:true, explicacao:"Verdade! Sem ingredientes não há como preparar uma refeição."},
+        {id:48, frase:"O bolo sempre é salgado.",                     resposta:false, explicacao:"Errado! O bolo geralmente é doce, não salgado.", palavraChave:"salgado"}
+      ]},
+      {id:17, dificuldade:"Difícil", perguntas:[
+        {id:49, frase:"A geladeira sempre precisa de energia para funcionar.", resposta:true, explicacao:"Correto! A geladeira precisa de eletricidade para manter o frio.", palavraChave:"energia"},
+        {id:50, frase:"O sal sempre deixa a comida doce.",            resposta:false, explicacao:"Errado! O sal deixa a comida salgada, não doce.", palavraChave:"doce"},
+        {id:51, frase:"A água sempre ferve ao ser aquecida o suficiente.", resposta:true, explicacao:"Verdade! Com calor suficiente, a água sempre ferve."}
+      ]},
+      {id:18, dificuldade:"Difícil", perguntas:[
+        {id:52, frase:"O fogão sempre precisa de energia ou gás para funcionar.", resposta:true, explicacao:"Correto! O fogão elétrico usa energia e o a gás usa gás.", palavraChave:"gás"},
+        {id:53, frase:"O açúcar sempre deixa a comida amarga.",       resposta:false, explicacao:"Errado! O açúcar adoça, não amarga.", palavraChave:"amarga"},
+        {id:54, frase:"O cozinheiro sempre usa utensílios para preparar a comida.", resposta:true, explicacao:"Correto! Sem utensílios como panelas e colheres, cozinhar é impossível."}
+      ]},
+      {id:19, dificuldade:"Difícil", perguntas:[
+        {id:55, frase:"A frigideira sempre esquenta o alimento quando colocada no fogo.", resposta:true, explicacao:"Verdade! No fogo, a frigideira esquenta e cozinha o alimento."},
+        {id:56, frase:"O limão sempre tem sabor doce.",               resposta:false, explicacao:"Errado! O limão tem sabor azedo, não doce.", palavraChave:"doce"},
+        {id:57, frase:"A panela sempre precisa de calor para cozinhar.", resposta:true, explicacao:"Correto! Sem calor, a panela não cozinha nada.", palavraChave:"calor"}
+      ]},
+      {id:20, dificuldade:"Difícil", perguntas:[
+        {id:58, frase:"O pão sempre é feito de chocolate.",           resposta:false, explicacao:"Errado! O pão é feito de farinha, não de chocolate.", palavraChave:"chocolate"},
+        {id:59, frase:"A cozinha sempre tem espaço para preparar alimentos.", resposta:true, explicacao:"Verdade! A cozinha é o cômodo feito exatamente para isso."},
+        {id:60, frase:"O feijão sempre é consumido cru.",             resposta:false, explicacao:"Errado! O feijão precisa ser cozido antes de ser consumido.", palavraChave:"cru"}
+      ]},
+      {id:21, dificuldade:"Difícil", perguntas:[
+        {id:61, frase:"O açúcar não é doce.",                         resposta:false, explicacao:"Errado! O açúcar é famoso justamente pelo sabor doce.", palavraChave:"doce"},
+        {id:62, frase:"A geladeira sempre conserva melhor do que deixar na mesa.", resposta:true, explicacao:"Verdade! O frio da geladeira ajuda os alimentos a durarem mais."},
+        {id:63, frase:"A faca nunca precisa ser afiada.",             resposta:false, explicacao:"Errado! A faca precisa ser afiada para cortar bem.", palavraChave:"afiada"}
+      ]},
+      {id:22, dificuldade:"Difícil", perguntas:[
+        {id:64, frase:"O vinagre não é usado em saladas.",            resposta:false, explicacao:"Errado! O vinagre é muito comum em temperos de salada.", palavraChave:"saladas"},
+        {id:65, frase:"A frigideira nunca é usada para fritar.",      resposta:false, explicacao:"Errado! A frigideira é feita exatamente para fritar alimentos.", palavraChave:"fritar"},
+        {id:66, frase:"O leite sempre precisa ser guardado na geladeira após aberto.", resposta:true, explicacao:"Correto! O leite aberto deve ficar na geladeira para não estragar."}
+      ]},
+      {id:23, dificuldade:"Difícil", perguntas:[
+        {id:67, frase:"O sal não torna a comida mais saborosa.",      resposta:false, explicacao:"Errado! O sal realça o sabor dos alimentos.", palavraChave:"saborosa"},
+        {id:68, frase:"A frigideira sempre precisa de fogo para ser usada.", resposta:true, explicacao:"Correto! A frigideira precisa de calor para cozinhar alimentos.", palavraChave:"fogo"},
+        {id:69, frase:"O queijo nunca pode ser usado em sanduíches.", resposta:false, explicacao:"Errado! O queijo é um ingrediente muito comum em sanduíches.", palavraChave:"sanduíches"}
+      ]},
+      {id:24, dificuldade:"Difícil", perguntas:[
+        {id:70, frase:"O ovo não pode ser usado em bolos.",           resposta:false, explicacao:"Errado! O ovo é ingrediente fundamental em muitos bolos.", palavraChave:"bolos"},
+        {id:71, frase:"A geladeira jamais pode conter alimentos já cozidos.", resposta:false, explicacao:"Errado! A geladeira é ótima para guardar sobras de comida cozida.", palavraChave:"cozidos"},
+        {id:72, frase:"O cozinheiro sempre lava as mãos antes de preparar alimentos.", resposta:true, explicacao:"Correto! Lavar as mãos é essencial para a higiene na cozinha."}
+      ]},
+      {id:25, dificuldade:"Difícil", perguntas:[
+        {id:73, frase:"O fogão não é um equipamento da cozinha.",     resposta:false, explicacao:"Errado! O fogão é um dos principais equipamentos da cozinha.", palavraChave:"equipamento"},
+        {id:74, frase:"A água nunca pode ser usada para cozinhar massas.", resposta:false, explicacao:"Errado! Macarrão e outras massas são cozidos em água fervente.", palavraChave:"massas"},
+        {id:75, frase:"O chocolate sempre é feito com cacau.",        resposta:true,  explicacao:"Correto! O cacau é o ingrediente principal do chocolate.", palavraChave:"cacau"}
+      ]}
+    ]
+  };
+
   let gameData    = null;
   let perguntaIdx = 0;
   let acertos     = 0;
   let respondendo = false;
 
-
   async function init() {
+    let fonte = COZINHA_INLINE;
     try {
-      gameData = await loadGameData('../data/cozinha.json');
-    } catch(e) {
-      gameData = COZINHA_INLINE; // fallback file://
-    }
-    const blocoIdx        = gameState.getCozinhaBloco();          // lê e avança o contador
-    gameData.perguntas    = gameData.blocos[blocoIdx].perguntas;  // seleciona o bloco certo
-    document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor; 
-    document.getElementById('dica-texto').textContent = gameData.dica;
+      fonte = await loadGameData('../data/cozinha.json');
+    } catch(e) { /* file:// ou falha de rede — usa inline */ }
+
+    /* Separa blocos por fase */
+    const f1 = fonte.blocos.filter(b => b.dificuldade === 'Fácil');
+    const f2 = fonte.blocos.filter(b => b.dificuldade === 'Médio');
+    const f3 = fonte.blocos.filter(b => b.dificuldade === 'Difícil');
+
+    /* Seleciona um bloco de cada fase de forma cíclica a cada sessão */
+    const sessao = gameState.getCozinhaBloco();
+    const b1 = f1[sessao % f1.length];
+    const b2 = f2[sessao % f2.length];
+    const b3 = f3[sessao % f3.length];
+
+    /* Achata 9 perguntas em sequência; cada uma carrega sua fase */
+    const perguntas = [
+      ...b1.perguntas.map(p => Object.assign({}, p, { _fase: 'Fácil' })),
+      ...b2.perguntas.map(p => Object.assign({}, p, { _fase: 'Médio' })),
+      ...b3.perguntas.map(p => Object.assign({}, p, { _fase: 'Difícil' }))
+    ];
+
+    gameData = {
+      instrucaoInstrutor: fonte.instrucaoInstrutor,
+      dica:               fonte.dica,
+      perguntas,
+      tamFase: 3   /* perguntas por fase */
+    };
+
+    document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+    document.getElementById('dica-texto').textContent  = gameData.dica;
     renderPergunta();
     atualizarBadge();
   }
 
+  /* ---- Abas de nível — mesmo padrão da Despensa ---- */
+  const NIVEIS = ['Fácil', 'Médio', 'Difícil'];
+
+  function buildNivelTabs(faseAtual) {
+    const cont = document.getElementById('niveis-tabs');
+    cont.innerHTML = '';
+    const idxAtual = NIVEIS.indexOf(faseAtual);
+    NIVEIS.forEach((nome, i) => {
+      const span = document.createElement('span');
+      if (i < idxAtual)        span.className = 'nivel nivel--ok';
+      else if (i === idxAtual) span.className = 'nivel nivel--ativo';
+      else                     span.className = 'nivel nivel--bloq';
+      span.textContent = nome + (i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : '');
+      cont.appendChild(span);
+    });
+  }
+
   /* ---- Renderiza pergunta atual ---- */
   function renderPergunta() {
-    const total = gameData.perguntas.length;
-    const p     = gameData.perguntas[perguntaIdx];
-    document.getElementById('pergunta-numero').textContent = `Pergunta ${perguntaIdx + 1} de ${total}`;
-    document.getElementById('pergunta-frase').innerHTML = destacarPalavrasChaves(destacarNegacoes(p.frase));
+    const p          = gameData.perguntas[perguntaIdx];
+    const faseAtual  = p._fase;
+    const idxNaFase  = perguntaIdx % gameData.tamFase;
+
+    document.getElementById('hud-subtitulo').textContent   = `Mini-jogo 3 · ${faseAtual}`;
+    document.getElementById('pergunta-numero').textContent = `${faseAtual} · Pergunta ${idxNaFase + 1} de ${gameData.tamFase}`;
+    document.getElementById('pergunta-frase').innerHTML    = destacarFrase(p.frase, p.palavraChave);
     document.getElementById('feedback-area').style.display = 'none';
+    buildNivelTabs(faseAtual);
     renderProgresso();
     habilitarBotoes(true);
   }
 
-  function destacarNegacoes(frase) {
-    return frase.replace(/\b(não|nunca|sempre|jamais)\b/gi,
+  function destacarFrase(frase, palavraChave) {
+    let r = frase.replace(/\b(não|nunca|sempre|jamais)\b/gi,
       '<u style="font-weight:700;">$1</u>');
-  }
-  function destacarPalavrasChaves(frase)
-  {
-    return frase.replace(/\b(fruta|vermelha|verde|doces|calor)\b/gi,
-      '<u style="font-weight:700;">$1</u>');
+    if (palavraChave) {
+      const re = new RegExp(`\\b(${palavraChave})\\b`, 'gi');
+      r = r.replace(re, '<strong>$1</strong>');
+    }
+    return r;
   }
 
-  /* ---- Bolinhas de progresso ---- */
+  /* ---- Bolinhas de progresso (3 dots = dentro da fase atual) ---- */
   function renderProgresso() {
-    const cont  = document.getElementById('progresso-dots');
-    const total = gameData.perguntas.length;
-    cont.innerHTML = '';
-    for (let i = 0; i < total; i++) {
+    const cont      = document.getElementById('progresso-dots');
+    const idxNaFase = perguntaIdx % gameData.tamFase;
+    cont.innerHTML  = '';
+    for (let i = 0; i < gameData.tamFase; i++) {
       const span = document.createElement('span');
       span.className = 'progresso__bolinha ' + (
-        i < perguntaIdx ? 'progresso__bolinha--ok' :
-        i === perguntaIdx ? 'progresso__bolinha--meio' :
-        'progresso__bolinha--vazio'
+        i < idxNaFase  ? 'progresso__bolinha--ok'   :
+        i === idxNaFase ? 'progresso__bolinha--meio' :
+                          'progresso__bolinha--vazio'
       );
       span.setAttribute('aria-label', `Pergunta ${i+1}: ${
-        i < perguntaIdx ? 'respondida' : i === perguntaIdx ? 'atual' : 'pendente'}`);
+        i < idxNaFase ? 'respondida' : i === idxNaFase ? 'atual' : 'pendente'}`);
       cont.appendChild(span);
     }
   }
@@ -161,14 +338,14 @@ const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidade
     if (ok) {
       acertos++;
       audio.acerto();
-      const msg = p.explicacao || 'Correto! Muito bem!';
-      mostrarFeedback(msg, 'verde');
+      mostrarFeedback(p.explicacao ? `Correto! ${p.explicacao}` : 'Correto! Muito bem!', 'verde');
     } else {
       audio.erro();
-      const msg = p.explicacao
-        ? `Ops! ${p.explicacao}`
-        : `Ops! A resposta correta é ${p.resposta ? 'Verdadeiro' : 'Falso'}.`;
-      mostrarFeedback(msg, 'erro');
+      const correta = p.resposta ? 'Verdadeiro' : 'Falso';
+      mostrarFeedback(
+        p.explicacao ? `A resposta é ${correta}. ${p.explicacao}` : `Ops! A resposta correta é ${correta}.`,
+        'erro'
+      );
     }
 
     atualizarBadge();
@@ -200,6 +377,7 @@ const COZINHA_INLINE = {"miniJogo":"Cozinha — Verdadeiro ou Falso","habilidade
 
   /* ---- Conclusão ---- */
   function conclusao() {
+    gameState.setCozinhaBloco(gameState.getCozinhaBloco() + 1);
     const erros = gameData.perguntas.length - acertos;
     const score = gameState.calcularScore(erros);
     gameState.setRoomScore('cozinha', score);

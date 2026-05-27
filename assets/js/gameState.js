@@ -16,7 +16,7 @@ const DEFAULT_STATE = {
     somAtivado:    true,
     musicaAtivada: true
   },
-  blocos: { cozinha: 0 }
+  cozinhaBloco: 0
 };
 
 const gameState = {
@@ -27,11 +27,11 @@ const gameState = {
       const saved = JSON.parse(raw);
       // merge defaults so new keys are always present
       return {
-        scores:    { ...DEFAULT_STATE.scores,    ...saved.scores },
-        completed: { ...DEFAULT_STATE.completed, ...saved.completed },
-        unlocked:  { ...DEFAULT_STATE.unlocked,  ...saved.unlocked },
-        settings:  { ...DEFAULT_STATE.settings,  ...saved.settings },
-        blocos:    { ...DEFAULT_STATE.blocos,    ...saved.blocos } 
+        scores:       { ...DEFAULT_STATE.scores,    ...saved.scores },
+        completed:    { ...DEFAULT_STATE.completed, ...saved.completed },
+        unlocked:     { ...DEFAULT_STATE.unlocked,  ...saved.unlocked },
+        settings:     { ...DEFAULT_STATE.settings,  ...saved.settings },
+        cozinhaBloco: saved.cozinhaBloco ?? DEFAULT_STATE.cozinhaBloco
       };
     } catch {
       return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -78,7 +78,6 @@ const gameState = {
   getSettings() {
     return this._load().settings;
   },
-  
 
   calcularScore(erros) {
     if (erros === 0) return 25;
@@ -86,13 +85,15 @@ const gameState = {
     if (erros === 2) return 15;
     return 10;
   },
-  
-    getCozinhaBloco() {
-    const state  = this._load();
-    const atual  = state.blocos.cozinha;           // lê bloco atual (0–4)
-    state.blocos.cozinha = (atual + 1) % 5;        // avança para a próxima entrada
+
+  getCozinhaBloco() {
+    return this._load().cozinhaBloco ?? 0;
+  },
+
+  setCozinhaBloco(n) {
+    const state = this._load();
+    state.cozinhaBloco = n;
     this._save(state);
-    return atual;                                  // retorna o índice do bloco a exibir
   },
 
   reset() {

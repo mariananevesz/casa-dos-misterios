@@ -178,6 +178,14 @@
 
 .inicio-comodo__label--cinza { color: var(--cinza); }
 
+/* ---------- Lista de cômodos (flex row) ---------- */
+.inicio-comodos__lista {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 /* ---------- Rodapé ---------- */
 .inicio-rodape {
   font-size: 13px;
@@ -185,4 +193,25 @@
   color: rgba(111, 46, 15, 0.25);
   text-align: center;
   margin-top: 1.5rem;
+}
+
+/* ---------- Responsividade ---------- */
+@media (max-width: 560px) {
+  .inicio-header__titulo    { font-size: 28px; letter-spacing: -0.5px; }
+  .inicio-header__subtitulo { font-size: 14px; }
+  .btn--menu-principal      { font-size: 16px; min-height: 54px; padding: 0 18px; }
+  .menu-botoes              { margin: 1rem 0 1.5rem; }
+}
+
+@media (max-width: 400px) {
+  .inicio-header__titulo    { font-size: 22px; }
+  .inicio-header__subtitulo { font-size: 13px; }
+  .btn--menu-principal      { font-size: 15px; min-height: 48px; }
+  .btn--menu-principal span { font-size: 18px; width: 26px; }
+  .menu-botoes              { margin: 0.75rem 0 1.25rem; }
+  .inicio-comodos           { padding: 14px 8px 6px; margin-top: 1.2rem; }
+  .inicio-comodos__titulo   { font-size: 14px; margin-bottom: 14px; }
+  .inicio-comodo__icone-img { width: 60px; height: 60px; }
+  .inicio-comodo__label     { font-size: 12px; }
+  .inicio-rodape            { font-size: 11px; margin-top: 1rem; }
 }
