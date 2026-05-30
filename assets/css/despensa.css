@@ -3,78 +3,277 @@
    Depende de: base.css
    ============================================================= */
 
-/* ---------- Balão do Logi — estrutura interna ---------- */
+/* Ajuste apenas da página da Despensa — sem imagem de fundo */
+.pagina-despensa {
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem;
+  background:
+    radial-gradient(circle at 14% 88%, rgba(216, 90, 48, 0.09), transparent 22%),
+    radial-gradient(circle at 88% 12%, rgba(250, 199, 117, 0.18), transparent 24%),
+    #FFF3EB;
+}
+
+.despensa-page {
+  width: min(100%, 1080px);
+  max-width: 1080px;
+  max-height: calc(100vh - 1.3rem);
+  overflow: auto;
+  padding: 0.85rem;
+  border-color: var(--laranja-borda);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 8% 94%, rgba(216, 90, 48, 0.07), transparent 20%),
+    radial-gradient(circle at 92% 92%, rgba(250, 199, 117, 0.13), transparent 22%),
+    #FFF9F2;
+  box-shadow: 0 18px 38px rgba(111, 46, 15, 0.13);
+}
+
+/* ---------- Cabeçalho ---------- */
+.despensa-hud {
+  margin-bottom: 0.55rem;
+  gap: 0.75rem;
+}
+
+.despensa-voltar {
+  padding: 7px 13px;
+  border-color: var(--laranja-borda);
+  color: var(--marrom-medio);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.despensa-hud__info {
+  flex: 1;
+  justify-content: center;
+}
+
+.despensa-hud__icone {
+  width: 42px;
+  height: 42px;
+  filter: drop-shadow(0 5px 7px rgba(111, 46, 15, 0.16));
+}
+
+.despensa-hud__titulo {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.4px;
+}
+
+.despensa-hud__subtitulo {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.despensa-badge {
+  min-width: 78px;
+  text-align: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.14);
+}
+
+/* ---------- Balão do Logi ---------- */
+.despensa-logi {
+  max-width: 760px;
+  margin: 0 auto 0.65rem;
+  padding: 0.55rem 0.75rem;
+  gap: 0.65rem;
+  align-items: center;
+  border-color: var(--laranja-borda);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.90);
+}
+
+.despensa-logi::after {
+  display: none;
+}
+
+.despensa-logi__img {
+  width: 52px;
+  height: 46px;
+}
+
+.despensa-logi__corpo,
 .balao__corpo {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
-.balao__instrucao {
+.despensa-logi__nome {
+  font-size: 11px;
+  color: var(--laranja);
+  margin-bottom: 0;
+}
+
+.despensa-logi__texto {
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--marrom-medio);
+}
+
+.balao__instrucao,
+.despensa-logi__instrucao {
   font-size: 13px;
-  font-weight: 700;
-  color: var(--laranja-escuro, #8D4E00);
+  line-height: 1.35;
+  font-weight: 900;
+  color: #8D4E00;
   margin: 0;
 }
 
-.balao__legenda-cor {
+.balao__legenda-cor,
+.despensa-logi__legenda {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 11px;
   color: var(--cinza);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
 }
 
 .legenda-circulo {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background: #E53935;
   flex-shrink: 0;
-  font-size: 0; /* esconde o ● do HTML, usa o bg colorido */
+  font-size: 0;
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
+}
+
+/* ---------- Layout principal ---------- */
+.despensa-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.despensa-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.65rem;
+}
+
+.despensa-work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.despensa-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--laranja-borda);
+  border-radius: 18px;
+  padding: 0.75rem;
+  box-shadow: 0 8px 18px rgba(111, 46, 15, 0.08);
+}
+
+.despensa-card__titulo {
+  color: var(--laranja);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 0.55rem;
+}
+
+.despensa-card--itens,
+.despensa-card--prateleira {
+  min-height: 245px;
+}
+
+.despensa-card--prateleira {
+  background:
+    linear-gradient(180deg, rgba(253, 245, 238, 0.85), rgba(255, 255, 255, 0.94));
+}
+
+/* ---------- Abas de nível de dificuldade ---------- */
+.niveis,
+.despensa-niveis {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+  padding: 0.55rem 0.65rem;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1.5px solid var(--laranja-borda);
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(111, 46, 15, 0.06);
+}
+
+.nivel {
+  border-radius: var(--raio-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nivel--ok {
+  background: #97C459;
+  color: #27500A;
+}
+
+.nivel--ativo {
+  background: var(--laranja);
+  color: var(--branco);
+}
+
+.nivel--bloq {
+  background: var(--cinza-fundo);
+  color: var(--cinza);
 }
 
 /* ---------- Itens para arrastar / selecionar ---------- */
-.itens-grid {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.itens-grid,
+.despensa-itens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+  gap: 0.55rem;
   justify-content: center;
+  align-items: stretch;
 }
 
 .item-card {
   position: relative;
-  background: var(--ambar-fundo);
-  border: 2px dashed var(--ambar);
-  border-radius: var(--raio);
-  padding: 10px 14px;
+  min-height: 92px;
+  background: rgba(250, 238, 218, 0.92);
+  border: 1.5px dashed rgba(239, 159, 39, 0.72);
+  border-radius: 16px;
+  padding: 0.6rem 0.45rem;
   text-align: center;
   cursor: grab;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
 }
 
 .item-card:hover {
-  transform: scale(1.06);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 14px rgba(111, 46, 15, 0.12);
 }
 
 .item-card:active {
   transform: scale(0.97);
 }
 
-/* Destaque vermelho para itens de cor vermelha (Easy) */
 .item-card--vermelho-hint {
-  box-shadow: 0 0 8px rgba(229, 57, 53, 0.45);
-  border-color: rgba(229, 57, 53, 0.35);
+  box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.08), 0 6px 14px rgba(111, 46, 15, 0.08);
+  border-color: rgba(229, 57, 53, 0.36);
 }
 
-/* Estado: selecionado (Easy) */
 .item-card--selecionado {
-  border: 3px solid #4CAF50;
+  border: 2px solid #4CAF50;
   background: #E8F5E9;
   cursor: pointer;
 }
@@ -86,30 +285,28 @@
   right: -8px;
   background: #4CAF50;
   color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  width: 18px;
-  height: 18px;
+  font-size: 12px;
+  font-weight: 900;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 18px;
+  line-height: 20px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.14);
 }
 
-/* Estado: selecionado incorretamente (Easy) */
 .item-card--incorreto {
-  border: 3px solid #E53935;
+  border: 2px solid #E53935;
   background: #FFEBEE;
   animation: shake 0.35s ease;
 }
 
-/* Dimming em itens não-selecionados quando há seleção ativa */
 .itens-grid.tem-selecao .item-card:not(.item-card--selecionado) {
   opacity: 0.55;
 }
 
-/* Círculo colorido (fallback quando não há imagem) */
 .item-card__circulo {
   width: 48px;
   height: 48px;
@@ -121,81 +318,218 @@
   font-size: 20px;
 }
 
-.item-card__emoji { display: block; }
-.item-card__nome  { font-size: 10px; color: var(--ambar); margin-top: 3px; font-weight: 600; }
-.item-card__tam   { font-size: 9px;  color: var(--cinza); }
+.item-card__emoji {
+  display: block;
+  filter: drop-shadow(0 5px 6px rgba(111, 46, 15, 0.13));
+}
 
-/* ---------- Botão confirmar ---------- */
-.btn--confirmar {
-  font-size: 16px;
-  padding: 10px 24px;
+.item-card__nome {
+  font-size: 11px;
+  color: var(--marrom-medio);
+  margin-top: 5px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.item-card__tam {
+  font-size: 9.5px;
+  color: var(--cinza);
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 /* ---------- Prateleira (drop target) ---------- */
-.prateleira {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  border-bottom: 3px solid #8B6347;
-  padding-bottom: 4px;
-  min-height: 70px;
+.prateleira,
+.despensa-prateleira {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+  gap: 0.55rem;
+  align-items: stretch;
+  min-height: 142px;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(250, 238, 218, 0.92), rgba(255, 248, 238, 0.92));
+  box-shadow: inset 0 -7px 0 rgba(139, 99, 71, 0.24);
 }
 
 .prateleira__slot {
-  border: 2px dashed var(--cinza-claro);
-  border-radius: 8px;
-  padding: 8px 10px;
+  border: 1.5px dashed rgba(139, 99, 71, 0.36);
+  border-radius: 14px;
+  padding: 0.55rem 0.35rem;
   text-align: center;
-  min-width: 50px;
-  min-height: 52px;
+  min-width: 0;
+  min-height: 76px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  color: var(--cinza-claro);
-  transition: border-color 0.2s ease, background 0.2s ease;
+  font-weight: 800;
+  color: rgba(113, 43, 19, 0.45);
+  background: rgba(255, 255, 255, 0.45);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.prateleira__slot:hover {
+  transform: translateY(-2px);
 }
 
 .prateleira__slot--ok {
   background: var(--verde-fundo);
-  border: 2px solid var(--verde-claro);
+  border: 1.5px solid var(--verde-claro);
   color: #085041;
 }
 
 .prateleira__slot--erro {
   background: #FFEBEE;
-  border: 2px solid #E53935;
+  border: 1.5px solid #E53935;
   color: #B71C1C;
 }
 
-.prateleira__legenda {
+.prateleira__legenda,
+.despensa-prateleira__legenda {
   display: flex;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 0.45rem;
 }
 
 .prateleira__leg-txt {
-  font-size: 9px;
-  color: var(--cinza-claro);
+  font-size: 10px;
+  color: rgba(113, 43, 19, 0.48);
   min-width: 50px;
   text-align: center;
+  font-weight: 800;
 }
 
-/* ---------- Abas de nível de dificuldade ---------- */
-.niveis {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
-  justify-content: center;
+/* ---------- Feedback ---------- */
+.despensa-feedback {
+  margin: 0;
 }
 
-.nivel {
-  border-radius: var(--raio-pill);
-  padding: 4px 12px;
-  font-size: 11px;
-  font-weight: 600;
+.despensa-feedback .dica {
+  margin: 0;
+  border-radius: 16px;
+  padding: 0.65rem 0.75rem;
 }
 
-.nivel--ok   { background: #97C459;           color: #27500A; }
-.nivel--ativo{ background: var(--laranja);     color: var(--branco); }
-.nivel--bloq { background: var(--cinza-fundo); color: var(--cinza); }
+.despensa-feedback .dica__texto {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ---------- Botões ---------- */
+.despensa-actions {
+  gap: 0.65rem;
+}
+
+.btn--confirmar,
+.despensa-btn {
+  min-height: 44px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 900;
+  padding: 0 18px;
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.18);
+}
+
+.despensa-btn--limpar {
+  flex: 0 0 120px;
+}
+
+/* ---------- Ajuda lateral ---------- */
+.despensa-ajuda {
+  display: grid;
+  gap: 0.75rem;
+  align-content: stretch;
+}
+
+.despensa-card--ajuda,
+.despensa-card--objetivo {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.despensa-lista {
+  padding-left: 1.05rem;
+  color: var(--texto-medio);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.despensa-lista li + li {
+  margin-top: 0.45rem;
+}
+
+.despensa-objetivo-texto {
+  color: var(--texto-medio);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.despensa-estrela {
+  display: block;
+  margin-top: 0.7rem;
+  text-align: center;
+  font-size: 34px;
+  filter: drop-shadow(0 6px 8px rgba(111, 46, 15, 0.16));
+}
+
+/* ---------- Responsividade ---------- */
+@media (max-width: 980px) {
+  .despensa-page {
+    max-height: none;
+  }
+
+  .despensa-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .despensa-ajuda {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .pagina-despensa {
+    padding: 0.5rem;
+  }
+
+  .despensa-page {
+    padding: 0.7rem;
+    border-radius: 18px;
+  }
+
+  .despensa-hud {
+    flex-wrap: wrap;
+  }
+
+  .despensa-hud__info {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+
+  .despensa-hud__titulo {
+    font-size: 20px;
+  }
+
+  .despensa-logi__texto,
+  .despensa-logi__instrucao {
+    font-size: 12px;
+  }
+
+  .despensa-work-grid,
+  .despensa-ajuda {
+    grid-template-columns: 1fr;
+  }
+
+  .despensa-actions {
+    flex-direction: column;
+  }
+
+  .despensa-btn--limpar {
+    flex: 1;
+  }
+}

@@ -9,63 +9,109 @@
 </head>
 <body>
 
-  <section class="tela" id="tela-principal">
+  <section class="tela sala-page" id="tela-principal">
 
     <!-- HUD -->
-    <section class="hud">
-      <button class="btn-voltar-mapa"
+    <section class="hud sala-hud">
+      <button class="btn-voltar-mapa sala-voltar"
               onclick="window.location.href='MapaCasa.html'"
-              aria-label="Voltar ao mapa">← Mapa</button>
-      <section class="hud__info">
-        <img src="../img/icone-sala.png" alt="Sala" class="hud__icone-img">
+              aria-label="Voltar ao mapa">
+        <span aria-hidden="true">←</span>
+        <strong>Mapa</strong>
+      </button>
+
+      <section class="hud__info sala-hud__info">
+        <img src="../img/icone-sala.png" alt="Sala" class="hud__icone-img sala-hud__icone">
         <section>
-          <p class="hud__titulo">Sala — Algoritmos</p>
-          <p class="hud__subtitulo" id="fase-label">Mini-jogo 1</p>
+          <p class="hud__titulo sala-hud__titulo">Sala</p>
+          <p class="hud__subtitulo sala-hud__subtitulo" id="fase-label">Mini-jogo 1</p>
         </section>
       </section>
-      <span class="badge badge--laranja" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
     <!-- Mascote Logi -->
-    <section class="balao" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote">
-      <p class="balao__texto" id="logi-texto">Carregando…</p>
-    </section>
-
-    <!-- Indicador de fase -->
-    <section class="niveis" id="indicador-fases" aria-label="Progresso de fases"></section>
-
-    <!-- Grade + Blocos disponíveis -->
-    <section class="sala-grid">
-      <section class="painel">
-        <p class="painel__label">Grade do Jogo</p>
-        <section class="grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
-      </section>
-
-      <section class="painel">
-        <p class="painel__label">Blocos Disponíveis</p>
-        <section class="blocos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
+    <section class="balao sala-logi" aria-label="Instruções do Logi">
+      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote sala-logi__img">
+      <section class="sala-logi__conteudo">
+        <p class="balao__nome">Logi diz:</p>
+        <p class="balao__texto" id="logi-texto">Carregando…</p>
       </section>
     </section>
 
-    <!-- Sequência do jogador -->
-    <section class="painel painel--tracejado"
-             id="painel-sequencia"
-             aria-dropeffect="move">
-      <p class="painel__label">Minha Sequência</p>
-      <section class="blocos" id="sequencia-player" role="listbox" aria-label="Sequência montada" aria-live="polite"></section>
-    </section>
+    <!-- Indicador de fase oculto: mantido apenas para o JavaScript não quebrar -->
+    <section class="niveis sala-niveis sala-fases-hidden"
+             id="indicador-fases"
+             aria-label="Progresso de fases"
+             hidden></section>
 
-    <!-- Feedback -->
-    <section id="feedback-area" aria-live="polite" style="display:none;" class="dica dica--erro">
-      <img src="../img/dica.png" alt="" class="dica-img">
-      <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
-    </section>
+    <!-- Área principal da Sala -->
+    <section class="sala-layout">
 
-    <!-- Botões -->
-    <section class="btn-grupo">
-      <button class="btn btn--laranja" id="btn-executar" aria-label="Executar sequência">Executar</button>
-      <button class="btn btn--outline" id="btn-limpar" aria-label="Limpar sequência">Limpar</button>
+      <!-- Comandos disponíveis -->
+      <aside class="sala-panel sala-comandos-panel" aria-label="Comandos disponíveis">
+        <p class="sala-panel__title">Comandos disponíveis</p>
+        <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
+        <section class="blocos sala-comandos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
+
+        <section class="sala-mini-dica" aria-label="Dica da Sala">
+          <span class="sala-mini-dica__icon" aria-hidden="true">💡</span>
+          <p><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
+        </section>
+      </aside>
+
+      <!-- Jogo -->
+      <main class="sala-game-area">
+        <section class="painel painel--tracejado sala-sequencia-panel"
+                 id="painel-sequencia"
+                 aria-dropeffect="move">
+          <p class="sala-panel__title">Painel de comandos</p>
+          <section class="blocos sala-sequencia" id="sequencia-player" role="listbox" aria-label="Sequência montada" aria-live="polite"></section>
+        </section>
+
+        <section class="painel sala-grade-panel">
+          <p class="sala-panel__title">Grade do jogo</p>
+          <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
+        </section>
+
+        <!-- Feedback -->
+        <section id="feedback-area" aria-live="polite" style="display:none;" class="dica dica--erro sala-feedback">
+          <span class="dica__emoji" aria-hidden="true">💡</span>
+          <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
+        </section>
+
+        <!-- Botões -->
+        <section class="btn-grupo sala-actions">
+          <button class="btn btn--outline sala-btn sala-btn--limpar" id="btn-limpar" aria-label="Limpar sequência">
+            <span aria-hidden="true">↻</span>
+            Limpar
+          </button>
+          <button class="btn btn--laranja sala-btn sala-btn--executar" id="btn-executar" aria-label="Executar sequência">
+            <span aria-hidden="true">▶</span>
+            Executar
+          </button>
+        </section>
+      </main>
+
+      <!-- Ajuda lateral -->
+      <aside class="sala-panel sala-ajuda-panel" aria-label="Ajuda da Sala">
+        <section class="sala-ajuda-card">
+          <p class="sala-panel__title">Como jogar</p>
+          <ol class="sala-lista-ajuda">
+            <li>Escolha os comandos: cima, baixo, esquerda, direita ou repetir.</li>
+            <li>Monte a sequência no painel.</li>
+            <li>Clique em <strong>Executar</strong> para testar seu algoritmo.</li>
+          </ol>
+        </section>
+
+        <section class="sala-ajuda-card sala-objetivo-card">
+          <p class="sala-panel__title">Objetivo</p>
+          <p>Leve o personagem até a estrela sem bater nos obstáculos.</p>
+          <span class="sala-estrela-deco" aria-hidden="true">⭐</span>
+        </section>
+      </aside>
+
     </section>
 
   </section>
@@ -73,7 +119,7 @@
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
       <p class="modal-sub" id="modal-sub">Você criou um algoritmo com passos!</p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -165,6 +211,19 @@ const MOVES = {
   dir: [0, 1]
 };
 
+const BLOCO_ICONS = {
+  cima: '↑',
+  baixo: '↓',
+  esq: '←',
+  dir: '→',
+  repetir2: '↻',
+  repetir3: '↻'
+};
+
+function blocoIconeHtml(bloco) {
+  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>`;
+}
+
 const FASE_KEY = 'sala_fase';
 
   /* ---- Inicialização ---- */
@@ -233,11 +292,11 @@ const FASE_KEY = 'sala_fase';
         }
 
         if (r === posicaoAlvo.linha && c === posicaoAlvo.coluna) {
-          cell.innerHTML = `<img src="../img/alvo.png" alt="Estrela" class="grade-img" id="celula-alvo-img">`;
+          cell.innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela" id="celula-alvo-img">`;
           cell.id = 'celula-alvo';
         }
         if (r === posicaoInicial.linha && c === posicaoInicial.coluna) {
-          cell.innerHTML += `<img src="../img/personagem.png" alt="Personagem" class="grade-img grade-personagem" id="personagem">`;
+          cell.innerHTML += `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`;
           cell.classList.add('grade__celula--ativa');
           cell.id = 'celula-personagem';
         }
@@ -269,7 +328,7 @@ const FASE_KEY = 'sala_fase';
     el.setAttribute('role', 'option');
     el.setAttribute('aria-label', bloco.rotulo);
     el.setAttribute('tabindex', '0');
-    el.innerHTML = `<img src="${bloco.img}" alt="" class="bloco-img"> ${bloco.rotulo}`;
+    el.innerHTML = `${blocoIconeHtml(bloco)} <span>${bloco.rotulo}</span>`;
 
     el.addEventListener('dragstart', e => {
       e.dataTransfer.setData('blocoId', bloco.id);
@@ -307,7 +366,7 @@ const FASE_KEY = 'sala_fase';
       el.dataset.idx = idx;
       el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Clique para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `<img src="${bloco.img}" alt="" class="bloco-img"> ${bloco.rotulo}`;
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span>${bloco.rotulo}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
@@ -452,7 +511,7 @@ async function executar() {
       );
 
       if (celulaOrigemEhAlvo) {
-        cells[deIdx].innerHTML = `<img src="../img/alvo.png" alt="Estrela" class="grade-img">`;
+        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela">`;
       } else if (celulaOrigemEhObstaculo) {
         cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
       } else {
@@ -461,7 +520,7 @@ async function executar() {
 
       cells[deIdx].classList.remove('grade__celula--ativa');
 
-      cells[paraIdx].innerHTML += `<img src="../img/personagem.png" alt="Personagem" class="grade-img grade-personagem" id="personagem">`;
+      cells[paraIdx].innerHTML += `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`;
       cells[paraIdx].classList.add('grade__celula--ativa');
 
       audio.passo();
@@ -527,9 +586,9 @@ async function executar() {
     elEstrelas.innerHTML = '';
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
-      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
-      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
-      img.className = 'modal-estrela-img';
+      img.src = '../img/estrela.png';
+      img.alt = i < estrelas ? 'Estrela conquistada' : 'Estrela não conquistada';
+      img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEstrelas.appendChild(img);
     }
 

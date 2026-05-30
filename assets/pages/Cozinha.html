@@ -4,70 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cozinha — Verdadeiro ou Falso</title>
-  <link rel="stylesheet" href="../css/estilos.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/cozinha.css">
 </head>
-<body>
+<body class="pagina-cozinha">
 
-  <section class="tela tela--verde" id="tela-principal">
+  <section class="tela tela--verde cozinha-page" id="tela-principal">
 
     <!-- HUD -->
-    <section class="hud">
-      <button class="btn-voltar-mapa"
+    <section class="hud cozinha-hud">
+      <button class="btn-voltar-mapa cozinha-voltar"
               onclick="window.location.href='MapaCasa.html'"
               aria-label="Voltar ao mapa">← Mapa</button>
-      <section class="hud__info">
-        <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img">
+      <section class="hud__info cozinha-hud__info">
+        <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img cozinha-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--verde">Cozinha — Verdadeiro ou Falso</p>
-          <p class="hud__subtitulo hud__subtitulo--verde" id="hud-subtitulo">Mini-jogo 3</p>
+          <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha — Verdadeiro ou Falso</p>
+          <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
         </section>
       </section>
-      <span class="badge badge--verde" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
     <!-- Mascote Logi -->
-    <section class="balao balao--verde" aria-label="Instruções do Logi">
-      <img src="../img/logi.png" alt="Logi" class="logi-mascote">
-      <p class="balao__texto balao__texto--verde" id="logi-texto">Carregando…</p>
-    </section>
-
-    <!-- Progresso (bolinhas da fase atual) -->
-    <section class="progresso progresso--centro" id="progresso-dots" aria-label="Progresso das perguntas"></section>
-
-    <!-- Abas de nível (igual à Despensa) -->
-    <section class="niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
-
-    <!-- Caixa de pergunta -->
-    <section class="pergunta-box" id="pergunta-box" aria-live="polite">
-      <p class="pergunta-box__numero" id="pergunta-numero">Pergunta 1 de 5</p>
-      <p class="pergunta-box__frase"  id="pergunta-frase"></p>
-      <p class="pergunta-box__aviso">Leia com atenção antes de responder!</p>
-    </section>
-
-    <!-- Botões V/F -->
-    <section class="vf-grid">
-      <button class="btn-vf btn-vf--verde" id="btn-verdadeiro" aria-label="Verdadeiro">
-        <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img">
-        Verdadeiro
-      </button>
-      <button class="btn-vf btn-vf--vermelho" id="btn-falso" aria-label="Falso">
-        <img src="../img/falso.png" alt="" class="btn-vf__emoji-img">
-        Falso
-      </button>
-    </section>
-
-    <!-- Feedback imediato -->
-    <section id="feedback-area" aria-live="assertive" style="display:none;">
-      <section class="dica" id="feedback-dica">
-        <img src="../img/dica.png" alt="" class="dica-img">
-        <p class="dica__texto" id="feedback-texto"></p>
+    <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
+      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote cozinha-logi__img">
+      <section>
+        <p class="balao__nome cozinha-logi__nome">Logi diz:</p>
+        <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
       </section>
     </section>
 
-    <!-- Dica do jogo -->
-    <section class="dica dica--verde">
-      <img src="../img/dica.png" alt="" class="dica-img">
-      <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
+    <section class="cozinha-layout" aria-label="Área do jogo da cozinha">
+
+      <!-- Ajuda lateral -->
+      <aside class="cozinha-card cozinha-card--ajuda" aria-label="Como jogar">
+        <p class="cozinha-card__titulo">Como jogar</p>
+        <ol class="cozinha-lista">
+          <li>Leia a frase com atenção.</li>
+          <li>Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.</li>
+          <li>Escolha se a frase é verdadeira ou falsa.</li>
+        </ol>
+      </aside>
+
+      <!-- Área principal -->
+      <main class="cozinha-centro">
+
+        <section class="cozinha-status" aria-label="Progresso da cozinha">
+          <section class="niveis cozinha-niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
+          <section class="progresso progresso--centro cozinha-progresso" id="progresso-dots" aria-label="Progresso das perguntas"></section>
+        </section>
+
+        <!-- Caixa de pergunta -->
+        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite">
+          <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
+          <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
+          <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
+        </section>
+
+        <!-- Botões V/F -->
+        <section class="vf-grid cozinha-vf" aria-label="Escolha verdadeiro ou falso">
+          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro" aria-label="Verdadeiro">
+            <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
+            <span>Verdadeiro</span>
+          </button>
+          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso" aria-label="Falso">
+            <img src="../img/falso.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
+            <span>Falso</span>
+          </button>
+        </section>
+
+        <!-- Feedback imediato -->
+        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" style="display:none;">
+          <section class="dica" id="feedback-dica">
+            <img src="../img/dica.png" alt="" class="dica-img">
+            <p class="dica__texto" id="feedback-texto"></p>
+          </section>
+        </section>
+      </main>
+
+      <!-- Objetivo e dica -->
+      <aside class="cozinha-card cozinha-card--objetivo" aria-label="Objetivo e dica">
+        <p class="cozinha-card__titulo">Objetivo</p>
+        <p class="cozinha-objetivo-texto">Responda às frases para praticar lógica com verdadeiro e falso.</p>
+
+        <section class="cozinha-dica dica dica--verde">
+          <img src="../img/dica.png" alt="" class="dica-img">
+          <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
+        </section>
+      </aside>
+
     </section>
 
   </section>

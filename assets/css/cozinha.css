@@ -3,51 +3,461 @@
    Depende de: base.css
    ============================================================= */
 
-/* ---------- Botões Verdadeiro / Falso ---------- */
-.vf-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 1rem;
+/* Ajuste apenas da página da Cozinha — sem imagem de fundo */
+.pagina-cozinha {
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem;
+  background:
+    radial-gradient(circle at 14% 88%, rgba(29, 158, 117, 0.10), transparent 22%),
+    radial-gradient(circle at 88% 12%, rgba(250, 199, 117, 0.16), transparent 24%),
+    #FFF3EB;
 }
 
-.btn-vf {
-  border: none;
-  border-radius: var(--raio);
-  padding: 18px 0;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
+.cozinha-page {
+  width: min(100%, 1080px);
+  max-width: 1080px;
+  max-height: calc(100vh - 1.3rem);
+  overflow: auto;
+  padding: 0.85rem;
+  border-color: var(--verde-claro);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 8% 94%, rgba(29, 158, 117, 0.08), transparent 20%),
+    radial-gradient(circle at 90% 90%, rgba(250, 199, 117, 0.14), transparent 22%),
+    #F6FFF9;
+  box-shadow: 0 18px 38px rgba(29, 158, 117, 0.13);
+}
+
+/* ---------- Cabeçalho ---------- */
+.cozinha-hud {
+  margin-bottom: 0.55rem;
+  gap: 0.75rem;
+}
+
+.cozinha-voltar {
+  padding: 7px 13px;
+  border-color: var(--verde-borda);
+  color: #085041;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.cozinha-hud__info {
+  flex: 1;
+  justify-content: center;
+}
+
+.cozinha-hud__icone {
+  width: 42px;
+  height: 42px;
+  filter: drop-shadow(0 5px 7px rgba(29, 158, 117, 0.16));
+}
+
+.cozinha-hud__titulo {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.4px;
+}
+
+.cozinha-hud__subtitulo {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.cozinha-badge {
+  min-width: 78px;
+  text-align: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  box-shadow: 0 3px 0 rgba(29, 158, 117, 0.14);
+}
+
+/* ---------- Balão do Logi ---------- */
+.cozinha-logi {
+  max-width: 760px;
+  margin: 0 auto 0.65rem;
+  padding: 0.55rem 0.75rem;
+  gap: 0.65rem;
+  align-items: center;
+  border-color: var(--verde-borda);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cozinha-logi::after {
+  display: none;
+}
+
+.cozinha-logi__img {
+  width: 52px;
+  height: 46px;
+}
+
+.cozinha-logi__nome {
+  font-size: 11px;
+  color: var(--verde);
+  margin-bottom: 2px;
+}
+
+.cozinha-logi__texto {
+  font-size: 13px;
+  line-height: 1.38;
+  color: #085041;
+}
+
+/* ---------- Layout principal ---------- */
+.cozinha-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 230px;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.cozinha-card,
+.cozinha-status,
+.cozinha-pergunta {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--verde-borda);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px rgba(29, 158, 117, 0.08);
+}
+
+.cozinha-card {
+  padding: 0.75rem;
+}
+
+.cozinha-card__titulo {
+  color: var(--verde);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 0.55rem;
+}
+
+.cozinha-lista {
+  padding-left: 1.05rem;
+  color: var(--texto-medio);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.cozinha-lista li + li {
+  margin-top: 0.45rem;
+}
+
+.cozinha-centro {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  transition: opacity 0.15s;
+  gap: 0.65rem;
+  min-width: 0;
 }
 
-.btn-vf:hover { opacity: 0.88; }
+/* ---------- Níveis e progresso ---------- */
+.cozinha-status {
+  padding: 0.55rem 0.65rem;
+}
 
-.btn-vf__emoji { font-size: 28px; }
-
-.btn-vf--verde    { background: var(--verde);    color: var(--branco); }
-.btn-vf--vermelho { background: var(--vermelho); color: var(--branco); }
-
-/* ---------- Bolinhas de progresso centralizadas ---------- */
-.progresso--centro {
+.cozinha-niveis,
+.niveis {
+  display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.nivel {
+  border-radius: var(--raio-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nivel--ok {
+  background: #97C459;
+  color: #27500A;
+}
+
+.nivel--ativo {
+  background: var(--verde);
+  color: var(--branco);
+}
+
+.nivel--bloq {
+  background: var(--cinza-fundo);
+  color: var(--cinza);
+}
+
+.cozinha-progresso {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.cozinha-progresso .progresso__bolinha {
+  width: 12px;
+  height: 12px;
 }
 
 /* ---------- Caixa de pergunta ---------- */
-.pergunta-box {
-  background: var(--branco);
-  border: 2px solid var(--verde-claro);
-  border-radius: 14px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+.cozinha-pergunta {
+  position: relative;
+  padding: 1rem;
+  margin-bottom: 0;
   text-align: center;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.pergunta-box__numero { font-size: 11px; font-weight: 600; color: var(--cinza); text-transform: uppercase; margin-bottom: 10px; }
-.pergunta-box__frase  { font-size: 16px; font-weight: 600; color: #085041; line-height: 1.5; margin-bottom: 0.5rem; }
-.pergunta-box__aviso  { font-size: 12px; color: var(--cinza); }
+.cozinha-pergunta::before,
+.cozinha-pergunta::after {
+  content: "";
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.cozinha-pergunta::before {
+  left: 18px;
+  bottom: 18px;
+  border: 3px solid var(--ambar);
+  border-radius: 50%;
+}
+
+.cozinha-pergunta::after {
+  right: 20px;
+  top: 22px;
+  border: 3px solid var(--verde);
+  border-radius: 12px;
+  transform: rotate(12deg);
+}
+
+.cozinha-pergunta__numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: var(--raio-pill);
+  background: var(--verde-fundo);
+  color: #085041;
+  border: 1.5px solid var(--verde-borda);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+  box-shadow: 0 3px 0 rgba(29, 158, 117, 0.11);
+}
+
+.cozinha-pergunta__frase {
+  max-width: 620px;
+  color: #2D281C;
+  font-size: 29px;
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: -0.35px;
+  margin-bottom: 0.65rem;
+}
+
+.cozinha-pergunta__frase u {
+  color: var(--vermelho);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+}
+
+.cozinha-pergunta__frase strong {
+  color: var(--verde);
+}
+
+.cozinha-pergunta__aviso {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cinza);
+}
+
+/* ---------- Botões Verdadeiro / Falso ---------- */
+.cozinha-vf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+.cozinha-vf__btn {
+  min-height: 80px;
+  border-radius: 20px;
+  padding: 0.65rem 1rem;
+  font-size: 25px;
+  font-weight: 900;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 5px 0 rgba(111, 46, 15, 0.18);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.cozinha-vf__btn:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.cozinha-vf__btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(111, 46, 15, 0.18);
+}
+
+.cozinha-vf__btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cozinha-vf__img {
+  width: 42px;
+  height: 42px;
+}
+
+.btn-vf--verde {
+  background: linear-gradient(180deg, var(--verde-claro), var(--verde));
+  color: var(--branco);
+}
+
+.btn-vf--vermelho {
+  background: linear-gradient(180deg, #FF6F62, var(--vermelho));
+  color: var(--branco);
+}
+
+/* ---------- Feedback ---------- */
+.cozinha-feedback .dica {
+  margin-bottom: 0;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+}
+
+.cozinha-feedback .dica--verde {
+  border-color: var(--verde-borda);
+}
+
+.cozinha-feedback .dica--erro {
+  border-color: rgba(226, 75, 74, 0.28);
+}
+
+.cozinha-feedback .dica__texto {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+/* ---------- Objetivo e dica lateral ---------- */
+.cozinha-card--objetivo {
+  display: flex;
+  flex-direction: column;
+}
+
+.cozinha-objetivo-texto {
+  color: var(--texto-medio);
+  font-size: 12px;
+  line-height: 1.45;
+  margin-bottom: 0.75rem;
+}
+
+.cozinha-dica {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding: 0.65rem;
+  border-radius: 14px;
+  align-items: flex-start;
+}
+
+.cozinha-dica .dica__texto {
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+/* ---------- Responsividade ---------- */
+@media (max-width: 980px) {
+  .cozinha-page {
+    max-height: none;
+  }
+
+  .cozinha-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cozinha-card--ajuda,
+  .cozinha-card--objetivo {
+    display: block;
+  }
+
+  .cozinha-lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .cozinha-lista li + li {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .pagina-cozinha {
+    padding: 0.5rem;
+  }
+
+  .cozinha-page {
+    padding: 0.7rem;
+    border-radius: 18px;
+  }
+
+  .cozinha-hud {
+    flex-wrap: wrap;
+  }
+
+  .cozinha-hud__info {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+
+  .cozinha-hud__titulo {
+    font-size: 20px;
+  }
+
+  .cozinha-logi__texto {
+    font-size: 12px;
+  }
+
+  .cozinha-lista {
+    display: block;
+  }
+
+  .cozinha-lista li + li {
+    margin-top: 0.45rem;
+  }
+
+  .cozinha-pergunta {
+    min-height: 160px;
+    padding: 0.85rem;
+  }
+
+  .cozinha-pergunta__frase {
+    font-size: 21px;
+  }
+
+  .cozinha-vf {
+    grid-template-columns: 1fr;
+  }
+
+  .cozinha-vf__btn {
+    min-height: 64px;
+    font-size: 20px;
+  }
+}

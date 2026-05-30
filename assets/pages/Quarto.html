@@ -7,58 +7,89 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/quarto.css">
 </head>
-<body>
+<body class="pagina-quarto">
 
-  <section class="tela tela--roxa" id="tela-principal">
+  <section class="tela tela--roxa quarto-page" id="tela-principal">
 
     <!-- HUD -->
-    <section class="hud">
-      <button class="btn-voltar-mapa"
+    <section class="hud quarto-hud">
+      <button class="btn-voltar-mapa quarto-voltar"
               onclick="window.location.href='MapaCasa.html'"
               aria-label="Voltar ao mapa">← Mapa</button>
-      <section class="hud__info">
-        <img src="../img/icone-quarto.png" alt="Quarto" class="hud__icone-img">
+
+      <section class="hud__info quarto-hud__info">
+        <img src="../img/icone-quarto.png" alt="Quarto" class="hud__icone-img quarto-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--roxo">Quarto — Depuração</p>
-          <p class="hud__subtitulo hud__subtitulo--roxo">Mini-jogo 2</p>
+          <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto — Depuração</p>
+          <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
         </section>
       </section>
-      <span class="badge badge--roxo" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
-     <!-- Mascote Logi -->
-    <section class="balao balao--verde" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote"> 
-      <p class="balao__texto balao__texto--verde" id="logi-texto">Carregando…</p>
-    </section>
-
-    <!-- Blocos com erro (fonte) -->
-    <section class="painel painel--roxo">
-      <p class="painel__label">Clique ou arraste os blocos corretos para baixo</p>
-      <section class="blocos" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis (alguns com erro)"></section>
-      <section class="dica dica--erro" id="dica-erros" style="margin-top:8px;margin-bottom:0;">
-        <img src="../img/dica.png" alt="" class="dica-img">
-        <p class="dica__texto dica__texto--erro" id="dica-texto"></p>
+    <!-- Mascote Logi -->
+    <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
+      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
+      <section>
+        <p class="balao__nome quarto-logi__nome">Logi diz:</p>
+        <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
       </section>
     </section>
 
-    <!-- Sequência corrigida (destino) -->
-    <section class="painel painel--roxo painel--tracejado"
-             id="painel-destino"
-             aria-dropeffect="move">
-      <p class="painel__label">Sequência Corrigida — monte a ordem certa aqui</p>
-      <section class="blocos" id="sequencia-corrigida" role="listbox" aria-label="Sequência corrigida" aria-live="polite"></section>
-    </section>
+    <section class="quarto-layout" aria-label="Área do desafio do quarto">
 
-    <!-- Feedback de verificação -->
-    <section id="feedback-area" style="display:none;" aria-live="polite">
-      <section class="blocos" id="feedback-blocos" style="margin-bottom:0.5rem;flex-wrap:wrap;gap:6px;"></section>
-    </section>
+      <!-- Sequência com erros -->
+      <aside class="quarto-card quarto-card--fonte" aria-label="Sequência com erros">
+        <p class="quarto-card__titulo">Sequência com erros</p>
+        <p class="quarto-card__subtitulo">Clique ou arraste apenas os passos que fazem sentido.</p>
 
-    <!-- Botões -->
-    <section class="btn-grupo">
-      <button class="btn btn--roxo" id="btn-verificar" aria-label="Verificar sequência">Verificar sequência</button>
-      <button class="btn btn--outline-roxo" id="btn-limpar" aria-label="Limpar sequência corrigida">Limpar</button>
+        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
+
+        <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
+          <img src="../img/dica.png" alt="" class="dica-img quarto-dica__img">
+          <p class="dica__texto dica__texto--erro quarto-dica__texto" id="dica-texto"></p>
+        </section>
+      </aside>
+
+      <!-- Área central -->
+      <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
+        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino" aria-dropeffect="move">
+          <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
+          <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
+
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="listbox" aria-label="Sequência corrigida" aria-live="polite"></section>
+        </section>
+
+        <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite">
+          <p class="quarto-feedback__titulo">Resultado da verificação</p>
+          <section class="blocos quarto-feedback__blocos" id="feedback-blocos"></section>
+        </section>
+
+        <section class="btn-grupo quarto-actions" aria-label="Ações do desafio">
+          <button class="btn btn--roxo quarto-btn quarto-btn--verificar" id="btn-verificar" aria-label="Verificar sequência">✓ Verificar sequência</button>
+          <button class="btn btn--outline-roxo quarto-btn quarto-btn--limpar" id="btn-limpar" aria-label="Limpar sequência corrigida">↻ Limpar</button>
+        </section>
+      </main>
+
+      <!-- Ajuda lateral -->
+      <aside class="quarto-ajuda" aria-label="Como jogar e objetivo">
+        <section class="quarto-card quarto-card--ajuda">
+          <p class="quarto-card__titulo">Como jogar</p>
+          <ol class="quarto-lista">
+            <li>Observe a sequência com erros.</li>
+            <li>Escolha os blocos corretos.</li>
+            <li>Monte a ordem certa no painel.</li>
+            <li>Use verificar para testar.</li>
+          </ol>
+        </section>
+
+        <section class="quarto-card quarto-card--objetivo">
+          <p class="quarto-card__titulo">Objetivo</p>
+          <p class="quarto-objetivo-texto">Corrigir a rotina do quarto, removendo erros e organizando os passos na ordem certa.</p>
+        </section>
+      </aside>
+
     </section>
 
   </section>
@@ -194,6 +225,7 @@
       el.className = `bloco ${temErro ? 'bloco--erro' : 'bloco--roxo'}`;
       el.draggable = true;
       el.dataset.index = index;
+      el.dataset.blocoId = id;
       el.setAttribute('role', 'option');
       el.setAttribute('tabindex', '0');
       el.setAttribute('aria-label', `${bloco.rotulo}${temErro ? ' — suspeito' : ''}`);
@@ -456,3 +488,4 @@
 
 </body>
 </html>
+

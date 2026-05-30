@@ -7,73 +7,100 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/despensa.css">
 </head>
-<body>
+<body class="pagina-despensa">
 
-  <section class="tela tela--marrom" id="tela-principal">
+  <section class="tela tela--marrom despensa-page" id="tela-principal">
 
     <!-- HUD -->
-    <section class="hud">
-      <button class="btn-voltar-mapa"
+    <section class="hud despensa-hud">
+      <button class="btn-voltar-mapa despensa-voltar"
               onclick="window.location.href='MapaCasa.html'"
               aria-label="Voltar ao mapa">← Mapa</button>
-      <section class="hud__info">
-        <img src="../img/icone-despensa.png" alt="Despensa" class="hud__icone-img">
+
+      <section class="hud__info despensa-hud__info">
+        <img src="../img/icone-despensa.png" alt="Despensa" class="hud__icone-img despensa-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--marrom">Despensa — Estoque Inteligente</p>
-          <p class="hud__subtitulo hud__subtitulo--marrom" id="hud-subtitulo">Mini-jogo 4</p>
+          <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa — Estoque Inteligente</p>
+          <p class="hud__subtitulo hud__subtitulo--marrom despensa-hud__subtitulo" id="hud-subtitulo">Mini-jogo 4</p>
         </section>
       </section>
-      <span class="badge badge--marrom" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
     </section>
 
-    <!-- Mascote Logi — duas falas distintas -->
-    <section class="balao balao--marrom" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote">
-      <div class="balao__corpo">
-        <!-- Fala fixa de boas-vindas (definida uma vez em init) -->
-        <p class="balao__texto balao__texto--marrom" id="logi-boas-vindas"></p>
-        <!-- Instrução ativa: muda a cada nível, destaque visual -->
-        <p class="balao__instrucao" id="logi-instrucao"></p>
-        <!-- Legenda cromática exclusiva do nível Fácil (item 10) -->
-        <p class="balao__legenda-cor" id="logi-legenda-cor" style="display:none;">
+    <!-- Mascote Logi -->
+    <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
+      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote despensa-logi__img">
+      <div class="balao__corpo despensa-logi__corpo">
+        <p class="balao__nome despensa-logi__nome">Logi diz:</p>
+        <p class="balao__texto balao__texto--marrom despensa-logi__texto" id="logi-boas-vindas"></p>
+        <p class="balao__instrucao despensa-logi__instrucao" id="logi-instrucao"></p>
+        <p class="balao__legenda-cor despensa-logi__legenda" id="logi-legenda-cor" style="display:none;">
+          <span class="legenda-circulo" aria-hidden="true"></span>
+          Vermelho = fruta correta neste nível
         </p>
       </div>
     </section>
 
-    <!-- Abas de nível -->
-    <section class="niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
+    <section class="despensa-layout">
 
-    <!-- Painel: itens para selecionar ou arrastar -->
-    <section class="painel" id="painel-itens">
-      <p class="painel__label" id="painel-itens-label">Itens para organizar</p>
-      <section class="itens-grid" id="itens-grid" role="listbox" aria-label="Itens disponíveis"></section>
-    </section>
+      <section class="despensa-main" aria-label="Área principal da despensa">
+        <!-- Abas de nível -->
+        <section class="niveis despensa-niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
 
-    <!-- Painel: prateleira (oculto no nível Fácil) -->
-    <section class="painel" id="painel-prateleira" aria-dropeffect="move">
-      <p class="painel__label" id="prateleira-label">Prateleira</p>
-      <section class="prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
-      <section class="prateleira__legenda">
-        <span class="prateleira__leg-txt" id="leg-esq">menor</span>
-        <span style="flex:1;"></span>
-        <span class="prateleira__leg-txt" id="leg-dir">maior</span>
+        <section class="despensa-work-grid">
+          <!-- Painel: itens para selecionar ou arrastar -->
+          <section class="painel despensa-card despensa-card--itens" id="painel-itens">
+            <p class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</p>
+            <section class="itens-grid despensa-itens-grid" id="itens-grid" role="listbox" aria-label="Itens disponíveis"></section>
+          </section>
+
+          <!-- Painel: prateleira (oculto no nível Fácil) -->
+          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira" aria-dropeffect="move">
+            <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
+            <section class="prateleira despensa-prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
+            <section class="prateleira__legenda despensa-prateleira__legenda">
+              <span class="prateleira__leg-txt" id="leg-esq">menor</span>
+              <span style="flex:1;"></span>
+              <span class="prateleira__leg-txt" id="leg-dir">maior</span>
+            </section>
+          </section>
+        </section>
+
+        <!-- Feedback granular -->
+        <section id="feedback-area" class="despensa-feedback" style="display:none;" aria-live="polite">
+          <section class="dica" id="feedback-dica">
+            <span class="dica__emoji" id="feedback-emoji">&#128270;</span>
+            <p class="dica__texto" id="feedback-texto"></p>
+          </section>
+        </section>
+
+        <!-- Botões -->
+        <section class="btn-grupo despensa-actions">
+          <button class="btn btn--marrom btn--confirmar despensa-btn" id="btn-confirmar" aria-label="Confirmar organização">
+            ✓ Confirmar!
+          </button>
+          <button class="btn btn--outline despensa-btn despensa-btn--limpar" id="btn-limpar" aria-label="Limpar seleção">Limpar</button>
+        </section>
       </section>
-    </section>
 
-    <!-- Feedback granular -->
-    <section id="feedback-area" style="display:none;" aria-live="polite">
-      <section class="dica" id="feedback-dica">
-        <span class="dica__emoji" id="feedback-emoji">&#128270;</span>
-        <p class="dica__texto" id="feedback-texto"></p>
-      </section>
-    </section>
+      <aside class="despensa-ajuda" aria-label="Ajuda da despensa">
+        <section class="despensa-card despensa-card--ajuda">
+          <p class="despensa-card__titulo">Como jogar</p>
+          <ol class="despensa-lista">
+            <li>Leia a regra mostrada pelo Logi.</li>
+            <li>Selecione ou arraste os itens corretos.</li>
+            <li>Use <strong>Confirmar</strong> para conferir.</li>
+          </ol>
+        </section>
 
-    <!-- Botões — item 5: texto conciso, fonte maior -->
-    <section class="btn-grupo">
-      <button class="btn btn--marrom btn--confirmar" id="btn-confirmar" aria-label="Confirmar organização">
-        &#10003; Confirmar!
-      </button>
-      <button class="btn btn--outline" id="btn-limpar" aria-label="Limpar seleção">Limpar</button>
+        <section class="despensa-card despensa-card--objetivo">
+          <p class="despensa-card__titulo">Objetivo</p>
+          <p class="despensa-objetivo-texto">Organize os itens por cor, tamanho ou categoria para deixar a despensa em ordem.</p>
+          <span class="despensa-estrela" aria-hidden="true">⭐</span>
+        </section>
+      </aside>
+
     </section>
 
   </section>
