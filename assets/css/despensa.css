@@ -167,6 +167,20 @@
   align-items: stretch;
 }
 
+.despensa-work-grid--prateleira-acima {
+  grid-template-columns: 1fr;
+}
+
+.despensa-work-grid--prateleira-acima .despensa-card--prateleira {
+  order: 1;
+  min-height: 190px;
+}
+
+.despensa-work-grid--prateleira-acima .despensa-card--itens {
+  order: 2;
+  min-height: 220px;
+}
+
 .despensa-card {
   background: rgba(255, 255, 255, 0.92);
   border: 1.5px solid var(--laranja-borda);
@@ -241,6 +255,11 @@
   align-items: stretch;
 }
 
+.despensa-itens-grid--tamanho {
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  align-items: end;
+}
+
 .item-card {
   position: relative;
   min-height: 92px;
@@ -256,6 +275,15 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+}
+
+.item-card--tamanho {
+  min-height: var(--item-card-height, 120px);
+  justify-content: flex-end;
+  gap: 4px;
+  border-style: solid;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 241, 0.96), rgba(250, 238, 218, 0.94));
 }
 
 .item-card:hover {
@@ -303,6 +331,31 @@
   animation: shake 0.35s ease;
 }
 
+.item-card--na-prateleira {
+  border: 2px solid var(--verde);
+  background: var(--verde-fundo);
+  cursor: default;
+  box-shadow: inset 0 0 0 2px rgba(29, 158, 117, 0.08);
+}
+
+.item-card--na-prateleira::after {
+  content: '✓';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--verde);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.14);
+}
+
 .itens-grid.tem-selecao .item-card:not(.item-card--selecionado) {
   opacity: 0.55;
 }
@@ -323,18 +376,18 @@
   filter: drop-shadow(0 5px 6px rgba(111, 46, 15, 0.13));
 }
 
+.item-card__emoji--tamanho {
+  width: var(--item-img-size, 54px);
+  height: var(--item-img-size, 54px);
+  object-fit: contain;
+  margin: 0 auto;
+}
+
 .item-card__nome {
   font-size: 11px;
   color: var(--marrom-medio);
-  margin-top: 5px;
+  margin-bottom: 5px;
   font-weight: 900;
-  line-height: 1.15;
-}
-
-.item-card__tam {
-  font-size: 9.5px;
-  color: var(--cinza);
-  font-weight: 700;
   line-height: 1.15;
 }
 
@@ -354,6 +407,23 @@
   box-shadow: inset 0 -7px 0 rgba(139, 99, 71, 0.24);
 }
 
+.despensa-work-grid--prateleira-acima .despensa-prateleira {
+  grid-template-columns: repeat(5, minmax(78px, 1fr));
+  min-height: 130px;
+}
+
+.despensa-work-grid--sementes .despensa-prateleira {
+  grid-template-columns: repeat(3, minmax(88px, 140px));
+  justify-content: center;
+}
+
+.despensa-prateleira--dragover {
+  outline: 3px solid rgba(29, 158, 117, 0.42);
+  outline-offset: 3px;
+  background:
+    linear-gradient(180deg, rgba(225, 245, 238, 0.94), rgba(255, 248, 238, 0.96));
+}
+
 .prateleira__slot {
   border: 1.5px dashed rgba(139, 99, 71, 0.36);
   border-radius: 14px;
@@ -370,6 +440,11 @@
   color: rgba(113, 43, 19, 0.45);
   background: rgba(255, 255, 255, 0.45);
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  font-family: inherit;
+}
+
+button.prateleira__slot {
+  cursor: pointer;
 }
 
 .prateleira__slot:hover {
@@ -386,6 +461,12 @@
   background: #FFEBEE;
   border: 1.5px solid #E53935;
   color: #B71C1C;
+}
+
+.prateleira__slot-pos {
+  font-size: 9px;
+  display: block;
+  margin-top: 2px;
 }
 
 .prateleira__legenda,

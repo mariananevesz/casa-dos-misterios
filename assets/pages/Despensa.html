@@ -36,8 +36,6 @@
         <p class="balao__texto balao__texto--marrom despensa-logi__texto" id="logi-boas-vindas"></p>
         <p class="balao__instrucao despensa-logi__instrucao" id="logi-instrucao"></p>
         <p class="balao__legenda-cor despensa-logi__legenda" id="logi-legenda-cor" style="display:none;">
-          <span class="legenda-circulo" aria-hidden="true"></span>
-          Vermelho = fruta correta neste nível
         </p>
       </div>
     </section>
@@ -48,7 +46,7 @@
         <!-- Abas de nível -->
         <section class="niveis despensa-niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
 
-        <section class="despensa-work-grid">
+        <section class="despensa-work-grid" id="despensa-work-grid">
           <!-- Painel: itens para selecionar ou arrastar -->
           <section class="painel despensa-card despensa-card--itens" id="painel-itens">
             <p class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</p>
@@ -89,14 +87,14 @@
           <p class="despensa-card__titulo">Como jogar</p>
           <ol class="despensa-lista">
             <li>Leia a regra mostrada pelo Logi.</li>
-            <li>Selecione ou arraste os itens corretos.</li>
+            <li>Clique ou arraste os itens corretos.</li>
             <li>Use <strong>Confirmar</strong> para conferir.</li>
           </ol>
         </section>
 
         <section class="despensa-card despensa-card--objetivo">
           <p class="despensa-card__titulo">Objetivo</p>
-          <p class="despensa-objetivo-texto">Organize os itens por cor, tamanho ou categoria para deixar a despensa em ordem.</p>
+          <p class="despensa-objetivo-texto">Organize os itens por cor, tamanho ou características das frutas para deixar a despensa em ordem.</p>
           <span class="despensa-estrela" aria-hidden="true">⭐</span>
         </section>
       </aside>
@@ -152,28 +150,29 @@
       {
         "nivel": "Médio",
         "criterio": "tamanho",
-        "instrucao": "Arraste por tamanho: do menor para o maior.",
+        "instrucao": "Clique ou arraste por tamanho: do menor para o maior.",
         "itens": [
           { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png"      },
           { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
           { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maça.png"     },
           { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png"  },
-          { "id": "banana",   "nome": "Banana",   "tamanho": 3, "img": "../img/banana.png"   }
+          { "id": "banana",   "nome": "Banana",   "tamanho": 4, "img": "../img/banana.png"   }
         ],
         "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
       },
       {
         "nivel": "Difícil",
-        "criterio": "categoria",
-        "instrucao": "Organize: frutas cítricas primeiro, depois as demais, do menor ao maior dentro de cada grupo.",
+        "criterio": "selecao-sementes",
+        "instrucao": "Escolha apenas as frutas que têm sementes por dentro.",
         "itens": [
-          { "id": "uva",      "nome": "Uva",      "categoria": "fruta-comum", "tamanho": 2, "img": "../img/uva.png"      },
-          { "id": "melancia", "nome": "Melancia", "categoria": "fruta-comum", "tamanho": 5, "img": "../img/melancia.png" },
-          { "id": "maca",     "nome": "Maçã",     "categoria": "fruta-comum", "tamanho": 3, "img": "../img/maca.png"     },
-          { "id": "mirtilo",  "nome": "Mirtilo",  "categoria": "fruta-comum", "tamanho": 1, "img": "../img/mirtilo.png"  },
-          { "id": "banana",   "nome": "Banana",   "categoria": "fruta-comum", "tamanho": 3, "img": "../img/banana.png"   }
+          { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+          { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png"     },
+          { "id": "uva",      "nome": "Uva",      "tipo": "sementes", "img": "../img/uva.png"      },
+          { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+          { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+          { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
         ],
-        "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+        "corretos": ["melancia", "kiwi", "uva"]
       }
     ]
   };
@@ -246,19 +245,23 @@
 
     /* Mostrar/ocultar prateleira conforme o critério */
     const mostraPrateleira = nivel.criterio !== 'selecao-cor';
+    organizarPainelNivel(nivel, mostraPrateleira);
     document.getElementById('painel-prateleira').style.display = mostraPrateleira ? '' : 'none';
 
     /* Rótulo do painel de itens */
     document.getElementById('painel-itens-label').textContent =
       nivel.criterio === 'selecao-cor'
         ? 'Toque nas frutas para selecionar'
-        : 'Itens para organizar — arraste para a prateleira';
+        : nivel.criterio === 'selecao-sementes'
+          ? 'Clique ou arraste as frutas com sementes'
+          : 'Itens para organizar — clique ou arraste para a prateleira';
 
     /* Legenda da prateleira */
     if (mostraPrateleira) {
       const esq = document.getElementById('leg-esq');
       const dir = document.getElementById('leg-dir');
       if (nivel.criterio === 'tamanho')   { esq.textContent = 'menor';   dir.textContent = 'maior';  }
+      else if (nivel.criterio === 'selecao-sementes') { esq.textContent = 'escolhas'; dir.textContent = '3 frutas'; }
       else                                { esq.textContent = 'primeiro'; dir.textContent = 'último'; }
       document.getElementById('prateleira-label').textContent = nivel.instrucao;
     }
@@ -269,6 +272,23 @@
 
     document.getElementById('feedback-area').style.display = 'none';
     atualizarBadge();
+  }
+
+  function organizarPainelNivel(nivel, mostraPrateleira) {
+    const workGrid = document.getElementById('despensa-work-grid');
+    const painelItens = document.getElementById('painel-itens');
+    const painelPrateleira = document.getElementById('painel-prateleira');
+    const prateleiraAcima = nivel.criterio === 'tamanho' || nivel.criterio === 'selecao-sementes';
+
+    workGrid.classList.toggle('despensa-work-grid--prateleira-acima', prateleiraAcima);
+    workGrid.classList.toggle('despensa-work-grid--com-prateleira', mostraPrateleira);
+    workGrid.classList.toggle('despensa-work-grid--sementes', nivel.criterio === 'selecao-sementes');
+
+    if (prateleiraAcima) {
+      workGrid.insertBefore(painelPrateleira, painelItens);
+    } else {
+      workGrid.insertBefore(painelItens, painelPrateleira);
+    }
   }
 
   /* ================================================================
@@ -290,13 +310,36 @@
   /* ================================================================
      CONSTRUÇÃO DOS ITENS
      - selecao-cor: click para toggle, sem drag
-     - tamanho / categoria: drag + touch
+     - tamanho: drag + touch
+     - selecao-sementes: click ou drag para selecionar na prateleira
   ================================================================ */
+  function labelTamanho(valor) {
+    const labels = {
+      1: 'muito pequeno',
+      2: 'pequeno',
+      3: 'médio',
+      4: 'grande',
+      5: 'muito grande'
+    };
+    return labels[valor] || `tamanho ${valor}`;
+  }
+
+  function textoTamanho(valor) {
+    return `tam. ${valor}: ${labelTamanho(valor)}`;
+  }
+
+  function tamanhoImagemPx(valor, compacto = false) {
+    const tamanho = Number(valor || 3);
+    return compacto
+      ? 20 + (tamanho - 1) * 9
+      : 28 + (tamanho - 1) * 13;
+  }
+
   function buildItens(nivel) {
     const cont = document.getElementById('itens-grid');
     cont.innerHTML = '';
     cont.classList.remove('tem-selecao');
-    cont.style.alignItems = nivel.criterio === 'tamanho' ? 'flex-end' : '';
+    cont.classList.toggle('despensa-itens-grid--tamanho', nivel.criterio === 'tamanho');
 
     nivel.itens.forEach(item => {
       const card = document.createElement('article');
@@ -304,6 +347,7 @@
       card.dataset.itemId = item.id;
       card.setAttribute('role', 'option');
       card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-selected', 'false');
 
       /* --- HTML da imagem — usa item.img vindo do JSON --- */
       let imgHtml;
@@ -324,27 +368,30 @@
         card.setAttribute('aria-label', `${item.nome} — clique para selecionar`);
 
       } else if (nivel.criterio === 'tamanho') {
-        const px = item.tamanho !== undefined ? 20 + (item.tamanho - 1) * 14 : 40;
+        const px = tamanhoImagemPx(item.tamanho);
+        card.classList.add('item-card--tamanho');
+        card.style.setProperty('--item-img-size', `${px}px`);
+        card.style.setProperty('--item-card-height', `${78 + Number(item.tamanho || 3) * 14}px`);
         imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
-          class="item-card__emoji"
-          style="width:${px}px;height:${px}px;object-fit:contain;display:block;margin:0 auto;">`;
-        card.setAttribute('aria-label', `${item.nome} — arraste para a prateleira`);
+          class="item-card__emoji item-card__emoji--tamanho">`;
+        card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — clique ou arraste para a prateleira`);
 
       } else {
         imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
           class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">`;
-        card.setAttribute('aria-label', `${item.nome} — arraste para a prateleira`);
+        card.setAttribute(
+          'aria-label',
+          nivel.criterio === 'selecao-sementes'
+            ? `${item.nome} — clique ou arraste para escolher`
+            : `${item.nome} — arraste para a prateleira`
+        );
       }
 
-      const atributoTxt =
-        item.tamanho  !== undefined ? 'tamanho ' + item.tamanho :
-        item.cor      !== undefined ? item.cor :
-        (item.atributo || '');
+      card.dataset.defaultAriaLabel = card.getAttribute('aria-label');
 
       card.innerHTML = `
-        ${imgHtml}
         <p class="item-card__nome">${item.nome}</p>
-        <p class="item-card__tam">${atributoTxt}</p>
+        ${imgHtml}
       `;
 
       /* --- Eventos --- */
@@ -363,6 +410,7 @@
         card.addEventListener('touchstart', touchStart, { passive: true });
         card.addEventListener('touchmove',  touchMove,  { passive: false });
         card.addEventListener('touchend',   touchEnd,   { passive: true });
+        card.addEventListener('click', () => adicionarItem(item.id));
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarItem(item.id); }
         });
@@ -370,6 +418,8 @@
 
       cont.appendChild(card);
     });
+
+    atualizarItensDisponiveis();
   }
 
   /* ================================================================
@@ -390,7 +440,9 @@
 
     grid.querySelectorAll('.item-card').forEach(card => {
       const cid = card.dataset.itemId;
-      card.classList.toggle('item-card--selecionado', selecionados.includes(cid));
+      const selecionado = selecionados.includes(cid);
+      card.classList.toggle('item-card--selecionado', selecionado);
+      card.setAttribute('aria-selected', selecionado ? 'true' : 'false');
       card.classList.remove('item-card--incorreto'); // limpa erro ao tocar
     });
 
@@ -404,7 +456,34 @@
       if (selecionados.includes(cid) && !nivel.corretos.includes(cid)) {
         card.classList.add('item-card--incorreto');
         card.classList.remove('item-card--selecionado');
+        card.setAttribute('aria-selected', 'true');
       }
+    });
+  }
+
+  function atualizarItensDisponiveis() {
+    if (!gameData) return;
+    const nivel = gameData.niveis[nivelIdx];
+    const grid = document.getElementById('itens-grid');
+
+    grid.querySelectorAll('.item-card').forEach(card => {
+      const id = card.dataset.itemId;
+
+      if (nivel.criterio === 'selecao-cor') {
+        const selecionado = selecionados.includes(id);
+        card.setAttribute('aria-selected', selecionado ? 'true' : 'false');
+        return;
+      }
+
+      const naPrateleira = prateleira.includes(id);
+      card.classList.toggle('item-card--na-prateleira', naPrateleira);
+      card.setAttribute('aria-selected', naPrateleira ? 'true' : 'false');
+      card.setAttribute(
+        'aria-label',
+        naPrateleira
+          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Clique no item da prateleira para remover.`
+          : card.dataset.defaultAriaLabel
+      );
     });
   }
 
@@ -413,17 +492,22 @@
   ================================================================ */
   function renderPrateleira(nivel) {
     if (!nivel) nivel = gameData.niveis[nivelIdx];
-    const total = nivel.itens.length;
+    const total = nivel.criterio === 'selecao-sementes'
+      ? nivel.corretos.length
+      : nivel.itens.length;
     const cont  = document.getElementById('prateleira');
     cont.innerHTML = '';
 
     for (let i = 0; i < total; i++) {
-      const slot = document.createElement('span');
+      const slot = document.createElement(i < prateleira.length ? 'button' : 'span');
 
       if (i < prateleira.length) {
         const id   = prateleira[i];
         const item = nivel.itens.find(it => it.id === id);
         const status = prateleiraStatus[i]; // 'ok' | 'erro' | ''
+        const imgSize = nivel.criterio === 'tamanho' && item?.tamanho
+          ? tamanhoImagemPx(item.tamanho, true)
+          : 28;
 
         /* Item 2 — manter itens + destacar erros com borda vermelha */
         if (status === 'erro') {
@@ -435,13 +519,13 @@
         }
 
         slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        slot.setAttribute('type', 'button');
 
         const imgSrc = item?.img || '';
         slot.innerHTML = `
-          <img src="${imgSrc}" alt="${item?.nome || id}" style="width:28px;height:28px;object-fit:contain;">
-          <span style="font-size:9px;display:block;margin-top:2px;">${i+1}º</span>
+          <img src="${imgSrc}" alt="${item?.nome || id}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
+          <span class="prateleira__slot-pos">${i+1}º</span>
         `;
-        slot.style.cursor = 'pointer';
         slot.addEventListener('click', () => removerItem(i));
 
       } else {
@@ -453,9 +537,21 @@
       cont.appendChild(slot);
     }
 
-    cont.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+    atualizarItensDisponiveis();
+
+    cont.ondragover = e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      cont.classList.add('despensa-prateleira--dragover');
+    };
+    cont.ondragleave = e => {
+      if (!cont.contains(e.relatedTarget)) {
+        cont.classList.remove('despensa-prateleira--dragover');
+      }
+    };
     cont.ondrop     = e => {
       e.preventDefault();
+      cont.classList.remove('despensa-prateleira--dragover');
       const id = e.dataTransfer.getData('itemId');
       if (id) adicionarItem(id);
     };
@@ -463,7 +559,10 @@
 
   function adicionarItem(id) {
     const nivel = gameData.niveis[nivelIdx];
-    if (prateleira.length >= nivel.itens.length) return;
+    const limite = nivel.criterio === 'selecao-sementes'
+      ? nivel.corretos.length
+      : nivel.itens.length;
+    if (prateleira.length >= limite) return;
     if (prateleira.includes(id)) return;
     prateleira.push(id);
     prateleiraStatus = []; // limpa status ao adicionar novo item
@@ -518,6 +617,8 @@
 
     if (nivel.criterio === 'selecao-cor') {
       confirmarSelecao(nivel);
+    } else if (nivel.criterio === 'selecao-sementes') {
+      confirmarSelecaoSementes(nivel);
     } else {
       confirmarOrdenacao(nivel);
     }
@@ -552,10 +653,8 @@
         marcarSelecaoErrada(nivel);
       } else {
         /* Selecionou apenas corretas mas faltou alguma */
-        const faltandoId   = corretos.find(id => !selecionados.includes(id));
-        const faltandoItem = nivel.itens.find(it => it.id === faltandoId);
         mostrarFeedback(
-          `Faltou selecionar a ${faltandoItem?.nome || ''}! Continue procurando.`,
+          `Faltou selecionar uma fruta! Continue procurando.`,
           'ambar'
         );
       }
@@ -563,7 +662,50 @@
     }
   }
 
-  /* --- Validação dos níveis Médio e Difícil (ordenação) --- */
+  /* --- Validação do nível Difícil (seleção por click/arraste) --- */
+  function confirmarSelecaoSementes(nivel) {
+    const total = nivel.corretos.length;
+
+    if (prateleira.length < total) {
+      mostrarFeedback('Escolha 3 frutas antes de confirmar!', 'ambar');
+      return;
+    }
+
+    const corretos = nivel.corretos;
+    const todasCorretas = corretos.every(id => prateleira.includes(id));
+    const nenhumaErrada = prateleira.every(id => corretos.includes(id));
+
+    prateleiraStatus = prateleira.map(id => corretos.includes(id) ? 'ok' : 'erro');
+
+    if (todasCorretas && nenhumaErrada) {
+      audio.acerto();
+      prateleiraStatus = [];
+      setTimeout(() => nivelConcluido(nivel), 400);
+      return;
+    }
+
+    erros++;
+    audio.erro();
+    renderPrateleira(nivel);
+
+    const erradoId = prateleira.find(id => !corretos.includes(id));
+    const erradoItem = nivel.itens.find(it => it.id === erradoId);
+
+    if (erradoId === 'morango') {
+      mostrarFeedback(
+        'No morango, os pontinhos de fora são aquênios. Neste desafio, ele não conta como fruta com sementes por dentro. Remova o morango e tente de novo!',
+        'erro'
+      );
+      return;
+    }
+
+    mostrarFeedback(
+      `${erradoItem?.nome || erradoId} não é uma das frutas com sementes por dentro neste desafio. Remova o item destacado e tente de novo!`,
+      'erro'
+    );
+  }
+
+  /* --- Validação do nível Médio (ordenação) --- */
   function confirmarOrdenacao(nivel) {
     const total = nivel.itens.length;
     if (prateleira.length < total) {
@@ -685,6 +827,7 @@
       document.getElementById('itens-grid').classList.remove('tem-selecao');
       document.getElementById('itens-grid').querySelectorAll('.item-card').forEach(c => {
         c.classList.remove('item-card--selecionado', 'item-card--incorreto');
+        c.setAttribute('aria-selected', 'false');
       });
     } else {
       prateleira       = [];

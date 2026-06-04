@@ -19,28 +19,29 @@
     {
       "nivel": "Médio",
       "criterio": "tamanho",
-      "instrucao": "Arraste por tamanho: do menor para o maior.",
+      "instrucao": "Clique ou arraste por tamanho: do menor para o maior.",
       "itens": [
         { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png"      },
         { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
-        { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maca.png"     },
+        { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maça.png"     },
         { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png"  },
-        { "id": "banana",   "nome": "Banana",   "tamanho": 3, "img": "../img/banana.png"   }
+        { "id": "banana",   "nome": "Banana",   "tamanho": 4, "img": "../img/banana.png"   }
       ],
       "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
     },
     {
       "nivel": "Difícil",
-      "criterio": "categoria",
-      "instrucao": "Organize: frutas cítricas primeiro, depois as demais, do menor ao maior dentro de cada grupo.",
+      "criterio": "selecao-sementes",
+      "instrucao": "Escolha apenas as frutas que têm sementes por dentro.",
       "itens": [
-        { "id": "uva",      "nome": "Uva",      "categoria": "fruta-comum", "tamanho": 2, "img": "../img/uva.png"      },
-        { "id": "melancia", "nome": "Melancia", "categoria": "fruta-comum", "tamanho": 5, "img": "../img/melancia.png" },
-        { "id": "maca",     "nome": "Maçã",     "categoria": "fruta-comum", "tamanho": 3, "img": "../img/maca.png"     },
-        { "id": "mirtilo",  "nome": "Mirtilo",  "categoria": "fruta-comum", "tamanho": 1, "img": "../img/mirtilo.png"  },
-        { "id": "banana",   "nome": "Banana",   "categoria": "fruta-comum", "tamanho": 3, "img": "../img/banana.png"   }
+        { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+        { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png"     },
+        { "id": "uva",      "nome": "Uva",      "tipo": "sementes", "img": "../img/uva.png"      },
+        { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+        { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+        { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
       ],
-      "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+      "corretos": ["melancia", "kiwi", "uva"]
     }
   ]
 }
