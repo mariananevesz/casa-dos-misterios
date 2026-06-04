@@ -217,9 +217,9 @@
   background: rgba(252, 235, 235, 0.78);
 }
 
-.quarto-dica__img {
-  width: 17px;
-  height: 17px;
+.quarto-dica__icon {
+  font-size: 20px;
+  line-height: 1;
   margin-top: 1px;
 }
 

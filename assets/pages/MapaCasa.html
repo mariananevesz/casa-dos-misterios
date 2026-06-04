@@ -112,11 +112,12 @@
       const desbloqueado = state.unlocked[c.id];
       const concluido    = state.completed[c.id];
       const score        = state.scores[c.id];
-      const estrelas     = gameState.getStars(score);
+      const estrelas     = gameState.getRoomProgressStars(c.id);
+      const totalEstrelas = gameState.getRoomStarGoal(c.id);
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
       const card = document.createElement('article');
-      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}`);
+      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
@@ -144,9 +145,9 @@
         if (c.tag) tagHtml = `<span class="comodo-card__tag comodo-card__tag--verde">${c.tag}</span>`;
 
         let estrelasHtml = '';
-        if (concluido) {
-          estrelasHtml = '<section class="modal-estrelas comodo-card__estrelas" aria-label="Estrelas conquistadas">';
-          for (let i = 0; i < 3; i++) {
+        if (estrelas > 0) {
+          estrelasHtml = `<section class="modal-estrelas comodo-card__estrelas" aria-label="${estrelas} de ${totalEstrelas} estrelas conquistadas">`;
+          for (let i = 0; i < totalEstrelas; i++) {
             estrelasHtml += `<img src="../img/estrela.png" alt="${i < estrelas ? 'Estrela conquistada' : 'Estrela vazia'}" class="${i < estrelas ? '' : 'estrela-vazia'}">`;
           }
           estrelasHtml += '</section>';

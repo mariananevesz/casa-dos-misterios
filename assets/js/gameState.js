@@ -68,6 +68,45 @@ const gameState = {
     return 1;
   },
 
+  _countPhaseScores(storageKey) {
+    try {
+      const scores = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      return Object.keys(scores).length;
+    } catch {
+      return 0;
+    }
+  },
+
+  getRoomStarGoal() {
+    return 3;
+  },
+
+  getRoomProgressStars(room) {
+    const state = this._load();
+
+    if (room === 'sala') {
+      const fases = this._countPhaseScores('sala_scores_fases');
+      return Math.min(this.getRoomStarGoal(room), fases || (state.completed.sala ? 3 : 0));
+    }
+
+    if (room === 'quarto') {
+      const fases = this._countPhaseScores('quarto_scores_fases');
+      return Math.min(this.getRoomStarGoal(room), fases || (state.completed.quarto ? 3 : 0));
+    }
+
+    if (room === 'despensa') {
+      if (state.completed.despensa) return 3;
+      const nivelAtual = parseInt(localStorage.getItem('despensa_nivel') || '0', 10);
+      return Math.max(0, Math.min(this.getRoomStarGoal(room), nivelAtual));
+    }
+
+    if (room === 'cozinha') {
+      return state.completed.cozinha ? 3 : 0;
+    }
+
+    return state.completed[room] ? 3 : 0;
+  },
+
   updateSettings(patch) {
     const state = this._load();
     state.settings = { ...state.settings, ...patch };
@@ -97,6 +136,15 @@ const gameState = {
   },
 
   reset() {
+    [
+      'sala_fase',
+      'sala_scores_fases',
+      'quarto_fase',
+      'quarto_scores_fases',
+      'despensa_nivel'
+    ].forEach(key => {
+      try { localStorage.removeItem(key); } catch {}
+    });
     this._save(JSON.parse(JSON.stringify(DEFAULT_STATE)));
   }
 };
