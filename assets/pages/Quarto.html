@@ -402,8 +402,8 @@
   scoresQuarto[fase.id] = scoreFase;
   localStorage.setItem('quarto_scores_fases', JSON.stringify(scoresQuarto));
 
-  const somaFases = Object.values(scoresQuarto).reduce((soma, valor) => soma + valor, 0);
-  const totalQuarto = Math.round(somaFases / gameData.fases.length);
+  const errosQuarto = gameState.getErrorsFromPhaseScores(scoresQuarto);
+  const totalQuarto = gameState.calcularScore(errosQuarto);
 
   const proxFase = faseAtual + 1;
   const quartoConcluido = proxFase >= gameData.fases.length;

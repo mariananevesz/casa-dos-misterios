@@ -46,7 +46,7 @@ const gameState = {
 
   setRoomScore(room, score, completed = true) {
     const state = this._load();
-    state.scores[room] = score;
+    state.scores[room] = Math.max(0, Math.min(25, Number(score) || 0));
     if (completed) {
       state.completed[room] = true;
       const idx = ROOMS.indexOf(room);
@@ -60,23 +60,18 @@ const gameState = {
 
   getTotalScore() {
     const state = this._load();
-    return Object.values(state.scores).reduce((sum, s) => sum + (s || 0), 0);
+    return Math.min(100, Object.values(state.scores).reduce(
+      (sum, score) => sum + Math.max(0, Math.min(25, Number(score) || 0)),
+      0
+    ));
   },
 
   getStars(score) {
     if (score === null || score === undefined) return 0;
-    if (score >= 80) return 3;
-    if (score >= 50) return 2;
-    return 1;
-  },
-
-  _countPhaseScores(storageKey) {
-    try {
-      const scores = JSON.parse(localStorage.getItem(storageKey) || '{}');
-      return Object.keys(scores).length;
-    } catch {
-      return 0;
-    }
+    if (score >= 25) return 3;
+    if (score >= 20) return 2;
+    if (score >= 10) return 1;
+    return 0;
   },
 
   getRoomStarGoal() {
@@ -85,28 +80,7 @@ const gameState = {
 
   getRoomProgressStars(room) {
     const state = this._load();
-
-    if (room === 'sala') {
-      const fases = this._countPhaseScores('sala_scores_fases');
-      return Math.min(this.getRoomStarGoal(room), fases || (state.completed.sala ? 3 : 0));
-    }
-
-    if (room === 'quarto') {
-      const fases = this._countPhaseScores('quarto_scores_fases');
-      return Math.min(this.getRoomStarGoal(room), fases || (state.completed.quarto ? 3 : 0));
-    }
-
-    if (room === 'despensa') {
-      if (state.completed.despensa) return 3;
-      const nivelAtual = parseInt(localStorage.getItem('despensa_nivel') || '0', 10);
-      return Math.max(0, Math.min(this.getRoomStarGoal(room), nivelAtual));
-    }
-
-    if (room === 'cozinha') {
-      return state.completed.cozinha ? 3 : 0;
-    }
-
-    return state.completed[room] ? 3 : 0;
+    return state.completed[room] ? this.getStars(state.scores[room]) : 0;
   },
 
   updateSettings(patch) {
@@ -121,10 +95,20 @@ const gameState = {
   },
 
   calcularScore(erros) {
-    if (erros === 0) return 25;
-    if (erros === 1) return 20;
-    if (erros === 2) return 15;
+    const totalErros = Math.max(0, Number(erros) || 0);
+    if (totalErros === 0) return 25;
+    if (totalErros === 1) return 20;
+    if (totalErros === 2) return 15;
     return 10;
+  },
+
+  getErrorsFromPhaseScores(phaseScores) {
+    return Object.values(phaseScores).reduce((total, score) => {
+      if (score >= 25) return total;
+      if (score >= 20) return total + 1;
+      if (score >= 15) return total + 2;
+      return total + 3;
+    }, 0);
   },
 
   getCozinhaBloco() {

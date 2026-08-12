@@ -63,7 +63,7 @@
   function render() {
     const state  = gameState.get();
     const total  = gameState.getTotalScore();
-    const concluidos = COMODOS.filter(c => gameState.getRoomProgressStars(c.id) >= gameState.getRoomStarGoal(c.id)).length;
+    const concluidos = COMODOS.filter(c => state.completed[c.id]).length;
 
     document.getElementById('pontuacao-final').textContent = total;
 
