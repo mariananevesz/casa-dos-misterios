@@ -189,6 +189,7 @@
   let boasVindasExibido = false;  // mostra instrucaoInstrutor apenas uma vez
 
   const NIVEL_KEY = 'despensa_nivel';
+  const ERROS_KEY = 'despensa_erros';
 
   /* Cores para exibição visual do nível Fácil (círculo fallback sem imagem) */
   const COR_CARD = {
@@ -212,6 +213,7 @@
       parseInt(localStorage.getItem(NIVEL_KEY) || '0'),
       gameData.niveis.length - 1
     );
+    erros = Math.max(0, parseInt(localStorage.getItem(ERROS_KEY) || '0', 10) || 0);
 
     /* Item 1 — fala de boas-vindas exibida uma única vez */
     document.getElementById('logi-boas-vindas').textContent = gameData.instrucaoInstrutor;
@@ -241,7 +243,6 @@
     prateleira       = [];
     prateleiraStatus = [];
     selecionados     = [];
-    erros            = 0;
 
     /* Mostrar/ocultar prateleira conforme o critério */
     const mostraPrateleira = nivel.criterio !== 'selecao-cor';
@@ -624,6 +625,11 @@
     }
   }
 
+  function registrarErro() {
+    erros++;
+    localStorage.setItem(ERROS_KEY, erros);
+  }
+
   /* --- Validação do nível Fácil (seleção de cor) --- */
   function confirmarSelecao(nivel) {
     if (selecionados.length === 0) {
@@ -639,7 +645,7 @@
       audio.acerto();
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
-      erros++;
+      registrarErro();
       audio.erro();
 
       /* Item 3 — feedback granular: nome do primeiro item errado */
@@ -684,7 +690,7 @@
       return;
     }
 
-    erros++;
+    registrarErro();
     audio.erro();
     renderPrateleira(nivel);
 
@@ -728,7 +734,7 @@
       prateleiraStatus = [];
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
-      erros++;
+      registrarErro();
       audio.erro();
 
       /* Item 2 — manter itens, destacar erros (sem setTimeout que limpava) */
@@ -768,6 +774,7 @@
       localStorage.removeItem(NIVEL_KEY);
       const score = gameState.calcularScore(erros);
       gameState.setRoomScore('despensa', score);
+      localStorage.removeItem(ERROS_KEY);
       atualizarBadge(score);
       exibirModal(score);
       if (score === 25) audio.conclusao();

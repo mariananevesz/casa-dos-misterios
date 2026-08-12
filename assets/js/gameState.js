@@ -127,7 +127,8 @@ const gameState = {
       'sala_scores_fases',
       'quarto_fase',
       'quarto_scores_fases',
-      'despensa_nivel'
+      'despensa_nivel',
+      'despensa_erros'
     ].forEach(key => {
       try { localStorage.removeItem(key); } catch {}
     });
