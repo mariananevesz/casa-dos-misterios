@@ -561,9 +561,10 @@ async function executar() {
     localStorage.setItem('sala_scores_fases', JSON.stringify(scoresSala));
     const somaFases = Object.values(scoresSala).reduce((soma, valor) => soma + valor, 0);
     const totalSala = Math.round(somaFases / gameData.fases.length);
-    gameState.setRoomScore('sala', totalSala);
-
     const proxFase = faseAtual + 1;
+    const salaConcluida = proxFase >= gameData.fases.length;
+    gameState.setRoomScore('sala', totalSala, salaConcluida);
+
     if (proxFase < gameData.fases.length) {
       localStorage.setItem(FASE_KEY, proxFase);
     } else {

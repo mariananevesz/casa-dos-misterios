@@ -44,13 +44,15 @@ const gameState = {
 
   get() { return this._load(); },
 
-  setRoomScore(room, score) {
+  setRoomScore(room, score, completed = true) {
     const state = this._load();
-    state.scores[room]    = score;
-    state.completed[room] = true;
-    const idx = ROOMS.indexOf(room);
-    if (idx >= 0 && idx < ROOMS.length - 1) {
-      state.unlocked[ROOMS[idx + 1]] = true;
+    state.scores[room] = score;
+    if (completed) {
+      state.completed[room] = true;
+      const idx = ROOMS.indexOf(room);
+      if (idx >= 0 && idx < ROOMS.length - 1) {
+        state.unlocked[ROOMS[idx + 1]] = true;
+      }
     }
     this._save(state);
     return state;

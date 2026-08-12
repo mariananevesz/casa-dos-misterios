@@ -405,10 +405,10 @@
   const somaFases = Object.values(scoresQuarto).reduce((soma, valor) => soma + valor, 0);
   const totalQuarto = Math.round(somaFases / gameData.fases.length);
 
-  gameState.setRoomScore('quarto', totalQuarto);
-  atualizarBadge(totalQuarto);
-
   const proxFase = faseAtual + 1;
+  const quartoConcluido = proxFase >= gameData.fases.length;
+  gameState.setRoomScore('quarto', totalQuarto, quartoConcluido);
+  atualizarBadge(totalQuarto);
 
   if (proxFase < gameData.fases.length) {
     localStorage.setItem(FASE_KEY, proxFase);
