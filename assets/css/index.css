@@ -11,6 +11,7 @@
     var(--branco);
   border: 2px solid var(--ambar-claro);
   box-shadow: 0 18px 45px rgba(111, 46, 15, 0.12);
+  margin-block: auto;
 }
 
 /* ---------- Cabeçalho ---------- */
@@ -214,4 +215,19 @@
   .inicio-comodo__icone-img { width: 60px; height: 60px; }
   .inicio-comodo__label     { font-size: 12px; }
   .inicio-rodape            { font-size: 11px; margin-top: 1rem; }
+}
+
+@media (max-height: 800px) {
+  #tela-principal { padding-block: clamp(0.7rem, 2vh, 1rem); }
+  .inicio-header { margin-bottom: 0.8rem; }
+  .inicio-header__titulo { font-size: clamp(24px, 4vh, 30px); }
+  .menu-botoes { margin: 0.7rem 0 1rem; }
+  .menu-botoes .btn--menu-principal + .btn--menu-principal,
+  #tela-principal > .btn--menu-principal + .btn--menu-principal { margin-top: 10px; }
+  .btn--menu-principal { min-height: 46px; font-size: 15px; }
+  .inicio-comodos { margin-top: 0.9rem; padding-top: 10px; }
+  .inicio-comodos__titulo { margin-bottom: 10px; font-size: 14px; }
+  .inicio-comodo__icone-img { width: clamp(48px, 8vh, 64px); height: clamp(48px, 8vh, 64px); }
+  .inicio-comodo__label { margin-top: 4px; font-size: 12px; }
+  .inicio-rodape { margin-top: 0.7rem; }
 }

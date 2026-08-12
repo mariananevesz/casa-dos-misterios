@@ -17,8 +17,8 @@
   width: min(100%, 1080px);
   max-width: 1080px;
   min-height: auto;
-  max-height: calc(100vh - 1.3rem);
-  overflow: auto;
+  max-height: none;
+  overflow: visible;
   padding: 0.85rem;
   border-color: var(--roxo-borda);
   border-radius: 22px;
@@ -342,7 +342,7 @@
 }
 
 /* ---------- Responsividade ---------- */
-@media (max-width: 980px) {
+@media (max-width: 1020px) {
   .quarto-page {
     max-height: none;
   }
@@ -410,4 +410,28 @@
   .quarto-btn--limpar {
     flex: 1;
   }
+}
+
+@media (max-height: 780px) and (min-width: 1021px) {
+  .quarto-page { padding: 0.6rem; }
+  .quarto-hud { margin-bottom: 0.35rem; }
+  .quarto-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
+  .quarto-layout { gap: 0.55rem; }
+  .quarto-card { padding: 0.55rem; }
+  .quarto-card--destino { min-height: 210px; }
+  .quarto-sequencia { min-height: 135px; gap: 0.4rem; }
+  .quarto-page #blocos-fonte .bloco,
+  .quarto-page #sequencia-corrigida .bloco,
+  .quarto-page #feedback-blocos .bloco { min-height: 34px; padding-block: 0.32rem; }
+  .quarto-lista { font-size: 10.5px; line-height: 1.35; }
+  .quarto-estrela { font-size: 28px; margin-top: 0.45rem; }
+}
+
+@media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 1020px) {
+  .quarto-page { max-width: none; padding: 0.55rem; }
+  .quarto-layout { grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr); gap: 0.5rem; }
+  .quarto-ajuda { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+  .quarto-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
+  .quarto-card--destino { min-height: 205px; }
+  .quarto-sequencia { min-height: 130px; }
 }

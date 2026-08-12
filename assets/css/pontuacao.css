@@ -72,3 +72,18 @@
 .pontuacao-card__pts--roxo     { color: var(--roxo); }
 .pontuacao-card__pts--verde    { color: var(--verde); }
 .pontuacao-card__pts--marrom   { color: var(--laranja); }
+
+@media (max-width: 520px) {
+  .pontuacao-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .resultado-header { margin-bottom: 1rem; }
+  .pontuacao-total { padding: 1rem; margin-bottom: 1rem; }
+  .pontuacao-total__numero { font-size: clamp(36px, 12vw, 48px); }
+}
+
+@media (max-height: 720px) {
+  .resultado-header { margin-bottom: 0.65rem; }
+  .resultado-header__icone { font-size: 54px; margin-bottom: 0.25rem; }
+  .pontuacao-total { padding: 0.75rem; margin-bottom: 0.75rem; }
+  .pontuacao-total__numero { font-size: 38px; }
+  .pontuacao-grid { margin-bottom: 0.75rem; }
+}

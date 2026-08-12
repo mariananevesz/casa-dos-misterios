@@ -45,22 +45,44 @@
   padding: 0;
 }
 
-html, body { height: 100%; }
+html, body {
+  min-height: 100%;
+  width: 100%;
+}
+
+img, svg, video, canvas {
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  max-width: 100%;
+}
+
+p, li, h1, h2, h3, strong, span {
+  overflow-wrap: break-word;
+}
+
+html {
+  overflow-x: hidden;
+}
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #FFF3EB;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   min-height: 100vh;
-  padding: 1.5rem;
+  min-height: 100dvh;
+  padding: clamp(0.5rem, 2vw, 1.5rem);
   color: var(--texto-escuro);
+  overflow-x: hidden;
 }
 
 /* ---------- Container principal ---------- */
 .tela {
   width: 100%;
+  min-width: 0;
   max-width: 620px;
   background: var(--branco);
   border-radius: var(--raio-lg);
@@ -380,15 +402,28 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.hud,
+.hud__info,
+.balao,
+.painel,
+.btn-grupo {
+  min-width: 0;
 }
 
 .modal {
   background: var(--branco);
   border-radius: var(--raio-lg);
-  padding: 1.5rem;
-  width: 100%;
+  padding: clamp(1rem, 4vw, 1.5rem);
+  width: min(100%, 360px);
   max-width: 360px;
+  max-height: calc(100dvh - 1rem);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   animation: modalEntrada 0.25s ease;
@@ -501,6 +536,18 @@ kbd {
   .balao__texto    { font-size: 15px; }
   .logi-mascote    { width: 52px; height: 44px; }
   .balao           { padding: 8px 10px; gap: 8px; }
+}
+
+@media (max-height: 760px) and (min-width: 700px) {
+  body { padding-block: 0.45rem; }
+  .modal { padding-block: 0.85rem; }
+  .modal-trofeu { width: 44px; height: 44px; }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  body { padding: 0.35rem; }
+  .modal-overlay { align-items: flex-start; padding: 0.35rem; }
+  .modal { max-height: calc(100dvh - 0.7rem); }
 }
 
 /* ---------- Foco visível (acessibilidade) ---------- */

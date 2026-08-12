@@ -73,6 +73,7 @@
     radial-gradient(circle at 92% 88%, rgba(216, 90, 48, 0.08), transparent 20%),
     var(--branco);
   box-shadow: 0 18px 45px rgba(111, 46, 15, 0.12);
+  margin-block: auto;
 }
 
 /* Topo: voltar | título | pontos */
@@ -389,4 +390,25 @@
   .tela--mapa .comodo-card__imagem-box { padding: 14px; }
   .tela--mapa .progresso,
   .tela--mapa .comodo-card__estrelas { justify-content: center; }
+}
+
+@media (max-height: 800px) and (min-width: 761px) {
+  .tela--mapa { padding: 0.85rem; }
+  .tela--mapa .mapa-topo { margin-bottom: 0.6rem; }
+  .tela--mapa .mapa-titulo-linha h1 { font-size: 28px; }
+  .tela--mapa .mapa-titulo-area p { font-size: 14px; }
+  .tela--mapa .mapa-logi { grid-template-columns: 68px 1fr; margin-bottom: 0.6rem; }
+  .tela--mapa .mapa-logi__img { width: 66px; height: 66px; }
+  .tela--mapa .mapa-logi__balao { padding: 10px 16px; }
+  .tela--mapa .mapa-logi__balao p:last-child { font-size: 13px; line-height: 1.35; }
+  .tela--mapa .mapa-grid { gap: 10px; margin-bottom: 0.65rem; }
+  .tela--mapa .comodo-card { min-height: 128px; }
+  .tela--mapa .comodo-card__imagem-box { padding: 10px; }
+  .tela--mapa .comodo-card__icone-img { width: 88px; height: 88px; }
+  .tela--mapa .comodo-card__conteudo { padding: 10px 12px; }
+  .tela--mapa .comodo-card__nome { font-size: 19px; }
+  .tela--mapa .comodo-card__skill { margin-bottom: 4px; }
+  .tela--mapa .comodo-card__pts { margin-bottom: 3px; }
+  .tela--mapa .comodo-card__acao { min-height: 30px; margin-top: 3px; padding-inline: 14px; font-size: 13px; }
+  .tela--mapa .mapa-progresso-geral { padding: 9px 14px; }
 }
