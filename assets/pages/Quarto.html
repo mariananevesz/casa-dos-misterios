@@ -26,6 +26,8 @@
       </section>
 
       <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
@@ -47,8 +49,9 @@
         <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
 
         <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
-          <span class="dica__emoji quarto-dica__icon" aria-hidden="true">💡</span>
+          <img src="../img/icone-quarto.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--erro quarto-dica__texto" id="dica-texto"></p>
+          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
         </section>
       </aside>
 
@@ -72,32 +75,40 @@
         </section>
       </main>
 
-      <!-- Ajuda lateral -->
-      <aside class="quarto-ajuda" aria-label="Como jogar e objetivo">
-        <section class="quarto-card quarto-card--ajuda">
-          <p class="quarto-card__titulo">Como jogar</p>
-          <ol class="quarto-lista">
-            <li>Observe a sequência com erros.</li>
-            <li>Escolha os blocos corretos.</li>
-            <li>Monte a ordem certa no painel.</li>
-            <li>Use verificar para testar.</li>
-          </ol>
-        </section>
-
-        <section class="quarto-card quarto-card--objetivo">
-          <p class="quarto-card__titulo">Objetivo</p>
-          <p class="quarto-objetivo-texto">Corrigir a rotina do quarto, removendo erros e organizando os passos na ordem certa.</p>
-        </section>
-      </aside>
-
     </section>
 
   </section>
 
+  <!-- Modal de Como jogar / Objetivo -->
+  <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
+    <section class="modal modal-ajuda">
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">📋 Como jogar</p>
+        <ol class="modal-ajuda-lista">
+          <li>Observe a sequência com erros.</li>
+          <li>Escolha os blocos corretos.</li>
+          <li>Monte a ordem certa no painel.</li>
+          <li>Use verificar para testar.</li>
+        </ol>
+      </section>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
+        <section class="modal-ajuda-objetivo">
+          <img src="../img/estrela.png" alt="">
+          <p>Corrigir a rotina do quarto, removendo erros e organizando os passos na ordem certa.</p>
+        </section>
+      </section>
+    </section>
+  </div>
+
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Depuração completa!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -429,9 +440,9 @@
 
   for (let i = 0; i < 3; i++) {
     const img = document.createElement('img');
-    img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
+    img.src = '../img/estrela.png';
     img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
-    img.className = 'modal-estrela-img';
+    img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
     elEst.appendChild(img);
   }
 
@@ -473,6 +484,22 @@
     if (s !== null) sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
   }
   window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  /* ---- Ajuda (Como jogar / Objetivo) ---- */
+  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+
+  document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
+  document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
+  document.getElementById('modal-ajuda').addEventListener('click', e => {
+    if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
+  function onPlayAudio() {
+    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
+  }
+  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
 
   document.getElementById('btn-verificar').addEventListener('click', () => { if (gameData) verificar(); });
   document.getElementById('btn-limpar').addEventListener('click', () => {

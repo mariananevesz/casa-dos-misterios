@@ -26,6 +26,8 @@
       </section>
 
       <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
@@ -82,26 +84,34 @@
         </section>
       </section>
 
-      <aside class="despensa-ajuda" aria-label="Ajuda da despensa">
-        <section class="despensa-card despensa-card--ajuda">
-          <p class="despensa-card__titulo">Como jogar</p>
-          <ol class="despensa-lista">
-            <li>Leia a regra mostrada pelo Logi.</li>
-            <li>Clique ou arraste os itens corretos.</li>
-            <li>Use <strong>Confirmar</strong> para conferir.</li>
-          </ol>
-        </section>
-
-        <section class="despensa-card despensa-card--objetivo">
-          <p class="despensa-card__titulo">Objetivo</p>
-          <p class="despensa-objetivo-texto">Organize os itens por cor, tamanho ou características das frutas para deixar a despensa em ordem.</p>
-          <span class="despensa-estrela" aria-hidden="true">⭐</span>
-        </section>
-      </aside>
-
     </section>
 
   </section>
+
+  <!-- Modal de Como jogar / Objetivo -->
+  <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
+    <section class="modal modal-ajuda">
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">📋 Como jogar</p>
+        <ol class="modal-ajuda-lista">
+          <li>Leia a regra mostrada pelo Logi.</li>
+          <li>Clique ou arraste os itens corretos.</li>
+          <li>Use <strong>Confirmar</strong> para conferir.</li>
+        </ol>
+      </section>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
+        <section class="modal-ajuda-objetivo">
+          <img src="../img/estrela.png" alt="">
+          <p>Organize os itens por cor, tamanho ou características das frutas para deixar a despensa em ordem.</p>
+        </section>
+      </section>
+    </section>
+  </div>
 
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
@@ -792,9 +802,9 @@
     elEst.innerHTML = '';
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
-      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
-      img.alt = i < estrelas ? 'Estrela' : '';
-      img.className = 'modal-estrela-img';
+      img.src = '../img/estrela.png';
+      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }
     document.getElementById('modal-sub').textContent  = 'Você organizou todos os níveis da despensa!';
@@ -828,6 +838,16 @@
     sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
   }
   window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  /* ---- Ajuda (Como jogar / Objetivo) ---- */
+  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+
+  document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
+  document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
+  document.getElementById('modal-ajuda').addEventListener('click', e => {
+    if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 

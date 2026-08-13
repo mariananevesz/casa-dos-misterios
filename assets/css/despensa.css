@@ -148,7 +148,7 @@
 /* ---------- Layout principal ---------- */
 .despensa-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 240px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
@@ -520,43 +520,6 @@ button.prateleira__slot {
   flex: 0 0 120px;
 }
 
-/* ---------- Ajuda lateral ---------- */
-.despensa-ajuda {
-  display: grid;
-  gap: 0.75rem;
-  align-content: stretch;
-}
-
-.despensa-card--ajuda,
-.despensa-card--objetivo {
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.despensa-lista {
-  padding-left: 1.05rem;
-  color: var(--texto-medio);
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-
-.despensa-lista li + li {
-  margin-top: 0.45rem;
-}
-
-.despensa-objetivo-texto {
-  color: var(--texto-medio);
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-
-.despensa-estrela {
-  display: block;
-  margin-top: 0.7rem;
-  text-align: center;
-  font-size: 34px;
-  filter: drop-shadow(0 6px 8px rgba(111, 46, 15, 0.16));
-}
-
 /* ---------- Responsividade ---------- */
 @media (max-width: 1020px) {
   .despensa-page {
@@ -565,10 +528,6 @@ button.prateleira__slot {
 
   .despensa-layout {
     grid-template-columns: 1fr;
-  }
-
-  .despensa-ajuda {
-    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -601,8 +560,7 @@ button.prateleira__slot {
     font-size: 12px;
   }
 
-  .despensa-work-grid,
-  .despensa-ajuda {
+  .despensa-work-grid {
     grid-template-columns: 1fr;
   }
 
@@ -644,13 +602,11 @@ button.prateleira__slot {
   .item-card { min-height: 78px; padding-block: 0.35rem; }
   .prateleira, .despensa-prateleira { min-height: 112px; padding: 0.55rem; }
   .prateleira__slot { min-height: 64px; }
-  .despensa-lista, .despensa-objetivo-texto { font-size: 10.5px; line-height: 1.35; }
 }
 
 @media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 1020px) {
   .despensa-page { max-width: none; padding: 0.55rem; }
-  .despensa-layout { grid-template-columns: minmax(0, 1fr) 190px; gap: 0.5rem; }
-  .despensa-ajuda { grid-template-columns: 1fr; }
+  .despensa-layout { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
   .despensa-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
   .despensa-card--itens, .despensa-card--prateleira { min-height: 190px; }
 }

@@ -110,7 +110,7 @@
 /* ---------- Layout principal ---------- */
 .quarto-layout {
   display: grid;
-  grid-template-columns: 275px minmax(0, 1fr) 230px;
+  grid-template-columns: 275px minmax(0, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
@@ -213,14 +213,8 @@
   margin: 0.65rem 0 0;
   padding: 0.55rem;
   border-radius: 14px;
-  align-items: flex-start;
+  align-items: center;
   background: rgba(252, 235, 235, 0.78);
-}
-
-.quarto-dica__icon {
-  font-size: 20px;
-  line-height: 1;
-  margin-top: 1px;
 }
 
 .quarto-dica__texto {
@@ -305,34 +299,6 @@
   flex: 0 0 125px;
 }
 
-/* ---------- Ajuda lateral ---------- */
-.quarto-ajuda {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.quarto-card--ajuda,
-.quarto-card--objetivo {
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.quarto-lista {
-  padding-left: 1.05rem;
-  color: var(--texto-medio);
-  font-size: 11.3px;
-  line-height: 1.45;
-}
-
-.quarto-lista li + li {
-  margin-top: 0.35rem;
-}
-
-.quarto-objetivo-texto {
-  color: var(--texto-medio);
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-
 /* Área de feedback com indicação visual de posições certas/erradas */
 #feedback-blocos {
   display: flex;
@@ -349,10 +315,6 @@
 
   .quarto-layout {
     grid-template-columns: 1fr;
-  }
-
-  .quarto-ajuda {
-    grid-template-columns: 1fr 1fr;
   }
 
   .quarto-blocos-fonte {
@@ -393,10 +355,6 @@
     font-size: 12px;
   }
 
-  .quarto-ajuda {
-    grid-template-columns: 1fr;
-  }
-
   .quarto-sequencia,
   .quarto-feedback__blocos {
     grid-template-columns: 1fr;
@@ -423,14 +381,12 @@
   .quarto-page #blocos-fonte .bloco,
   .quarto-page #sequencia-corrigida .bloco,
   .quarto-page #feedback-blocos .bloco { min-height: 34px; padding-block: 0.32rem; }
-  .quarto-lista { font-size: 10.5px; line-height: 1.35; }
   .quarto-estrela { font-size: 28px; margin-top: 0.45rem; }
 }
 
 @media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 1020px) {
   .quarto-page { max-width: none; padding: 0.55rem; }
   .quarto-layout { grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr); gap: 0.5rem; }
-  .quarto-ajuda { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
   .quarto-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
   .quarto-card--destino { min-height: 205px; }
   .quarto-sequencia { min-height: 130px; }
