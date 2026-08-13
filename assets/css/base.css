@@ -198,6 +198,19 @@ body {
   flex-shrink: 0;
 }
 
+/* Item 9 — botão de play ao lado do mascote, mesmo padrão do play da Dica */
+.balao__mascote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.balao__play {
+  margin-left: 0;
+}
+
 /* ---------- Painel / card interno ---------- */
 .painel {
   background: var(--branco);
@@ -412,7 +425,43 @@ body {
   line-height: 1.6;
 }
 
-.modal-ajuda-lista li + li { margin-top: 0.4rem; }
+.modal-ajuda-lista li + li { margin-top: 0.7rem; }
+
+/* Item 7 — cada passo do "Como jogar" ganha um preview real do elemento citado */
+.modal-ajuda-visual {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.modal-ajuda-visual .btn {
+  flex: none;
+  padding: 8px 16px;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.modal-ajuda-visual .bloco {
+  flex: none;
+  pointer-events: none;
+}
+
+.modal-ajuda-visual img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.modal-ajuda-visual .modal-ajuda-mini-painel {
+  border: 1.5px dashed var(--laranja-borda);
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 11.5px;
+  color: var(--texto-medio);
+  background: rgba(255, 255, 255, 0.6);
+}
 
 .modal-ajuda-objetivo {
   display: flex;
@@ -465,6 +514,21 @@ body {
 
 .dica__play:hover  { opacity: 0.85; transform: scale(1.06); }
 .dica__play:active { transform: scale(0.94); }
+
+/* Item 8 — chama a atenção para a Dica após o primeiro erro do jogador */
+.dica--pulsar {
+  animation: dica-pulsar 1.3s ease-in-out infinite;
+  box-shadow: 0 0 0 3px rgba(239, 159, 39, 0.35);
+}
+
+@keyframes dica-pulsar {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dica--pulsar { animation: none; }
+}
 
 /* ---------- Botão de configurações (⚙) ---------- */
 .btn-config {

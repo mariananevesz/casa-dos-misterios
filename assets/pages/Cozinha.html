@@ -30,7 +30,10 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote cozinha-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote cozinha-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+      </section>
       <section>
         <p class="balao__nome cozinha-logi__nome">Logi diz:</p>
         <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
@@ -75,7 +78,7 @@
         </section>
 
         <!-- Dica padronizada -->
-        <section class="cozinha-dica dica dica--verde">
+        <section class="cozinha-dica dica dica--verde" id="dica-comodo">
           <img src="../img/icone-cozinha.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
           <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
@@ -95,9 +98,25 @@
       <section class="modal-ajuda-secao">
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
-          <li>Leia a frase com atenção.</li>
-          <li>Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.</li>
-          <li>Escolha se a frase é verdadeira ou falsa.</li>
+          <li>
+            Leia a frase com atenção.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="modal-ajuda-mini-painel">"O sal é doce."</span>
+            </span>
+          </li>
+          <li>
+            Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="modal-ajuda-mini-painel"><u style="font-weight:700;">não</u> é doce</span>
+            </span>
+          </li>
+          <li>
+            Escolha se a frase é verdadeira ou falsa.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <img src="../img/verdadeiro.png" alt="">
+              <img src="../img/falso.png" alt="">
+            </span>
+          </li>
         </ol>
       </section>
 
@@ -338,6 +357,7 @@
     buildNivelTabs(faseAtual);
     renderProgresso();
     habilitarBotoes(true);
+    pararAtencaoDica();
   }
 
   function destacarFrase(frase, palavraChave) {
@@ -373,6 +393,7 @@
     if (respondendo) return;
     respondendo = true;
     habilitarBotoes(false);
+    pararAtencaoDica();
 
     const p  = gameData.perguntas[perguntaIdx];
     const ok = escolha === p.resposta;
@@ -383,6 +404,7 @@
       mostrarFeedback(p.explicacao ? `Correto! ${p.explicacao}` : 'Correto! Muito bem!', 'verde');
     } else {
       audio.erro();
+      ativarAtencaoDica();
       const correta = p.resposta ? 'Verdadeiro' : 'Falso';
       mostrarFeedback(
         p.explicacao ? `A resposta é ${correta}. ${p.explicacao}` : `Ops! A resposta correta é ${correta}.`,
@@ -419,6 +441,7 @@
 
   /* ---- Conclusão ---- */
   function conclusao() {
+    pararAtencaoDica();
     gameState.setCozinhaBloco(gameState.getCozinhaBloco() + 1);
     const erros = gameData.perguntas.length - acertos;
     const score = gameState.calcularScore(erros);
@@ -471,7 +494,12 @@
   function onPlayAudio() {
     // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
   }
-  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
+  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+
+  /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
+  function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('dica-comodo').classList.remove('dica--pulsar'); }
 
   document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });

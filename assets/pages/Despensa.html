@@ -32,7 +32,10 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote despensa-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote despensa-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+      </section>
       <div class="balao__corpo despensa-logi__corpo">
         <p class="balao__nome despensa-logi__nome">Logi diz:</p>
         <p class="balao__texto balao__texto--marrom despensa-logi__texto" id="logi-boas-vindas"></p>
@@ -97,9 +100,25 @@
       <section class="modal-ajuda-secao">
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
-          <li>Leia a regra mostrada pelo Logi.</li>
-          <li>Clique ou arraste os itens corretos.</li>
-          <li>Use <strong>Confirmar</strong> para conferir.</li>
+          <li>
+            Leia a regra mostrada pelo Logi.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <img src="../img/logi_feliz.png" alt="">
+            </span>
+          </li>
+          <li>
+            Clique ou arraste os itens corretos.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <img src="../img/maça.png" alt="">
+              <img src="../img/uva.png" alt="">
+            </span>
+          </li>
+          <li>
+            Use <strong>Confirmar</strong> para conferir.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <button class="btn btn--marrom" type="button" tabindex="-1">✓ Confirmar!</button>
+            </span>
+          </li>
         </ol>
       </section>
 
@@ -843,6 +862,12 @@
   document.getElementById('modal-ajuda').addEventListener('click', e => {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
+
+  /* ---- Áudio do mascote (handler preparado para integração futura) ---- */
+  function onPlayAudio() {
+    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
+  }
+  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 
