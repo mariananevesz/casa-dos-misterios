@@ -34,7 +34,9 @@ function sendFinalScore({
   score,
   difficulty
 } = {}) {
-  if (scoreSent) return;
+  if (typeof gameState !== 'undefined' && !gameState.isFullyCompleted()) return;
+  const persistedGuard = typeof gameState !== 'undefined' && gameState.hasFinalScoreBeenSent();
+  if (scoreSent || persistedGuard) return;
   try {
     window.parent.postMessage({
       type: 'C4A_GAME_SCORE',
@@ -44,6 +46,7 @@ function sendFinalScore({
       }
     }, '*');
     scoreSent = true;
+    if (typeof gameState !== 'undefined') gameState.markFinalScoreSent();
   } catch (error) {
     console.log('⚠️ Falha ao enviar score:', error?.message || error);
   }

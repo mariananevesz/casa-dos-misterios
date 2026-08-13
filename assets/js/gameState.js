@@ -16,7 +16,9 @@ const DEFAULT_STATE = {
     somAtivado:    true,
     musicaAtivada: true
   },
-  cozinhaBloco: 0
+  cozinhaBloco: 0,
+  finalScoreSent: false,
+  finalCelebrationShown: false
 };
 
 const gameState = {
@@ -31,7 +33,9 @@ const gameState = {
         completed:    { ...DEFAULT_STATE.completed, ...saved.completed },
         unlocked:     { ...DEFAULT_STATE.unlocked,  ...saved.unlocked },
         settings:     { ...DEFAULT_STATE.settings,  ...saved.settings },
-        cozinhaBloco: saved.cozinhaBloco ?? DEFAULT_STATE.cozinhaBloco
+        cozinhaBloco: saved.cozinhaBloco ?? DEFAULT_STATE.cozinhaBloco,
+        finalScoreSent: saved.finalScoreSent ?? DEFAULT_STATE.finalScoreSent,
+        finalCelebrationShown: saved.finalCelebrationShown ?? DEFAULT_STATE.finalCelebrationShown
       };
     } catch {
       return JSON.parse(JSON.stringify(DEFAULT_STATE));
@@ -64,6 +68,31 @@ const gameState = {
       (sum, score) => sum + Math.max(0, Math.min(25, Number(score) || 0)),
       0
     ));
+  },
+
+  isFullyCompleted() {
+    const state = this._load();
+    return ROOMS.every(room => state.completed[room] === true);
+  },
+
+  hasFinalScoreBeenSent() {
+    return this._load().finalScoreSent === true;
+  },
+
+  markFinalScoreSent() {
+    const state = this._load();
+    state.finalScoreSent = true;
+    this._save(state);
+  },
+
+  hasShownFinalCelebration() {
+    return this._load().finalCelebrationShown === true;
+  },
+
+  markFinalCelebrationShown() {
+    const state = this._load();
+    state.finalCelebrationShown = true;
+    this._save(state);
   },
 
   getStars(score) {
@@ -122,6 +151,7 @@ const gameState = {
   },
 
   reset() {
+    const settings = this.getSettings();
     [
       'sala_fase',
       'sala_scores_fases',
@@ -132,7 +162,9 @@ const gameState = {
     ].forEach(key => {
       try { localStorage.removeItem(key); } catch {}
     });
-    this._save(JSON.parse(JSON.stringify(DEFAULT_STATE)));
+    const freshState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    freshState.settings = settings;
+    this._save(freshState);
   }
 };
 

@@ -776,6 +776,11 @@
       gameState.setRoomScore('despensa', score);
       localStorage.removeItem(ERROS_KEY);
       atualizarBadge(score);
+      if (gameState.isFullyCompleted()) {
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+        window.location.href = 'TelaPontuacao.html';
+        return;
+      }
       exibirModal(score);
       if (score === 25) audio.conclusao();
     }
