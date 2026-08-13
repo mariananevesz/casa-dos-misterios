@@ -24,6 +24,8 @@
         </section>
       </section>
       <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
@@ -36,16 +38,6 @@
     </section>
 
     <section class="cozinha-layout" aria-label="Área do jogo da cozinha">
-
-      <!-- Ajuda lateral -->
-      <aside class="cozinha-card cozinha-card--ajuda" aria-label="Como jogar">
-        <p class="cozinha-card__titulo">Como jogar</p>
-        <ol class="cozinha-lista">
-          <li>Leia a frase com atenção.</li>
-          <li>Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.</li>
-          <li>Escolha se a frase é verdadeira ou falsa.</li>
-        </ol>
-      </aside>
 
       <!-- Área principal -->
       <main class="cozinha-centro">
@@ -81,27 +73,48 @@
             <p class="dica__texto" id="feedback-texto"></p>
           </section>
         </section>
-      </main>
 
-      <!-- Objetivo e dica -->
-      <aside class="cozinha-card cozinha-card--objetivo" aria-label="Objetivo e dica">
-        <p class="cozinha-card__titulo">Objetivo</p>
-        <p class="cozinha-objetivo-texto">Responda às frases para praticar lógica com verdadeiro e falso.</p>
-
+        <!-- Dica padronizada -->
         <section class="cozinha-dica dica dica--verde">
-          <span class="dica__emoji" aria-hidden="true">💡</span>
+          <img src="../img/icone-cozinha.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
+          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
         </section>
-      </aside>
+      </main>
 
     </section>
 
   </section>
 
+  <!-- Modal de Como jogar / Objetivo -->
+  <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
+    <section class="modal modal-ajuda">
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">📋 Como jogar</p>
+        <ol class="modal-ajuda-lista">
+          <li>Leia a frase com atenção.</li>
+          <li>Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.</li>
+          <li>Escolha se a frase é verdadeira ou falsa.</li>
+        </ol>
+      </section>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
+        <section class="modal-ajuda-objetivo">
+          <img src="../img/estrela.png" alt="">
+          <p>Responda às frases para praticar lógica com verdadeiro e falso.</p>
+        </section>
+      </section>
+    </section>
+  </div>
+
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/trofeu.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -417,9 +430,9 @@
     elEst.innerHTML = '';
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
-      img.src = i < estrelas ? '../img/estrela.png' : '../img/estrela-vazia.png';
-      img.alt = i < estrelas ? 'Estrela' : '';
-      img.className = 'modal-estrela-img';
+      img.src = '../img/estrela.png';
+      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }
 
@@ -443,6 +456,22 @@
     sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
   }
   window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  /* ---- Ajuda (Como jogar / Objetivo) ---- */
+  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+
+  document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
+  document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
+  document.getElementById('modal-ajuda').addEventListener('click', e => {
+    if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
+  function onPlayAudio() {
+    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
+  }
+  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
 
   document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });

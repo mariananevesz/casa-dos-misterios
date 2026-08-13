@@ -29,6 +29,8 @@
       </section>
 
       <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
+
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
@@ -55,9 +57,10 @@
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
         <section class="blocos sala-comandos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
 
-        <section class="sala-mini-dica" aria-label="Dica da Sala">
-          <span class="sala-mini-dica__icon" aria-hidden="true">💡</span>
-          <p><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
+        <section class="dica dica--ambar sala-mini-dica" aria-label="Dica da Sala">
+          <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
+          <p class="dica__texto dica__texto--ambar"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
+          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
         </section>
       </aside>
 
@@ -94,27 +97,34 @@
         </section>
       </main>
 
-      <!-- Ajuda lateral -->
-      <aside class="sala-panel sala-ajuda-panel" aria-label="Ajuda da Sala">
-        <section class="sala-ajuda-card">
-          <p class="sala-panel__title">Como jogar</p>
-          <ol class="sala-lista-ajuda">
-            <li>Escolha os comandos: cima, baixo, esquerda, direita ou repetir.</li>
-            <li>Monte a sequência no painel.</li>
-            <li>Clique em <strong>Executar</strong> para testar seu algoritmo.</li>
-          </ol>
-        </section>
-
-        <section class="sala-ajuda-card sala-objetivo-card">
-          <p class="sala-panel__title">Objetivo</p>
-          <p>Leve o personagem até a estrela sem bater nos obstáculos.</p>
-          <span class="sala-estrela-deco" aria-hidden="true">⭐</span>
-        </section>
-      </aside>
-
     </section>
 
   </section>
+
+  <!-- Modal de Como jogar / Objetivo -->
+  <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
+    <section class="modal modal-ajuda">
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">📋 Como jogar</p>
+        <ol class="modal-ajuda-lista">
+          <li>Escolha os comandos: cima, baixo, esquerda, direita ou repetir.</li>
+          <li>Monte a sequência no painel.</li>
+          <li>Clique em <strong>Executar</strong> para testar seu algoritmo.</li>
+        </ol>
+      </section>
+
+      <section class="modal-ajuda-secao">
+        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
+        <section class="modal-ajuda-objetivo">
+          <img src="../img/estrela.png" alt="">
+          <p>Leve o personagem até a estrela sem bater nos obstáculos.</p>
+        </section>
+      </section>
+    </section>
+  </div>
 
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
@@ -328,7 +338,7 @@ const FASE_KEY = 'sala_fase';
     el.setAttribute('role', 'option');
     el.setAttribute('aria-label', bloco.rotulo);
     el.setAttribute('tabindex', '0');
-    el.innerHTML = `${blocoIconeHtml(bloco)} <span>${bloco.rotulo}</span>`;
+    el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
 
     el.addEventListener('dragstart', e => {
       e.dataTransfer.setData('blocoId', bloco.id);
@@ -366,7 +376,7 @@ const FASE_KEY = 'sala_fase';
       el.dataset.idx = idx;
       el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Clique para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `${blocoIconeHtml(bloco)} <span>${bloco.rotulo}</span>`;
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
@@ -634,6 +644,22 @@ async function executar() {
     if (s !== null) sendFinalScore({ score: gameState.getTotalScore(), difficulty: getPlatformDifficulty() });
   }
   window.addEventListener('beforeunload', beforeUnloadHandler);
+
+  /* ---- Ajuda (Como jogar / Objetivo) ---- */
+  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
+  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+
+  document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
+  document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
+  document.getElementById('modal-ajuda').addEventListener('click', e => {
+    if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
+  function onPlayAudio() {
+    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
+  }
+  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
 
   /* ---- Botões ---- */
   document.getElementById('btn-executar').addEventListener('click', () => { if (gameData) executar(); });

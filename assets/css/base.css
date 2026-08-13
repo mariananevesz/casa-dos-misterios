@@ -268,6 +268,7 @@ body {
 .dica-img                { width: 18px;  height: 18px;  object-fit: contain; flex-shrink: 0; }
 .modal-trofeu            { width: 56px;  height: 56px;  object-fit: contain; margin-bottom: 0.5rem; }
 .modal-estrela-img       { width: 28px;  height: 28px;  object-fit: contain; }
+.modal-estrela-img--vazia { filter: grayscale(1) opacity(0.35); }
 .comodo-card__icone-img  { display: block; width: 40px; height: 40px; object-fit: contain; margin: 0 auto 6px; }
 .resultado-header__icone-img  { width: 60px; height: 60px; object-fit: contain; margin-bottom: 0.5rem; }
 .pontuacao-card__icone-img    { width: 22px; height: 22px; object-fit: contain; }
@@ -302,7 +303,9 @@ body {
   background: var(--laranja-fundo);
   color: var(--marrom-medio);
   border: 1.5px solid var(--laranja-borda);
-  flex: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow-wrap: normal;
   padding: 12px 16px;
 }
 
@@ -310,7 +313,9 @@ body {
   background: var(--roxo-fundo);
   color: #3C3489;
   border: 1.5px solid var(--roxo-borda);
-  flex: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow-wrap: normal;
   padding: 12px 16px;
 }
 
@@ -334,6 +339,132 @@ body {
 }
 .btn-voltar-mapa:hover  { opacity: 0.85; transform: translateX(-2px); }
 .btn-voltar-mapa:active { transform: translateX(0); opacity: 0.75; }
+
+/* ---------- Botão de ajuda (Como jogar / Objetivo) ---------- */
+.btn-ajuda {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--laranja-borda);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--marrom-medio);
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 8px;
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.14);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.btn-ajuda:hover  { opacity: 0.88; transform: translateY(-2px); }
+.btn-ajuda:active { transform: translateY(0); opacity: 0.75; }
+
+/* ---------- Conteúdo do modal de ajuda (Como jogar / Objetivo) ---------- */
+.modal-ajuda {
+  text-align: left;
+}
+
+.modal-fechar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cinza-fundo);
+  color: var(--texto-medio);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-ajuda-secao {
+  margin-bottom: 1.1rem;
+}
+
+.modal-ajuda-secao:last-child { margin-bottom: 0; }
+
+.modal-ajuda-titulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--laranja);
+  margin-bottom: 0.55rem;
+}
+
+.modal-ajuda-lista {
+  padding-left: 1.1rem;
+  color: var(--texto-medio);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.modal-ajuda-lista li + li { margin-top: 0.4rem; }
+
+.modal-ajuda-objetivo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--laranja-fundo);
+  border-radius: 14px;
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+}
+
+.modal-ajuda-objetivo img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.modal-ajuda-objetivo p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--marrom-medio);
+}
+
+/* ---------- Dica padronizada (ícone do cômodo + play) ---------- */
+.dica__icone-comodo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.dica__play {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.75);
+  color: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.dica__play:hover  { opacity: 0.85; transform: scale(1.06); }
+.dica__play:active { transform: scale(0.94); }
 
 /* ---------- Botão de configurações (⚙) ---------- */
 .btn-config {
