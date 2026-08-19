@@ -15,7 +15,7 @@
     <button class="btn-config" id="btn-config"
             aria-label="Abrir configurações"
             aria-haspopup="dialog">
-      <img src="assets/img/config.png" alt="Configurações" style="width:20px;height:20px;">
+      <img src="assets/img/config.png" alt="" style="width:20px;height:20px;">
     </button>
 
     <!-- Cabeçalho -->
@@ -38,20 +38,20 @@
     <div class="menu-botoes">
       <button class="btn--menu-principal btn--menu-laranja"
               onclick="window.location.href='assets/pages/MapaCasa.html'">
-        <span>▶</span>
+        <span aria-hidden="true">▶</span>
         <strong>Jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
-        <span>📖</span>
+        <span aria-hidden="true">📖</span>
         <strong>Como jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline"
               onclick="window.location.href='assets/pages/TelaPontuacao.html'">
-        <span>🏆</span>
+        <span aria-hidden="true">🏆</span>
         <strong>Pontuações</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
-        <span>↻</span>
+        <span aria-hidden="true">↻</span>
         <strong>Reiniciar progresso</strong>
       </button>
     </div>
@@ -91,8 +91,8 @@
       <section class="config-linha">
         <label class="config-label" for="toggle-contraste">Alto contraste</label>
         <button class="toggle-btn" id="toggle-contraste" role="switch"
-                aria-checked="false" aria-label="Ativar alto contraste">
-          <span class="toggle-thumb"></span>
+                aria-checked="false">
+          <span class="toggle-thumb" aria-hidden="true"></span>
         </button>
       </section>
 
@@ -110,16 +110,16 @@
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-som">Efeitos sonoros</label>
         <button class="toggle-btn" id="toggle-som" role="switch"
-                aria-checked="true" aria-label="Ativar efeitos sonoros">
-          <span class="toggle-thumb"></span>
+                aria-checked="true">
+          <span class="toggle-thumb" aria-hidden="true"></span>
         </button>
       </section>
 
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-musica">Música</label>
         <button class="toggle-btn" id="toggle-musica" role="switch"
-                aria-checked="true" aria-label="Ativar música">
-          <span class="toggle-thumb"></span>
+                aria-checked="true">
+          <span class="toggle-thumb" aria-hidden="true"></span>
         </button>
       </section>
 

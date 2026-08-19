@@ -51,7 +51,7 @@
         </section>
 
         <!-- Caixa de pergunta -->
-        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite">
+        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite" aria-atomic="true">
           <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
           <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
           <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
@@ -59,18 +59,18 @@
 
         <!-- Botões V/F -->
         <section class="vf-grid cozinha-vf" aria-label="Escolha verdadeiro ou falso">
-          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro" aria-label="Verdadeiro">
+          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro">
             <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Verdadeiro</span>
           </button>
-          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso" aria-label="Falso">
+          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso">
             <img src="../img/falso.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Falso</span>
           </button>
         </section>
 
         <!-- Feedback imediato -->
-        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" style="display:none;">
+        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" aria-atomic="true" style="display:none;">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -131,7 +131,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
@@ -340,6 +340,7 @@
       else if (i === idxAtual) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
       span.textContent = nome + (i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : '');
+      if (i === idxAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
   }
@@ -384,6 +385,7 @@
       );
       span.setAttribute('aria-label', `Pergunta ${i+1}: ${
         i < idxNaFase ? 'respondida' : i === idxNaFase ? 'atual' : 'pendente'}`);
+      if (i === idxNaFase) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     }
   }
@@ -430,8 +432,8 @@
     const txt  = document.getElementById('feedback-texto');
     dica.className = `dica dica--${tipo === 'verde' ? 'verde' : 'erro'}`;
     txt.className  = `dica__texto dica__texto--${tipo === 'verde' ? 'verde' : 'erro'}`;
-    txt.textContent = msg;
     document.getElementById('feedback-area').style.display = 'block';
+    txt.textContent = msg;
   }
 
   function habilitarBotoes(on) {

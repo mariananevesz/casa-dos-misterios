@@ -27,8 +27,8 @@
         <p>Escolha um cômodo para explorar</p>
       </section>
 
-      <span class="mapa-pontos" id="badge-total" aria-live="polite">
-        <img src="../img/estrela.png" alt="Estrela">
+      <span class="mapa-pontos" id="badge-total" aria-live="polite" aria-atomic="true">
+        <img src="../img/estrela.png" alt="" aria-hidden="true">
         <span id="total-pts">0</span>
       </span>
     </section>
@@ -48,7 +48,7 @@
         <p>Total de progresso</p>
         <strong><span id="mapa-progresso-texto">0</span>/100 pontos</strong>
       </div>
-      <div class="mapa-barra">
+      <div class="mapa-barra" role="progressbar" aria-label="Progresso geral" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <span id="mapa-barra-preenchida"></span>
       </div>
     </section>
@@ -104,6 +104,7 @@
     document.getElementById('total-pts').textContent = total;
     document.getElementById('mapa-progresso-texto').textContent = Math.min(total, 100);
     document.getElementById('mapa-barra-preenchida').style.width = Math.min(total, 100) + '%';
+    document.querySelector('.mapa-barra').setAttribute('aria-valuenow', Math.min(total, 100));
 
     const grid = document.getElementById('mapa-grid');
     grid.innerHTML = '';
@@ -117,11 +118,9 @@
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
       const card = document.createElement('article');
-      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
-        card.setAttribute('aria-disabled', 'true');
         card.innerHTML = `
           <div class="comodo-card__imagem-box">
             <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
@@ -135,6 +134,7 @@
       } else {
         card.className = `comodo-card ${c.corCard}`;
         card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Explorar ${c.nome} — disponível${estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
         card.setAttribute('tabindex', '0');
         card.addEventListener('click', () => { window.location.href = c.pagina; });
         card.addEventListener('keydown', e => {
@@ -188,7 +188,7 @@
     const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
     const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';
     const v3 = score !== null && score >= 25 ? '--ok'   : '--vazio';
-    return `<section class="progresso">
+    return `<section class="progresso" aria-hidden="true">
       <span class="progresso__bolinha progresso__bolinha${v1}"></span>
       <span class="progresso__bolinha progresso__bolinha${v2}"></span>
       <span class="progresso__bolinha progresso__bolinha${v3}"></span>

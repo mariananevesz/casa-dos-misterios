@@ -59,9 +59,9 @@
           </section>
 
           <!-- Painel: prateleira (oculto no nível Fácil) -->
-          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira" aria-dropeffect="move">
+          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira">
             <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
-            <section class="prateleira despensa-prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
+            <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira" aria-live="polite" aria-atomic="true"></section>
             <section class="prateleira__legenda despensa-prateleira__legenda">
               <span class="prateleira__leg-txt" id="leg-esq">menor</span>
               <span style="flex:1;"></span>
@@ -71,7 +71,7 @@
         </section>
 
         <!-- Feedback granular -->
-        <section id="feedback-area" class="despensa-feedback" style="display:none;" aria-live="polite">
+        <section id="feedback-area" class="despensa-feedback" style="display:none;" aria-live="polite" aria-atomic="true">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" id="feedback-emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -133,7 +133,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Despensa organizada!</h2>
@@ -333,6 +333,7 @@
       else if (i === nivelIdx) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
       span.textContent = n.nivel + (i < nivelIdx ? ' ✓' : i === nivelIdx ? ' ←' : '');
+      if (i === nivelIdx) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
   }
@@ -395,7 +396,7 @@
             style="background:${COR_CARD[item.cor] || '#ccc'};"
             aria-hidden="true"></span>`;
         }
-        card.setAttribute('aria-label', `${item.nome} — clique para selecionar`);
+        card.setAttribute('aria-label', `${item.nome} — ativar para selecionar`);
 
       } else if (nivel.criterio === 'tamanho') {
         const px = tamanhoImagemPx(item.tamanho);
@@ -404,7 +405,7 @@
         card.style.setProperty('--item-card-height', `${78 + Number(item.tamanho || 3) * 14}px`);
         imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
           class="item-card__emoji item-card__emoji--tamanho">`;
-        card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — clique ou arraste para a prateleira`);
+        card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — ativar ou arrastar para a prateleira`);
 
       } else {
         imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
@@ -412,7 +413,7 @@
         card.setAttribute(
           'aria-label',
           nivel.criterio === 'selecao-sementes'
-            ? `${item.nome} — clique ou arraste para escolher`
+            ? `${item.nome} — ativar ou arrastar para escolher`
             : `${item.nome} — arraste para a prateleira`
         );
       }
@@ -511,7 +512,7 @@
       card.setAttribute(
         'aria-label',
         naPrateleira
-          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Clique no item da prateleira para remover.`
+          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Ative o item da prateleira para remover.`
           : card.dataset.defaultAriaLabel
       );
     });
@@ -548,7 +549,7 @@
           slot.className = 'prateleira__slot prateleira__slot--ok';
         }
 
-        slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Ativar para remover.`);
         slot.setAttribute('type', 'button');
 
         const imgSrc = item?.img || '';
@@ -841,8 +842,8 @@
     const txt  = document.getElementById('feedback-texto');
     dica.className  = `dica dica--${tipo}`;
     txt.className   = `dica__texto dica__texto--${tipo}`;
-    txt.textContent = msg;
     document.getElementById('feedback-area').style.display = 'block';
+    txt.textContent = msg;
   }
 
   function atualizarBadge(score) {

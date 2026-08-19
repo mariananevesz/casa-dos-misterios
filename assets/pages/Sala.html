@@ -58,7 +58,7 @@
       <aside class="sala-panel sala-comandos-panel" aria-label="Comandos disponíveis">
         <p class="sala-panel__title">Comandos disponíveis</p>
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
-        <section class="blocos sala-comandos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
+        <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
 
         <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
           <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
@@ -70,10 +70,9 @@
       <!-- Jogo -->
       <main class="sala-game-area">
         <section class="painel painel--tracejado sala-sequencia-panel"
-                 id="painel-sequencia"
-                 aria-dropeffect="move">
+                 id="painel-sequencia">
           <p class="sala-panel__title">Painel de comandos</p>
-          <section class="blocos sala-sequencia" id="sequencia-player" role="listbox" aria-label="Sequência montada" aria-live="polite"></section>
+          <section class="blocos sala-sequencia" id="sequencia-player" role="group" aria-label="Sequência montada" aria-live="polite" aria-atomic="true"></section>
         </section>
 
         <section class="painel sala-grade-panel">
@@ -82,7 +81,7 @@
         </section>
 
         <!-- Feedback -->
-        <section id="feedback-area" aria-live="polite" style="display:none;" class="dica dica--erro sala-feedback">
+        <section id="feedback-area" aria-live="polite" aria-atomic="true" style="display:none;" class="dica dica--erro sala-feedback">
           <span class="dica__emoji" aria-hidden="true">💡</span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
@@ -146,7 +145,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
     <section class="modal">
       <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
@@ -296,6 +295,7 @@ const FASE_KEY = 'sala_fase';
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                      span.className = 'nivel nivel--bloq';
       span.textContent = `Fase ${f.id}`;
+      if (i === faseAtual) span.setAttribute('aria-current', 'step');
       el.appendChild(span);
     });
   }
@@ -305,6 +305,10 @@ const FASE_KEY = 'sala_fase';
     const grid = document.getElementById('game-grid');
     const { linhas, colunas, posicaoInicial, posicaoAlvo, obstaculos = [] } = fase.grade;
     grid.innerHTML = '';
+    const obstaculosTexto = obstaculos.length
+      ? ` Obstáculos em ${obstaculos.map(obs => `linha ${obs.linha + 1}, coluna ${obs.coluna + 1}`).join('; ')}.`
+      : '';
+    grid.setAttribute('aria-label', `Grade de ${linhas} linhas por ${colunas} colunas. Personagem na linha ${posicaoInicial.linha + 1}, coluna ${posicaoInicial.coluna + 1}. Estrela na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}.${obstaculosTexto}`);
     grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
 
     for (let r = 0; r < linhas; r++) {
@@ -355,8 +359,8 @@ const FASE_KEY = 'sala_fase';
     el.className = `bloco ${bloco.tipo === 'controle' ? 'bloco--ambar' : 'bloco--laranja'}`;
     el.draggable = true;
     el.dataset.blocoId = bloco.id;
-    el.setAttribute('role', 'option');
-    el.setAttribute('aria-label', bloco.rotulo);
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `Adicionar ${bloco.rotulo} à sequência`);
     el.setAttribute('tabindex', '0');
     el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
 
@@ -394,7 +398,8 @@ const FASE_KEY = 'sala_fase';
       const el = document.createElement('span');
       el.className = 'bloco bloco--laranja';
       el.dataset.idx = idx;
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Clique para remover.`);
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
       el.setAttribute('tabindex', '0');
       el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
@@ -653,8 +658,8 @@ async function executar() {
     const txt  = document.getElementById('feedback-texto');
     area.className = `dica dica--${tipo === 'erro' ? 'erro' : 'ambar'}`;
     txt.className  = `dica__texto dica__texto--${tipo === 'erro' ? 'erro' : 'ambar'}`;
-    txt.textContent = msg;
     area.style.display = 'flex';
+    txt.textContent = msg;
   }
 
   function atualizarBadge(score) {
