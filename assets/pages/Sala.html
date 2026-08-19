@@ -35,7 +35,10 @@
 
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote sala-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote sala-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+      </section>
       <section class="sala-logi__conteudo">
         <p class="balao__nome">Logi diz:</p>
         <p class="balao__texto" id="logi-texto">Carregando…</p>
@@ -57,7 +60,7 @@
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
         <section class="blocos sala-comandos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
 
-        <section class="dica dica--ambar sala-mini-dica" aria-label="Dica da Sala">
+        <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
           <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--ambar"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
           <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
@@ -110,9 +113,25 @@
       <section class="modal-ajuda-secao">
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
-          <li>Escolha os comandos: cima, baixo, esquerda, direita ou repetir.</li>
-          <li>Monte a sequência no painel.</li>
-          <li>Clique em <strong>Executar</strong> para testar seu algoritmo.</li>
+          <li>
+            Escolha os comandos: cima, baixo, esquerda, direita ou repetir.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="bloco bloco--laranja">↑ Cima</span>
+              <span class="bloco bloco--ambar">↻ Repetir</span>
+            </span>
+          </li>
+          <li>
+            Monte a sequência no painel.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="modal-ajuda-mini-painel">+ bloco</span>
+            </span>
+          </li>
+          <li>
+            Clique em <strong>Executar</strong> para testar seu algoritmo.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <button class="btn btn--laranja" type="button" tabindex="-1">▶ Executar</button>
+            </span>
+          </li>
         </ol>
       </section>
 
@@ -257,6 +276,7 @@ const FASE_KEY = 'sala_fase';
     document.getElementById('fase-label').textContent = `Fase ${fase.id} de ${gameData.fases.length}`;
     document.getElementById('btn-executar').disabled = false;
     erros = 0;
+    pararAtencaoDica();
     sequencia = [];
     buildIndicadorFases();
     buildGrid(fase);
@@ -406,6 +426,7 @@ const FASE_KEY = 'sala_fase';
     if (sequencia.length >= (fase.maxBlocos || 8)) return;
     sequencia.push(bid);
     audio.clique();
+    pararAtencaoDica();
     renderSequencia();
   }
 
@@ -557,6 +578,7 @@ async function executar() {
 
   animando = false;
   document.getElementById('btn-executar').disabled = false;
+  ativarAtencaoDica();
 
   renderSequencia();
 }
@@ -565,6 +587,7 @@ async function executar() {
 
   function vitoria(fase) {
     audio.acerto();
+    pararAtencaoDica();
     const scoreFase = gameState.calcularScore(erros);
     let scoresSala = JSON.parse(localStorage.getItem('sala_scores_fases') || '{}');
     scoresSala[fase.id] = scoreFase;
@@ -659,7 +682,12 @@ async function executar() {
   function onPlayAudio() {
     // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
   }
-  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
+  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+
+  /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
+  function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('dica-comodo').classList.remove('dica--pulsar'); }
 
   /* ---- Botões ---- */
   document.getElementById('btn-executar').addEventListener('click', () => { if (gameData) executar(); });

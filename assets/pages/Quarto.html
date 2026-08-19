@@ -32,7 +32,10 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
-      <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+      </section>
       <section>
         <p class="balao__nome quarto-logi__nome">Logi diz:</p>
         <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
@@ -88,10 +91,30 @@
       <section class="modal-ajuda-secao">
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
-          <li>Observe a sequência com erros.</li>
-          <li>Escolha os blocos corretos.</li>
-          <li>Monte a ordem certa no painel.</li>
-          <li>Use verificar para testar.</li>
+          <li>
+            Observe a sequência com erros.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="bloco bloco--erro">🦷 Escovar os dentes <span class="bloco__tag-erro">!</span></span>
+            </span>
+          </li>
+          <li>
+            Escolha os blocos corretos.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="bloco bloco--roxo">🦷 Escovar os dentes</span>
+            </span>
+          </li>
+          <li>
+            Monte a ordem certa no painel.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <span class="modal-ajuda-mini-painel">+ bloco</span>
+            </span>
+          </li>
+          <li>
+            Use verificar para testar.
+            <span class="modal-ajuda-visual" aria-hidden="true">
+              <button class="btn btn--roxo" type="button" tabindex="-1">✓ Verificar sequência</button>
+            </span>
+          </li>
         </ol>
       </section>
 
@@ -211,6 +234,7 @@
   corrigida = [];
   verificado = false;
   erros = 0;
+  pararAtencaoDica();
 
   buildFonte();
   renderCorrigida();
@@ -321,6 +345,7 @@
     if (corrigida.length >= fase.sequenciaCorreta.length) return;
     corrigida.push(bid);
     audio.clique();
+    pararAtencaoDica();
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
   }
@@ -389,6 +414,7 @@
       setTimeout(() => conclusao(), 600);
     } else {
       erros++;
+      ativarAtencaoDica();
       audio.erro();
       verificado = false;
       // Permite tentar novamente
@@ -406,6 +432,7 @@
 
  function conclusao() {
   const fase = gameData.fases[faseAtual];
+  pararAtencaoDica();
 
   const scoreFase = gameState.calcularScore(erros);
 
@@ -499,7 +526,12 @@
   function onPlayAudio() {
     // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
   }
-  document.getElementById('dica-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
+  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+
+  /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
+  function ativarAtencaoDica() { document.getElementById('dica-erros').classList.add('dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('dica-erros').classList.remove('dica--pulsar'); }
 
   document.getElementById('btn-verificar').addEventListener('click', () => { if (gameData) verificar(); });
   document.getElementById('btn-limpar').addEventListener('click', () => {

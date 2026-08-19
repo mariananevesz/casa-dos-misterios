@@ -318,6 +318,7 @@
 }
 
 .sala-grade {
+  container-type: inline-size;
   margin-top: 12px;
   padding: 14px;
   border-radius: 18px;
@@ -336,7 +337,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  /* Item 6 — ícone (personagem/estrela) ocupando ~80% da célula, proporcional ao container */
+  font-size: clamp(20px, 14.5cqw, 46px);
   overflow: hidden;
 }
 
@@ -350,8 +352,8 @@
 }
 
 .sala-page .grade-img {
-  width: 82%;
-  height: 82%;
+  width: 85%;
+  height: 85%;
   object-fit: contain;
   filter: drop-shadow(0 5px 5px rgba(111, 46, 15, 0.18));
 }
