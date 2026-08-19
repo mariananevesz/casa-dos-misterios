@@ -317,7 +317,10 @@
       el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          removerBloco(idx);
+        }
       });
       cont.appendChild(el);
     });
