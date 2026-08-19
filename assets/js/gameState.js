@@ -6,6 +6,9 @@
 const ROOMS = ['sala', 'quarto', 'cozinha', 'despensa'];
 const STORAGE_KEY = 'casaMisterios_state';
 
+/* Chaves de estágio (fase/nível) por cômodo — usadas por getEstagio/setEstagio/limparEstagio */
+const STAGE_KEYS = { sala: 'sala_fase', quarto: 'quarto_fase', despensa: 'despensa_nivel' };
+
 const DEFAULT_STATE = {
   scores:    { sala: null, quarto: null, cozinha: null, despensa: null },
   completed: { sala: false, quarto: false, cozinha: false, despensa: false },
@@ -150,6 +153,86 @@ const gameState = {
     this._save(state);
   },
 
+  /* =============================================================
+     Item 2.2 — Estado anterior (fase/nível) centralizado
+     Substitui as chaves FASE_KEY/NIVEL_KEY duplicadas em cada
+     cômodo por uma única responsabilidade.
+     ============================================================= */
+  getEstagio(room) {
+    try {
+      return Math.max(0, parseInt(localStorage.getItem(STAGE_KEYS[room]) || '0', 10) || 0);
+    } catch { return 0; }
+  },
+
+  setEstagio(room, idx) {
+    try { localStorage.setItem(STAGE_KEYS[room], idx); } catch {}
+  },
+
+  limparEstagio(room) {
+    try { localStorage.removeItem(STAGE_KEYS[room]); } catch {}
+  },
+
+  /* =============================================================
+     Item 2.2 — Saída centralizada de qualquer mini-game
+     Todo caminho de saída (botão "Mapa", botão "Voltar ao mapa"
+     dos modais, ESC, conclusão) deve chamar esta função. Ela limpa
+     as marcas de sessão do sorteio de variação (item 2.3), para que
+     a próxima ENTRADA real no cômodo sorteie de novo.
+     ============================================================= */
+  sairMiniGame(room, destino) {
+    try { sessionStorage.removeItem(`${room}_sessao_ativa`); } catch {}
+    try { sessionStorage.removeItem(`${room}_variacao_idx`); } catch {}
+    window.location.href = destino;
+  },
+
+  /* Detecta se esta é uma ENTRADA nova no cômodo (true) ou se o
+     jogador só recarregou/está no meio da mesma sessão (false).
+     Usa sessionStorage: sobrevive a um F5, mas é limpo por
+     sairMiniGame() sempre que o jogador realmente sai do cômodo. */
+  isNovaEntrada(room) {
+    try {
+      if (sessionStorage.getItem(`${room}_sessao_ativa`) === '1') return false;
+      sessionStorage.setItem(`${room}_sessao_ativa`, '1');
+      return true;
+    } catch { return true; }
+  },
+
+  /* =============================================================
+     Item 2.3 — Sorteio de variação (mín. 4 variações por jogo)
+     Sorteia uma variação a cada ENTRADA nova no cômodo e mantém a
+     mesma variação se o jogador só recarregar a página no meio da
+     partida. Evita repetir a última variação jogada.
+     ============================================================= */
+  iniciarVariacao(room, total) {
+    const idxKey = `${room}_variacao_idx`;
+    if (!this.isNovaEntrada(room)) {
+      try {
+        const raw = sessionStorage.getItem(idxKey);
+        const idx = parseInt(raw, 10);
+        if (!isNaN(idx) && idx >= 0 && idx < total) return idx;
+      } catch {}
+    }
+    let idx = Math.floor(Math.random() * total);
+    const ultimaKey = `${room}_ultima_variacao`;
+    let ultima = NaN;
+    try { ultima = parseInt(localStorage.getItem(ultimaKey), 10); } catch {}
+    if (total > 1 && idx === ultima) idx = (idx + 1) % total;
+    try { sessionStorage.setItem(idxKey, idx); } catch {}
+    try { localStorage.setItem(ultimaKey, idx); } catch {}
+    return idx;
+  },
+
+  /* Cozinha já tinha um sistema de rotação de blocos de perguntas
+     (getCozinhaBloco/setCozinhaBloco). Aqui só decidimos QUANDO
+     girar para o próximo bloco: a cada entrada nova, não a cada
+     conclusão da partida inteira. */
+  avancarBlocoSeNovaEntrada() {
+    if (this.isNovaEntrada('cozinha')) {
+      this.setCozinhaBloco(this.getCozinhaBloco() + 1);
+    }
+    return this.getCozinhaBloco();
+  },
+
   reset() {
     const settings = this.getSettings();
     [
@@ -161,6 +244,11 @@ const gameState = {
       'despensa_erros'
     ].forEach(key => {
       try { localStorage.removeItem(key); } catch {}
+    });
+    ROOMS.forEach(room => {
+      try { sessionStorage.removeItem(`${room}_sessao_ativa`); } catch {}
+      try { sessionStorage.removeItem(`${room}_variacao_idx`); } catch {}
+      try { localStorage.removeItem(`${room}_ultima_variacao`); } catch {}
     });
     const freshState = JSON.parse(JSON.stringify(DEFAULT_STATE));
     freshState.settings = settings;

@@ -14,7 +14,7 @@
     <!-- HUD -->
     <section class="hud sala-hud">
       <button class="btn-voltar-mapa sala-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('sala','MapaCasa.html')"
               aria-label="Voltar ao mapa">
         <span aria-hidden="true">←</span>
         <strong>Mapa</strong>
@@ -45,11 +45,10 @@
       </section>
     </section>
 
-    <!-- Indicador de fase oculto: mantido apenas para o JavaScript não quebrar -->
-    <section class="niveis sala-niveis sala-fases-hidden"
+    <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
+    <section class="niveis sala-niveis"
              id="indicador-fases"
-             aria-label="Progresso de fases"
-             hidden></section>
+             aria-label="Progresso de dificuldade"></section>
 
     <!-- Área principal da Sala -->
     <section class="sala-layout">
@@ -155,7 +154,7 @@
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
         <button class="btn btn--laranja" id="btn-proxima-fase" style="display:none;">Próxima fase</button>
-        <button class="btn btn--outline" id="btn-mapa" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--outline" id="btn-mapa" onclick="gameState.sairMiniGame('sala','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
@@ -226,6 +225,32 @@
   ]
 };
 
+/* Fallback de variações — usado apenas quando o fetch falha (file://) */
+const SALA_VARIACOES_INLINE = {
+  "variacoes": [
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 1, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 2 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [ { "linha": 2, "coluna": 1 }, { "linha": 1, "coluna": 1 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 1 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [ { "linha": 1, "coluna": 2 }, { "linha": 2, "coluna": 2 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 2, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 1 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 1, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 2 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [] }
+    ] }
+  ]
+};
+
 let gameData     = null;
 let faseAtual    = 0;
 let sequencia    = [];
@@ -253,8 +278,6 @@ function blocoIconeHtml(bloco) {
   return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>`;
 }
 
-const FASE_KEY = 'sala_fase';
-
   /* ---- Inicialização ---- */
   async function init() {
     try {
@@ -262,10 +285,21 @@ const FASE_KEY = 'sala_fase';
     } catch (e) {
       gameData = SALA_INLINE; // fallback file://
     }
-    faseAtual = Math.min(
-      parseInt(localStorage.getItem(FASE_KEY) || '0'),
-      gameData.fases.length - 1
-    );
+
+    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real na Sala */
+    let variacoesData;
+    try {
+      variacoesData = await loadGameData('../data/sala-variacoes.json');
+    } catch (e) {
+      variacoesData = SALA_VARIACOES_INLINE;
+    }
+    const variacaoIdx = gameState.iniciarVariacao('sala', variacoesData.variacoes.length);
+    const variacao = variacoesData.variacoes[variacaoIdx];
+    gameData.fases.forEach((fase, i) => {
+      if (variacao.grades[i]) fase.grade = variacao.grades[i];
+    });
+
+    faseAtual = Math.min(gameState.getEstagio('sala'), gameData.fases.length - 1);
     renderFase();
   }
 
@@ -291,11 +325,10 @@ const FASE_KEY = 'sala_fase';
     el.innerHTML = '';
     gameData.fases.forEach((f, i) => {
       const span = document.createElement('span');
-      const state = gameState.get();
       if (i < faseAtual)       span.className = 'nivel nivel--ok';
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                      span.className = 'nivel nivel--bloq';
-      span.textContent = `Fase ${f.id}`;
+      span.textContent = f.dificuldade + (i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : '');
       el.appendChild(span);
     });
   }
@@ -599,9 +632,9 @@ async function executar() {
     gameState.setRoomScore('sala', totalSala, salaConcluida);
 
     if (proxFase < gameData.fases.length) {
-      localStorage.setItem(FASE_KEY, proxFase);
+      gameState.setEstagio('sala', proxFase);
     } else {
-      localStorage.removeItem(FASE_KEY);
+      gameState.limparEstagio('sala');
     }
 
     atualizarBadge(totalSala);
@@ -676,6 +709,14 @@ async function executar() {
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
   document.getElementById('modal-ajuda').addEventListener('click', e => {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('sala', 'MapaCasa.html');
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */

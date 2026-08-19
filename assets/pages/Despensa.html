@@ -14,7 +14,7 @@
     <!-- HUD -->
     <section class="hud despensa-hud">
       <button class="btn-voltar-mapa despensa-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('despensa','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info despensa-hud__info">
@@ -142,7 +142,7 @@
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
         <button class="btn btn--laranja" id="btn-proximo-nivel" style="display:none;">Próximo nível</button>
-        <button class="btn btn--outline" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--outline" onclick="gameState.sairMiniGame('despensa','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
@@ -206,6 +206,41 @@
     ]
   };
 
+  /* Fallback de variações — usado apenas quando o fetch falha (file://) */
+  const DESPENSA_VARIACOES_INLINE = { "variacoes": [ { "niveis": [
+    {
+      "itens": [
+        { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png" },
+        { "id": "morango", "nome": "Morango", "cor": "vermelho", "img": "../img/morango.png" },
+        { "id": "banana",  "nome": "Banana",  "cor": "amarelo",  "img": "../img/banana.png" },
+        { "id": "uva",     "nome": "Uva",     "cor": "roxo",     "img": "../img/uva.png" },
+        { "id": "mirtilo", "nome": "Mirtilo", "cor": "azul",     "img": "../img/mirtilo.png" }
+      ],
+      "corretos": ["maca", "morango"]
+    },
+    {
+      "itens": [
+        { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png" },
+        { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
+        { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maça.png" },
+        { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png" },
+        { "id": "banana",   "nome": "Banana",   "tamanho": 4, "img": "../img/banana.png" }
+      ],
+      "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+    },
+    {
+      "itens": [
+        { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+        { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png" },
+        { "id": "uva",      "nome": "Uva",      "tipo": "sementes", "img": "../img/uva.png" },
+        { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+        { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+        { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
+      ],
+      "corretos": ["melancia", "kiwi", "uva"]
+    }
+  ] } ] };
+
   /* ---- Estado do jogo ---- */
   let gameData         = null;
   let nivelIdx         = 0;
@@ -217,7 +252,6 @@
   let touchGhost       = null;
   let boasVindasExibido = false;  // mostra instrucaoInstrutor apenas uma vez
 
-  const NIVEL_KEY = 'despensa_nivel';
   const ERROS_KEY = 'despensa_erros';
 
   /* Cores para exibição visual do nível Fácil (círculo fallback sem imagem) */
@@ -238,10 +272,21 @@
     } catch(e) {
       gameData = DESPENSA_INLINE;
     }
-    nivelIdx = Math.min(
-      parseInt(localStorage.getItem(NIVEL_KEY) || '0'),
-      gameData.niveis.length - 1
-    );
+
+    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real na Despensa */
+    let variacoesData;
+    try {
+      variacoesData = await loadGameData('../data/despensa-variacoes.json');
+    } catch(e) {
+      variacoesData = DESPENSA_VARIACOES_INLINE;
+    }
+    const variacaoIdx = gameState.iniciarVariacao('despensa', variacoesData.variacoes.length);
+    const variacao = variacoesData.variacoes[variacaoIdx];
+    gameData.niveis.forEach((nivel, i) => {
+      if (variacao.niveis[i]) Object.assign(nivel, variacao.niveis[i]);
+    });
+
+    nivelIdx = Math.min(gameState.getEstagio('despensa'), gameData.niveis.length - 1);
     erros = Math.max(0, parseInt(localStorage.getItem(ERROS_KEY) || '0', 10) || 0);
 
     /* Item 1 — fala de boas-vindas exibida uma única vez */
@@ -792,7 +837,7 @@
     const temProx   = proxNivel < gameData.niveis.length;
 
     if (temProx) {
-      localStorage.setItem(NIVEL_KEY, proxNivel);
+      gameState.setEstagio('despensa', proxNivel);
       audio.desbloqueio();
       mostrarFeedback(`Nível ${nivel.nivel} concluído! Próximo nível desbloqueado.`, 'ambar');
       setTimeout(() => {
@@ -800,14 +845,14 @@
         renderNivel();
       }, 1200);
     } else {
-      localStorage.removeItem(NIVEL_KEY);
+      gameState.limparEstagio('despensa');
       const score = gameState.calcularScore(erros);
       gameState.setRoomScore('despensa', score);
       localStorage.removeItem(ERROS_KEY);
       atualizarBadge(score);
       if (gameState.isFullyCompleted()) {
         window.removeEventListener('beforeunload', beforeUnloadHandler);
-        window.location.href = 'TelaPontuacao.html';
+        gameState.sairMiniGame('despensa', 'TelaPontuacao.html');
         return;
       }
       exibirModal(score);
@@ -866,6 +911,14 @@
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
   document.getElementById('modal-ajuda').addEventListener('click', e => {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('despensa', 'MapaCasa.html');
   });
 
   /* ---- Áudio do mascote (handler preparado para integração futura) ---- */

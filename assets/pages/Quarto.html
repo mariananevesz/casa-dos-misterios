@@ -14,7 +14,7 @@
     <!-- HUD -->
     <section class="hud quarto-hud">
       <button class="btn-voltar-mapa quarto-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('quarto','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info quarto-hud__info">
@@ -41,6 +41,9 @@
         <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
       </section>
     </section>
+
+    <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
+    <section class="niveis quarto-niveis" id="niveis-tabs" aria-label="Progresso de dificuldade"></section>
 
     <section class="quarto-layout" aria-label="Área do desafio do quarto">
 
@@ -200,6 +203,32 @@
   ]
 };
 
+  /* Fallback de variações — usado apenas quando o fetch falha (file://) */
+  const QUARTO_VARIACOES_INLINE = { "variacoes": [ { "fases": [
+    { "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
+    { "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
+    { "sequenciaComErros": [
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"] }
+  ] } ] };
+
   let gameData   = null;
   let faseAtual = 0;
   let corrigida  = [];
@@ -207,7 +236,6 @@
   let erros      = 0;
   let touchBloco = null;
   let touchGhost = null;
-  const FASE_KEY = 'quarto_fase';
 
   async function init() {
     try {
@@ -215,11 +243,38 @@
     } catch(e) {
       gameData = QUARTO_INLINE; // fallback file://
     }
-    faseAtual = Math.min(
-    parseInt(localStorage.getItem(FASE_KEY) || '0'),
-    gameData.fases.length - 1
-);
+
+    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real no Quarto */
+    let variacoesData;
+    try {
+      variacoesData = await loadGameData('../data/quarto-variacoes.json');
+    } catch(e) {
+      variacoesData = QUARTO_VARIACOES_INLINE;
+    }
+    const variacaoIdx = gameState.iniciarVariacao('quarto', variacoesData.variacoes.length);
+    const variacao = variacoesData.variacoes[variacaoIdx];
+    gameData.fases.forEach((fase, i) => {
+      if (variacao.fases[i]) {
+        fase.sequenciaComErros = variacao.fases[i].sequenciaComErros;
+        fase.sequenciaCorreta  = variacao.fases[i].sequenciaCorreta;
+      }
+    });
+
+    faseAtual = Math.min(gameState.getEstagio('quarto'), gameData.fases.length - 1);
     renderFase();
+  }
+
+  function buildNivelTabs() {
+    const cont = document.getElementById('niveis-tabs');
+    cont.innerHTML = '';
+    gameData.fases.forEach((f, i) => {
+      const span = document.createElement('span');
+      if (i < faseAtual)        span.className = 'nivel nivel--ok';
+      else if (i === faseAtual) span.className = 'nivel nivel--ativo';
+      else                       span.className = 'nivel nivel--bloq';
+      span.textContent = f.dificuldade + (i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : '');
+      cont.appendChild(span);
+    });
   }
 
   function renderFase() {
@@ -236,6 +291,7 @@
   erros = 0;
   pararAtencaoDica();
 
+  buildNivelTabs();
   buildFonte();
   renderCorrigida();
 
@@ -449,9 +505,9 @@
   atualizarBadge(totalQuarto);
 
   if (proxFase < gameData.fases.length) {
-    localStorage.setItem(FASE_KEY, proxFase);
+    gameState.setEstagio('quarto', proxFase);
   } else {
-    localStorage.removeItem(FASE_KEY);
+    gameState.limparEstagio('quarto');
   }
 
   document.getElementById('modal-sub').textContent =
@@ -493,7 +549,7 @@
   btnMapa.className = 'btn btn--outline-roxo';
   btnMapa.textContent = 'Voltar ao mapa';
   btnMapa.onclick = () => {
-    window.location.href = 'MapaCasa.html';
+    gameState.sairMiniGame('quarto', 'MapaCasa.html');
   };
   btnGrupo.appendChild(btnMapa);
 
@@ -520,6 +576,14 @@
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
   document.getElementById('modal-ajuda').addEventListener('click', e => {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('quarto', 'MapaCasa.html');
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */

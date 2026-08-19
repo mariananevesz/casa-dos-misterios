@@ -1,0 +1,33 @@
+{
+  "_comentario": "4 variações de grade por fase. Cada variação substitui apenas o campo 'grade' da fase correspondente em sala.json (mesma dificuldade, mesmo maxBlocos).",
+  "variacoes": [
+    {
+      "grades": [
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 1, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 2 }, "obstaculos": [] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [ { "linha": 2, "coluna": 1 }, { "linha": 1, "coluna": 1 } ] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [] }
+      ]
+    },
+    {
+      "grades": [
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 1 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [ { "linha": 1, "coluna": 2 }, { "linha": 2, "coluna": 2 } ] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] }
+      ]
+    },
+    {
+      "grades": [
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 2, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 1 } ] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [] }
+      ]
+    },
+    {
+      "grades": [
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 1, "coluna": 3 }, "obstaculos": [] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 2 } ] },
+        { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [] }
+      ]
+    }
+  ]
+}

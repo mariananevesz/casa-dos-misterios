@@ -1,0 +1,145 @@
+{
+  "_comentario": "4 variações por nível. Cada variação substitui 'itens' + 'corretos'/'ordemCorreta' do nível correspondente em despensa.json (mesmo criterio/instrucao).",
+  "variacoes": [
+    {
+      "niveis": [
+        {
+          "itens": [
+            { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png" },
+            { "id": "morango", "nome": "Morango", "cor": "vermelho", "img": "../img/morango.png" },
+            { "id": "banana",  "nome": "Banana",  "cor": "amarelo",  "img": "../img/banana.png" },
+            { "id": "uva",     "nome": "Uva",     "cor": "roxo",     "img": "../img/uva.png" },
+            { "id": "mirtilo", "nome": "Mirtilo", "cor": "azul",     "img": "../img/mirtilo.png" }
+          ],
+          "corretos": ["maca", "morango"]
+        },
+        {
+          "itens": [
+            { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png" },
+            { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
+            { "id": "maca",     "nome": "Maçã",     "tamanho": 3, "img": "../img/maça.png" },
+            { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png" },
+            { "id": "banana",   "nome": "Banana",   "tamanho": 4, "img": "../img/banana.png" }
+          ],
+          "ordemCorreta": ["mirtilo", "uva", "maca", "banana", "melancia"]
+        },
+        {
+          "itens": [
+            { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+            { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png" },
+            { "id": "uva",      "nome": "Uva",      "tipo": "sementes", "img": "../img/uva.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+            { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+            { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
+          ],
+          "corretos": ["melancia", "kiwi", "uva"]
+        }
+      ]
+    },
+    {
+      "niveis": [
+        {
+          "itens": [
+            { "id": "banana",  "nome": "Banana",  "cor": "amarelo",  "img": "../img/banana.png" },
+            { "id": "abacaxi", "nome": "Abacaxi", "cor": "amarelo",  "img": "../img/abacaxi.png" },
+            { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png" },
+            { "id": "uva",     "nome": "Uva",     "cor": "roxo",     "img": "../img/uva.png" },
+            { "id": "mirtilo", "nome": "Mirtilo", "cor": "azul",     "img": "../img/mirtilo.png" }
+          ],
+          "corretos": ["banana", "abacaxi"]
+        },
+        {
+          "itens": [
+            { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png" },
+            { "id": "morango",  "nome": "Morango",  "tamanho": 2, "img": "../img/morango.png" },
+            { "id": "kiwi",     "nome": "Kiwi",     "tamanho": 3, "img": "../img/kiwi.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tamanho": 4, "img": "../img/abacaxi.png" },
+            { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" }
+          ],
+          "ordemCorreta": ["mirtilo", "morango", "kiwi", "abacaxi", "melancia"]
+        },
+        {
+          "itens": [
+            { "id": "maca",     "nome": "Maçã",     "tipo": "sementes", "img": "../img/maça.png" },
+            { "id": "mirtilo",  "nome": "Mirtilo",  "tipo": "sementes", "img": "../img/mirtilo.png" },
+            { "id": "uva",      "nome": "Uva",      "tipo": "sementes", "img": "../img/uva.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+            { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+            { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
+          ],
+          "corretos": ["maca", "mirtilo", "uva"]
+        }
+      ]
+    },
+    {
+      "niveis": [
+        {
+          "itens": [
+            { "id": "melancia", "nome": "Melancia", "cor": "verde",    "img": "../img/melancia.png" },
+            { "id": "kiwi",     "nome": "Kiwi",     "cor": "verde",    "img": "../img/kiwi.png" },
+            { "id": "maca",     "nome": "Maçã",     "cor": "vermelho", "img": "../img/maça.png" },
+            { "id": "banana",   "nome": "Banana",   "cor": "amarelo",  "img": "../img/banana.png" },
+            { "id": "uva",      "nome": "Uva",      "cor": "roxo",     "img": "../img/uva.png" }
+          ],
+          "corretos": ["melancia", "kiwi"]
+        },
+        {
+          "itens": [
+            { "id": "uva",      "nome": "Uva",      "tamanho": 1, "img": "../img/uva.png" },
+            { "id": "maca",     "nome": "Maçã",     "tamanho": 2, "img": "../img/maça.png" },
+            { "id": "banana",   "nome": "Banana",   "tamanho": 3, "img": "../img/banana.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tamanho": 4, "img": "../img/abacaxi.png" },
+            { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" }
+          ],
+          "ordemCorreta": ["uva", "maca", "banana", "abacaxi", "melancia"]
+        },
+        {
+          "itens": [
+            { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+            { "id": "maca",     "nome": "Maçã",     "tipo": "sementes", "img": "../img/maça.png" },
+            { "id": "mirtilo",  "nome": "Mirtilo",  "tipo": "sementes", "img": "../img/mirtilo.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+            { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+            { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
+          ],
+          "corretos": ["melancia", "maca", "mirtilo"]
+        }
+      ]
+    },
+    {
+      "niveis": [
+        {
+          "itens": [
+            { "id": "morango",  "nome": "Morango",  "cor": "vermelho", "img": "../img/morango.png" },
+            { "id": "maca",     "nome": "Maçã",     "cor": "vermelho", "img": "../img/maça.png" },
+            { "id": "mirtilo",  "nome": "Mirtilo",  "cor": "azul",     "img": "../img/mirtilo.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "cor": "amarelo",  "img": "../img/abacaxi.png" },
+            { "id": "kiwi",     "nome": "Kiwi",     "cor": "verde",    "img": "../img/kiwi.png" }
+          ],
+          "corretos": ["morango", "maca"]
+        },
+        {
+          "itens": [
+            { "id": "mirtilo",  "nome": "Mirtilo",  "tamanho": 1, "img": "../img/mirtilo.png" },
+            { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png" },
+            { "id": "kiwi",     "nome": "Kiwi",     "tamanho": 3, "img": "../img/kiwi.png" },
+            { "id": "banana",   "nome": "Banana",   "tamanho": 4, "img": "../img/banana.png" },
+            { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" }
+          ],
+          "ordemCorreta": ["mirtilo", "uva", "kiwi", "banana", "melancia"]
+        },
+        {
+          "itens": [
+            { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png" },
+            { "id": "maca",     "nome": "Maçã",     "tipo": "sementes", "img": "../img/maça.png" },
+            { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
+            { "id": "abacaxi",  "nome": "Abacaxi",  "tipo": "sem-semente-visivel", "img": "../img/abacaxi.png" },
+            { "id": "morango",  "nome": "Morango",  "tipo": "aquenios", "img": "../img/morango.png" },
+            { "id": "banana",   "nome": "Banana",   "tipo": "sem-semente", "img": "../img/banana.png" }
+          ],
+          "corretos": ["kiwi", "maca", "melancia"]
+        }
+      ]
+    }
+  ]
+}

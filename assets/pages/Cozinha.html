@@ -14,7 +14,7 @@
     <!-- HUD -->
     <section class="hud cozinha-hud">
       <button class="btn-voltar-mapa cozinha-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
       <section class="hud__info cozinha-hud__info">
         <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img cozinha-hud__icone">
@@ -139,7 +139,7 @@
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
-        <button class="btn btn--verde" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--verde" onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
@@ -301,8 +301,9 @@
     const f2 = fonte.blocos.filter(b => b.dificuldade === 'Médio');
     const f3 = fonte.blocos.filter(b => b.dificuldade === 'Difícil');
 
-    /* Seleciona um bloco de cada fase de forma cíclica a cada sessão */
-    const sessao = gameState.getCozinhaBloco();
+    /* Item 2.3 — gira para o próximo bloco a cada entrada real na Cozinha
+       (não a cada conclusão da partida inteira, e não num simples F5). */
+    const sessao = gameState.avancarBlocoSeNovaEntrada();
     const b1 = f1[sessao % f1.length];
     const b2 = f2[sessao % f2.length];
     const b3 = f3[sessao % f3.length];
@@ -442,7 +443,6 @@
   /* ---- Conclusão ---- */
   function conclusao() {
     pararAtencaoDica();
-    gameState.setCozinhaBloco(gameState.getCozinhaBloco() + 1);
     const erros = gameData.perguntas.length - acertos;
     const score = gameState.calcularScore(erros);
     gameState.setRoomScore('cozinha', score);
@@ -488,6 +488,14 @@
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
   document.getElementById('modal-ajuda').addEventListener('click', e => {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
+  });
+
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('cozinha', 'MapaCasa.html');
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
