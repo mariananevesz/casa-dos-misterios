@@ -747,19 +747,9 @@ kbd {
 
 /* ---------- Foco visível (acessibilidade) ---------- */
 :focus-visible {
-  outline: 3px solid var(--laranja);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-.btn:focus-visible,
-.btn-vf:focus-visible,
-.btn--menu-principal:focus-visible,
-.bloco:focus-visible,
-.comodo-card:focus-visible,
-.item-card:focus-visible {
-  outline: 3px solid var(--laranja);
+  outline: 3px solid #FFFFFF;
   outline-offset: 2px;
+  box-shadow: 0 0 0 6px #1F2937 !important;
 }
 
 /* ---------- Alto contraste ---------- */
