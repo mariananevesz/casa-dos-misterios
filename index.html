@@ -107,14 +107,14 @@
         <section class="config-fonte-btns">
           <button class="btn btn--outline" id="btn-fonte-menos"
                   type="button" aria-label="Diminuir tamanho da fonte"
-                  aria-describedby="fonte-status" disabled style="flex:0;padding:8px 14px;">A−</button>
-          <span id="fonte-valor" aria-label="Tamanho padrão: 100 por cento" style="font-size:13px;font-weight:600;color:var(--texto-escuro);min-width:40px;text-align:center;">100%</span>
+                  aria-describedby="fonte-status" style="flex:0;padding:8px 14px;">A−</button>
+          <span id="fonte-valor" role="status" aria-live="polite" aria-atomic="true" style="font-size:calc(13px * var(--escala-fonte));font-weight:600;color:var(--texto-escuro);min-width:40px;text-align:center;">Padrão (100%)</span>
           <button class="btn btn--outline" id="btn-fonte-mais"
                   type="button" aria-label="Aumentar tamanho da fonte"
-                  aria-describedby="fonte-status" disabled style="flex:0;padding:8px 14px;">A+</button>
+                  aria-describedby="fonte-status" style="flex:0;padding:8px 14px;">A+</button>
         </section>
       </section>
-      <p class="modal-sub" id="fonte-status">Configuração disponível em breve.</p>
+      <p class="modal-sub" id="fonte-status">Escolha entre tamanho padrão, maior e muito maior.</p>
 
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-som">Efeitos sonoros</label>
@@ -133,10 +133,10 @@
       </section>
 
       <section style="margin-top:1.25rem;">
-        <p style="font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
+        <p style="font-size:calc(11px * var(--escala-fonte));font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
           Atalhos de teclado
         </p>
-        <ul style="font-size:11px;color:var(--texto-medio);line-height:2;">
+        <ul style="font-size:calc(11px * var(--escala-fonte));color:var(--texto-medio);line-height:2;">
           <li><kbd>Tab</kbd> — navegar entre elementos</li>
           <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> — selecionar / confirmar</li>
           <li><kbd>Delete</kbd> — remover bloco selecionado</li>
@@ -156,13 +156,13 @@
        aria-labelledby="cj-titulo" style="display:none;">
     <section class="modal" style="max-width:340px;">
       <h2 class="modal-titulo" id="cj-titulo" style="margin-bottom:1rem;">Como jogar</h2>
-      <ul style="font-size:13px;line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
+      <ul style="font-size:calc(13px * var(--escala-fonte));line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
         <li><img src="assets/img/icone-sala.png"     alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Sala</strong> — Monte sequências de blocos para guiar o personagem até a estrela.</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-quarto.png"   alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Quarto</strong> — Encontre os erros na rotina e reconstrua a ordem correta.</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-cozinha.png"  alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Cozinha</strong> — Julgue cada frase: Verdadeiro ou Falso?</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-despensa.png" alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Despensa</strong> — Organize os itens por tamanho, cor ou categoria.</li>
       </ul>
-      <p style="font-size:12px;color:var(--cinza);margin-top:1rem;">
+      <p style="font-size:calc(12px * var(--escala-fonte));color:var(--cinza);margin-top:1rem;">
         Complete cada cômodo para desbloquear o próximo. Quanto menos erros, mais pontos!
       </p>
       <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
@@ -274,7 +274,7 @@
     setToggle('toggle-contraste', cfg.altoContraste);
     setToggle('toggle-som',       cfg.somAtivado);
     setToggle('toggle-musica',    cfg.musicaAtivada);
-    document.getElementById('fonte-valor').textContent = '100%';
+    atualizarControleFonte(cfg.tamanhoFonte);
   }
 
   function setToggle(id, on) {
@@ -296,6 +296,38 @@
   bindToggle('toggle-contraste', 'altoContraste');
   bindToggle('toggle-som',       'somAtivado');
   bindToggle('toggle-musica',    'musicaAtivada');
+
+  /* ---- Tamanho da fonte ---- */
+  const NIVEIS_FONTE = [100, 120, 140];
+  const NOMES_FONTE = { 100: 'Padrão', 120: 'Maior', 140: 'Muito maior' };
+
+  function nivelFonteAtual(valor) {
+    return NIVEIS_FONTE.includes(Number(valor)) ? Number(valor) : 100;
+  }
+
+  function atualizarControleFonte(valor) {
+    const nivel = nivelFonteAtual(valor);
+    const indice = NIVEIS_FONTE.indexOf(nivel);
+    const valorEl = document.getElementById('fonte-valor');
+    valorEl.textContent = `${NOMES_FONTE[nivel]} (${nivel}%)`;
+    valorEl.setAttribute('aria-label', `Tamanho da fonte: ${NOMES_FONTE[nivel]}, ${nivel} por cento`);
+    document.getElementById('btn-fonte-menos').setAttribute('aria-disabled', indice === 0 ? 'true' : 'false');
+    document.getElementById('btn-fonte-mais').setAttribute('aria-disabled', indice === NIVEIS_FONTE.length - 1 ? 'true' : 'false');
+  }
+
+  function alterarTamanhoFonte(direcao) {
+    const atual = nivelFonteAtual(gameState.getSettings().tamanhoFonte);
+    const indiceAtual = NIVEIS_FONTE.indexOf(atual);
+    const novoIndice = Math.max(0, Math.min(NIVEIS_FONTE.length - 1, indiceAtual + direcao));
+    const novoNivel = NIVEIS_FONTE[novoIndice];
+    if (novoNivel === atual) return;
+    gameState.updateSettings({ tamanhoFonte: novoNivel });
+    aplicarConfiguracoes();
+    atualizarControleFonte(novoNivel);
+  }
+
+  document.getElementById('btn-fonte-menos').addEventListener('click', () => alterarTamanhoFonte(-1));
+  document.getElementById('btn-fonte-mais').addEventListener('click', () => alterarTamanhoFonte(1));
 
   /* ---- Resetar progresso ---- */
   document.getElementById('btn-resetar').addEventListener('click', () => {

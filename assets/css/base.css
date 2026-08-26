@@ -6,6 +6,7 @@
 
 /* ---------- Variáveis de design ---------- */
 :root {
+  --escala-fonte:   1;
   --laranja:        #D85A30;
   --laranja-claro:  #F0997B;
   --laranja-fundo:  #FAECE7;
@@ -56,6 +57,11 @@ img, svg, video, canvas {
 
 button, input, select, textarea {
   max-width: 100%;
+}
+
+button {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 p, li, h1, h2, h3, strong, span {
@@ -110,11 +116,11 @@ body {
   gap: 8px;
 }
 
-.hud__icone     { font-size: 22px; }
+.hud__icone     { font-size: calc(22px * var(--escala-fonte)); }
 .hud__icone-img { width: 24px; height: 24px; object-fit: contain; }
 
 .hud__titulo {
-  font-size: 14px;
+  font-size: calc(14px * var(--escala-fonte));
   font-weight: 600;
   color: var(--laranja);
 }
@@ -123,7 +129,7 @@ body {
 .hud__titulo--verde  { color: #085041; }
 .hud__titulo--marrom { color: var(--marrom); }
 
-.hud__subtitulo          { font-size: 11px; color: var(--cinza); }
+.hud__subtitulo          { font-size: calc(11px * var(--escala-fonte)); color: var(--cinza); }
 .hud__subtitulo--roxo   { color: var(--roxo); }
 .hud__subtitulo--verde  { color: #0F6E56; }
 .hud__subtitulo--marrom { color: var(--marrom-medio); }
@@ -132,7 +138,7 @@ body {
 .badge {
   border-radius: var(--raio-pill);
   padding: 4px 12px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 600;
 }
 
@@ -169,10 +175,10 @@ body {
 .balao--verde { border-color: var(--verde-claro); }
 .balao--marrom{ border-color: var(--laranja-borda); }
 
-.balao__emoji { font-size: 26px; flex-shrink: 0; }
+.balao__emoji { font-size: calc(26px * var(--escala-fonte)); flex-shrink: 0; }
 
 .balao__nome {
-  font-size: 15px;
+  font-size: calc(15px * var(--escala-fonte));
   font-weight: 700;
   color: var(--laranja);
   text-transform: uppercase;
@@ -181,7 +187,7 @@ body {
 }
 
 .balao__texto {
-  font-size: 20px;
+  font-size: calc(20px * var(--escala-fonte));
   line-height: 1.6;
   color: #854F0B;
 }
@@ -225,7 +231,7 @@ body {
 .painel--tracejado { border-style: dashed; }
 
 .painel__label {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 600;
   color: var(--cinza);
   text-transform: uppercase;
@@ -245,7 +251,7 @@ body {
 .bloco {
   border-radius: 8px;
   padding: 7px 10px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 500;
   cursor: grab;
   display: flex;
@@ -264,7 +270,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   padding: 1px 5px;
-  font-size: 10px;
+  font-size: calc(10px * var(--escala-fonte));
 }
 
 .bloco--vazio {
@@ -297,7 +303,7 @@ body {
   border: none;
   border-radius: var(--raio);
   padding: 12px 0;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala-fonte));
   font-weight: 600;
   cursor: pointer;
   flex: 1;
@@ -342,7 +348,7 @@ body {
   border: 1.5px solid var(--laranja-borda);
   background: rgba(255, 255, 255, 0.92);
   color: var(--marrom-medio);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   cursor: pointer;
   flex-shrink: 0;
@@ -365,7 +371,7 @@ body {
   border: 1.5px solid var(--laranja-borda);
   background: rgba(255, 255, 255, 0.95);
   color: var(--marrom-medio);
-  font-size: 20px;
+  font-size: calc(20px * var(--escala-fonte));
   font-weight: 900;
   cursor: pointer;
   flex-shrink: 0;
@@ -392,7 +398,7 @@ body {
   border: none;
   background: var(--cinza-fundo);
   color: var(--texto-medio);
-  font-size: 16px;
+  font-size: calc(16px * var(--escala-fonte));
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -410,7 +416,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -421,7 +427,7 @@ body {
 .modal-ajuda-lista {
   padding-left: 1.1rem;
   color: var(--texto-medio);
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.6;
 }
 
@@ -439,7 +445,7 @@ body {
 .modal-ajuda-visual .btn {
   flex: none;
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   pointer-events: none;
 }
 
@@ -458,7 +464,7 @@ body {
   border: 1.5px dashed var(--laranja-borda);
   border-radius: 10px;
   padding: 5px 10px;
-  font-size: 11.5px;
+  font-size: calc(11.5px * var(--escala-fonte));
   color: var(--texto-medio);
   background: rgba(255, 255, 255, 0.6);
 }
@@ -481,7 +487,7 @@ body {
 }
 
 .modal-ajuda-objetivo p {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.5;
   color: var(--marrom-medio);
 }
@@ -503,7 +509,7 @@ body {
   border: none;
   background: rgba(255, 255, 255, 0.75);
   color: inherit;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -542,7 +548,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala-fonte));
   border: 1.5px solid var(--ambar-claro);
   cursor: pointer;
 }
@@ -562,9 +568,9 @@ body {
 .dica--verde { background: var(--verde-fundo); }
 .dica--erro  { background: var(--vermelho-fundo); }
 
-.dica__emoji { font-size: 18px; flex-shrink: 0; }
+.dica__emoji { font-size: calc(18px * var(--escala-fonte)); flex-shrink: 0; }
 
-.dica__texto { font-size: 11px; line-height: 1.5; }
+.dica__texto { font-size: calc(11px * var(--escala-fonte)); line-height: 1.5; }
 .dica__texto--ambar { color: #854F0B; }
 .dica__texto--roxo  { color: #3C3489; }
 .dica__texto--verde { color: #085041; }
@@ -629,9 +635,9 @@ body {
   to   { transform: scale(1);    opacity: 1; }
 }
 
-.modal-titulo { font-size: 20px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
-.modal-sub    { font-size: 13px; color: var(--texto-medio); margin-bottom: 0.75rem; }
-.modal-pts    { font-size: 16px; font-weight: 700; color: var(--laranja); margin-top: 0.5rem; }
+.modal-titulo { font-size: calc(20px * var(--escala-fonte)); font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.modal-sub    { font-size: calc(13px * var(--escala-fonte)); color: var(--texto-medio); margin-bottom: 0.75rem; }
+.modal-pts    { font-size: calc(16px * var(--escala-fonte)); font-weight: 700; color: var(--laranja); margin-top: 0.5rem; }
 
 .modal-estrelas {
   display: flex;
@@ -649,7 +655,7 @@ body {
 }
 
 .config-label {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   font-weight: 600;
   color: var(--texto-escuro);
 }
@@ -658,6 +664,32 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+#fonte-valor { flex: 1 1 92px; }
+
+button[aria-disabled="true"] { opacity: 0.55; }
+
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .btn--outline,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .btn-voltar-mapa,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .nivel {
+  white-space: normal;
+}
+
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .config-linha {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .modal,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .balao,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .painel,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .comodo-card,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .pergunta-box,
+html[data-tamanho-fonte]:not([data-tamanho-fonte="100"]) .dica {
+  overflow-wrap: anywhere;
 }
 
 /* Toggle switch (alto contraste / som) */
@@ -712,7 +744,7 @@ kbd {
   border: 1px solid var(--cinza-claro);
   border-radius: 4px;
   padding: 1px 6px;
-  font-size: 10px;
+  font-size: calc(10px * var(--escala-fonte));
   font-family: monospace;
   color: var(--texto-escuro);
 }
@@ -721,14 +753,14 @@ kbd {
 @media (max-width: 560px) {
   body             { padding: 1rem; }
   .tela            { padding: 1rem; }
-  .balao__texto    { font-size: 17px; }
+  .balao__texto    { font-size: calc(17px * var(--escala-fonte)); }
   .logi-mascote    { width: 60px; height: 50px; }
 }
 
 @media (max-width: 400px) {
   body             { padding: 0.6rem; }
   .tela            { padding: 0.85rem; }
-  .balao__texto    { font-size: 15px; }
+  .balao__texto    { font-size: calc(15px * var(--escala-fonte)); }
   .logi-mascote    { width: 52px; height: 44px; }
   .balao           { padding: 8px 10px; gap: 8px; }
 }

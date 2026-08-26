@@ -54,14 +54,14 @@
 }
 
 .quarto-hud__titulo {
-  font-size: 26px;
+  font-size: calc(26px * var(--escala-fonte));
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.4px;
 }
 
 .quarto-hud__subtitulo {
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   margin-top: 4px;
 }
@@ -70,7 +70,7 @@
   min-width: 78px;
   text-align: center;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   box-shadow: 0 3px 0 rgba(83, 74, 183, 0.14);
 }
 
@@ -96,13 +96,13 @@
 }
 
 .quarto-logi__nome {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   color: var(--roxo);
   margin-bottom: 2px;
 }
 
 .quarto-logi__texto {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.38;
   color: #3C3489;
 }
@@ -125,7 +125,7 @@
 
 .quarto-card__titulo {
   color: var(--roxo);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.7px;
@@ -138,7 +138,7 @@
 }
 
 .quarto-card__subtitulo {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   line-height: 1.35;
   color: var(--texto-medio);
   margin-bottom: 0.65rem;
@@ -166,7 +166,7 @@
   border-radius: 14px;
   min-height: 38px;
   padding: 0.45rem 0.65rem;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 800;
   line-height: 1.2;
   box-shadow: 0 3px 0 rgba(83, 74, 183, 0.13);
@@ -218,7 +218,7 @@
 }
 
 .quarto-dica__texto {
-  font-size: 10.8px;
+  font-size: calc(10.8px * var(--escala-fonte));
   line-height: 1.35;
 }
 
@@ -261,7 +261,7 @@
 }
 
 .quarto-feedback__titulo {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 900;
   color: var(--laranja);
   text-transform: uppercase;
@@ -276,7 +276,7 @@
 }
 
 .quarto-feedback__blocos > span:not(.bloco) {
-  font-size: 12px !important;
+  font-size: calc(12px * var(--escala-fonte)) !important;
   font-weight: 700;
   line-height: 1.35;
   color: var(--vermelho) !important;
@@ -290,7 +290,7 @@
 .quarto-btn {
   min-height: 42px;
   border-radius: 15px;
-  font-size: 13.5px;
+  font-size: calc(13.5px * var(--escala-fonte));
   font-weight: 900;
   box-shadow: 0 3px 0 rgba(83, 74, 183, 0.16);
 }
@@ -348,11 +348,11 @@
   }
 
   .quarto-hud__titulo {
-    font-size: 20px;
+    font-size: calc(20px * var(--escala-fonte));
   }
 
   .quarto-logi__texto {
-    font-size: 12px;
+    font-size: calc(12px * var(--escala-fonte));
   }
 
   .quarto-sequencia,
@@ -381,7 +381,7 @@
   .quarto-page #blocos-fonte .bloco,
   .quarto-page #sequencia-corrigida .bloco,
   .quarto-page #feedback-blocos .bloco { min-height: 34px; padding-block: 0.32rem; }
-  .quarto-estrela { font-size: 28px; margin-top: 0.45rem; }
+  .quarto-estrela { font-size: calc(28px * var(--escala-fonte)); margin-top: 0.45rem; }
 }
 
 @media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 1020px) {
