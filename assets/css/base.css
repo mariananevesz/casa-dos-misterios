@@ -763,42 +763,205 @@ kbd {
 }
 
 /* ---------- Alto contraste ---------- */
-body.alto-contraste                { background: #000 !important; color: #fff !important; }
+body.alto-contraste {
+  background: #000 !important;
+  color: #fff !important;
+  --texto-escuro: #fff;
+  --texto-medio: #f2f2f2;
+  --cinza: #dedede;
+  --cinza-claro: #bdbdbd;
+  --cinza-fundo: #242424;
+}
 
 body.alto-contraste .tela,
 body.alto-contraste .tela--roxa,
 body.alto-contraste .tela--verde,
-body.alto-contraste .tela--marrom  { background: #111 !important; border-color: #FFD700 !important; color: #fff !important; }
-
-body.alto-contraste .hud__titulo,
-body.alto-contraste .hud__subtitulo,
-body.alto-contraste .balao__texto,
-body.alto-contraste .painel__label,
-body.alto-contraste .dica__texto,
-body.alto-contraste .comodo-card__nome,
-body.alto-contraste .comodo-card__skill,
-body.alto-contraste .pergunta-box__frase,
-body.alto-contraste .pontuacao-total__label { color: #fff !important; }
+body.alto-contraste .tela--marrom,
+body.alto-contraste #tela-principal,
+body.alto-contraste .tela--mapa,
+body.alto-contraste .sala-page,
+body.alto-contraste .quarto-page,
+body.alto-contraste .cozinha-page,
+body.alto-contraste .despensa-page {
+  background: #090909 !important;
+  border-color: #ffd700 !important;
+  color: #fff !important;
+}
 
 body.alto-contraste .balao,
 body.alto-contraste .painel,
 body.alto-contraste .pergunta-box,
-body.alto-contraste .dica,
+body.alto-contraste .modal,
 body.alto-contraste .pontuacao-card,
-body.alto-contraste .modal                 { background: #1a1a1a !important; border-color: #FFD700 !important; }
+body.alto-contraste .comodo-card,
+body.alto-contraste .mapa-pontos,
+body.alto-contraste .mapa-logi__balao,
+body.alto-contraste .mapa-progresso-geral,
+body.alto-contraste .sala-fases-card,
+body.alto-contraste .sala-sequencia-panel,
+body.alto-contraste .quarto-logi,
+body.alto-contraste .quarto-card,
+body.alto-contraste .quarto-feedback,
+body.alto-contraste .cozinha-logi,
+body.alto-contraste .cozinha-pergunta,
+body.alto-contraste .despensa-logi,
+body.alto-contraste .despensa-card,
+body.alto-contraste .despensa-niveis,
+body.alto-contraste .item-card,
+body.alto-contraste .dica {
+  background: #181818 !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
 
-body.alto-contraste .btn--laranja,
-body.alto-contraste .btn--roxo,
-body.alto-contraste .btn--verde,
-body.alto-contraste .btn--marrom,
+body.alto-contraste .hud__titulo,
+body.alto-contraste .hud__subtitulo,
+body.alto-contraste .balao__nome,
+body.alto-contraste .balao__texto,
+body.alto-contraste .painel__label,
+body.alto-contraste .dica__texto,
+body.alto-contraste .modal-titulo,
+body.alto-contraste .modal-sub,
+body.alto-contraste .config-label,
+body.alto-contraste .inicio-header__titulo,
+body.alto-contraste .inicio-header__subtitulo,
+body.alto-contraste .inicio-comodos__titulo,
+body.alto-contraste .inicio-comodo__label,
+body.alto-contraste .inicio-rodape,
+body.alto-contraste .mapa-titulo-linha h1,
+body.alto-contraste .mapa-titulo-area p,
+body.alto-contraste .mapa-logi__nome,
+body.alto-contraste .mapa-logi__balao p,
+body.alto-contraste .mapa-progresso-geral p,
+body.alto-contraste .mapa-progresso-geral strong,
+body.alto-contraste .comodo-card__nome,
+body.alto-contraste .comodo-card__skill,
+body.alto-contraste .comodo-card__pts,
+body.alto-contraste .comodo-card__bloq-aviso,
+body.alto-contraste .sala-hud__titulo,
+body.alto-contraste .sala-hud__subtitulo,
+body.alto-contraste .sala-panel__title,
+body.alto-contraste .sala-panel__hint,
+body.alto-contraste .quarto-logi__nome,
+body.alto-contraste .quarto-logi__texto,
+body.alto-contraste .quarto-card__titulo,
+body.alto-contraste .quarto-card__subtitulo,
+body.alto-contraste .cozinha-logi__nome,
+body.alto-contraste .cozinha-logi__texto,
+body.alto-contraste .cozinha-pergunta__frase,
+body.alto-contraste .cozinha-pergunta__aviso,
+body.alto-contraste .despensa-logi__nome,
+body.alto-contraste .despensa-logi__texto,
+body.alto-contraste .despensa-logi__instrucao,
+body.alto-contraste .despensa-logi__legenda,
+body.alto-contraste .despensa-card__titulo,
+body.alto-contraste .item-card__nome,
+body.alto-contraste .prateleira__slot,
+body.alto-contraste .prateleira__leg-txt,
+body.alto-contraste .resultado-kicker,
+body.alto-contraste .resultado-header__titulo,
+body.alto-contraste .resultado-header__sub,
+body.alto-contraste .pontuacao-card__nome,
+body.alto-contraste .pontuacao-card__pts {
+  color: #fff !important;
+}
+
+body.alto-contraste .btn,
+body.alto-contraste .btn--menu-principal,
+body.alto-contraste .btn-voltar-mapa,
+body.alto-contraste .btn-ajuda,
+body.alto-contraste .btn-config,
+body.alto-contraste .mapa-voltar,
+body.alto-contraste .comodo-card__acao,
+body.alto-contraste .sala-btn,
+body.alto-contraste .quarto-btn,
+body.alto-contraste .despensa-btn {
+  background: #ffd700 !important;
+  border: 2px solid #fff !important;
+  color: #000 !important;
+}
+
+body.alto-contraste .toggle-btn {
+  background: #555 !important;
+  border: 2px solid #fff !important;
+}
+
+body.alto-contraste .toggle-btn--on { background: #00e5ff !important; }
+body.alto-contraste .toggle-thumb { background: #000 !important; }
+body.alto-contraste .badge,
+body.alto-contraste .nivel--ativo,
+body.alto-contraste .nivel--ok,
+body.alto-contraste .cozinha-pergunta__numero,
+body.alto-contraste .comodo-card__tag { background: #ffd700 !important; border-color: #fff !important; color: #000 !important; }
+
 body.alto-contraste .btn-vf--verde,
-body.alto-contraste .btn--menu-laranja     { background: #FFD700 !important; color: #000 !important; }
+body.alto-contraste .bloco--verde,
+body.alto-contraste .item-card--selecionado,
+body.alto-contraste .item-card--na-prateleira,
+body.alto-contraste .prateleira__slot--ok {
+  background: #00e5ff !important;
+  border: 3px solid #fff !important;
+  color: #000 !important;
+}
+
+body.alto-contraste .btn-vf--vermelho,
+body.alto-contraste .bloco--erro,
+body.alto-contraste .item-card--incorreto,
+body.alto-contraste .prateleira__slot--erro,
+body.alto-contraste .dica--erro {
+  background: #ff5c8a !important;
+  border: 3px dashed #fff !important;
+  color: #000 !important;
+}
 
 body.alto-contraste .bloco--laranja,
 body.alto-contraste .bloco--ambar,
-body.alto-contraste .bloco--roxo           { background: #FFD700 !important; color: #000 !important; }
+body.alto-contraste .bloco--roxo,
+body.alto-contraste .sala-page #blocos-disponiveis .bloco,
+body.alto-contraste .quarto-page .bloco--roxo {
+  background: #ffd700 !important;
+  border: 2px solid #fff !important;
+  color: #000 !important;
+}
 
-body.alto-contraste .bloco--erro           { background: #FF4444 !important; color: #fff !important; }
-body.alto-contraste .badge                 { background: #FFD700 !important; color: #000 !important; }
-body.alto-contraste :focus-visible         { outline-color: #FFD700 !important; }
-body.alto-contraste .comodo-card--bloq     { opacity: 0.5 !important; border-color: #888 !important; }
+body.alto-contraste .bloco--vazio,
+body.alto-contraste .prateleira__slot,
+body.alto-contraste .nivel--bloq,
+body.alto-contraste .comodo-card--bloq {
+  background: #242424 !important;
+  border-color: #bdbdbd !important;
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+body.alto-contraste .sala-grade,
+body.alto-contraste .despensa-prateleira {
+  background: #111 !important;
+  border: 2px solid #fff !important;
+}
+
+body.alto-contraste .grade__celula {
+  background: #000 !important;
+  border-color: #fff !important;
+}
+
+body.alto-contraste .grade__celula--ativa { background: #ffd700 !important; outline: 3px solid #fff; }
+body.alto-contraste .grade__celula--obstaculo { background: #ff5c8a !important; border-style: dashed; }
+body.alto-contraste .progresso__bolinha { border: 1px solid #fff; }
+body.alto-contraste .progresso__bolinha--ok { background: #00e5ff !important; }
+body.alto-contraste .progresso__bolinha--meio { background: #ffd700 !important; }
+body.alto-contraste .progresso__bolinha--vazio { background: #555 !important; }
+body.alto-contraste .mapa-barra { background: #333 !important; border: 1px solid #fff; }
+body.alto-contraste .mapa-barra span { background: #00e5ff !important; }
+
+body.alto-contraste .pontuacao-total {
+  background: #ffd700 !important;
+  border: 2px solid #fff;
+}
+
+body.alto-contraste .pontuacao-total__label,
+body.alto-contraste .pontuacao-total__numero,
+body.alto-contraste .pontuacao-total__de { color: #000 !important; }
+
+body.alto-contraste kbd { background: #000 !important; border-color: #fff !important; color: #fff !important; }
+body.alto-contraste :focus-visible { outline: 4px solid #00e5ff !important; outline-offset: 3px; }

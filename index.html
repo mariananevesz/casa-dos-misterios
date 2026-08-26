@@ -96,11 +96,11 @@
         <label class="config-label" for="toggle-contraste">Alto contraste</label>
         <button class="toggle-btn" id="toggle-contraste" role="switch"
                 type="button" aria-checked="false" aria-label="Alto contraste"
-                aria-describedby="contraste-status" disabled>
+                aria-describedby="contraste-status">
           <span class="toggle-thumb"></span>
         </button>
       </section>
-      <p class="modal-sub" id="contraste-status">Configuração disponível em breve.</p>
+      <p class="modal-sub" id="contraste-status">Aumenta o contraste de textos, fundos e controles.</p>
 
       <section class="config-linha" style="margin-top:1rem;">
         <span class="config-label" id="fonte-label">Tamanho da fonte</span>
@@ -271,7 +271,7 @@
   /* ---- Toggles ---- */
   function sincronizarTogglles() {
     const cfg = gameState.getSettings();
-    setToggle('toggle-contraste', false);
+    setToggle('toggle-contraste', cfg.altoContraste);
     setToggle('toggle-som',       cfg.somAtivado);
     setToggle('toggle-musica',    cfg.musicaAtivada);
     document.getElementById('fonte-valor').textContent = '100%';
@@ -293,6 +293,7 @@
     });
   }
 
+  bindToggle('toggle-contraste', 'altoContraste');
   bindToggle('toggle-som',       'somAtivado');
   bindToggle('toggle-musica',    'musicaAtivada');
 
