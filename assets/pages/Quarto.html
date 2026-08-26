@@ -18,7 +18,7 @@
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info quarto-hud__info">
-        <img src="../img/icone-quarto.png" alt="Quarto" class="hud__icone-img quarto-hud__icone">
+        <img src="../img/icone-quarto.png" alt="" class="hud__icone-img quarto-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto — Depuração</p>
           <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
@@ -33,7 +33,7 @@
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
         <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
       </section>
       <section>
@@ -131,7 +131,7 @@
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Depuração completa!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -464,11 +464,12 @@
   elEst.innerHTML = '';
 
   const estrelas = gameState.getStars(scoreFase);
+  elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
 
   for (let i = 0; i < 3; i++) {
     const img = document.createElement('img');
     img.src = '../img/estrela.png';
-    img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+    img.alt = '';
     img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
     elEst.appendChild(img);
   }

@@ -18,7 +18,7 @@
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info despensa-hud__info">
-        <img src="../img/icone-despensa.png" alt="Despensa" class="hud__icone-img despensa-hud__icone">
+        <img src="../img/icone-despensa.png" alt="" class="hud__icone-img despensa-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa — Estoque Inteligente</p>
           <p class="hud__subtitulo hud__subtitulo--marrom despensa-hud__subtitulo" id="hud-subtitulo">Mini-jogo 4</p>
@@ -33,7 +33,7 @@
     <!-- Mascote Logi -->
     <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote despensa-logi__img">
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
         <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
       </section>
       <div class="balao__corpo despensa-logi__corpo">
@@ -135,7 +135,7 @@
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Despensa organizada!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -387,7 +387,7 @@
         if (item.cor === 'vermelho') card.classList.add('item-card--vermelho-hint');
 
         if (item.img) {
-          imgHtml = `<img src="${item.img}" alt="${item.nome}"
+          imgHtml = `<img src="${item.img}" alt=""
             class="item-card__emoji" style="width:48px;height:48px;object-fit:contain;display:block;margin:0 auto;">`;
         } else {
           /* Círculo colorido para frutas sem imagem (ex: morango) */
@@ -395,19 +395,19 @@
             style="background:${COR_CARD[item.cor] || '#ccc'};"
             aria-hidden="true"></span>`;
         }
-        card.setAttribute('aria-label', `${item.nome} — clique para selecionar`);
+        card.setAttribute('aria-label', `${item.nome}, cor ${item.cor} — clique para selecionar`);
 
       } else if (nivel.criterio === 'tamanho') {
         const px = tamanhoImagemPx(item.tamanho);
         card.classList.add('item-card--tamanho');
         card.style.setProperty('--item-img-size', `${px}px`);
         card.style.setProperty('--item-card-height', `${78 + Number(item.tamanho || 3) * 14}px`);
-        imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
+        imgHtml = `<img src="${item.img || ''}" alt=""
           class="item-card__emoji item-card__emoji--tamanho">`;
         card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — clique ou arraste para a prateleira`);
 
       } else {
-        imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
+        imgHtml = `<img src="${item.img || ''}" alt=""
           class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">`;
         card.setAttribute(
           'aria-label',
@@ -553,7 +553,7 @@
 
         const imgSrc = item?.img || '';
         slot.innerHTML = `
-          <img src="${imgSrc}" alt="${item?.nome || id}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
+          <img src="${imgSrc}" alt="" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
           <span class="prateleira__slot-pos">${i+1}º</span>
         `;
         slot.addEventListener('click', () => removerItem(i));
@@ -819,10 +819,11 @@
     const estrelas = gameState.getStars(score);
     const elEst = document.getElementById('modal-estrelas');
     elEst.innerHTML = '';
+    elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }
