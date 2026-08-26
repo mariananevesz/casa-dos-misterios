@@ -490,6 +490,7 @@ async function executar() {
 
       if (!anterior || !MOVES[anterior]) {
         erros++;
+        audio.erro();
         mostrarFeedback('Use o bloco Repetir depois de uma seta.', 'erro');
         await resetarAposErro(fase);
         return;
@@ -567,6 +568,7 @@ async function executar() {
   }
 
   erros++;
+  audio.erro();
   mostrarFeedback('Você ainda não chegou na estrela. Ajuste sua sequência e tente de novo!', 'erro');
   await resetarAposErro(fase);
 }

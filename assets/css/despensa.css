@@ -425,6 +425,7 @@
 }
 
 .prateleira__slot {
+  position: relative;
   border: 1.5px dashed rgba(139, 99, 71, 0.36);
   border-radius: 14px;
   padding: 0.55rem 0.35rem;
@@ -467,6 +468,15 @@ button.prateleira__slot {
   font-size: calc(9px * var(--escala-fonte));
   display: block;
   margin-top: 2px;
+}
+
+.prateleira__slot-status {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: calc(12px * var(--escala-fonte));
+  font-weight: 900;
+  line-height: 1;
 }
 
 .prateleira__legenda,

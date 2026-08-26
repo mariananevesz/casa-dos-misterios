@@ -386,6 +386,7 @@
   function verificar() {
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < fase.sequenciaCorreta.length) {
+      audio.erro();
       mostrarFeedbackTexto('Complete todos os slots antes de verificar!');
       return;
     }
@@ -405,7 +406,7 @@
       const el = document.createElement('span');
       el.className = `bloco ${ok ? 'bloco--verde' : 'bloco--erro'}`;
       el.setAttribute('aria-label', `${bloco.rotulo} — ${ok ? 'correto' : 'incorreto'}`);
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
+      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo} <strong aria-hidden="true">${ok ? '✓' : '✕'}</strong>`;
       cont.appendChild(el);
     });
 

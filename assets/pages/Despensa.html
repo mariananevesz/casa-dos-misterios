@@ -545,16 +545,21 @@
         } else if (status === 'ok') {
           slot.className = 'prateleira__slot prateleira__slot--ok';
         } else {
-          slot.className = 'prateleira__slot prateleira__slot--ok';
+          slot.className = 'prateleira__slot';
         }
 
-        slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        const textoStatus = status === 'erro' ? 'incorreto' : status === 'ok' ? 'correto' : '';
+        slot.setAttribute(
+          'aria-label',
+          `${item?.nome || id}, posição ${i+1}${textoStatus ? `, ${textoStatus}` : ''}. Clique para remover.`
+        );
         slot.setAttribute('type', 'button');
 
         const imgSrc = item?.img || '';
         slot.innerHTML = `
           <img src="${imgSrc}" alt="" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
           <span class="prateleira__slot-pos">${i+1}º</span>
+          ${textoStatus ? `<span class="prateleira__slot-status" aria-hidden="true">${status === 'erro' ? '✕' : '✓'}</span>` : ''}
         `;
         slot.addEventListener('click', () => removerItem(i));
 
@@ -662,6 +667,7 @@
   /* --- Validação do nível Fácil (seleção de cor) --- */
   function confirmarSelecao(nivel) {
     if (selecionados.length === 0) {
+      audio.erro();
       mostrarFeedback('Toque nas frutas para selecioná-las primeiro!', 'ambar');
       return;
     }
@@ -671,7 +677,7 @@
     const nenhumaErrada = selecionados.every(id => corretos.includes(id));
 
     if (todasCorretas && nenhumaErrada) {
-      audio.acerto();
+      mostrarFeedback('Correto! As frutas selecionadas são vermelhas.', 'verde');
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
       registrarErro();
@@ -702,6 +708,7 @@
     const total = nivel.corretos.length;
 
     if (prateleira.length < total) {
+      audio.erro();
       mostrarFeedback('Escolha 3 frutas antes de confirmar!', 'ambar');
       return;
     }
@@ -713,7 +720,7 @@
     prateleiraStatus = prateleira.map(id => corretos.includes(id) ? 'ok' : 'erro');
 
     if (todasCorretas && nenhumaErrada) {
-      audio.acerto();
+      mostrarFeedback('Correto! Você escolheu as frutas com sementes por dentro.', 'verde');
       prateleiraStatus = [];
       setTimeout(() => nivelConcluido(nivel), 400);
       return;
@@ -744,6 +751,7 @@
   function confirmarOrdenacao(nivel) {
     const total = nivel.itens.length;
     if (prateleira.length < total) {
+      audio.erro();
       mostrarFeedback('Coloque todos os itens na prateleira primeiro!', 'ambar');
       return;
     }
@@ -759,7 +767,7 @@
     });
 
     if (acertos === total) {
-      audio.acerto();
+      mostrarFeedback('Correto! Os itens estão do menor para o maior.', 'verde');
       prateleiraStatus = [];
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
@@ -778,7 +786,7 @@
           break;
         }
       }
-      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens destacados em vermelho!`;
+      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens marcados com ✕!`;
 
       mostrarFeedback(msg, 'erro');
     }
@@ -806,12 +814,13 @@
       localStorage.removeItem(ERROS_KEY);
       atualizarBadge(score);
       if (gameState.isFullyCompleted()) {
+        audio.conclusao();
         window.removeEventListener('beforeunload', beforeUnloadHandler);
-        window.location.href = 'TelaPontuacao.html';
+        setTimeout(() => { window.location.href = 'TelaPontuacao.html'; }, 850);
         return;
       }
       exibirModal(score);
-      if (score === 25) audio.conclusao();
+      audio.conclusao();
     }
   }
 
