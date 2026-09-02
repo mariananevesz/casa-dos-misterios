@@ -230,7 +230,7 @@
   function fecharModal(id) {
     const modal = document.getElementById(id);
     if (modal.style.display === 'none') return;
-    if (id === 'modal-como-jogar') audio.pararNarracao();
+    if (id === 'modal-como-jogar') restaurarNarracaoAposTutorial();
     modal.style.display = 'none';
     const acionador = acionadorModal;
     if (acionador?.hasAttribute('aria-expanded')) {
@@ -250,10 +250,9 @@
     abrirModal('modal-como-jogar', e.currentTarget);
     const modal = document.getElementById('modal-como-jogar');
     const texto = [...modal.querySelectorAll('li, p')].map(el => el.textContent).join(' ');
-    audio.narrar(texto);
+    narrarTutorialAcessivel(texto);
   });
   document.getElementById('btn-fechar-cj').addEventListener('click', () => {
-    audio.pararNarracao();
     fecharModal('modal-como-jogar');
   });
 

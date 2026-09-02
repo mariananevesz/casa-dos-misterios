@@ -70,6 +70,10 @@ const audio = (() => {
     return falar(instrucaoAtual);
   }
 
+  function obterNarracaoAtual() {
+    return instrucaoAtual;
+  }
+
   function sincronizarNarracao() {
     if (isNarracaoAtivada()) repetirNarracao();
     else pararNarracao();
@@ -178,6 +182,7 @@ const audio = (() => {
     definirNarracao,
     narrar(texto) { return falar(texto); },
     repetirNarracao,
+    obterNarracaoAtual,
     pararNarracao,
     sincronizarNarracao,
     sincronizarConfiguracoes,

@@ -844,6 +844,10 @@ body.alto-contraste .painel__label,
 body.alto-contraste .dica__texto,
 body.alto-contraste .modal-titulo,
 body.alto-contraste .modal-sub,
+body.alto-contraste .modal-ajuda-titulo,
+body.alto-contraste .modal-ajuda-lista,
+body.alto-contraste .modal-ajuda-objetivo p,
+body.alto-contraste .modal-ajuda-mini-painel,
 body.alto-contraste .config-label,
 body.alto-contraste .inicio-header__titulo,
 body.alto-contraste .inicio-header__subtitulo,
@@ -886,6 +890,12 @@ body.alto-contraste .resultado-header__sub,
 body.alto-contraste .pontuacao-card__nome,
 body.alto-contraste .pontuacao-card__pts {
   color: #fff !important;
+}
+
+body.alto-contraste .modal-ajuda-objetivo,
+body.alto-contraste .modal-ajuda-mini-painel {
+  background: #181818 !important;
+  border-color: #fff !important;
 }
 
 body.alto-contraste .btn,

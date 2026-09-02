@@ -77,8 +77,73 @@ function modalVisivelComFechamento() {
   return null;
 }
 
+let tutorialAtivo = null;
+let acionadorTutorial = null;
+let narracaoAnteriorTutorial = null;
+
+function elementosFocaveisTutorial(modal) {
+  return [...modal.querySelectorAll(
+    'button:not([disabled]):not([tabindex="-1"]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )].filter(elemento => !elemento.hidden && window.getComputedStyle(elemento).display !== 'none');
+}
+
+function abrirTutorialAcessivel(modal, acionador) {
+  if (!modal) return;
+  tutorialAtivo = modal;
+  acionadorTutorial = acionador || document.activeElement;
+  modal.style.display = 'flex';
+  acionadorTutorial?.setAttribute?.('aria-expanded', 'true');
+  window.requestAnimationFrame(() => elementosFocaveisTutorial(modal)[0]?.focus());
+}
+
+function narrarTutorialAcessivel(texto) {
+  if (typeof audio === 'undefined') return;
+  if (narracaoAnteriorTutorial === null && typeof audio.obterNarracaoAtual === 'function') {
+    narracaoAnteriorTutorial = audio.obterNarracaoAtual();
+  }
+  audio.definirNarracao(texto);
+}
+
+function restaurarNarracaoAposTutorial() {
+  if (typeof audio === 'undefined') return;
+  audio.pararNarracao();
+  if (narracaoAnteriorTutorial !== null) {
+    audio.definirNarracao(narracaoAnteriorTutorial, false);
+    narracaoAnteriorTutorial = null;
+  }
+}
+
+function fecharTutorialAcessivel(modal = tutorialAtivo) {
+  if (!modal) return;
+  restaurarNarracaoAposTutorial();
+  modal.style.display = 'none';
+  const acionador = acionadorTutorial;
+  acionador?.setAttribute?.('aria-expanded', 'false');
+  tutorialAtivo = null;
+  acionadorTutorial = null;
+  acionador?.focus?.();
+}
+
 document.addEventListener('keydown', event => {
   if (event.repeat || alvoEditavel(event.target)) return;
+
+  if (event.key === 'Tab' && tutorialAtivo) {
+    const focaveis = elementosFocaveisTutorial(tutorialAtivo);
+    if (!focaveis.length) {
+      event.preventDefault();
+      return;
+    }
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[focaveis.length - 1];
+    if (event.shiftKey && document.activeElement === primeiro) {
+      event.preventDefault();
+      ultimo.focus();
+    } else if (!event.shiftKey && document.activeElement === ultimo) {
+      event.preventDefault();
+      primeiro.focus();
+    }
+    return;
+  }
 
   const tecla = String(event.key).toLowerCase();
   const somenteAlt = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey;

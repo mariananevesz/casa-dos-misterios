@@ -27,7 +27,7 @@
 
       <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
 
-      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
@@ -874,12 +874,11 @@
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
-    modal.style.display = 'flex';
-    audio.narrar([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+    abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
+    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
   }
   function fecharModalAjuda() {
-    audio.pararNarracao();
-    document.getElementById('modal-ajuda').style.display = 'none';
+    fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
   }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
