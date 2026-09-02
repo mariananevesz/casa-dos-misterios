@@ -145,7 +145,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
@@ -643,14 +643,14 @@ async function executar() {
       btnProx.style.display = '';
       btnProx.onclick = () => {
         faseAtual = proxFaseIdx;
-        document.getElementById('modal-conclusao').style.display = 'none';
+        fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
         renderFase();
       };
     } else {
       btnProx.style.display = 'none';
     }
 
-    document.getElementById('modal-conclusao').style.display = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     // beforeunload guard
     window.removeEventListener('beforeunload', beforeUnloadHandler);

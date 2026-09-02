@@ -145,7 +145,10 @@
         card.setAttribute('tabindex', '0');
         card.addEventListener('click', () => { window.location.href = c.pagina; });
         card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') window.location.href = c.pagina;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = c.pagina;
+          }
         });
 
         let tagHtml = '';

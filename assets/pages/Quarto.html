@@ -60,11 +60,11 @@
 
       <!-- Área central -->
       <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
-        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino" aria-dropeffect="move">
+        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino">
           <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
-          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="listbox" aria-label="Sequência corrigida" aria-live="polite"></section>
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite"></section>
         </section>
 
         <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite">
@@ -129,7 +129,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Depuração completa!</h2>
@@ -286,18 +286,12 @@
   }
 
   function imgTag(id) {
-    const fase = gameData.fases[faseAtual];
     const mapa = {
-      tenis:  '../img/item-tenis.png',
-      dentes: '../img/item-dentes.png',
-      roupa:  '../img/item-roupa.png',
-      cafe:   '../img/item-cafe.png',
       mochila: '../img/item-mochila.png',
       brincar: '../img/item-brinquedo.png'
     };
-    const src = mapa[id] || '../img/logi.png';
-    const bloco = fase.sequenciaComErros.find(b => b.id === id);
-    return `<img src="${src}" alt="" class="bloco-img">`;
+    const src = mapa[id];
+    return src ? `<img src="${src}" alt="" class="bloco-img">` : '';
   }
 
   /* ---- Sequência corrigida (destino) ---- */
@@ -313,12 +307,16 @@
       const el = document.createElement('span');
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Clique para remover.`);
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ative para remover.`);
       el.setAttribute('tabindex', '0');
       el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          removerBloco(idx);
+        }
       });
       cont.appendChild(el);
     });
@@ -486,7 +484,7 @@
     btnProx.textContent = 'Próxima fase';
     btnProx.onclick = () => {
       faseAtual = proxFase;
-      document.getElementById('modal-conclusao').style.display = 'none';
+      fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
       renderFase();
     };
     btnGrupo.appendChild(btnProx);
@@ -500,7 +498,7 @@
   };
   btnGrupo.appendChild(btnMapa);
 
-  document.getElementById('modal-conclusao').style.display = 'flex';
+  abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
   window.removeEventListener('beforeunload', beforeUnloadHandler);
 }
 

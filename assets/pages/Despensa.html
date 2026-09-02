@@ -59,9 +59,9 @@
           </section>
 
           <!-- Painel: prateleira (oculto no nível Fácil) -->
-          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira" aria-dropeffect="move">
+          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira">
             <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
-            <section class="prateleira despensa-prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
+            <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira" aria-live="polite"></section>
             <section class="prateleira__legenda despensa-prateleira__legenda">
               <span class="prateleira__leg-txt" id="leg-esq">menor</span>
               <span style="flex:1;"></span>
@@ -133,7 +133,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Despensa organizada!</h2>
@@ -842,7 +842,7 @@
     document.getElementById('modal-sub').textContent  = 'Você organizou todos os níveis da despensa!';
     document.getElementById('modal-pts').textContent  = `Pontuação: ${score} / 25 pts`;
     document.getElementById('btn-proximo-nivel').style.display = 'none';
-    document.getElementById('modal-conclusao').style.display   = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
     window.removeEventListener('beforeunload', beforeUnloadHandler);
   }
 

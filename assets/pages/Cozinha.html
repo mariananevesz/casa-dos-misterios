@@ -131,7 +131,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
@@ -466,7 +466,7 @@
     document.getElementById('modal-sub').textContent =
       `Você acertou ${acertos} de ${gameData.perguntas.length} perguntas!`;
     document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
-    document.getElementById('modal-conclusao').style.display = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     if (score === 25) audio.conclusao();
     window.removeEventListener('beforeunload', beforeUnloadHandler);
@@ -515,7 +515,7 @@
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
 
   document.addEventListener('keydown', e => {
-    if (!gameData) return;
+    if (!gameData || respondendo || e.repeat || e.altKey || e.ctrlKey || e.metaKey || existeModalVisivel()) return;
     if (e.key.toLowerCase() === 'v') responder(true);
     if (e.key.toLowerCase() === 'f') responder(false);
   });

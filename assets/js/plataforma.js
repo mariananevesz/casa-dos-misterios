@@ -77,9 +77,16 @@ function modalVisivelComFechamento() {
   return null;
 }
 
+function existeModalVisivel() {
+  return [...document.querySelectorAll('.modal-overlay')].some(modal =>
+    !modal.hidden && window.getComputedStyle(modal).display !== 'none'
+  );
+}
+
 let tutorialAtivo = null;
 let acionadorTutorial = null;
 let narracaoAnteriorTutorial = null;
+let modalFluxoAtivo = null;
 
 function elementosFocaveisTutorial(modal) {
   return [...modal.querySelectorAll(
@@ -124,11 +131,25 @@ function fecharTutorialAcessivel(modal = tutorialAtivo) {
   acionador?.focus?.();
 }
 
+function abrirModalFluxoAcessivel(modal) {
+  if (!modal) return;
+  modalFluxoAtivo = modal;
+  modal.style.display = 'flex';
+  window.requestAnimationFrame(() => elementosFocaveisTutorial(modal)[0]?.focus());
+}
+
+function fecharModalFluxoAcessivel(modal = modalFluxoAtivo) {
+  if (!modal) return;
+  modal.style.display = 'none';
+  if (modalFluxoAtivo === modal) modalFluxoAtivo = null;
+}
+
 document.addEventListener('keydown', event => {
   if (event.repeat || alvoEditavel(event.target)) return;
 
-  if (event.key === 'Tab' && tutorialAtivo) {
-    const focaveis = elementosFocaveisTutorial(tutorialAtivo);
+  const modalComFoco = tutorialAtivo || modalFluxoAtivo;
+  if (event.key === 'Tab' && modalComFoco) {
+    const focaveis = elementosFocaveisTutorial(modalComFoco);
     if (!focaveis.length) {
       event.preventDefault();
       return;
