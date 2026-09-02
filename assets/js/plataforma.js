@@ -51,3 +51,57 @@ function sendFinalScore({
     console.log('⚠️ Falha ao enviar score:', error?.message || error);
   }
 }
+
+/* -------------------------------------------------------------
+   Atalhos globais de teclado
+   Reutilizam os controles e as funções já existentes na página.
+   ------------------------------------------------------------- */
+
+function alvoEditavel(elemento) {
+  if (!(elemento instanceof Element)) return false;
+  return elemento.matches('input, textarea, select, [contenteditable="true"]') ||
+    Boolean(elemento.closest('[contenteditable="true"]'));
+}
+
+function modalVisivelComFechamento() {
+  const modais = [...document.querySelectorAll('.modal-overlay')].filter(modal =>
+    !modal.hidden && window.getComputedStyle(modal).display !== 'none'
+  );
+
+  for (let i = modais.length - 1; i >= 0; i--) {
+    const fechar = modais[i].querySelector(
+      '.modal-fechar, button[aria-label^="Fechar"], #btn-fechar-config, #btn-fechar-cj'
+    );
+    if (fechar && !fechar.disabled) return fechar;
+  }
+  return null;
+}
+
+document.addEventListener('keydown', event => {
+  if (event.repeat || alvoEditavel(event.target)) return;
+
+  const tecla = String(event.key).toLowerCase();
+  const somenteAlt = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey;
+
+  if (somenteAlt && tecla === 'a') {
+    const abrirAcessibilidade = document.querySelector('[aria-controls="modal-config"]');
+    if (!abrirAcessibilidade || abrirAcessibilidade.getAttribute('aria-expanded') === 'true') return;
+    event.preventDefault();
+    abrirAcessibilidade.click();
+    return;
+  }
+
+  if (somenteAlt && tecla === 'r') {
+    if (typeof audio === 'undefined' || typeof audio.repetirNarracao !== 'function') return;
+    event.preventDefault();
+    audio.repetirNarracao();
+    return;
+  }
+
+  if (event.key === 'Escape' && !event.altKey && !event.ctrlKey && !event.metaKey) {
+    const fechar = modalVisivelComFechamento();
+    if (!fechar) return;
+    event.preventDefault();
+    fechar.click();
+  }
+});
