@@ -21,7 +21,7 @@
       </button>
 
       <section class="hud__info sala-hud__info">
-        <img src="../img/icone-sala.png" alt="Sala" class="hud__icone-img sala-hud__icone">
+        <img src="../img/icone-sala.png" alt="" class="hud__icone-img sala-hud__icone">
         <section>
           <p class="hud__titulo sala-hud__titulo">Sala</p>
           <p class="hud__subtitulo sala-hud__subtitulo" id="fase-label">Mini-jogo 1</p>
@@ -36,7 +36,7 @@
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote sala-logi__img">
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
         <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
       </section>
       <section class="sala-logi__conteudo">
@@ -321,12 +321,12 @@ const FASE_KEY = 'sala_fase';
         const temObstaculo = obstaculos.some(obs => obs.linha === r && obs.coluna === c);
 
         if (temObstaculo) {
-          cell.innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+          cell.innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${r + 1}, coluna ${c + 1}" class="grade-img">`;
           cell.classList.add('grade__celula--obstaculo');
         }
 
         if (r === posicaoAlvo.linha && c === posicaoAlvo.coluna) {
-          cell.innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela" id="celula-alvo-img">`;
+          cell.innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${r + 1}, coluna ${c + 1}: estrela" class="grade-img grade-estrela" id="celula-alvo-img">`;
           cell.id = 'celula-alvo';
         }
         if (r === posicaoInicial.linha && c === posicaoInicial.coluna) {
@@ -498,6 +498,7 @@ async function executar() {
 
       if (!anterior || !MOVES[anterior]) {
         erros++;
+        audio.erro();
         mostrarFeedback('Use o bloco Repetir depois de uma seta.', 'erro');
         await resetarAposErro(fase);
         return;
@@ -550,9 +551,9 @@ async function executar() {
       );
 
       if (celulaOrigemEhAlvo) {
-        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela">`;
+        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}: estrela" class="grade-img grade-estrela">`;
       } else if (celulaOrigemEhObstaculo) {
-        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${pos.linha + 1}, coluna ${pos.coluna + 1}" class="grade-img">`;
       } else {
         cells[deIdx].innerHTML = '';
       }
@@ -575,6 +576,7 @@ async function executar() {
   }
 
   erros++;
+  audio.erro();
   mostrarFeedback('Você ainda não chegou na estrela. Ajuste sua sequência e tente de novo!', 'erro');
   await resetarAposErro(fase);
 }
@@ -626,10 +628,11 @@ async function executar() {
 
     const elEstrelas = document.getElementById('modal-estrelas');
     elEstrelas.innerHTML = '';
+    elEstrelas.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela conquistada' : 'Estrela não conquistada';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEstrelas.appendChild(img);
     }

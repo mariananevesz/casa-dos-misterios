@@ -18,7 +18,7 @@
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info quarto-hud__info">
-        <img src="../img/icone-quarto.png" alt="Quarto" class="hud__icone-img quarto-hud__icone">
+        <img src="../img/icone-quarto.png" alt="" class="hud__icone-img quarto-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto — Depuração</p>
           <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
@@ -33,7 +33,7 @@
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
         <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
       </section>
       <section>
@@ -49,7 +49,7 @@
         <p class="quarto-card__titulo">Sequência com erros</p>
         <p class="quarto-card__subtitulo">Clique ou arraste apenas os passos que fazem sentido.</p>
 
-        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar, alguns com erro"></section>
+        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
 
         <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
           <img src="../img/icone-quarto.png" alt="" class="dica__icone-comodo">
@@ -60,14 +60,14 @@
 
       <!-- Área central -->
       <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
-        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino">
+        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino" aria-dropeffect="move">
           <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
-          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite" aria-atomic="true"></section>
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="listbox" aria-label="Sequência corrigida" aria-live="polite"></section>
         </section>
 
-        <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite" aria-atomic="true">
+        <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite">
           <p class="quarto-feedback__titulo">Resultado da verificação</p>
           <section class="blocos quarto-feedback__blocos" id="feedback-blocos"></section>
         </section>
@@ -129,9 +129,9 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Depuração completa!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -261,9 +261,9 @@
       el.draggable = true;
       el.dataset.index = index;
       el.dataset.blocoId = id;
-      el.setAttribute('role', 'button');
+      el.setAttribute('role', 'option');
       el.setAttribute('tabindex', '0');
-      el.setAttribute('aria-label', `Adicionar ${bloco.rotulo} à sequência${temErro ? ' — passo suspeito' : ''}`);
+      el.setAttribute('aria-label', `${bloco.rotulo}${temErro ? ' — suspeito' : ''}`);
 
       const img = imgTag(id);
       
@@ -312,16 +312,12 @@
       const el = document.createElement('span');
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
-      el.setAttribute('role', 'button');
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ativar para remover.`);
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Clique para remover.`);
       el.setAttribute('tabindex', '0');
       el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
-          e.preventDefault();
-          removerBloco(idx);
-        }
+        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
       });
       cont.appendChild(el);
     });
@@ -390,6 +386,7 @@
   function verificar() {
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < fase.sequenciaCorreta.length) {
+      audio.erro();
       mostrarFeedbackTexto('Complete todos os slots antes de verificar!');
       return;
     }
@@ -409,7 +406,7 @@
       const el = document.createElement('span');
       el.className = `bloco ${ok ? 'bloco--verde' : 'bloco--erro'}`;
       el.setAttribute('aria-label', `${bloco.rotulo} — ${ok ? 'correto' : 'incorreto'}`);
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
+      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo} <strong aria-hidden="true">${ok ? '✓' : '✕'}</strong>`;
       cont.appendChild(el);
     });
 
@@ -430,8 +427,8 @@
 
   function mostrarFeedbackTexto(msg) {
     const cont = document.getElementById('feedback-blocos');
+    cont.innerHTML = `<span style="font-size:calc(12px * var(--escala-fonte));color:var(--vermelho);">${msg}</span>`;
     document.getElementById('feedback-area').style.display = 'block';
-    cont.innerHTML = `<span style="font-size:12px;color:var(--vermelho);">${msg}</span>`;
   }
 
  function conclusao() {
@@ -468,11 +465,12 @@
   elEst.innerHTML = '';
 
   const estrelas = gameState.getStars(scoreFase);
+  elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
 
   for (let i = 0; i < 3; i++) {
     const img = document.createElement('img');
     img.src = '../img/estrela.png';
-    img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+    img.alt = '';
     img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
     elEst.appendChild(img);
   }

@@ -32,14 +32,14 @@
   min-width: 98px;
   justify-content: center;
   padding: 10px 18px;
-  font-size: 15px;
+  font-size: calc(15px * var(--escala-fonte));
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 0 rgba(111, 46, 15, 0.12);
 }
 
 .sala-voltar span {
-  font-size: 20px;
+  font-size: calc(20px * var(--escala-fonte));
   line-height: 1;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .sala-hud__titulo {
-  font-size: 32px;
+  font-size: calc(32px * var(--escala-fonte));
   font-weight: 900;
   color: var(--marrom-medio);
   letter-spacing: -1px;
@@ -66,7 +66,7 @@
 
 .sala-hud__subtitulo {
   margin-top: 6px;
-  font-size: 16px;
+  font-size: calc(16px * var(--escala-fonte));
   font-weight: 700;
   color: var(--laranja);
   text-align: center;
@@ -78,7 +78,7 @@
   border: 2px solid var(--laranja-borda);
   background: rgba(255, 248, 238, 0.9);
   color: var(--marrom-medio);
-  font-size: 18px;
+  font-size: calc(18px * var(--escala-fonte));
   box-shadow: 0 4px 0 rgba(111, 46, 15, 0.10);
 }
 
@@ -106,7 +106,7 @@
 }
 
 .sala-logi .balao__texto {
-  font-size: 17px;
+  font-size: calc(17px * var(--escala-fonte));
   line-height: 1.55;
 }
 
@@ -122,7 +122,7 @@
 
 .sala-section-title,
 .sala-panel__title {
-  font-size: 14px;
+  font-size: calc(14px * var(--escala-fonte));
   font-weight: 900;
   color: var(--laranja);
   text-transform: uppercase;
@@ -138,7 +138,7 @@
 
 .sala-niveis .nivel {
   padding: 6px 14px;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
 }
 
 /* ---------- Layout principal ---------- */
@@ -165,7 +165,7 @@
 
 .sala-panel__hint {
   margin: 8px 0 14px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.45;
   color: var(--texto-medio);
   text-align: center;
@@ -187,7 +187,7 @@
   min-height: 68px;
   padding: 6px 16px;
   border-radius: 15px;
-  font-size: 16px;
+  font-size: calc(16px * var(--escala-fonte));
   font-weight: 800;
   color: var(--branco);
   cursor: pointer;
@@ -200,7 +200,7 @@
 /* Item 1 — ícone é o elemento de destaque principal do botão de comando;
    o texto vira um rótulo de apoio, menor e em caixa alta. */
 .sala-page #blocos-disponiveis .bloco-emoji {
-  font-size: 40px;
+  font-size: calc(40px * var(--escala-fonte));
   line-height: 1;
   flex-shrink: 0;
   min-width: 40px;
@@ -208,7 +208,7 @@
 }
 
 .sala-page #blocos-disponiveis .bloco-label {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 800;
   letter-spacing: 0.4px;
   text-transform: uppercase;
@@ -264,7 +264,7 @@
 }
 
 .sala-mini-dica .dica__texto {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.5;
 }
 
@@ -292,7 +292,7 @@
   min-height: 50px;
   border-radius: 14px;
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   font-weight: 800;
   box-shadow: 0 3px 0 rgba(111, 46, 15, 0.18);
 }
@@ -301,7 +301,7 @@
   border: 2px dashed var(--laranja-borda);
   background: rgba(255, 248, 238, 0.72);
   color: var(--laranja-claro);
-  font-size: 18px;
+  font-size: calc(18px * var(--escala-fonte));
 }
 
 /* ---------- Grade 4x4 do jogo ---------- */
@@ -375,7 +375,7 @@
 .sala-btn {
   min-height: 54px;
   border-radius: 18px;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala-fonte));
   font-weight: 900;
   display: inline-flex;
   align-items: center;
@@ -456,7 +456,7 @@
   }
 
   .sala-hud__titulo {
-    font-size: 34px;
+    font-size: calc(34px * var(--escala-fonte));
   }
 
   .sala-comandos {
@@ -473,7 +473,7 @@
     padding: 1rem;
   }
 
-  .sala-hud__titulo { font-size: clamp(22px, 8vw, 28px); }
+  .sala-hud__titulo { font-size: clamp(calc(22px * var(--escala-fonte)), 8vw, calc(28px * var(--escala-fonte))); }
 
   .sala-logi {
     align-items: flex-start;
@@ -482,7 +482,7 @@
   .sala-logi__img { width: 52px; height: 46px; }
 
   .sala-logi .balao__texto {
-    font-size: 15px;
+    font-size: calc(15px * var(--escala-fonte));
   }
 
   .sala-comandos {
@@ -504,11 +504,11 @@
   .sala-page { padding: 0.6rem; }
   .sala-hud { margin-bottom: 0.4rem; }
   .sala-hud__icone { width: 40px; height: 40px; }
-  .sala-hud__titulo { font-size: 26px; }
+  .sala-hud__titulo { font-size: calc(26px * var(--escala-fonte)); }
   .sala-score { padding-block: 8px; }
   .sala-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
   .sala-logi__img { width: 46px; height: 40px; }
-  .sala-logi .balao__texto { font-size: 14px; line-height: 1.35; }
+  .sala-logi .balao__texto { font-size: calc(14px * var(--escala-fonte)); line-height: 1.35; }
   .sala-fases-card { margin-bottom: 0.55rem; padding-block: 6px; }
   .sala-layout { gap: 0.55rem; }
   .sala-panel, .sala-game-area { padding: 9px; }
@@ -521,26 +521,26 @@
     padding: 8px;
     gap: 4px;
   }
-  .sala-btn { min-height: 44px; font-size: 15px; }
+  .sala-btn { min-height: 44px; font-size: calc(15px * var(--escala-fonte)); }
 }
 
 @media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 820px) {
   .sala-page { max-width: none; padding: 0.55rem; }
   .sala-hud { display: flex; gap: 0.5rem; }
   .sala-hud__info { grid-column: auto; grid-row: auto; }
-  .sala-hud__titulo { font-size: 24px; }
+  .sala-hud__titulo { font-size: calc(24px * var(--escala-fonte)); }
   .sala-hud__icone { width: 38px; height: 38px; }
   .sala-voltar, .sala-score { grid-column: auto; padding-block: 7px; }
   .sala-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
   .sala-logi__img { width: 42px; height: 38px; }
-  .sala-logi .balao__texto { font-size: 13px; line-height: 1.3; }
+  .sala-logi .balao__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
   .sala-layout { grid-template-columns: minmax(190px, 0.75fr) minmax(0, 1.25fr); gap: 0.5rem; }
   .sala-comandos { grid-template-columns: 1fr 1fr; gap: 6px; }
   .sala-page #blocos-disponiveis .bloco { min-height: 42px; padding-inline: 8px; gap: 8px; }
-  .sala-page #blocos-disponiveis .bloco-emoji { font-size: 24px; min-width: 24px; }
-  .sala-page #blocos-disponiveis .bloco-label { font-size: 9.5px; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(24px * var(--escala-fonte)); min-width: 24px; }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(9.5px * var(--escala-fonte)); }
   .sala-mini-dica { margin-top: 8px; padding: 8px; }
   .sala-sequencia-panel, .sala-grade-panel { margin-bottom: 8px; padding: 8px; }
   .sala-grade { width: min(100%, 310px); margin-inline: auto; padding: 7px; }
-  .sala-btn { min-height: 42px; font-size: 14px; }
+  .sala-btn { min-height: 42px; font-size: calc(14px * var(--escala-fonte)); }
 }

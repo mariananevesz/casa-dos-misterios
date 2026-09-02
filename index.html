@@ -11,11 +11,14 @@
 
   <section class="tela tela--relativa" id="tela-principal">
 
-    <!-- Botão de configurações -->
+    <!-- Acesso às configurações de acessibilidade -->
     <button class="btn-config" id="btn-config"
-            aria-label="Abrir configurações"
-            aria-haspopup="dialog">
-      <img src="assets/img/config.png" alt="" style="width:20px;height:20px;">
+            type="button"
+            aria-label="Abrir configurações de acessibilidade"
+            aria-haspopup="dialog"
+            aria-controls="modal-config"
+            aria-expanded="false">
+      <img src="assets/img/config.png" alt="" aria-hidden="true" style="width:20px;height:20px;">
     </button>
 
     <!-- Cabeçalho -->
@@ -26,7 +29,7 @@
 
     <!-- Mascote Logi de boas-vindas -->
     <section class="balao" style="margin-bottom:1.25rem;" aria-label="Mensagem do Logi">
-      <img src="assets/img/logi_feliz.png" alt="Logi" class="logi-mascote">
+      <img src="assets/img/logi_feliz.png" alt="" class="logi-mascote">
       <p class="balao__nome">Logi diz:</p>
       <p class="balao__texto" id="logi-boas-vindas">
         Olá! Eu sou o <strong>Logi</strong>, seu guia investigador! Prontos para resolver os mistérios da casa?
@@ -38,20 +41,20 @@
     <div class="menu-botoes">
       <button class="btn--menu-principal btn--menu-laranja"
               onclick="window.location.href='assets/pages/MapaCasa.html'">
-        <span aria-hidden="true">▶</span>
+        <span>▶</span>
         <strong>Jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
-        <span aria-hidden="true">📖</span>
+        <span>📖</span>
         <strong>Como jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline"
               onclick="window.location.href='assets/pages/TelaPontuacao.html'">
-        <span aria-hidden="true">🏆</span>
+        <span>🏆</span>
         <strong>Pontuações</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
-        <span aria-hidden="true">↻</span>
+        <span>↻</span>
         <strong>Reiniciar progresso</strong>
       </button>
     </div>
@@ -61,19 +64,19 @@
       <p class="inicio-comodos__titulo">Cômodos da Casa</p>
       <div class="inicio-comodos__lista">
         <article class="inicio-comodo">
-          <img src="assets/img/icone-sala.png" alt="Sala" class="inicio-comodo__icone-img">
+          <img src="assets/img/icone-sala.png" alt="" class="inicio-comodo__icone-img">
           <p class="inicio-comodo__label" id="lbl-sala">Sala</p>
         </article>
         <article class="inicio-comodo">
-          <img src="assets/img/icone-quarto.png" alt="Quarto" class="inicio-comodo__icone-img">
+          <img src="assets/img/icone-quarto.png" alt="" class="inicio-comodo__icone-img">
           <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-quarto">Quarto</p>
         </article>
         <article class="inicio-comodo">
-          <img src="assets/img/icone-cozinha.png" alt="Cozinha" class="inicio-comodo__icone-img">
+          <img src="assets/img/icone-cozinha.png" alt="" class="inicio-comodo__icone-img">
           <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-cozinha">Cozinha</p>
         </article>
         <article class="inicio-comodo">
-          <img src="assets/img/icone-despensa.png" alt="Despensa" class="inicio-comodo__icone-img">
+          <img src="assets/img/icone-despensa.png" alt="" class="inicio-comodo__icone-img">
           <p class="inicio-comodo__label inicio-comodo__label--cinza" id="lbl-despensa">Despensa</p>
         </article>
       </div>
@@ -82,52 +85,58 @@
 
   </section><!-- /tela-principal -->
 
-  <!-- ===== Modal Configurações ===== -->
+  <!-- ===== Modal Configurações de acessibilidade ===== -->
   <div class="modal-overlay" id="modal-config" role="dialog" aria-modal="true"
-       aria-labelledby="config-titulo" style="display:none;">
+       aria-labelledby="config-titulo" aria-describedby="config-descricao" style="display:none;">
     <section class="modal" style="max-width:340px;">
-      <h2 class="modal-titulo" id="config-titulo" style="margin-bottom:1rem;">Configurações</h2>
+      <h2 class="modal-titulo" id="config-titulo">Configurações de acessibilidade</h2>
+      <p class="modal-sub" id="config-descricao">Opções para tornar o jogo mais confortável.</p>
 
       <section class="config-linha">
         <label class="config-label" for="toggle-contraste">Alto contraste</label>
         <button class="toggle-btn" id="toggle-contraste" role="switch"
-                aria-checked="false">
-          <span class="toggle-thumb" aria-hidden="true"></span>
+                type="button" aria-checked="false" aria-label="Alto contraste"
+                aria-describedby="contraste-status">
+          <span class="toggle-thumb"></span>
         </button>
       </section>
+      <p class="modal-sub" id="contraste-status">Aumenta o contraste de textos, fundos e controles.</p>
 
       <section class="config-linha" style="margin-top:1rem;">
-        <label class="config-label">Tamanho da fonte</label>
+        <span class="config-label" id="fonte-label">Tamanho da fonte</span>
         <section class="config-fonte-btns">
           <button class="btn btn--outline" id="btn-fonte-menos"
-                  aria-label="Diminuir tamanho da fonte" style="flex:0;padding:8px 14px;">A−</button>
-          <span id="fonte-valor" style="font-size:13px;font-weight:600;color:var(--texto-escuro);min-width:40px;text-align:center;">100%</span>
+                  type="button" aria-label="Diminuir tamanho da fonte"
+                  aria-describedby="fonte-status" style="flex:0;padding:8px 14px;">A−</button>
+          <span id="fonte-valor" role="status" aria-live="polite" aria-atomic="true" style="font-size:calc(13px * var(--escala-fonte));font-weight:600;color:var(--texto-escuro);min-width:40px;text-align:center;">Padrão (100%)</span>
           <button class="btn btn--outline" id="btn-fonte-mais"
-                  aria-label="Aumentar tamanho da fonte" style="flex:0;padding:8px 14px;">A+</button>
+                  type="button" aria-label="Aumentar tamanho da fonte"
+                  aria-describedby="fonte-status" style="flex:0;padding:8px 14px;">A+</button>
         </section>
       </section>
+      <p class="modal-sub" id="fonte-status">Escolha entre tamanho padrão, maior e muito maior.</p>
 
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-som">Efeitos sonoros</label>
         <button class="toggle-btn" id="toggle-som" role="switch"
-                aria-checked="true">
-          <span class="toggle-thumb" aria-hidden="true"></span>
+                aria-checked="true" aria-label="Efeitos sonoros">
+          <span class="toggle-thumb"></span>
         </button>
       </section>
 
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-musica">Música</label>
         <button class="toggle-btn" id="toggle-musica" role="switch"
-                aria-checked="true">
-          <span class="toggle-thumb" aria-hidden="true"></span>
+                aria-checked="true" aria-label="Música">
+          <span class="toggle-thumb"></span>
         </button>
       </section>
 
       <section style="margin-top:1.25rem;">
-        <p style="font-size:11px;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
+        <p style="font-size:calc(11px * var(--escala-fonte));font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
           Atalhos de teclado
         </p>
-        <ul style="font-size:11px;color:var(--texto-medio);line-height:2;">
+        <ul style="font-size:calc(11px * var(--escala-fonte));color:var(--texto-medio);line-height:2;">
           <li><kbd>Tab</kbd> — navegar entre elementos</li>
           <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> — selecionar / confirmar</li>
           <li><kbd>Delete</kbd> — remover bloco selecionado</li>
@@ -147,13 +156,13 @@
        aria-labelledby="cj-titulo" style="display:none;">
     <section class="modal" style="max-width:340px;">
       <h2 class="modal-titulo" id="cj-titulo" style="margin-bottom:1rem;">Como jogar</h2>
-      <ul style="font-size:13px;line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
+      <ul style="font-size:calc(13px * var(--escala-fonte));line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
         <li><img src="assets/img/icone-sala.png"     alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Sala</strong> — Monte sequências de blocos para guiar o personagem até a estrela.</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-quarto.png"   alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Quarto</strong> — Encontre os erros na rotina e reconstrua a ordem correta.</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-cozinha.png"  alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Cozinha</strong> — Julgue cada frase: Verdadeiro ou Falso?</li>
         <li style="margin-top:6px;"><img src="assets/img/icone-despensa.png" alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Despensa</strong> — Organize os itens por tamanho, cor ou categoria.</li>
       </ul>
-      <p style="font-size:12px;color:var(--cinza);margin-top:1rem;">
+      <p style="font-size:calc(12px * var(--escala-fonte));color:var(--cinza);margin-top:1rem;">
         Complete cada cômodo para desbloquear o próximo. Quanto menos erros, mais pontos!
       </p>
       <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
@@ -165,6 +174,7 @@
 
   <script src="assets/js/plataforma.js"></script>
   <script src="assets/js/gameState.js"></script>
+  <script src="assets/js/audio.js"></script>
   <script>
   /* ===== index.html — menu principal ===== */
 
@@ -183,15 +193,45 @@
   }
 
   /* ===== Configurações ===== */
-  function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
-  function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+  let modalAberto = null;
+  let acionadorModal = null;
+
+  function elementosFocaveis(modal) {
+    return [...modal.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )].filter(el => !el.hidden && el.offsetParent !== null);
+  }
+
+  function abrirModal(id, acionador) {
+    const modal = document.getElementById(id);
+    modalAberto = modal;
+    acionadorModal = acionador || document.activeElement;
+    modal.style.display = 'flex';
+    if (acionadorModal?.hasAttribute('aria-expanded')) {
+      acionadorModal.setAttribute('aria-expanded', 'true');
+    }
+    requestAnimationFrame(() => elementosFocaveis(modal)[0]?.focus());
+  }
+
+  function fecharModal(id) {
+    const modal = document.getElementById(id);
+    if (modal.style.display === 'none') return;
+    modal.style.display = 'none';
+    const acionador = acionadorModal;
+    if (acionador?.hasAttribute('aria-expanded')) {
+      acionador.setAttribute('aria-expanded', 'false');
+    }
+    modalAberto = null;
+    acionadorModal = null;
+    acionador?.focus();
+  }
 
   document.getElementById('btn-config').addEventListener('click', () => {
     sincronizarTogglles();
-    abrirModal('modal-config');
+    abrirModal('modal-config', document.getElementById('btn-config'));
   });
   document.getElementById('btn-fechar-config').addEventListener('click', () => fecharModal('modal-config'));
-  document.getElementById('btn-como-jogar').addEventListener('click',   () => abrirModal('modal-como-jogar'));
+  document.getElementById('btn-como-jogar').addEventListener('click', e => abrirModal('modal-como-jogar', e.currentTarget));
   document.getElementById('btn-fechar-cj').addEventListener('click',    () => fecharModal('modal-como-jogar'));
 
   // Fechar ao clicar fora
@@ -201,11 +241,31 @@
     });
   });
 
-  // Esc fecha modais
+  // Mantém a navegação no modal aberto e permite fechá-lo com Esc.
   document.addEventListener('keydown', e => {
+    if (!modalAberto) return;
+
     if (e.key === 'Escape') {
-      fecharModal('modal-config');
-      fecharModal('modal-como-jogar');
+      e.preventDefault();
+      fecharModal(modalAberto.id);
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      const focaveis = elementosFocaveis(modalAberto);
+      if (!focaveis.length) {
+        e.preventDefault();
+        return;
+      }
+      const primeiro = focaveis[0];
+      const ultimo = focaveis[focaveis.length - 1];
+      if (e.shiftKey && document.activeElement === primeiro) {
+        e.preventDefault();
+        ultimo.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault();
+        primeiro.focus();
+      }
     }
   });
 
@@ -215,7 +275,7 @@
     setToggle('toggle-contraste', cfg.altoContraste);
     setToggle('toggle-som',       cfg.somAtivado);
     setToggle('toggle-musica',    cfg.musicaAtivada);
-    document.getElementById('fonte-valor').textContent = cfg.tamanhoFonte + '%';
+    atualizarControleFonte(cfg.tamanhoFonte);
   }
 
   function setToggle(id, on) {
@@ -231,6 +291,7 @@
       gameState.updateSettings({ [key]: novoVal });
       setToggle(id, novoVal);
       aplicarConfiguracoes();
+      if (key === 'musicaAtivada') audio.sincronizarConfiguracoes();
     });
   }
 
@@ -238,21 +299,37 @@
   bindToggle('toggle-som',       'somAtivado');
   bindToggle('toggle-musica',    'musicaAtivada');
 
-  /* Tamanho de fonte */
-  document.getElementById('btn-fonte-mais').addEventListener('click', () => {
-    const cfg  = gameState.getSettings();
-    const novo = Math.min(cfg.tamanhoFonte + 10, 150);
-    gameState.updateSettings({ tamanhoFonte: novo });
-    document.getElementById('fonte-valor').textContent = novo + '%';
+  /* ---- Tamanho da fonte ---- */
+  const NIVEIS_FONTE = [100, 120, 140];
+  const NOMES_FONTE = { 100: 'Padrão', 120: 'Maior', 140: 'Muito maior' };
+
+  function nivelFonteAtual(valor) {
+    return NIVEIS_FONTE.includes(Number(valor)) ? Number(valor) : 100;
+  }
+
+  function atualizarControleFonte(valor) {
+    const nivel = nivelFonteAtual(valor);
+    const indice = NIVEIS_FONTE.indexOf(nivel);
+    const valorEl = document.getElementById('fonte-valor');
+    valorEl.textContent = `${NOMES_FONTE[nivel]} (${nivel}%)`;
+    valorEl.setAttribute('aria-label', `Tamanho da fonte: ${NOMES_FONTE[nivel]}, ${nivel} por cento`);
+    document.getElementById('btn-fonte-menos').setAttribute('aria-disabled', indice === 0 ? 'true' : 'false');
+    document.getElementById('btn-fonte-mais').setAttribute('aria-disabled', indice === NIVEIS_FONTE.length - 1 ? 'true' : 'false');
+  }
+
+  function alterarTamanhoFonte(direcao) {
+    const atual = nivelFonteAtual(gameState.getSettings().tamanhoFonte);
+    const indiceAtual = NIVEIS_FONTE.indexOf(atual);
+    const novoIndice = Math.max(0, Math.min(NIVEIS_FONTE.length - 1, indiceAtual + direcao));
+    const novoNivel = NIVEIS_FONTE[novoIndice];
+    if (novoNivel === atual) return;
+    gameState.updateSettings({ tamanhoFonte: novoNivel });
     aplicarConfiguracoes();
-  });
-  document.getElementById('btn-fonte-menos').addEventListener('click', () => {
-    const cfg  = gameState.getSettings();
-    const novo = Math.max(cfg.tamanhoFonte - 10, 80);
-    gameState.updateSettings({ tamanhoFonte: novo });
-    document.getElementById('fonte-valor').textContent = novo + '%';
-    aplicarConfiguracoes();
-  });
+    atualizarControleFonte(novoNivel);
+  }
+
+  document.getElementById('btn-fonte-menos').addEventListener('click', () => alterarTamanhoFonte(-1));
+  document.getElementById('btn-fonte-mais').addEventListener('click', () => alterarTamanhoFonte(1));
 
   /* ---- Resetar progresso ---- */
   document.getElementById('btn-resetar').addEventListener('click', () => {

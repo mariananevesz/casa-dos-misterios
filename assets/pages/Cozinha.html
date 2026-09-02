@@ -17,7 +17,7 @@
               onclick="window.location.href='MapaCasa.html'"
               aria-label="Voltar ao mapa">← Mapa</button>
       <section class="hud__info cozinha-hud__info">
-        <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img cozinha-hud__icone">
+        <img src="../img/icone-cozinha.png" alt="" class="hud__icone-img cozinha-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha — Verdadeiro ou Falso</p>
           <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
@@ -31,7 +31,7 @@
     <!-- Mascote Logi -->
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote cozinha-logi__img">
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
         <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
       </section>
       <section>
@@ -133,7 +133,7 @@
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" aria-live="polite" aria-atomic="true" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -453,10 +453,11 @@
     const estrelas = gameState.getStars(score);
     const elEst = document.getElementById('modal-estrelas');
     elEst.innerHTML = '';
+    elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }

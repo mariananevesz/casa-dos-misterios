@@ -27,14 +27,14 @@
         <p>Escolha um cômodo para explorar</p>
       </section>
 
-      <span class="mapa-pontos" id="badge-total" aria-live="polite" aria-atomic="true">
-        <img src="../img/estrela.png" alt="" aria-hidden="true">
+      <span class="mapa-pontos" id="badge-total" aria-live="polite">
+        <img src="../img/estrela.png" alt="">
         <span id="total-pts">0</span>
       </span>
     </section>
 
     <section class="mapa-logi" aria-label="Mensagem do Logi">
-      <img src="../img/logi_exclamacao.png" alt="Logi" class="mapa-logi__img">
+      <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
       <div class="mapa-logi__balao">
         <p class="mapa-logi__nome">Logi diz:</p>
         <p>Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
@@ -48,7 +48,7 @@
         <p>Total de progresso</p>
         <strong><span id="mapa-progresso-texto">0</span>/100 pontos</strong>
       </div>
-      <div class="mapa-barra" role="progressbar" aria-label="Progresso geral" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="mapa-barra">
         <span id="mapa-barra-preenchida"></span>
       </div>
     </section>
@@ -57,6 +57,7 @@
 
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
+  <script src="../js/audio.js"></script>
   <script>
 
   const COMODOS = [
@@ -104,7 +105,6 @@
     document.getElementById('total-pts').textContent = total;
     document.getElementById('mapa-progresso-texto').textContent = Math.min(total, 100);
     document.getElementById('mapa-barra-preenchida').style.width = Math.min(total, 100) + '%';
-    document.querySelector('.mapa-barra').setAttribute('aria-valuenow', Math.min(total, 100));
 
     const grid = document.getElementById('mapa-grid');
     grid.innerHTML = '';
@@ -118,12 +118,14 @@
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
       const card = document.createElement('article');
+      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
+        card.setAttribute('aria-disabled', 'true');
         card.innerHTML = `
           <div class="comodo-card__imagem-box">
-            <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
+            <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
             <p class="comodo-card__nome">${c.nome}</p>
@@ -134,14 +136,10 @@
       } else {
         card.className = `comodo-card ${c.corCard}`;
         card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', `Explorar ${c.nome} — disponível${estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
         card.setAttribute('tabindex', '0');
         card.addEventListener('click', () => { window.location.href = c.pagina; });
         card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            window.location.href = c.pagina;
-          }
+          if (e.key === 'Enter' || e.key === ' ') window.location.href = c.pagina;
         });
 
         let tagHtml = '';
@@ -151,7 +149,7 @@
         if (estrelas > 0) {
           estrelasHtml = `<section class="modal-estrelas comodo-card__estrelas" aria-label="${estrelas} de ${totalEstrelas} estrelas conquistadas">`;
           for (let i = 0; i < totalEstrelas; i++) {
-            estrelasHtml += `<img src="../img/estrela.png" alt="${i < estrelas ? 'Estrela conquistada' : 'Estrela vazia'}" class="${i < estrelas ? '' : 'estrela-vazia'}">`;
+            estrelasHtml += `<img src="../img/estrela.png" alt="" class="${i < estrelas ? '' : 'estrela-vazia'}">`;
           }
           estrelasHtml += '</section>';
         } else {
@@ -165,7 +163,7 @@
         card.innerHTML = `
           ${tagHtml}
           <div class="comodo-card__imagem-box">
-            <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
+            <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
             <p class="comodo-card__nome">${c.nome}</p>
@@ -188,7 +186,7 @@
     const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
     const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';
     const v3 = score !== null && score >= 25 ? '--ok'   : '--vazio';
-    return `<section class="progresso" aria-hidden="true">
+    return `<section class="progresso">
       <span class="progresso__bolinha progresso__bolinha${v1}"></span>
       <span class="progresso__bolinha progresso__bolinha${v2}"></span>
       <span class="progresso__bolinha progresso__bolinha${v3}"></span>
