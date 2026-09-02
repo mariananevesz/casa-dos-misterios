@@ -8,6 +8,8 @@ const audio = (() => {
   let musicaTocando = false;
   let musicaTimer = null;
   let usuarioInteragiu = false;
+  let instrucaoAtual = '';
+  let narracaoPendente = false;
   const osciladoresMusica = new Set();
   const NOTAS_MUSICA = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23];
 
@@ -23,6 +25,54 @@ const audio = (() => {
 
   function isMusicaAtivada() {
     try { return gameState.getSettings().musicaAtivada; } catch { return true; }
+  }
+
+  function isNarracaoAtivada() {
+    try { return gameState.getSettings().narracaoAtivada; } catch { return true; }
+  }
+
+  function limparTextoNarracao(texto) {
+    return String(texto || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function pararNarracao() {
+    narracaoPendente = false;
+    try { window.speechSynthesis?.cancel(); } catch {}
+  }
+
+  function falar(texto) {
+    const fala = limparTextoNarracao(texto);
+    if (!fala || !isNarracaoAtivada()) return false;
+    if (!usuarioInteragiu) {
+      narracaoPendente = true;
+      return false;
+    }
+    if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false;
+
+    pararNarracao();
+    const utterance = new SpeechSynthesisUtterance(fala);
+    utterance.lang = 'pt-BR';
+    const vozPtBr = window.speechSynthesis.getVoices().find(voz =>
+      String(voz.lang).toLowerCase().replace('_', '-').startsWith('pt-br')
+    );
+    if (vozPtBr) utterance.voice = vozPtBr;
+    window.speechSynthesis.speak(utterance);
+    return true;
+  }
+
+  function definirNarracao(texto, reproduzirAutomaticamente = true) {
+    instrucaoAtual = limparTextoNarracao(texto);
+    narracaoPendente = false;
+    if (reproduzirAutomaticamente) falar(instrucaoAtual);
+  }
+
+  function repetirNarracao() {
+    return falar(instrucaoAtual);
+  }
+
+  function sincronizarNarracao() {
+    if (isNarracaoAtivada()) repetirNarracao();
+    else pararNarracao();
   }
 
   function beep(freq, dur, type = 'sine', vol = 0.28) {
@@ -105,12 +155,16 @@ const audio = (() => {
     document.removeEventListener('pointerdown', registrarInteracao, true);
     document.removeEventListener('keydown', registrarInteracao, true);
     sincronizarConfiguracoes();
+    if (narracaoPendente) repetirNarracao();
   }
 
   document.addEventListener('pointerdown', registrarInteracao, true);
   document.addEventListener('keydown', registrarInteracao, true);
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) pararMusica();
+    if (document.hidden) {
+      pararMusica();
+      pararNarracao();
+    }
     else sincronizarConfiguracoes();
   });
 
@@ -121,6 +175,11 @@ const audio = (() => {
     desbloqueio() { sequencia([[523,0.12],[659,0.12],[784,0.12],[1047,0.2]], 110); },
     conclusao()   { sequencia([[523,0.15],[659,0.15],[784,0.15],[1047,0.15],[1319,0.3]], 120); },
     passo()       { beep(330, 0.05, 'sine', 0.1); },
+    definirNarracao,
+    narrar(texto) { return falar(texto); },
+    repetirNarracao,
+    pararNarracao,
+    sincronizarNarracao,
     sincronizarConfiguracoes,
     iniciarMusica,
     pararMusica

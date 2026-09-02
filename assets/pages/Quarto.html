@@ -34,7 +34,7 @@
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
         <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
       </section>
       <section>
         <p class="balao__nome quarto-logi__nome">Logi diz:</p>
@@ -226,6 +226,7 @@
   const fase = gameData.fases[faseAtual];
 
   document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+  audio.definirNarracao(document.getElementById('logi-texto').textContent);
   document.querySelector('.hud__subtitulo--roxo').textContent =
     `Fase ${fase.id} de ${gameData.fases.length}`;
 
@@ -515,8 +516,15 @@
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    modal.style.display = 'flex';
+    audio.narrar([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    audio.pararNarracao();
+    document.getElementById('modal-ajuda').style.display = 'none';
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -525,11 +533,11 @@
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => {
+    pararAtencaoDica();
+    audio.narrar(document.getElementById('dica-texto').textContent);
+  });
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-erros').classList.add('dica--pulsar'); }

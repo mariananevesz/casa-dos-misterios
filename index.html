@@ -29,7 +29,10 @@
 
     <!-- Mascote Logi de boas-vindas -->
     <section class="balao" style="margin-bottom:1.25rem;" aria-label="Mensagem do Logi">
-      <img src="assets/img/logi_feliz.png" alt="" class="logi-mascote">
+      <section class="balao__mascote">
+        <img src="assets/img/logi_feliz.png" alt="" class="logi-mascote">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
+      </section>
       <p class="balao__nome">Logi diz:</p>
       <p class="balao__texto" id="logi-boas-vindas">
         Olá! Eu sou o <strong>Logi</strong>, seu guia investigador! Prontos para resolver os mistérios da casa?
@@ -132,6 +135,14 @@
         </button>
       </section>
 
+      <section class="config-linha" style="margin-top:1rem;">
+        <label class="config-label" for="toggle-narracao">Narração</label>
+        <button class="toggle-btn" id="toggle-narracao" role="switch"
+                type="button" aria-checked="true" aria-label="Narração de instruções">
+          <span class="toggle-thumb"></span>
+        </button>
+      </section>
+
       <section style="margin-top:1.25rem;">
         <p style="font-size:calc(11px * var(--escala-fonte));font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
           Atalhos de teclado
@@ -216,6 +227,7 @@
   function fecharModal(id) {
     const modal = document.getElementById(id);
     if (modal.style.display === 'none') return;
+    if (id === 'modal-como-jogar') audio.pararNarracao();
     modal.style.display = 'none';
     const acionador = acionadorModal;
     if (acionador?.hasAttribute('aria-expanded')) {
@@ -231,8 +243,16 @@
     abrirModal('modal-config', document.getElementById('btn-config'));
   });
   document.getElementById('btn-fechar-config').addEventListener('click', () => fecharModal('modal-config'));
-  document.getElementById('btn-como-jogar').addEventListener('click', e => abrirModal('modal-como-jogar', e.currentTarget));
-  document.getElementById('btn-fechar-cj').addEventListener('click',    () => fecharModal('modal-como-jogar'));
+  document.getElementById('btn-como-jogar').addEventListener('click', e => {
+    abrirModal('modal-como-jogar', e.currentTarget);
+    const modal = document.getElementById('modal-como-jogar');
+    const texto = [...modal.querySelectorAll('li, p')].map(el => el.textContent).join(' ');
+    audio.narrar(texto);
+  });
+  document.getElementById('btn-fechar-cj').addEventListener('click', () => {
+    audio.pararNarracao();
+    fecharModal('modal-como-jogar');
+  });
 
   // Fechar ao clicar fora
   ['modal-config', 'modal-como-jogar'].forEach(id => {
@@ -275,6 +295,7 @@
     setToggle('toggle-contraste', cfg.altoContraste);
     setToggle('toggle-som',       cfg.somAtivado);
     setToggle('toggle-musica',    cfg.musicaAtivada);
+    setToggle('toggle-narracao',  cfg.narracaoAtivada);
     atualizarControleFonte(cfg.tamanhoFonte);
   }
 
@@ -292,12 +313,18 @@
       setToggle(id, novoVal);
       aplicarConfiguracoes();
       if (key === 'musicaAtivada') audio.sincronizarConfiguracoes();
+      if (key === 'narracaoAtivada') audio.sincronizarNarracao();
     });
   }
 
   bindToggle('toggle-contraste', 'altoContraste');
   bindToggle('toggle-som',       'somAtivado');
   bindToggle('toggle-musica',    'musicaAtivada');
+  bindToggle('toggle-narracao',  'narracaoAtivada');
+
+  const textoBoasVindas = document.getElementById('logi-boas-vindas').textContent;
+  audio.definirNarracao(textoBoasVindas);
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Tamanho da fonte ---- */
   const NIVEIS_FONTE = [100, 120, 140];

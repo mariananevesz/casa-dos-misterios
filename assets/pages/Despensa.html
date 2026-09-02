@@ -34,7 +34,7 @@
     <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
         <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução atual do Logi">▶</button>
       </section>
       <div class="balao__corpo despensa-logi__corpo">
         <p class="balao__nome despensa-logi__nome">Logi diz:</p>
@@ -259,6 +259,9 @@
 
     /* Item 1 — instrução ativa do nível (destaque) */
     document.getElementById('logi-instrucao').textContent = nivel.instrucao;
+    const textoAtual = [document.getElementById('logi-boas-vindas').textContent, nivel.instrucao]
+      .filter(Boolean).join(' ');
+    audio.definirNarracao(textoAtual);
 
     /* Item 10 — legenda cromática no balão (apenas no nível Fácil) */
     const legendaCor = document.getElementById('logi-legenda-cor');
@@ -869,8 +872,15 @@
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    modal.style.display = 'flex';
+    audio.narrar([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    audio.pararNarracao();
+    document.getElementById('modal-ajuda').style.display = 'none';
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -879,10 +889,7 @@
   });
 
   /* ---- Áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 

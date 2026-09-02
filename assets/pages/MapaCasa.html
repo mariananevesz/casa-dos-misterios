@@ -34,10 +34,13 @@
     </section>
 
     <section class="mapa-logi" aria-label="Mensagem do Logi">
-      <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
+      </section>
       <div class="mapa-logi__balao">
         <p class="mapa-logi__nome">Logi diz:</p>
-        <p>Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
+        <p id="logi-texto">Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
       </div>
     </section>
 
@@ -59,6 +62,9 @@
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
   <script>
+
+  audio.definirNarracao(document.getElementById('logi-texto').textContent);
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   const COMODOS = [
     {
