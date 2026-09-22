@@ -188,6 +188,7 @@ body {
 
 .balao__texto {
   font-size: calc(20px * var(--escala-fonte));
+  font-weight: 700;
   line-height: 1.6;
   color: #854F0B;
 }
@@ -213,7 +214,19 @@ body {
   flex-shrink: 0;
 }
 
-.balao__play {
+/* Play do balão: maior e em destaque, alinhado à direita da fala */
+.dica__play.balao__play {
+  width: 42px;
+  height: 42px;
+  margin-left: auto;
+  align-self: center;
+  background: var(--laranja);
+  color: var(--branco);
+  font-size: calc(16px * var(--escala-fonte));
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.22);
+}
+
+.balao__mascote .dica__play.balao__play {
   margin-left: 0;
 }
 
@@ -820,7 +833,11 @@ body.alto-contraste .mapa-pontos,
 body.alto-contraste .mapa-logi__balao,
 body.alto-contraste .mapa-progresso-geral,
 body.alto-contraste .sala-fases-card,
+body.alto-contraste .sala-panel,
+body.alto-contraste .sala-game-area,
+body.alto-contraste .sala-grade-panel,
 body.alto-contraste .sala-sequencia-panel,
+body.alto-contraste .sala-mini-dica,
 body.alto-contraste .quarto-logi,
 body.alto-contraste .quarto-card,
 body.alto-contraste .quarto-feedback,
@@ -892,6 +909,8 @@ body.alto-contraste .pontuacao-card__pts {
   color: #fff !important;
 }
 
+body.alto-contraste .dica strong { color: #ffd700 !important; }
+
 body.alto-contraste .modal-ajuda-objetivo,
 body.alto-contraste .modal-ajuda-mini-painel {
   background: #181818 !important;
@@ -905,6 +924,8 @@ body.alto-contraste .btn-ajuda,
 body.alto-contraste .btn-config,
 body.alto-contraste .mapa-voltar,
 body.alto-contraste .comodo-card__acao,
+body.alto-contraste .balao__play,
+body.alto-contraste .dica__play,
 body.alto-contraste .sala-btn,
 body.alto-contraste .quarto-btn,
 body.alto-contraste .despensa-btn {
