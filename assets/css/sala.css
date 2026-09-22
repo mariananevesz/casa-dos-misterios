@@ -436,7 +436,7 @@ body {
 
 .sala-grade {
   container-type: inline-size;
-  width: min(100cqw, 100cqh, 560px);
+  width: min(90cqw, 90cqh, 500px);
   aspect-ratio: 1;
   padding: 3%;
   gap: 2%;
