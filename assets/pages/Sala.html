@@ -21,7 +21,7 @@
       </button>
 
       <section class="hud__info sala-hud__info">
-        <img src="../img/icone-sala.png" alt="Sala" class="hud__icone-img sala-hud__icone">
+        <img src="../img/icone-sala.png" alt="" class="hud__icone-img sala-hud__icone">
         <section>
           <p class="hud__titulo sala-hud__titulo">Sala</p>
           <p class="hud__subtitulo sala-hud__subtitulo" id="fase-label">Mini-jogo 1</p>
@@ -30,14 +30,14 @@
 
       <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
 
-      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote sala-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
       </section>
       <section class="sala-logi__conteudo">
         <p class="balao__nome">Logi diz:</p>
@@ -57,7 +57,7 @@
       <aside class="sala-panel sala-comandos-panel" aria-label="Comandos disponíveis">
         <p class="sala-panel__title">Comandos disponíveis</p>
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
-        <section class="blocos sala-comandos" id="blocos-disponiveis" role="listbox" aria-label="Blocos disponíveis para arrastar"></section>
+        <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
 
         <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
           <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
@@ -69,10 +69,9 @@
       <!-- Jogo -->
       <main class="sala-game-area">
         <section class="painel painel--tracejado sala-sequencia-panel"
-                 id="painel-sequencia"
-                 aria-dropeffect="move">
+                 id="painel-sequencia">
           <p class="sala-panel__title">Painel de comandos</p>
-          <section class="blocos sala-sequencia" id="sequencia-player" role="listbox" aria-label="Sequência montada" aria-live="polite"></section>
+          <section class="blocos sala-sequencia" id="sequencia-player" role="group" aria-label="Sequência montada" aria-live="polite" aria-atomic="true"></section>
         </section>
 
         <section class="painel sala-grade-panel">
@@ -81,7 +80,7 @@
         </section>
 
         <!-- Feedback -->
-        <section id="feedback-area" aria-live="polite" style="display:none;" class="dica dica--erro sala-feedback">
+        <section id="feedback-area" aria-live="polite" aria-atomic="true" style="display:none;" class="dica dica--erro sala-feedback">
           <span class="dica__emoji" aria-hidden="true">💡</span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
@@ -145,7 +144,7 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
@@ -307,6 +306,7 @@ function blocoIconeHtml(bloco) {
   function renderFase() {
     const fase = gameData.fases[faseAtual];
     document.getElementById('logi-texto').textContent = gameData.instrucaoLogi;
+    audio.definirNarracao(document.getElementById('logi-texto').textContent);
     document.getElementById('fase-label').textContent = `Fase ${fase.id} de ${gameData.fases.length}`;
     document.getElementById('btn-executar').disabled = false;
     erros = 0;
@@ -328,7 +328,8 @@ function blocoIconeHtml(bloco) {
       if (i < faseAtual)       span.className = 'nivel nivel--ok';
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                      span.className = 'nivel nivel--bloq';
-      span.textContent = f.dificuldade + (i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : '');
+      span.textContent = `Fase ${f.id}`;
+      if (i === faseAtual) span.setAttribute('aria-current', 'step');
       el.appendChild(span);
     });
   }
@@ -338,6 +339,10 @@ function blocoIconeHtml(bloco) {
     const grid = document.getElementById('game-grid');
     const { linhas, colunas, posicaoInicial, posicaoAlvo, obstaculos = [] } = fase.grade;
     grid.innerHTML = '';
+    const obstaculosTexto = obstaculos.length
+      ? ` Obstáculos em ${obstaculos.map(obs => `linha ${obs.linha + 1}, coluna ${obs.coluna + 1}`).join('; ')}.`
+      : '';
+    grid.setAttribute('aria-label', `Grade de ${linhas} linhas por ${colunas} colunas. Personagem na linha ${posicaoInicial.linha + 1}, coluna ${posicaoInicial.coluna + 1}. Estrela na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}.${obstaculosTexto}`);
     grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
 
     for (let r = 0; r < linhas; r++) {
@@ -350,12 +355,12 @@ function blocoIconeHtml(bloco) {
         const temObstaculo = obstaculos.some(obs => obs.linha === r && obs.coluna === c);
 
         if (temObstaculo) {
-          cell.innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+          cell.innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${r + 1}, coluna ${c + 1}" class="grade-img">`;
           cell.classList.add('grade__celula--obstaculo');
         }
 
         if (r === posicaoAlvo.linha && c === posicaoAlvo.coluna) {
-          cell.innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela" id="celula-alvo-img">`;
+          cell.innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${r + 1}, coluna ${c + 1}: estrela" class="grade-img grade-estrela" id="celula-alvo-img">`;
           cell.id = 'celula-alvo';
         }
         if (r === posicaoInicial.linha && c === posicaoInicial.coluna) {
@@ -388,8 +393,8 @@ function blocoIconeHtml(bloco) {
     el.className = `bloco ${bloco.tipo === 'controle' ? 'bloco--ambar' : 'bloco--laranja'}`;
     el.draggable = true;
     el.dataset.blocoId = bloco.id;
-    el.setAttribute('role', 'option');
-    el.setAttribute('aria-label', bloco.rotulo);
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `Adicionar ${bloco.rotulo} à sequência`);
     el.setAttribute('tabindex', '0');
     el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
 
@@ -427,12 +432,16 @@ function blocoIconeHtml(bloco) {
       const el = document.createElement('span');
       el.className = 'bloco bloco--laranja';
       el.dataset.idx = idx;
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Clique para remover.`);
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
       el.setAttribute('tabindex', '0');
       el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          removerBloco(idx);
+        }
       });
       cont.appendChild(el);
     });
@@ -523,6 +532,7 @@ async function executar() {
 
       if (!anterior || !MOVES[anterior]) {
         erros++;
+        audio.erro();
         mostrarFeedback('Use o bloco Repetir depois de uma seta.', 'erro');
         await resetarAposErro(fase);
         return;
@@ -575,9 +585,9 @@ async function executar() {
       );
 
       if (celulaOrigemEhAlvo) {
-        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Estrela" class="grade-img grade-estrela">`;
+        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}: estrela" class="grade-img grade-estrela">`;
       } else if (celulaOrigemEhObstaculo) {
-        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo" class="grade-img">`;
+        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${pos.linha + 1}, coluna ${pos.coluna + 1}" class="grade-img">`;
       } else {
         cells[deIdx].innerHTML = '';
       }
@@ -600,6 +610,7 @@ async function executar() {
   }
 
   erros++;
+  audio.erro();
   mostrarFeedback('Você ainda não chegou na estrela. Ajuste sua sequência e tente de novo!', 'erro');
   await resetarAposErro(fase);
 }
@@ -651,10 +662,11 @@ async function executar() {
 
     const elEstrelas = document.getElementById('modal-estrelas');
     elEstrelas.innerHTML = '';
+    elEstrelas.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela conquistada' : 'Estrela não conquistada';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEstrelas.appendChild(img);
     }
@@ -664,14 +676,14 @@ async function executar() {
       btnProx.style.display = '';
       btnProx.onclick = () => {
         faseAtual = proxFaseIdx;
-        document.getElementById('modal-conclusao').style.display = 'none';
+        fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
         renderFase();
       };
     } else {
       btnProx.style.display = 'none';
     }
 
-    document.getElementById('modal-conclusao').style.display = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     // beforeunload guard
     window.removeEventListener('beforeunload', beforeUnloadHandler);
@@ -683,8 +695,8 @@ async function executar() {
     const txt  = document.getElementById('feedback-texto');
     area.className = `dica dica--${tipo === 'erro' ? 'erro' : 'ambar'}`;
     txt.className  = `dica__texto dica__texto--${tipo === 'erro' ? 'erro' : 'ambar'}`;
-    txt.textContent = msg;
     area.style.display = 'flex';
+    txt.textContent = msg;
   }
 
   function atualizarBadge(score) {
@@ -702,8 +714,14 @@ async function executar() {
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
+    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -720,11 +738,11 @@ async function executar() {
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => {
+    pararAtencaoDica();
+    audio.narrar(document.getElementById('dica-texto').textContent);
+  });
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }

@@ -69,7 +69,7 @@
 }
 
 .inicio-header__titulo {
-  font-size: 34px;
+  font-size: calc(34px * var(--escala-fonte));
   font-weight: 900;
   color: var(--marrom-medio);
   letter-spacing: -1px;
@@ -78,7 +78,7 @@
 }
 
 .inicio-header__subtitulo {
-  font-size: 16px;
+  font-size: calc(16px * var(--escala-fonte));
   font-weight: 700;
   color: var(--ambar);
   margin-top: 2px;
@@ -104,7 +104,7 @@
   border: none;
   border-radius: 25px;
   padding: 0 26px;
-  font-size: 18px;
+  font-size: calc(18px * var(--escala-fonte));
   font-weight: 700;
   cursor: pointer;
   text-align: center;
@@ -119,7 +119,7 @@
 .btn--menu-principal:active { opacity: 1; transform: translateY(3px);  box-shadow: 0 1px 0 rgba(111, 46, 15, 0.22); }
 
 .btn--menu-principal strong { flex: 1; text-align: center; }
-.btn--menu-principal span   { width: 32px; font-size: 22px; }
+.btn--menu-principal span   { width: 32px; font-size: calc(22px * var(--escala-fonte)); }
 
 .btn--menu-laranja { background: var(--laranja); color: var(--branco); }
 .btn--menu-ambar   { background: var(--ambar);   color: var(--branco); }
@@ -137,7 +137,7 @@
 }
 
 .inicio-comodos__titulo {
-  font-size: 17px;
+  font-size: calc(17px * var(--escala-fonte));
   font-weight: 900;
   color: var(--laranja);
   text-transform: uppercase;
@@ -171,7 +171,7 @@
 }
 
 .inicio-comodo__label {
-  font-size: 15px;
+  font-size: calc(15px * var(--escala-fonte));
   font-weight: 800;
   color: var(--ambar);
   margin-top: 8px;
@@ -189,7 +189,7 @@
 
 /* ---------- Rodapé ---------- */
 .inicio-rodape {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   font-weight: 600;
   color: rgba(111, 46, 15, 0.25);
   text-align: center;
@@ -198,36 +198,36 @@
 
 /* ---------- Responsividade ---------- */
 @media (max-width: 560px) {
-  .inicio-header__titulo    { font-size: 28px; letter-spacing: -0.5px; }
-  .inicio-header__subtitulo { font-size: 14px; }
-  .btn--menu-principal      { font-size: 16px; min-height: 54px; padding: 0 18px; }
+  .inicio-header__titulo    { font-size: calc(28px * var(--escala-fonte)); letter-spacing: -0.5px; }
+  .inicio-header__subtitulo { font-size: calc(14px * var(--escala-fonte)); }
+  .btn--menu-principal      { font-size: calc(16px * var(--escala-fonte)); min-height: 54px; padding: 0 18px; }
   .menu-botoes              { margin: 1rem 0 1.5rem; }
 }
 
 @media (max-width: 400px) {
-  .inicio-header__titulo    { font-size: 22px; }
-  .inicio-header__subtitulo { font-size: 13px; }
-  .btn--menu-principal      { font-size: 15px; min-height: 48px; }
-  .btn--menu-principal span { font-size: 18px; width: 26px; }
+  .inicio-header__titulo    { font-size: calc(22px * var(--escala-fonte)); }
+  .inicio-header__subtitulo { font-size: calc(13px * var(--escala-fonte)); }
+  .btn--menu-principal      { font-size: calc(15px * var(--escala-fonte)); min-height: 48px; }
+  .btn--menu-principal span { font-size: calc(18px * var(--escala-fonte)); width: 26px; }
   .menu-botoes              { margin: 0.75rem 0 1.25rem; }
   .inicio-comodos           { padding: 14px 8px 6px; margin-top: 1.2rem; }
-  .inicio-comodos__titulo   { font-size: 14px; margin-bottom: 14px; }
+  .inicio-comodos__titulo   { font-size: calc(14px * var(--escala-fonte)); margin-bottom: 14px; }
   .inicio-comodo__icone-img { width: 60px; height: 60px; }
-  .inicio-comodo__label     { font-size: 12px; }
-  .inicio-rodape            { font-size: 11px; margin-top: 1rem; }
+  .inicio-comodo__label     { font-size: calc(12px * var(--escala-fonte)); }
+  .inicio-rodape            { font-size: calc(11px * var(--escala-fonte)); margin-top: 1rem; }
 }
 
 @media (max-height: 800px) {
   #tela-principal { padding-block: clamp(0.7rem, 2vh, 1rem); }
   .inicio-header { margin-bottom: 0.8rem; }
-  .inicio-header__titulo { font-size: clamp(24px, 4vh, 30px); }
+  .inicio-header__titulo { font-size: clamp(calc(24px * var(--escala-fonte)), 4vh, calc(30px * var(--escala-fonte))); }
   .menu-botoes { margin: 0.7rem 0 1rem; }
   .menu-botoes .btn--menu-principal + .btn--menu-principal,
   #tela-principal > .btn--menu-principal + .btn--menu-principal { margin-top: 10px; }
-  .btn--menu-principal { min-height: 46px; font-size: 15px; }
+  .btn--menu-principal { min-height: 46px; font-size: calc(15px * var(--escala-fonte)); }
   .inicio-comodos { margin-top: 0.9rem; padding-top: 10px; }
-  .inicio-comodos__titulo { margin-bottom: 10px; font-size: 14px; }
+  .inicio-comodos__titulo { margin-bottom: 10px; font-size: calc(14px * var(--escala-fonte)); }
   .inicio-comodo__icone-img { width: clamp(48px, 8vh, 64px); height: clamp(48px, 8vh, 64px); }
-  .inicio-comodo__label { margin-top: 4px; font-size: 12px; }
+  .inicio-comodo__label { margin-top: 4px; font-size: calc(12px * var(--escala-fonte)); }
   .inicio-rodape { margin-top: 0.7rem; }
 }

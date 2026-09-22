@@ -54,14 +54,14 @@
 }
 
 .despensa-hud__titulo {
-  font-size: 26px;
+  font-size: calc(26px * var(--escala-fonte));
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.4px;
 }
 
 .despensa-hud__subtitulo {
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   margin-top: 4px;
 }
@@ -70,7 +70,7 @@
   min-width: 78px;
   text-align: center;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   box-shadow: 0 3px 0 rgba(111, 46, 15, 0.14);
 }
 
@@ -103,20 +103,20 @@
 }
 
 .despensa-logi__nome {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   color: var(--laranja);
   margin-bottom: 0;
 }
 
 .despensa-logi__texto {
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--escala-fonte));
   line-height: 1.35;
   color: var(--marrom-medio);
 }
 
 .balao__instrucao,
 .despensa-logi__instrucao {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.35;
   font-weight: 900;
   color: #8D4E00;
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   color: var(--cinza);
   font-weight: 700;
   margin: 0;
@@ -191,7 +191,7 @@
 
 .despensa-card__titulo {
   color: var(--laranja);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.7px;
@@ -226,7 +226,7 @@
 .nivel {
   border-radius: var(--raio-pill);
   padding: 4px 12px;
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 800;
 }
 
@@ -313,7 +313,7 @@
   right: -8px;
   background: #4CAF50;
   color: #fff;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   width: 20px;
   height: 20px;
@@ -351,7 +351,7 @@
   justify-content: center;
   background: var(--verde);
   color: #fff;
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.14);
 }
@@ -368,7 +368,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 4px;
-  font-size: 20px;
+  font-size: calc(20px * var(--escala-fonte));
 }
 
 .item-card__emoji {
@@ -384,7 +384,7 @@
 }
 
 .item-card__nome {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   color: var(--marrom-medio);
   margin-bottom: 5px;
   font-weight: 900;
@@ -425,6 +425,7 @@
 }
 
 .prateleira__slot {
+  position: relative;
   border: 1.5px dashed rgba(139, 99, 71, 0.36);
   border-radius: 14px;
   padding: 0.55rem 0.35rem;
@@ -435,7 +436,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 800;
   color: rgba(113, 43, 19, 0.45);
   background: rgba(255, 255, 255, 0.45);
@@ -464,9 +465,18 @@ button.prateleira__slot {
 }
 
 .prateleira__slot-pos {
-  font-size: 9px;
+  font-size: calc(9px * var(--escala-fonte));
   display: block;
   margin-top: 2px;
+}
+
+.prateleira__slot-status {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: calc(12px * var(--escala-fonte));
+  font-weight: 900;
+  line-height: 1;
 }
 
 .prateleira__legenda,
@@ -477,7 +487,7 @@ button.prateleira__slot {
 }
 
 .prateleira__leg-txt {
-  font-size: 10px;
+  font-size: calc(10px * var(--escala-fonte));
   color: rgba(113, 43, 19, 0.48);
   min-width: 50px;
   text-align: center;
@@ -496,7 +506,7 @@ button.prateleira__slot {
 }
 
 .despensa-feedback .dica__texto {
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   line-height: 1.4;
 }
@@ -510,7 +520,7 @@ button.prateleira__slot {
 .despensa-btn {
   min-height: 44px;
   border-radius: 15px;
-  font-size: 14px;
+  font-size: calc(14px * var(--escala-fonte));
   font-weight: 900;
   padding: 0 18px;
   box-shadow: 0 3px 0 rgba(111, 46, 15, 0.18);
@@ -552,12 +562,12 @@ button.prateleira__slot {
   }
 
   .despensa-hud__titulo {
-    font-size: 20px;
+    font-size: calc(20px * var(--escala-fonte));
   }
 
   .despensa-logi__texto,
   .despensa-logi__instrucao {
-    font-size: 12px;
+    font-size: calc(12px * var(--escala-fonte));
   }
 
   .despensa-work-grid {

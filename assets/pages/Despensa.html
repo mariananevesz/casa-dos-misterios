@@ -18,7 +18,7 @@
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info despensa-hud__info">
-        <img src="../img/icone-despensa.png" alt="Despensa" class="hud__icone-img despensa-hud__icone">
+        <img src="../img/icone-despensa.png" alt="" class="hud__icone-img despensa-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa — Estoque Inteligente</p>
           <p class="hud__subtitulo hud__subtitulo--marrom despensa-hud__subtitulo" id="hud-subtitulo">Mini-jogo 4</p>
@@ -27,14 +27,14 @@
 
       <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
 
-      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote despensa-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução atual do Logi">▶</button>
       </section>
       <div class="balao__corpo despensa-logi__corpo">
         <p class="balao__nome despensa-logi__nome">Logi diz:</p>
@@ -59,9 +59,9 @@
           </section>
 
           <!-- Painel: prateleira (oculto no nível Fácil) -->
-          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira" aria-dropeffect="move">
+          <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira">
             <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
-            <section class="prateleira despensa-prateleira" id="prateleira" role="listbox" aria-label="Prateleira" aria-live="polite"></section>
+            <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira" aria-live="polite"></section>
             <section class="prateleira__legenda despensa-prateleira__legenda">
               <span class="prateleira__leg-txt" id="leg-esq">menor</span>
               <span style="flex:1;"></span>
@@ -133,9 +133,9 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Despensa organizada!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -304,6 +304,9 @@
 
     /* Item 1 — instrução ativa do nível (destaque) */
     document.getElementById('logi-instrucao').textContent = nivel.instrucao;
+    const textoAtual = [document.getElementById('logi-boas-vindas').textContent, nivel.instrucao]
+      .filter(Boolean).join(' ');
+    audio.definirNarracao(textoAtual);
 
     /* Item 10 — legenda cromática no balão (apenas no nível Fácil) */
     const legendaCor = document.getElementById('logi-legenda-cor');
@@ -432,7 +435,7 @@
         if (item.cor === 'vermelho') card.classList.add('item-card--vermelho-hint');
 
         if (item.img) {
-          imgHtml = `<img src="${item.img}" alt="${item.nome}"
+          imgHtml = `<img src="${item.img}" alt=""
             class="item-card__emoji" style="width:48px;height:48px;object-fit:contain;display:block;margin:0 auto;">`;
         } else {
           /* Círculo colorido para frutas sem imagem (ex: morango) */
@@ -440,19 +443,19 @@
             style="background:${COR_CARD[item.cor] || '#ccc'};"
             aria-hidden="true"></span>`;
         }
-        card.setAttribute('aria-label', `${item.nome} — clique para selecionar`);
+        card.setAttribute('aria-label', `${item.nome}, cor ${item.cor} — clique para selecionar`);
 
       } else if (nivel.criterio === 'tamanho') {
         const px = tamanhoImagemPx(item.tamanho);
         card.classList.add('item-card--tamanho');
         card.style.setProperty('--item-img-size', `${px}px`);
         card.style.setProperty('--item-card-height', `${78 + Number(item.tamanho || 3) * 14}px`);
-        imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
+        imgHtml = `<img src="${item.img || ''}" alt=""
           class="item-card__emoji item-card__emoji--tamanho">`;
         card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — clique ou arraste para a prateleira`);
 
       } else {
-        imgHtml = `<img src="${item.img || ''}" alt="${item.nome}"
+        imgHtml = `<img src="${item.img || ''}" alt=""
           class="item-card__emoji" style="width:40px;height:40px;object-fit:contain;">`;
         card.setAttribute(
           'aria-label',
@@ -590,16 +593,21 @@
         } else if (status === 'ok') {
           slot.className = 'prateleira__slot prateleira__slot--ok';
         } else {
-          slot.className = 'prateleira__slot prateleira__slot--ok';
+          slot.className = 'prateleira__slot';
         }
 
-        slot.setAttribute('aria-label', `${item?.nome || id}, posição ${i+1}. Clique para remover.`);
+        const textoStatus = status === 'erro' ? 'incorreto' : status === 'ok' ? 'correto' : '';
+        slot.setAttribute(
+          'aria-label',
+          `${item?.nome || id}, posição ${i+1}${textoStatus ? `, ${textoStatus}` : ''}. Clique para remover.`
+        );
         slot.setAttribute('type', 'button');
 
         const imgSrc = item?.img || '';
         slot.innerHTML = `
-          <img src="${imgSrc}" alt="${item?.nome || id}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
+          <img src="${imgSrc}" alt="" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
           <span class="prateleira__slot-pos">${i+1}º</span>
+          ${textoStatus ? `<span class="prateleira__slot-status" aria-hidden="true">${status === 'erro' ? '✕' : '✓'}</span>` : ''}
         `;
         slot.addEventListener('click', () => removerItem(i));
 
@@ -707,6 +715,7 @@
   /* --- Validação do nível Fácil (seleção de cor) --- */
   function confirmarSelecao(nivel) {
     if (selecionados.length === 0) {
+      audio.erro();
       mostrarFeedback('Toque nas frutas para selecioná-las primeiro!', 'ambar');
       return;
     }
@@ -716,7 +725,7 @@
     const nenhumaErrada = selecionados.every(id => corretos.includes(id));
 
     if (todasCorretas && nenhumaErrada) {
-      audio.acerto();
+      mostrarFeedback('Correto! As frutas selecionadas são vermelhas.', 'verde');
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
       registrarErro();
@@ -747,6 +756,7 @@
     const total = nivel.corretos.length;
 
     if (prateleira.length < total) {
+      audio.erro();
       mostrarFeedback('Escolha 3 frutas antes de confirmar!', 'ambar');
       return;
     }
@@ -758,7 +768,7 @@
     prateleiraStatus = prateleira.map(id => corretos.includes(id) ? 'ok' : 'erro');
 
     if (todasCorretas && nenhumaErrada) {
-      audio.acerto();
+      mostrarFeedback('Correto! Você escolheu as frutas com sementes por dentro.', 'verde');
       prateleiraStatus = [];
       setTimeout(() => nivelConcluido(nivel), 400);
       return;
@@ -789,6 +799,7 @@
   function confirmarOrdenacao(nivel) {
     const total = nivel.itens.length;
     if (prateleira.length < total) {
+      audio.erro();
       mostrarFeedback('Coloque todos os itens na prateleira primeiro!', 'ambar');
       return;
     }
@@ -804,7 +815,7 @@
     });
 
     if (acertos === total) {
-      audio.acerto();
+      mostrarFeedback('Correto! Os itens estão do menor para o maior.', 'verde');
       prateleiraStatus = [];
       setTimeout(() => nivelConcluido(nivel), 400);
     } else {
@@ -823,7 +834,7 @@
           break;
         }
       }
-      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens destacados em vermelho!`;
+      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens marcados com ✕!`;
 
       mostrarFeedback(msg, 'erro');
     }
@@ -851,12 +862,13 @@
       localStorage.removeItem(ERROS_KEY);
       atualizarBadge(score);
       if (gameState.isFullyCompleted()) {
+        audio.conclusao();
         window.removeEventListener('beforeunload', beforeUnloadHandler);
-        gameState.sairMiniGame('despensa', 'TelaPontuacao.html');
+        setTimeout(() => { window.location.href = 'TelaPontuacao.html'; }, 850);
         return;
       }
       exibirModal(score);
-      if (score === 25) audio.conclusao();
+      audio.conclusao();
     }
   }
 
@@ -864,17 +876,18 @@
     const estrelas = gameState.getStars(score);
     const elEst = document.getElementById('modal-estrelas');
     elEst.innerHTML = '';
+    elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }
     document.getElementById('modal-sub').textContent  = 'Você organizou todos os níveis da despensa!';
     document.getElementById('modal-pts').textContent  = `Pontuação: ${score} / 25 pts`;
     document.getElementById('btn-proximo-nivel').style.display = 'none';
-    document.getElementById('modal-conclusao').style.display   = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
     window.removeEventListener('beforeunload', beforeUnloadHandler);
   }
 
@@ -904,8 +917,14 @@
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
+    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -922,10 +941,7 @@
   });
 
   /* ---- Áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 

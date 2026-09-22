@@ -54,14 +54,14 @@
 }
 
 .cozinha-hud__titulo {
-  font-size: 26px;
+  font-size: calc(26px * var(--escala-fonte));
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.4px;
 }
 
 .cozinha-hud__subtitulo {
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   margin-top: 4px;
 }
@@ -70,7 +70,7 @@
   min-width: 78px;
   text-align: center;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   box-shadow: 0 3px 0 rgba(29, 158, 117, 0.14);
 }
 
@@ -96,13 +96,13 @@
 }
 
 .cozinha-logi__nome {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   color: var(--verde);
   margin-bottom: 2px;
 }
 
 .cozinha-logi__texto {
-  font-size: 13px;
+  font-size: calc(13px * var(--escala-fonte));
   line-height: 1.38;
   color: #085041;
 }
@@ -146,7 +146,7 @@
 .nivel {
   border-radius: var(--raio-pill);
   padding: 4px 12px;
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 800;
 }
 
@@ -223,7 +223,7 @@
   background: var(--verde-fundo);
   color: #085041;
   border: 1.5px solid var(--verde-borda);
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 900;
   text-transform: uppercase;
   margin-bottom: 0.9rem;
@@ -233,7 +233,7 @@
 .cozinha-pergunta__frase {
   max-width: 620px;
   color: #2D281C;
-  font-size: 29px;
+  font-size: calc(29px * var(--escala-fonte));
   font-weight: 900;
   line-height: 1.22;
   letter-spacing: -0.35px;
@@ -251,7 +251,7 @@
 }
 
 .cozinha-pergunta__aviso {
-  font-size: 12px;
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 700;
   color: var(--cinza);
 }
@@ -268,7 +268,7 @@
   min-height: 80px;
   border-radius: 20px;
   padding: 0.65rem 1rem;
-  font-size: 25px;
+  font-size: calc(25px * var(--escala-fonte));
   font-weight: 900;
   display: flex;
   flex-direction: row;
@@ -325,7 +325,7 @@
 }
 
 .cozinha-feedback .dica__texto {
-  font-size: 12.5px;
+  font-size: calc(12.5px * var(--escala-fonte));
   font-weight: 700;
 }
 
@@ -339,7 +339,7 @@
 }
 
 .cozinha-dica .dica__texto {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   line-height: 1.4;
   font-weight: 700;
 }
@@ -376,11 +376,11 @@
   }
 
   .cozinha-hud__titulo {
-    font-size: 20px;
+    font-size: calc(20px * var(--escala-fonte));
   }
 
   .cozinha-logi__texto {
-    font-size: 12px;
+    font-size: calc(12px * var(--escala-fonte));
   }
 
   .cozinha-pergunta {
@@ -389,7 +389,7 @@
   }
 
   .cozinha-pergunta__frase {
-    font-size: 21px;
+    font-size: calc(21px * var(--escala-fonte));
   }
 
   .cozinha-vf {
@@ -398,7 +398,7 @@
 
   .cozinha-vf__btn {
     min-height: 64px;
-    font-size: 20px;
+    font-size: calc(20px * var(--escala-fonte));
   }
 }
 
@@ -408,7 +408,7 @@
   .cozinha-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
   .cozinha-layout { gap: 0.55rem; }
   .cozinha-pergunta-box { min-height: 155px; padding: 1rem; }
-  .cozinha-pergunta-frase { font-size: clamp(18px, 2vw, 24px); }
+  .cozinha-pergunta-frase { font-size: clamp(calc(18px * var(--escala-fonte)), 2vw, calc(24px * var(--escala-fonte))); }
 }
 
 @media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 1020px) {

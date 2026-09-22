@@ -10,7 +10,7 @@
 }
 
 .resultado-kicker {
-  font-size: 11px;
+  font-size: calc(11px * var(--escala-fonte));
   font-weight: 600;
   color: var(--cinza);
   letter-spacing: 1px;
@@ -34,17 +34,17 @@
 }
 
 .resultado-header__sub { line-height: 1.55; }
-.resultado-header__sub strong { color: var(--marrom-medio); font-size: 15px; }
+.resultado-header__sub strong { color: var(--marrom-medio); font-size: calc(15px * var(--escala-fonte)); }
 
 .resultado-header__icone  {
   display: block;
-  font-size: 82px;
+  font-size: calc(82px * var(--escala-fonte));
   line-height: 1;
   margin-bottom: 0.5rem;
   filter: drop-shadow(0 8px 8px rgba(111, 46, 15, 0.16));
 }
-.resultado-header__titulo { font-size: 22px; font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
-.resultado-header__sub    { font-size: 13px; color: var(--ambar); }
+.resultado-header__titulo { font-size: calc(22px * var(--escala-fonte)); font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
+.resultado-header__sub    { font-size: calc(13px * var(--escala-fonte)); color: var(--ambar); }
 
 .pontuacao-logi-img {
   width: 38px;
@@ -62,9 +62,9 @@
   text-align: center;
 }
 
-.pontuacao-total__label  { font-size: 13px; color: var(--laranja-borda); margin-bottom: 4px; }
-.pontuacao-total__numero { font-size: clamp(34px, 6vh, 44px); font-weight: 700; color: var(--branco); line-height: 1; }
-.pontuacao-total__de     { font-size: 13px; color: var(--laranja-borda); margin-top: 4px; }
+.pontuacao-total__label  { font-size: calc(13px * var(--escala-fonte)); color: var(--laranja-borda); margin-bottom: 4px; }
+.pontuacao-total__numero { font-size: clamp(calc(34px * var(--escala-fonte)), 6vh, calc(44px * var(--escala-fonte))); font-weight: 700; color: var(--branco); line-height: 1; }
+.pontuacao-total__de     { font-size: calc(13px * var(--escala-fonte)); color: var(--laranja-borda); margin-top: 4px; }
 
 /* ---------- Grade de pontos por cômodo ---------- */
 .pontuacao-grid {
@@ -93,9 +93,9 @@
 .pontuacao-card--verde   { border: 1.5px solid var(--verde-claro); }
 .pontuacao-card--marrom  { border: 1.5px solid var(--laranja-borda); }
 
-.pontuacao-card__icone { font-size: 18px; }
-.pontuacao-card__nome  { font-size: 11px; font-weight: 600; margin-top: 4px; }
-.pontuacao-card__pts   { font-size: 13px; font-weight: 600; }
+.pontuacao-card__icone { font-size: calc(18px * var(--escala-fonte)); }
+.pontuacao-card__nome  { font-size: calc(11px * var(--escala-fonte)); font-weight: 600; margin-top: 4px; }
+.pontuacao-card__pts   { font-size: calc(13px * var(--escala-fonte)); font-weight: 600; }
 
 .pontuacao-card__nome--laranja { color: var(--marrom-medio); }
 .pontuacao-card__nome--roxo    { color: #3C3489; }
@@ -109,7 +109,7 @@
 
 .pontuacao-card__status {
   margin-top: 2px;
-  font-size: 10px;
+  font-size: calc(10px * var(--escala-fonte));
   line-height: 1.2;
   font-weight: 700;
   color: #0F6E56;
@@ -120,7 +120,7 @@
   padding-block: 5px;
   margin-bottom: clamp(0.5rem, 1.4vh, 0.8rem);
 }
-.pontuacao-feedback .dica__texto { font-size: 12px; }
+.pontuacao-feedback .dica__texto { font-size: calc(12px * var(--escala-fonte)); }
 
 .btn--menu-resultado {
   background: var(--branco);
@@ -167,10 +167,10 @@
   body { padding: 0.4rem; }
   .tela--pontuacao { padding: 0.7rem; }
   .pontuacao-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .pontuacao-card__nome { font-size: 10px; margin-top: 2px; }
-  .pontuacao-card__pts { font-size: 12px; }
-  .pontuacao-card__status { font-size: 9px; }
-  .pontuacao-feedback .dica__texto { font-size: 11px; }
+  .pontuacao-card__nome { font-size: calc(10px * var(--escala-fonte)); margin-top: 2px; }
+  .pontuacao-card__pts { font-size: calc(12px * var(--escala-fonte)); }
+  .pontuacao-card__status { font-size: calc(9px * var(--escala-fonte)); }
+  .pontuacao-feedback .dica__texto { font-size: calc(11px * var(--escala-fonte)); }
 }
 
 @media (max-height: 720px) {
@@ -179,12 +179,12 @@
   .resultado-kicker { margin-bottom: 0.25rem; }
   .resultado-header { margin-bottom: 0.45rem; }
   .resultado-header__logi { width: clamp(62px, 10vh, 76px); }
-  .resultado-header__icone { font-size: 54px; margin-bottom: 0.25rem; }
-  .resultado-header__titulo { font-size: 19px; }
-  .resultado-header__sub { font-size: 12px; line-height: 1.35; }
-  .resultado-header__sub strong { font-size: 13px; }
+  .resultado-header__icone { font-size: calc(54px * var(--escala-fonte)); margin-bottom: 0.25rem; }
+  .resultado-header__titulo { font-size: calc(19px * var(--escala-fonte)); }
+  .resultado-header__sub { font-size: calc(12px * var(--escala-fonte)); line-height: 1.35; }
+  .resultado-header__sub strong { font-size: calc(13px * var(--escala-fonte)); }
   .pontuacao-total { padding: 0.45rem; margin-bottom: 0.45rem; }
-  .pontuacao-total__numero { font-size: 32px; }
+  .pontuacao-total__numero { font-size: calc(32px * var(--escala-fonte)); }
   .pontuacao-grid { margin-bottom: 0.45rem; }
   .pontuacao-card__icone-img { width: 34px; height: 34px; }
   .pontuacao-feedback { min-height: 40px; margin-bottom: 0.45rem; }

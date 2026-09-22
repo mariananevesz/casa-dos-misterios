@@ -18,7 +18,7 @@
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info quarto-hud__info">
-        <img src="../img/icone-quarto.png" alt="Quarto" class="hud__icone-img quarto-hud__icone">
+        <img src="../img/icone-quarto.png" alt="" class="hud__icone-img quarto-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto — Depuração</p>
           <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
@@ -27,14 +27,14 @@
 
       <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite">0 pts</span>
 
-      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote quarto-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
       </section>
       <section>
         <p class="balao__nome quarto-logi__nome">Logi diz:</p>
@@ -63,11 +63,11 @@
 
       <!-- Área central -->
       <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
-        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino" aria-dropeffect="move">
+        <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino">
           <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
-          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="listbox" aria-label="Sequência corrigida" aria-live="polite"></section>
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite"></section>
         </section>
 
         <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite">
@@ -132,9 +132,9 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Depuração completa!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -281,6 +281,7 @@
   const fase = gameData.fases[faseAtual];
 
   document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+  audio.definirNarracao(document.getElementById('logi-texto').textContent);
   document.querySelector('.hud__subtitulo--roxo').textContent =
     `Fase ${fase.id} de ${gameData.fases.length}`;
 
@@ -341,18 +342,12 @@
   }
 
   function imgTag(id) {
-    const fase = gameData.fases[faseAtual];
     const mapa = {
-      tenis:  '../img/item-tenis.png',
-      dentes: '../img/item-dentes.png',
-      roupa:  '../img/item-roupa.png',
-      cafe:   '../img/item-cafe.png',
       mochila: '../img/item-mochila.png',
       brincar: '../img/item-brinquedo.png'
     };
-    const src = mapa[id] || '../img/logi.png';
-    const bloco = fase.sequenciaComErros.find(b => b.id === id);
-    return `<img src="${src}" alt="" class="bloco-img">`;
+    const src = mapa[id];
+    return src ? `<img src="${src}" alt="" class="bloco-img">` : '';
   }
 
   /* ---- Sequência corrigida (destino) ---- */
@@ -368,12 +363,16 @@
       const el = document.createElement('span');
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Clique para remover.`);
+      el.setAttribute('role', 'button');
+      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ative para remover.`);
       el.setAttribute('tabindex', '0');
       el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Delete' || e.key === 'Backspace') removerBloco(idx);
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          removerBloco(idx);
+        }
       });
       cont.appendChild(el);
     });
@@ -442,6 +441,7 @@
   function verificar() {
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < fase.sequenciaCorreta.length) {
+      audio.erro();
       mostrarFeedbackTexto('Complete todos os slots antes de verificar!');
       return;
     }
@@ -461,7 +461,7 @@
       const el = document.createElement('span');
       el.className = `bloco ${ok ? 'bloco--verde' : 'bloco--erro'}`;
       el.setAttribute('aria-label', `${bloco.rotulo} — ${ok ? 'correto' : 'incorreto'}`);
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
+      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo} <strong aria-hidden="true">${ok ? '✓' : '✕'}</strong>`;
       cont.appendChild(el);
     });
 
@@ -482,7 +482,7 @@
 
   function mostrarFeedbackTexto(msg) {
     const cont = document.getElementById('feedback-blocos');
-    cont.innerHTML = `<span style="font-size:12px;color:var(--vermelho);">${msg}</span>`;
+    cont.innerHTML = `<span style="font-size:calc(12px * var(--escala-fonte));color:var(--vermelho);">${msg}</span>`;
     document.getElementById('feedback-area').style.display = 'block';
   }
 
@@ -520,11 +520,12 @@
   elEst.innerHTML = '';
 
   const estrelas = gameState.getStars(scoreFase);
+  elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
 
   for (let i = 0; i < 3; i++) {
     const img = document.createElement('img');
     img.src = '../img/estrela.png';
-    img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+    img.alt = '';
     img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
     elEst.appendChild(img);
   }
@@ -539,7 +540,7 @@
     btnProx.textContent = 'Próxima fase';
     btnProx.onclick = () => {
       faseAtual = proxFase;
-      document.getElementById('modal-conclusao').style.display = 'none';
+      fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
       renderFase();
     };
     btnGrupo.appendChild(btnProx);
@@ -553,7 +554,7 @@
   };
   btnGrupo.appendChild(btnMapa);
 
-  document.getElementById('modal-conclusao').style.display = 'flex';
+  abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
   window.removeEventListener('beforeunload', beforeUnloadHandler);
 }
 
@@ -569,8 +570,14 @@
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
+    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -587,11 +594,11 @@
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => {
+    pararAtencaoDica();
+    audio.narrar(document.getElementById('dica-texto').textContent);
+  });
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-erros').classList.add('dica--pulsar'); }

@@ -28,16 +28,19 @@
       </section>
 
       <span class="mapa-pontos" id="badge-total" aria-live="polite">
-        <img src="../img/estrela.png" alt="Estrela">
+        <img src="../img/estrela.png" alt="">
         <span id="total-pts">0</span>
       </span>
     </section>
 
     <section class="mapa-logi" aria-label="Mensagem do Logi">
-      <img src="../img/logi_exclamacao.png" alt="Logi" class="mapa-logi__img">
+      <section class="balao__mascote">
+        <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
+      </section>
       <div class="mapa-logi__balao">
         <p class="mapa-logi__nome">Logi diz:</p>
-        <p>Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
+        <p id="logi-texto">Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
       </div>
     </section>
 
@@ -57,7 +60,11 @@
 
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
+  <script src="../js/audio.js"></script>
   <script>
+
+  audio.definirNarracao(document.getElementById('logi-texto').textContent);
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   const COMODOS = [
     {
@@ -124,7 +131,7 @@
         card.setAttribute('aria-disabled', 'true');
         card.innerHTML = `
           <div class="comodo-card__imagem-box">
-            <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
+            <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
             <p class="comodo-card__nome">${c.nome}</p>
@@ -138,7 +145,10 @@
         card.setAttribute('tabindex', '0');
         card.addEventListener('click', () => { window.location.href = c.pagina; });
         card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') window.location.href = c.pagina;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = c.pagina;
+          }
         });
 
         let tagHtml = '';
@@ -148,7 +158,7 @@
         if (estrelas > 0) {
           estrelasHtml = `<section class="modal-estrelas comodo-card__estrelas" aria-label="${estrelas} de ${totalEstrelas} estrelas conquistadas">`;
           for (let i = 0; i < totalEstrelas; i++) {
-            estrelasHtml += `<img src="../img/estrela.png" alt="${i < estrelas ? 'Estrela conquistada' : 'Estrela vazia'}" class="${i < estrelas ? '' : 'estrela-vazia'}">`;
+            estrelasHtml += `<img src="../img/estrela.png" alt="" class="${i < estrelas ? '' : 'estrela-vazia'}">`;
           }
           estrelasHtml += '</section>';
         } else {
@@ -162,7 +172,7 @@
         card.innerHTML = `
           ${tagHtml}
           <div class="comodo-card__imagem-box">
-            <img src="${c.img}" alt="${c.nome}" class="comodo-card__icone-img">
+            <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
             <p class="comodo-card__nome">${c.nome}</p>

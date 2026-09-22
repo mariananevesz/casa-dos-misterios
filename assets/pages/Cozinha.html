@@ -17,7 +17,7 @@
               onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
       <section class="hud__info cozinha-hud__info">
-        <img src="../img/icone-cozinha.png" alt="Cozinha" class="hud__icone-img cozinha-hud__icone">
+        <img src="../img/icone-cozinha.png" alt="" class="hud__icone-img cozinha-hud__icone">
         <section>
           <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha — Verdadeiro ou Falso</p>
           <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
@@ -25,14 +25,14 @@
       </section>
       <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite">0 pts</span>
 
-      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-label="Como jogar e objetivo">?</button>
+      <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
       <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="Logi" class="logi-mascote cozinha-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Ouvir fala do Logi">▶</button>
+        <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
       </section>
       <section>
         <p class="balao__nome cozinha-logi__nome">Logi diz:</p>
@@ -51,7 +51,7 @@
         </section>
 
         <!-- Caixa de pergunta -->
-        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite">
+        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite" aria-atomic="true">
           <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
           <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
           <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
@@ -59,18 +59,18 @@
 
         <!-- Botões V/F -->
         <section class="vf-grid cozinha-vf" aria-label="Escolha verdadeiro ou falso">
-          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro" aria-label="Verdadeiro">
+          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro">
             <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Verdadeiro</span>
           </button>
-          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso" aria-label="Falso">
+          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso">
             <img src="../img/falso.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Falso</span>
           </button>
         </section>
 
         <!-- Feedback imediato -->
-        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" style="display:none;">
+        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" aria-atomic="true" style="display:none;">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -131,9 +131,9 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
-      <img src="../img/estrela.png" alt="Troféu" class="modal-trofeu">
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -323,6 +323,7 @@
     };
 
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
+    audio.definirNarracao(document.getElementById('logi-texto').textContent);
     document.getElementById('dica-texto').textContent  = gameData.dica;
     renderPergunta();
     atualizarBadge();
@@ -341,6 +342,7 @@
       else if (i === idxAtual) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
       span.textContent = nome + (i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : '');
+      if (i === idxAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
   }
@@ -385,6 +387,7 @@
       );
       span.setAttribute('aria-label', `Pergunta ${i+1}: ${
         i < idxNaFase ? 'respondida' : i === idxNaFase ? 'atual' : 'pendente'}`);
+      if (i === idxNaFase) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     }
   }
@@ -431,8 +434,8 @@
     const txt  = document.getElementById('feedback-texto');
     dica.className = `dica dica--${tipo === 'verde' ? 'verde' : 'erro'}`;
     txt.className  = `dica__texto dica__texto--${tipo === 'verde' ? 'verde' : 'erro'}`;
-    txt.textContent = msg;
     document.getElementById('feedback-area').style.display = 'block';
+    txt.textContent = msg;
   }
 
   function habilitarBotoes(on) {
@@ -451,10 +454,11 @@
     const estrelas = gameState.getStars(score);
     const elEst = document.getElementById('modal-estrelas');
     elEst.innerHTML = '';
+    elEst.setAttribute('aria-label', `${estrelas} de 3 estrelas conquistadas`);
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
       img.src = '../img/estrela.png';
-      img.alt = i < estrelas ? 'Estrela' : 'Estrela vazia';
+      img.alt = '';
       img.className = i < estrelas ? 'modal-estrela-img' : 'modal-estrela-img modal-estrela-img--vazia';
       elEst.appendChild(img);
     }
@@ -462,7 +466,7 @@
     document.getElementById('modal-sub').textContent =
       `Você acertou ${acertos} de ${gameData.perguntas.length} perguntas!`;
     document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
-    document.getElementById('modal-conclusao').style.display = 'flex';
+    abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     if (score === 25) audio.conclusao();
     window.removeEventListener('beforeunload', beforeUnloadHandler);
@@ -481,8 +485,14 @@
   window.addEventListener('beforeunload', beforeUnloadHandler);
 
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
-  function abrirModalAjuda() { document.getElementById('modal-ajuda').style.display = 'flex'; }
-  function fecharModalAjuda() { document.getElementById('modal-ajuda').style.display = 'none'; }
+  function abrirModalAjuda() {
+    const modal = document.getElementById('modal-ajuda');
+    abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
+    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
+  }
+  function fecharModalAjuda() {
+    fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
+  }
 
   document.getElementById('btn-ajuda').addEventListener('click', abrirModalAjuda);
   document.getElementById('modal-ajuda-fechar').addEventListener('click', fecharModalAjuda);
@@ -499,11 +509,11 @@
   });
 
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  function onPlayAudio() {
-    // TODO: reproduzir narração do Logi quando o áudio estiver disponível.
-  }
-  document.getElementById('dica-play').addEventListener('click', () => { pararAtencaoDica(); onPlayAudio(); });
-  document.getElementById('logi-play').addEventListener('click', onPlayAudio);
+  document.getElementById('dica-play').addEventListener('click', () => {
+    pararAtencaoDica();
+    audio.narrar(document.getElementById('dica-texto').textContent);
+  });
+  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }
@@ -513,7 +523,7 @@
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
 
   document.addEventListener('keydown', e => {
-    if (!gameData) return;
+    if (!gameData || respondendo || e.repeat || e.altKey || e.ctrlKey || e.metaKey || existeModalVisivel()) return;
     if (e.key.toLowerCase() === 'v') responder(true);
     if (e.key.toLowerCase() === 'f') responder(false);
   });

@@ -17,7 +17,8 @@ const DEFAULT_STATE = {
     altoContraste: false,
     tamanhoFonte:  100,
     somAtivado:    true,
-    musicaAtivada: true
+    musicaAtivada: true,
+    narracaoAtivada: true
   },
   cozinhaBloco: 0,
   finalScoreSent: false,
@@ -270,8 +271,12 @@ function aplicarConfiguracoes() {
   if (cfg.altoContraste) document.body.classList.add('alto-contraste');
   else document.body.classList.remove('alto-contraste');
 
-  document.documentElement.style.setProperty('--fonte-base', cfg.tamanhoFonte + '%');
-  document.body.style.fontSize = cfg.tamanhoFonte + '%';
+  const niveisFonte = [100, 120, 140];
+  const tamanhoFonte = niveisFonte.includes(Number(cfg.tamanhoFonte))
+    ? Number(cfg.tamanhoFonte)
+    : 100;
+  document.documentElement.style.setProperty('--escala-fonte', tamanhoFonte / 100);
+  document.documentElement.dataset.tamanhoFonte = String(tamanhoFonte);
 }
 
 document.addEventListener('DOMContentLoaded', aplicarConfiguracoes);
