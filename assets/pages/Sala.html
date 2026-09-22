@@ -35,14 +35,9 @@
 
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
-      </section>
-      <section class="sala-logi__conteudo">
-        <p class="balao__nome">Logi diz:</p>
-        <p class="balao__texto" id="logi-texto">Carregando…</p>
-      </section>
+      <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
+      <p class="balao__texto sala-logi__texto" id="logi-texto">Carregando…</p>
+      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
     <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
@@ -58,12 +53,6 @@
         <p class="sala-panel__title">Comandos disponíveis</p>
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
         <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
-
-        <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
-          <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
-          <p class="dica__texto dica__texto--ambar"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
-          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
-        </section>
       </aside>
 
       <!-- Jogo -->
@@ -76,7 +65,17 @@
 
         <section class="painel sala-grade-panel">
           <p class="sala-panel__title">Grade do jogo</p>
-          <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
+          <section class="sala-grade-area">
+            <section class="sala-grade-box">
+              <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
+            </section>
+
+            <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
+              <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
+              <p class="dica__texto dica__texto--ambar" id="dica-texto"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
+              <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
+            </section>
+          </section>
         </section>
 
         <!-- Feedback -->
@@ -273,8 +272,11 @@ const BLOCO_ICONS = {
   repetir3: '↻'
 };
 
+const BLOCO_VEZES = { repetir2: '2x', repetir3: '3x' };
+
 function blocoIconeHtml(bloco) {
-  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>`;
+  const vezes = BLOCO_VEZES[bloco.id] ? `<span class="bloco-vezes" aria-hidden="true">${BLOCO_VEZES[bloco.id]}</span>` : '';
+  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>${vezes}`;
 }
 
   /* ---- Inicialização ---- */
@@ -432,10 +434,12 @@ function blocoIconeHtml(bloco) {
       const el = document.createElement('span');
       el.className = 'bloco bloco--laranja';
       el.dataset.idx = idx;
+      el.dataset.blocoId = bid;
       el.setAttribute('role', 'button');
       el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
+      el.title = 'Clique para remover';
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span><span class="bloco-remover" aria-hidden="true">×</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
@@ -446,11 +450,17 @@ function blocoIconeHtml(bloco) {
       cont.appendChild(el);
     });
 
-    if (sequencia.length < (fase.maxBlocos || 8)) {
+    /* Um slot tracejado por posição livre: mostra quantos blocos ainda cabem */
+    const livres = (fase.maxBlocos || 8) - sequencia.length;
+    for (let i = 0; i < livres; i++) {
       const empty = document.createElement('span');
       empty.className = 'bloco bloco--vazio';
-      empty.textContent = '+ bloco';
-      empty.setAttribute('aria-label', 'Slot vazio — arraste um bloco aqui');
+      if (i === 0) {
+        empty.textContent = '+';
+        empty.setAttribute('aria-label', `Espaço vazio — ${livres} ${livres === 1 ? 'bloco restante' : 'blocos restantes'}`);
+      } else {
+        empty.setAttribute('aria-hidden', 'true');
+      }
       cont.appendChild(empty);
     }
 
@@ -469,6 +479,7 @@ function blocoIconeHtml(bloco) {
     sequencia.push(bid);
     audio.clique();
     pararAtencaoDica();
+    document.getElementById('feedback-area').style.display = 'none';
     renderSequencia();
   }
 
@@ -510,7 +521,17 @@ function blocoIconeHtml(bloco) {
 
   /* ---- Execução ---- */
 async function executar() {
-  if (animando || sequencia.length === 0) return;
+  if (animando) return;
+
+  if (sequencia.length === 0) {
+    audio.erro();
+    mostrarFeedback('Ops! Escolha pelo menos um bloco de comando antes de executar.', 'aviso');
+    const painel = document.getElementById('painel-sequencia');
+    painel.classList.remove('shake');
+    void painel.offsetWidth;
+    painel.classList.add('shake');
+    return;
+  }
 
   animando = true;
   document.getElementById('btn-executar').disabled = true;

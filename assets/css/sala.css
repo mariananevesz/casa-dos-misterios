@@ -1,16 +1,32 @@
 /* =============================================================
    sala.css — Sala.html (Mini-jogo 1: Algoritmos)
    Depende de: base.css
+
+   A tela ocupa a altura visível do dispositivo: HUD, balão,
+   comandos e botões têm altura fixa e a grade do jogo usa o
+   espaço que sobrar — assim a Sala cabe sem barra de rolagem.
    ============================================================= */
 
 /* ---------- Tela da Sala ---------- */
+body {
+  padding: clamp(0.4rem, 1.6vw, 1rem);
+}
+
 .sala-page {
+  --sala-gutter: clamp(0.4rem, 1.6vw, 1rem);
+
   width: min(100%, 1080px);
   max-width: 1080px;
+  min-height: calc(100dvh - 2 * var(--sala-gutter));
   max-height: none;
   overflow: visible;
 
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
   padding: 0.85rem;
+  margin-block: auto;
 
   border-color: var(--ambar-claro);
   border-radius: 22px;
@@ -23,9 +39,18 @@
   box-shadow: 0 18px 38px rgba(111, 46, 15, 0.13);
 }
 
+/* Em telas muito altas a Sala não estica além do necessário */
+@media (min-height: 940px) {
+  .sala-page { min-height: min(calc(100dvh - 2 * var(--sala-gutter)), 900px); }
+}
+
+.sala-page > * { flex-shrink: 0; }
+
+/* ---------- HUD ---------- */
 .sala-hud {
   align-items: center;
-  margin-bottom: 0.65rem;
+  gap: 8px;
+  margin-bottom: 0;
 }
 
 .sala-voltar {
@@ -50,13 +75,13 @@
 }
 
 .sala-hud__icone {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   filter: drop-shadow(0 8px 8px rgba(111, 46, 15, 0.16));
 }
 
 .sala-hud__titulo {
-  font-size: calc(32px * var(--escala-fonte));
+  font-size: calc(30px * var(--escala-fonte));
   font-weight: 900;
   color: var(--marrom-medio);
   letter-spacing: -1px;
@@ -65,64 +90,50 @@
 }
 
 .sala-hud__subtitulo {
-  margin-top: 6px;
-  font-size: calc(16px * var(--escala-fonte));
+  margin-top: 5px;
+  font-size: calc(15px * var(--escala-fonte));
   font-weight: 700;
   color: var(--laranja);
   text-align: center;
 }
 
 .sala-score {
-  min-width: 110px;
-  padding: 12px 18px;
+  min-width: 96px;
+  padding: 10px 16px;
   border: 2px solid var(--laranja-borda);
   background: rgba(255, 248, 238, 0.9);
   color: var(--marrom-medio);
-  font-size: calc(18px * var(--escala-fonte));
+  font-size: calc(17px * var(--escala-fonte));
+  text-align: center;
   box-shadow: 0 4px 0 rgba(111, 46, 15, 0.10);
 }
 
-/* ---------- Balão do Logi ---------- */
+/* ---------- Balão do Logi (largura total, igual ao Mapa) ---------- */
 .sala-logi {
-  width: min(100%, 720px);
-  margin: 0 auto 0.65rem;
+  width: 100%;
+  margin: 0;
   align-items: center;
-  padding: 0.55rem 0.75rem;
-  border-radius: 16px;
-}
-
-.sala-logi::after {
-  left: 72px;
+  gap: 14px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 18px;
 }
 
 .sala-logi__img {
-  width: 58px;
-  height: 52px;
-}
-
-.sala-logi__conteudo {
-  display: grid;
-  gap: 2px;
+  width: 84px;
+  height: 76px;
 }
 
 .sala-logi .balao__texto {
-  font-size: calc(17px * var(--escala-fonte));
-  line-height: 1.55;
+  flex: 1;
+  min-width: 0;
+  font-size: calc(18px * var(--escala-fonte));
+  line-height: 1.45;
 }
 
 /* ---------- Progresso de fases ---------- */
-.sala-fases-card {
-  width: min(100%, 720px);
-  margin: 0 auto 1rem;
-  padding: 10px 14px;
-  border: 1.5px solid rgba(245, 196, 179, 0.75);
-  border-radius: 16px;
-  background: rgba(255, 248, 238, 0.72);
-}
-
 .sala-section-title,
 .sala-panel__title {
-  font-size: calc(14px * var(--escala-fonte));
+  font-size: calc(13px * var(--escala-fonte));
   font-weight: 900;
   color: var(--laranja);
   text-transform: uppercase;
@@ -135,8 +146,7 @@
   display: flex;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 8px;
-  margin-bottom: 0;
+  margin: 0;
   flex-wrap: wrap;
 }
 
@@ -163,17 +173,34 @@
 }
 
 .sala-niveis .nivel {
-  padding: 6px 14px;
+  padding: 5px 14px;
   font-size: calc(12px * var(--escala-fonte));
 }
 
 /* ---------- Layout principal ---------- */
 .sala-layout {
+  flex: 1 1 auto;
+  flex-shrink: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 245px minmax(390px, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: 220px minmax(0, 1fr);
+  /* Comandos + botões à esquerda; sequência + grade (alta) à direita */
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "cmd   seq"
+    "cmd   grade"
+    "fb    grade"
+    "acoes grade";
+  gap: 0.6rem 0.75rem;
   align-items: stretch;
 }
+
+.sala-layout .sala-game-area { display: contents; }
+.sala-comandos-panel  { grid-area: cmd; }
+.sala-sequencia-panel { grid-area: seq; }
+.sala-grade-panel     { grid-area: grade; }
+.sala-layout #feedback-area { grid-area: fb; }
+.sala-actions         { grid-area: acoes; }
 
 .sala-panel,
 .sala-game-area,
@@ -190,86 +217,97 @@
 }
 
 .sala-panel__hint {
-  margin: 8px 0 14px;
+  margin: 6px 0 12px;
   font-size: calc(13px * var(--escala-fonte));
-  line-height: 1.45;
+  line-height: 1.4;
   color: var(--texto-medio);
   text-align: center;
 }
 
 .sala-game-area {
+  min-width: 0;
+  min-height: 0;
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* ---------- Comandos disponíveis ---------- */
+.sala-game-area > * { flex-shrink: 0; margin-bottom: 0; }
+
+/* ---------- Comandos disponíveis (menores) ---------- */
 .sala-comandos {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
   min-height: auto;
 }
 
 .sala-page #blocos-disponiveis .bloco {
-  min-height: 68px;
-  padding: 6px 16px;
-  border-radius: 15px;
-  font-size: calc(16px * var(--escala-fonte));
+  min-height: 58px;
+  padding: 6px 4px;
+  border-radius: 13px;
+  font-size: calc(15px * var(--escala-fonte));
   font-weight: 800;
   color: var(--branco);
   cursor: pointer;
-  justify-content: flex-start;
-  gap: 14px;
-  box-shadow: 0 4px 0 rgba(111, 46, 15, 0.20);
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.20);
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 
-/* Item 1 — ícone é o elemento de destaque principal do botão de comando;
-   o texto vira um rótulo de apoio, menor e em caixa alta. */
+/* Ícone é o destaque do botão; texto é rótulo de apoio */
 .sala-page #blocos-disponiveis .bloco-emoji {
-  font-size: calc(40px * var(--escala-fonte));
+  font-size: calc(26px * var(--escala-fonte));
   line-height: 1;
   flex-shrink: 0;
-  min-width: 40px;
+  min-width: 26px;
   text-align: center;
 }
 
 .sala-page #blocos-disponiveis .bloco-label {
-  font-size: calc(11px * var(--escala-fonte));
+  font-size: calc(12px * var(--escala-fonte));
   font-weight: 800;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  opacity: 0.95;
+  text-align: center;
+  line-height: 1.1;
 }
+
+/* "2x"/"3x" só aparece quando o rótulo está escondido (sequência no celular) */
+.sala-page .bloco-vezes { display: none; }
 
 .sala-page #blocos-disponiveis .bloco:hover {
   opacity: 1;
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 rgba(111, 46, 15, 0.20);
+  box-shadow: 0 5px 0 rgba(111, 46, 15, 0.20);
 }
 
 .sala-page #blocos-disponiveis .bloco:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(111, 46, 15, 0.20);
+  box-shadow: 0 1px 0 rgba(111, 46, 15, 0.20);
 }
 
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="cima"] {
+.sala-page .bloco[data-bloco-id="cima"] {
   background: linear-gradient(180deg, #F06B3E, var(--laranja));
 }
 
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="baixo"] {
+.sala-page .bloco[data-bloco-id="baixo"] {
   background: linear-gradient(180deg, #F7B844, var(--ambar));
 }
 
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="esq"] {
+.sala-page .bloco[data-bloco-id="esq"] {
   background: linear-gradient(180deg, #7F77DD, var(--roxo));
 }
 
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="dir"] {
+.sala-page .bloco[data-bloco-id="dir"] {
   background: linear-gradient(180deg, #55C69C, var(--verde));
 }
 
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"],
-.sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir3"] {
+.sala-page .bloco[data-bloco-id="repetir2"],
+.sala-page .bloco[data-bloco-id="repetir3"] {
   background: linear-gradient(180deg, #F2A53D, #C97212);
 }
 
@@ -280,60 +318,113 @@
   flex-shrink: 0;
 }
 
-.sala-mini-dica {
-  margin-top: 18px;
-  margin-bottom: 0;
-  padding: 14px;
-  border-radius: 16px;
-  background: rgba(250, 238, 218, 0.82);
-  gap: 10px;
-}
-
-.sala-mini-dica .dica__texto {
-  font-size: calc(13px * var(--escala-fonte));
-  line-height: 1.5;
-}
-
-.sala-mini-dica strong {
-  color: var(--laranja);
-}
-
 /* ---------- Sequência do jogador ---------- */
 .sala-sequencia-panel {
-  margin-bottom: 16px;
-  padding: 14px;
+  padding: 10px 12px;
   border-style: solid;
 }
 
 .sala-sequencia {
   display: grid;
-  grid-template-columns: repeat(4, minmax(70px, 1fr));
-  gap: 10px;
-  margin-top: 12px;
-  min-height: 76px;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
+  min-height: auto;
+  align-items: stretch;
 }
 
 .sala-page #sequencia-player .bloco {
+  position: relative;
+  flex-direction: column;
   justify-content: center;
-  min-height: 50px;
-  border-radius: 14px;
-  padding: 8px 10px;
-  font-size: calc(13px * var(--escala-fonte));
+  gap: 2px;
+  min-height: 52px;
+  border-radius: 12px;
+  padding: 6px 4px;
+  cursor: pointer;
+  color: var(--branco);
   font-weight: 800;
   box-shadow: 0 3px 0 rgba(111, 46, 15, 0.18);
+}
+
+.sala-page #sequencia-player .bloco-emoji {
+  font-size: calc(22px * var(--escala-fonte));
+  line-height: 1;
+}
+
+.sala-page #sequencia-player .bloco-label {
+  font-size: calc(10px * var(--escala-fonte));
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Pequeno "×" indicando que o bloco pode ser removido */
+.sala-page .bloco-remover {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--branco);
+  color: var(--vermelho);
+  border: 1.5px solid rgba(226, 75, 74, 0.45);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(111, 46, 15, 0.22);
+  pointer-events: none;
+}
+
+.sala-page #sequencia-player .bloco:hover .bloco-remover {
+  background: var(--vermelho);
+  color: var(--branco);
 }
 
 .sala-page #sequencia-player .bloco--vazio {
   border: 2px dashed var(--laranja-borda);
   background: rgba(255, 248, 238, 0.72);
   color: var(--laranja-claro);
-  font-size: calc(18px * var(--escala-fonte));
+  font-size: calc(22px * var(--escala-fonte));
+  font-weight: 900;
+  box-shadow: none;
+  cursor: default;
 }
 
-/* ---------- Grade 4x4 do jogo ---------- */
+/* ---------- Grade do jogo + dica ao lado ---------- */
 .sala-grade-panel {
-  margin-bottom: 16px;
-  padding: 14px;
+  flex: 1 1 auto;
+  flex-shrink: 1;
+  min-height: 0;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sala-grade-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+/* A caixa da grade mede o espaço livre; a grade usa o menor lado */
+.sala-grade-box {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 170px;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .grade,
@@ -345,36 +436,43 @@
 
 .sala-grade {
   container-type: inline-size;
-  margin-top: 12px;
-  padding: 14px;
+  width: min(100cqw, 100cqh, 560px);
+  aspect-ratio: 1;
+  padding: 3%;
+  gap: 2%;
   border-radius: 18px;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.24)),
-    repeating-linear-gradient(90deg, rgba(216, 90, 48, 0.08) 0 18px, rgba(239, 159, 39, 0.08) 18px 36px),
-    #F6D09D;
-  box-shadow: inset 0 0 0 2px rgba(111, 46, 15, 0.08);
+  /* Tabuleiro em tom de madeira: contraste claro com as casas */
+  background: linear-gradient(180deg, #C9824A, #A9612E);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 6px 0 #7E4420,
+    0 10px 18px rgba(111, 46, 15, 0.18);
 }
 
 .grade__celula {
   aspect-ratio: 1;
-  background: rgba(255, 255, 255, 0.24);
-  border: 1.5px solid rgba(255, 255, 255, 0.65);
-  border-radius: 12px;
+  min-width: 0;
+  min-height: 0;
+  background: #FFF6E8;
+  border: 2px solid #8A4B22;
+  border-radius: 10px;
+  box-shadow: inset 0 -3px 0 rgba(138, 75, 34, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Item 6 — ícone (personagem/estrela) ocupando ~80% da célula, proporcional ao container */
-  font-size: clamp(20px, 14.5cqw, 46px);
+  /* ícone (personagem/estrela) proporcional ao tamanho da grade */
+  font-size: clamp(16px, 14.5cqw, 46px);
   overflow: hidden;
 }
 
 .grade__celula--ativa {
-  background: rgba(250, 199, 117, 0.5);
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.72), 0 0 0 2px rgba(239, 159, 39, 0.25);
+  background: #FFD88A;
+  border-color: var(--laranja);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.8), 0 0 0 3px rgba(255, 216, 138, 0.65);
 }
 
 .grade__celula--obstaculo {
-  background: rgba(216, 90, 48, 0.14);
+  background: #FBD9CC;
 }
 
 .sala-page .grade-img {
@@ -393,20 +491,61 @@
   50%      { transform: scale(1.06); }
 }
 
-/* ---------- Ações e feedback ---------- */
-.sala-actions {
-  gap: 16px;
+/* Dica ocupa o espaço em branco ao lado da grade */
+.sala-mini-dica {
+  flex: 0 1 230px;
+  align-self: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1.5px solid var(--ambar-claro);
+  background: rgba(250, 238, 218, 0.82);
+  gap: 10px;
 }
 
+.sala-mini-dica .dica__icone-comodo {
+  width: 40px;
+  height: 40px;
+}
+
+.sala-mini-dica .dica__texto {
+  font-size: calc(14px * var(--escala-fonte));
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.sala-mini-dica strong {
+  color: var(--laranja);
+}
+
+.sala-mini-dica .dica__play {
+  margin-left: 0;
+  width: 36px;
+  height: 36px;
+  font-size: calc(14px * var(--escala-fonte));
+}
+
+/* ---------- Ações e feedback ---------- */
+.sala-actions {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sala-actions .sala-btn { flex: none; width: 100%; }
+
 .sala-btn {
-  min-height: 54px;
-  border-radius: 18px;
-  font-size: calc(18px * var(--escala-fonte));
+  min-height: 50px;
+  border-radius: 16px;
+  font-size: calc(17px * var(--escala-fonte));
   font-weight: 900;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  padding-block: 8px;
   box-shadow: 0 4px 0 rgba(111, 46, 15, 0.18);
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
@@ -431,142 +570,252 @@
 }
 
 #feedback-area {
-  margin-bottom: 16px;
+  margin-bottom: 0;
+  padding: 8px 14px;
   border: 1.5px solid rgba(226, 75, 74, 0.25);
-  border-radius: 16px;
+  border-radius: 14px;
 }
 
-/* Layout antigo mantido por segurança, caso alguma versão da Sala ainda use. */
-.sala-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 1rem;
+#feedback-area.dica--ambar {
+  border-color: var(--ambar-claro);
+}
+
+#feedback-area .dica__texto {
+  font-size: calc(14px * var(--escala-fonte));
+  font-weight: 700;
 }
 
 /* ---------- Responsividade ---------- */
-@media (max-width: 900px) {
-  .sala-layout {
-    grid-template-columns: 260px 1fr;
-  }
-}
 
+/* Tablets / telas médias: comandos em 2 colunas no topo */
 @media (max-width: 820px) {
-  .sala-page {
-    max-width: 680px;
-    max-height: none;
-  }
+  .sala-page { gap: 0.5rem; padding: 0.7rem; }
 
   .sala-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sala-hud {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-  }
-
-  .sala-hud__info {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    order: -1;
-  }
-
-  .sala-voltar {
-    grid-column: 1;
-  }
-
-  .sala-score {
-    grid-column: 2;
-  }
-
-  .sala-hud__titulo {
-    font-size: calc(34px * var(--escala-fonte));
-  }
-
-  .sala-comandos {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .sala-sequencia {
-    grid-template-columns: repeat(2, minmax(90px, 1fr));
-  }
-}
-
-@media (max-width: 520px) {
-  .sala-page {
-    padding: 1rem;
-  }
-
-  .sala-hud__titulo { font-size: clamp(calc(22px * var(--escala-fonte)), 8vw, calc(28px * var(--escala-fonte))); }
-
-  .sala-logi {
-    align-items: flex-start;
-  }
-
-  .sala-logi__img { width: 52px; height: 46px; }
-
-  .sala-logi .balao__texto {
-    font-size: calc(15px * var(--escala-fonte));
-  }
-
-  .sala-comandos {
-    grid-template-columns: 1fr;
-  }
-
-  .sala-actions {
+    display: flex;
     flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .sala-btn--limpar,
-  .sala-btn--executar {
-    flex: 1;
-    width: 100%;
-  }
-}
+  .sala-layout .sala-game-area { display: flex; }
+  .sala-actions { flex-direction: row; }
+  .sala-actions .sala-btn--limpar { flex: 0.6; width: auto; }
+  .sala-actions .sala-btn--executar { flex: 1; width: auto; }
 
-@media (max-height: 780px) and (min-width: 821px) {
-  .sala-page { padding: 0.6rem; }
-  .sala-hud { margin-bottom: 0.4rem; }
-  .sala-hud__icone { width: 40px; height: 40px; }
+  .sala-comandos-panel { flex-shrink: 0; padding: 8px 10px; }
+  .sala-panel__hint { display: none; }
+
+  .sala-comandos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .sala-page #blocos-disponiveis .bloco { flex-direction: row; min-height: 44px; gap: 8px; }
+
+  .sala-game-area {
+    flex: 1 1 auto;
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    gap: 0.5rem;
+  }
+
   .sala-hud__titulo { font-size: calc(26px * var(--escala-fonte)); }
-  .sala-score { padding-block: 8px; }
-  .sala-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
-  .sala-logi__img { width: 46px; height: 40px; }
-  .sala-logi .balao__texto { font-size: calc(14px * var(--escala-fonte)); line-height: 1.35; }
-  .sala-fases-card { margin-bottom: 0.55rem; padding-block: 6px; }
-  .sala-layout { gap: 0.55rem; }
-  .sala-panel, .sala-game-area { padding: 9px; }
-  .sala-sequencia-panel, .sala-grade-panel { margin-bottom: 10px; padding: 9px; }
-  .sala-sequencia { margin-top: 7px; min-height: 56px; gap: 6px; }
-  .sala-page #sequencia-player .bloco { min-height: 42px; }
-  .sala-grade {
-    width: min(100%, max(260px, calc(100dvh - 400px)));
-    margin: 7px auto 0;
-    padding: 8px;
-    gap: 4px;
-  }
-  .sala-btn { min-height: 44px; font-size: calc(15px * var(--escala-fonte)); }
+  .sala-hud__icone { width: 40px; height: 40px; }
+  .sala-logi__img { width: 70px; height: 62px; }
+  .sala-logi .balao__texto { font-size: calc(16px * var(--escala-fonte)); }
 }
 
-@media (orientation: landscape) and (max-height: 650px) and (min-width: 650px) and (max-width: 820px) {
-  .sala-page { max-width: none; padding: 0.55rem; }
-  .sala-hud { display: flex; gap: 0.5rem; }
-  .sala-hud__info { grid-column: auto; grid-row: auto; }
-  .sala-hud__titulo { font-size: calc(24px * var(--escala-fonte)); }
-  .sala-hud__icone { width: 38px; height: 38px; }
-  .sala-voltar, .sala-score { grid-column: auto; padding-block: 7px; }
-  .sala-logi { margin-bottom: 0.4rem; padding-block: 0.35rem; }
-  .sala-logi__img { width: 42px; height: 38px; }
+/* Celulares em pé */
+@media (max-width: 560px) {
+  .sala-page {
+    padding: 0.5rem;
+    gap: 0.4rem;
+    border-radius: 16px;
+  }
+
+  /* HUD em uma linha só */
+  .sala-hud { gap: 6px; }
+  .sala-voltar {
+    min-width: 0;
+    padding: 7px 10px;
+    font-size: calc(13px * var(--escala-fonte));
+    border-radius: 12px;
+  }
+  .sala-voltar span { font-size: calc(16px * var(--escala-fonte)); }
+  .sala-hud__info { gap: 6px; }
+  .sala-hud__icone { width: 30px; height: 30px; }
+  .sala-hud__titulo { font-size: calc(20px * var(--escala-fonte)); letter-spacing: -0.5px; }
+  .sala-hud__subtitulo { margin-top: 2px; font-size: calc(12px * var(--escala-fonte)); }
+  .sala-score {
+    min-width: 0;
+    padding: 6px 10px;
+    font-size: calc(14px * var(--escala-fonte));
+  }
+  .sala-hud .btn-ajuda {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    margin-left: 0;
+    font-size: calc(17px * var(--escala-fonte));
+  }
+
+  /* "Fase X de 3" já aparece no HUD */
+  .sala-niveis { display: none; }
+
+  .sala-logi { gap: 8px; padding: 6px 8px; border-radius: 14px; }
+  .sala-logi__img { width: 56px; height: 50px; }
+  .sala-logi .balao__texto { font-size: calc(14px * var(--escala-fonte)); line-height: 1.35; }
+  .sala-logi .balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
+
+  .sala-panel__title { font-size: calc(11px * var(--escala-fonte)); }
+
+  .sala-page #blocos-disponiveis .bloco {
+    min-height: 38px;
+    padding: 3px 6px;
+    gap: 5px;
+    justify-content: center;
+    border-radius: 11px;
+  }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(20px * var(--escala-fonte)); min-width: 18px; }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(10px * var(--escala-fonte)); letter-spacing: 0; }
+
+  /* Sequência: só ícones (o rótulo completo fica no aria-label) */
+  .sala-sequencia-panel { padding: 6px 8px; }
+  .sala-sequencia { gap: 5px; margin-top: 4px; }
+  .sala-page #sequencia-player .bloco { min-height: 38px; padding: 3px 1px; border-radius: 9px; }
+  .sala-page #sequencia-player .bloco-label { display: none; }
+  .sala-page #sequencia-player .bloco-vezes {
+    display: block;
+    font-size: calc(9px * var(--escala-fonte));
+    font-weight: 900;
+    line-height: 1;
+  }
+  .sala-page #sequencia-player .bloco-emoji { font-size: calc(18px * var(--escala-fonte)); }
+  .sala-page #sequencia-player .bloco--vazio { font-size: calc(16px * var(--escala-fonte)); }
+  .sala-page .bloco-remover { width: 16px; height: 16px; top: -5px; right: -4px; font-size: 12px; }
+
+  .sala-grade-panel { padding: 6px 8px; }
+  .sala-grade-area { gap: 8px; margin-top: 4px; }
+  .sala-grade-box { min-height: 150px; }
+  .grade__celula { border-radius: 8px; }
+
+  .sala-mini-dica { flex: 0 1 112px; padding: 8px 6px; gap: 6px; }
+  .sala-mini-dica .dica__icone-comodo { width: 28px; height: 28px; }
+  .sala-mini-dica .dica__texto { font-size: calc(12px * var(--escala-fonte)); line-height: 1.35; }
+  .sala-mini-dica .dica__play { width: 30px; height: 30px; }
+
+  #feedback-area { padding: 6px 10px; }
+  #feedback-area .dica__texto { font-size: calc(12.5px * var(--escala-fonte)); }
+
+  .sala-actions { flex-direction: row; gap: 8px; }
+  .sala-btn { min-height: 44px; font-size: calc(15px * var(--escala-fonte)); border-radius: 13px; }
+}
+
+/* Celulares em pé com pouca altura (ex.: 360×560 com barra do navegador) */
+@media (max-width: 560px) and (max-height: 720px) {
+  .sala-layout .sala-panel__title { display: none; }
+  .sala-comandos { margin-top: 0; }
+  .sala-sequencia { margin-top: 0; }
+  .sala-grade-area { margin-top: 0; }
+  .sala-grade-box { min-height: 120px; }
+
+  .sala-logi__img { width: 46px; height: 42px; }
   .sala-logi .balao__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
-  .sala-layout { grid-template-columns: minmax(190px, 0.75fr) minmax(0, 1.25fr); gap: 0.5rem; }
-  .sala-comandos { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .sala-page #blocos-disponiveis .bloco { min-height: 42px; padding-inline: 8px; gap: 8px; }
-  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(24px * var(--escala-fonte)); min-width: 24px; }
+
+  .sala-mini-dica { padding: 6px; gap: 4px; }
+  .sala-mini-dica .dica__icone-comodo { display: none; }
+  .sala-mini-dica .dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
+  .sala-mini-dica .dica__play { width: 28px; height: 28px; }
+}
+
+/* Celulares bem estreitos */
+@media (max-width: 360px) {
+  .sala-voltar strong { display: none; }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(9px * var(--escala-fonte)); }
+  .sala-mini-dica { flex-basis: 96px; }
+}
+
+/* Notebook: a grade ganha a altura do título e das pílulas de fase
+   ("Fase X de 3" continua no HUD) */
+@media (max-height: 800px) and (min-width: 821px) {
+  .sala-niveis,
+  .sala-grade-panel > .sala-panel__title { display: none; }
+  .sala-grade-area { margin-top: 0; }
+}
+
+/* Desktop / notebook com pouca altura */
+@media (max-height: 760px) and (min-width: 821px) {
+  .sala-page { padding: 0.6rem; gap: 0.45rem; }
+  .sala-hud__icone { width: 38px; height: 38px; }
+  .sala-hud__titulo { font-size: calc(24px * var(--escala-fonte)); }
+  .sala-score, .sala-voltar { padding-block: 7px; }
+  .sala-logi { padding-block: 0.3rem; }
+  .sala-logi__img { width: 66px; height: 58px; }
+  .sala-logi .balao__texto { font-size: calc(16px * var(--escala-fonte)); line-height: 1.35; }
+  .sala-panel, .sala-game-area { padding: 9px; }
+  .sala-game-area { gap: 8px; }
+  .sala-page #blocos-disponiveis .bloco { min-height: 50px; }
+  .sala-page #sequencia-player .bloco { min-height: 44px; }
+  .sala-btn { min-height: 42px; font-size: calc(15px * var(--escala-fonte)); }
+}
+
+/* Celular deitado */
+@media (orientation: landscape) and (max-height: 500px) {
+  .sala-page { padding: 0.45rem; gap: 0.35rem; }
+  .sala-hud__icone { width: 30px; height: 30px; }
+  .sala-hud__titulo { font-size: calc(20px * var(--escala-fonte)); }
+  .sala-hud__subtitulo { font-size: calc(12px * var(--escala-fonte)); }
+  .sala-voltar, .sala-score { padding-block: 5px; }
+  .sala-hud .btn-ajuda { width: 34px; height: 34px; min-width: 34px; }
+  .sala-niveis { display: none; }
+  .sala-logi { padding: 4px 8px; }
+  .sala-logi__img { width: 46px; height: 40px; }
+  .sala-logi .balao__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
+  .sala-logi .balao__play { width: 32px; height: 32px; }
+
+  /* Comandos + botões à esquerda; sequência + grade à direita */
+  .sala-layout {
+    display: grid;
+    grid-template-columns: minmax(200px, 0.7fr) minmax(0, 1.3fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "cmd seq"
+      "cmd grade"
+      "fb  grade"
+      "acoes grade";
+    gap: 0.35rem 0.4rem;
+  }
+  .sala-layout .sala-game-area { display: contents; }
+  .sala-comandos-panel { grid-area: cmd; padding: 6px; }
+  .sala-sequencia-panel { grid-area: seq; }
+  .sala-grade-panel { grid-area: grade; }
+  #feedback-area { grid-area: fb; }
+  .sala-actions { grid-area: acoes; }
+
+  .sala-layout .sala-panel__title,
+  .sala-panel__hint { display: none; }
+  .sala-comandos { grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 0; }
+  .sala-page #blocos-disponiveis .bloco { min-height: 32px; padding-inline: 6px; gap: 6px; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(18px * var(--escala-fonte)); min-width: 18px; }
   .sala-page #blocos-disponiveis .bloco-label { font-size: calc(9.5px * var(--escala-fonte)); }
-  .sala-mini-dica { margin-top: 8px; padding: 8px; }
-  .sala-sequencia-panel, .sala-grade-panel { margin-bottom: 8px; padding: 8px; }
-  .sala-grade { width: min(100%, 310px); margin-inline: auto; padding: 7px; }
-  .sala-btn { min-height: 42px; font-size: calc(14px * var(--escala-fonte)); }
+
+  .sala-sequencia-panel { padding: 4px 8px; }
+  .sala-sequencia { margin-top: 0; }
+  .sala-page #sequencia-player .bloco { min-height: 32px; padding-block: 2px; }
+  .sala-page #sequencia-player .bloco-label { display: none; }
+  .sala-page #sequencia-player .bloco-vezes { display: block; font-size: 9px; font-weight: 900; }
+  .sala-grade-panel { padding: 5px 8px; }
+  .sala-grade-area { margin-top: 0; }
+  .sala-grade-box { min-height: 110px; }
+  .sala-mini-dica { flex-basis: 150px; padding: 6px; gap: 4px; }
+  .sala-mini-dica .dica__icone-comodo { display: none; }
+  .sala-mini-dica .dica__texto { font-size: calc(12px * var(--escala-fonte)); }
+  .sala-mini-dica .dica__play { width: 28px; height: 28px; }
+  #feedback-area { padding: 4px 8px; }
+  #feedback-area .dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
+  .sala-actions { flex-direction: row; gap: 6px; }
+  .sala-btn { min-height: 36px; font-size: calc(14px * var(--escala-fonte)); border-radius: 12px; }
 }
