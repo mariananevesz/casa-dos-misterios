@@ -95,6 +95,10 @@
   color: var(--marrom-medio);
   font-size: calc(15px * var(--escala-fonte));
   font-weight: 800;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   box-shadow: 0 4px 0 rgba(111, 46, 15, 0.12);
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
@@ -137,26 +141,31 @@
 
 /* ---------- Balão do Logi no mapa ---------- */
 .tela--mapa .mapa-logi {
-  display: grid;
-  grid-template-columns: 94px 1fr;
+  display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.2rem;
 }
 
 .tela--mapa .mapa-logi__img {
-  width: 92px;
-  height: 92px;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
   object-fit: contain;
   filter: drop-shadow(0 8px 10px rgba(111, 46, 15, 0.18));
 }
 
 .tela--mapa .mapa-logi__balao {
+  flex: 1;
+  min-width: 0;
   position: relative;
-  background: rgba(255, 248, 238, 0.86);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #FFF8EE;
   border: 2px solid var(--laranja-borda);
   border-radius: 20px;
-  padding: 18px 22px;
+  padding: 16px 18px 16px 22px;
   box-shadow: 0 8px 22px rgba(111, 46, 15, 0.08);
 }
 
@@ -164,26 +173,24 @@
 .tela--mapa .mapa-logi__balao::before {
   content: "";
   position: absolute;
-  left: -14px;
-  top: 36px;
-  width: 24px;
-  height: 24px;
-  background: rgba(255, 248, 238, 0.86);
+  left: -13px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  background: #FFF8EE;
   border-left: 2px solid var(--laranja-borda);
   border-bottom: 2px solid var(--laranja-borda);
-  transform: rotate(45deg);
+  transform: translateY(-50%) rotate(45deg);
 }
 
-.tela--mapa .mapa-logi__nome {
-  font-size: calc(13px * var(--escala-fonte));
-  font-weight: 900;
-  color: var(--laranja);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 6px;
+.tela--mapa .mapa-logi__texto {
+  flex: 1;
+  min-width: 0;
+  color: var(--marrom-medio);
+  font-size: calc(18px * var(--escala-fonte));
+  font-weight: 700;
+  line-height: 1.5;
 }
-
-.tela--mapa .mapa-logi__balao p:last-child { color: var(--marrom-medio); font-size: calc(16px * var(--escala-fonte)); line-height: 1.55; }
 
 /* ---------- Grid de cômodos ---------- */
 .tela--mapa .mapa-grid {
@@ -322,7 +329,7 @@
   box-shadow: 0 8px 20px rgba(111, 46, 15, 0.06);
 }
 
-.tela--mapa .mapa-progresso-geral p      { color: var(--cinza); font-size: calc(13px * var(--escala-fonte)); font-weight: 700; margin-bottom: 3px; }
+.tela--mapa .mapa-progresso-geral p      { color: var(--texto-medio); font-size: calc(13px * var(--escala-fonte)); font-weight: 700; margin-bottom: 3px; }
 .tela--mapa .mapa-progresso-geral strong { color: var(--marrom-medio); font-size: calc(18px * var(--escala-fonte)); }
 
 .tela--mapa .mapa-barra {
@@ -358,38 +365,95 @@
   .tela--mapa .mapa-titulo-area p   { font-size: calc(15px * var(--escala-fonte)); }
   .tela--mapa .mapa-grid            { gap: 12px; }
   .tela--mapa .mapa-logi            { gap: 0.75rem; }
-  .tela--mapa .mapa-progresso-geral { grid-template-columns: 1fr; gap: 0.6rem; }
+  .tela--mapa .mapa-logi__img       { width: 86px; height: 86px; }
+  .tela--mapa .mapa-logi__texto     { font-size: calc(16px * var(--escala-fonte)); }
 }
 
-/* Phones em portrait: colapsa header em coluna única */
+/* Celulares em pé: tudo cabe numa tela, cômodos em grade 2×2 */
 @media (max-width: 560px) {
-  .tela--mapa .mapa-topo {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 0.5rem;
+  .tela--mapa { padding: 0.6rem; border-radius: 16px; }
+
+  /* Voltar | título | pontos numa linha */
+  .tela--mapa .mapa-topo { gap: 0.4rem; margin-bottom: 0.5rem; }
+  .tela--mapa .mapa-voltar {
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: calc(13px * var(--escala-fonte));
   }
+  .tela--mapa .mapa-voltar span { margin-right: 3px; font-size: calc(16px * var(--escala-fonte)); }
+  .tela--mapa .mapa-titulo-linha h1 { font-size: calc(21px * var(--escala-fonte)); letter-spacing: -0.5px; }
+  .tela--mapa .mapa-titulo-area p   { display: none; }
+  .tela--mapa .mapa-pontos {
+    min-height: 38px;
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: calc(15px * var(--escala-fonte));
+    gap: 5px;
+  }
+  .tela--mapa .mapa-pontos img { width: 20px; height: 20px; }
 
-  .tela--mapa .mapa-voltar,
-  .tela--mapa .mapa-pontos    { justify-self: center; }
-  .tela--mapa .mapa-grid      { grid-template-columns: 1fr; }
-  .tela--mapa .mapa-logi      { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-  .tela--mapa .mapa-logi__balao::before { display: none; }
+  .tela--mapa .mapa-logi { gap: 0.6rem; margin-bottom: 0.5rem; }
+  .tela--mapa .mapa-logi__img { width: 62px; height: 62px; }
+  .tela--mapa .mapa-logi__balao { padding: 8px 8px 8px 12px; gap: 8px; border-radius: 14px; }
+  .tela--mapa .mapa-logi__balao::before { width: 16px; height: 16px; left: -10px; }
+  .tela--mapa .mapa-logi__texto { font-size: calc(13.5px * var(--escala-fonte)); line-height: 1.35; }
+  .tela--mapa .mapa-logi .balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
-  .tela--mapa .comodo-card__nome  { font-size: calc(20px * var(--escala-fonte)); }
-  .tela--mapa .comodo-card__skill { font-size: calc(12px * var(--escala-fonte)); }
-}
-
-/* Phones muito pequenos */
-@media (max-width: 400px) {
-  .tela--mapa { padding: 0.85rem; }
-  .tela--mapa .mapa-titulo-linha h1 { font-size: calc(24px * var(--escala-fonte)); }
-  .tela--mapa .mapa-titulo-area p   { font-size: calc(13px * var(--escala-fonte)); }
-  .tela--mapa .comodo-card          { grid-template-columns: 1fr; min-height: auto; }
-  .tela--mapa .comodo-card__conteudo { align-items: center; text-align: center; padding: 14px; }
-  .tela--mapa .comodo-card__icone-img { width: 90px; height: 90px; }
-  .tela--mapa .comodo-card__imagem-box { padding: 14px; }
+  /* Card do cômodo: imagem em cima, texto embaixo */
+  .tela--mapa .mapa-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .tela--mapa .mapa-progresso-geral { grid-template-columns: auto 1fr; gap: 12px; padding: 8px 12px; border-radius: 14px; }
+  .tela--mapa .mapa-progresso-geral p { font-size: calc(11px * var(--escala-fonte)); margin-bottom: 0; }
+  .tela--mapa .mapa-progresso-geral strong { font-size: calc(14px * var(--escala-fonte)); }
+  .tela--mapa .mapa-barra { height: 12px; }
+  .tela--mapa .comodo-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: 0;
+    border-radius: 18px;
+    box-shadow: 0 5px 0 rgba(111, 46, 15, 0.08);
+  }
+  .tela--mapa .comodo-card__imagem-box { padding: 4px; }
+  .tela--mapa .comodo-card__icone-img { width: 60px; height: 60px; }
+  /* Pontos e estrelas lado a lado; o resto ocupa a linha inteira */
+  .tela--mapa .comodo-card__conteudo {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    column-gap: 6px;
+    text-align: center;
+    padding: 6px 8px 10px;
+  }
+  .tela--mapa .comodo-card__conteudo > * { grid-column: 1 / -1; justify-self: center; }
+  .tela--mapa .comodo-card__conteudo > .comodo-card__pts,
+  .tela--mapa .comodo-card__conteudo > .comodo-card__estrelas,
+  .tela--mapa .comodo-card__conteudo > .progresso { grid-column: auto; margin: 0; }
+  .tela--mapa .comodo-card__nome  { font-size: calc(18px * var(--escala-fonte)); margin-bottom: 2px; }
+  .tela--mapa .comodo-card__skill { font-size: calc(11.5px * var(--escala-fonte)); margin-bottom: 5px; }
+  .tela--mapa .comodo-card__pts   { font-size: calc(13px * var(--escala-fonte)); margin-bottom: 4px; }
+  .tela--mapa .comodo-card__pts--vazio { font-size: calc(11px * var(--escala-fonte)); }
+  .tela--mapa .comodo-card__bloq-aviso { font-size: calc(11px * var(--escala-fonte)); margin-top: 2px; }
+  .tela--mapa .comodo-card__acao { min-height: 32px; margin-top: 4px; padding: 0 14px; border-radius: 11px; font-size: calc(13px * var(--escala-fonte)); }
   .tela--mapa .progresso,
   .tela--mapa .comodo-card__estrelas { justify-content: center; }
+  .tela--mapa .comodo-card__estrelas img { width: 18px; height: 18px; }
+}
+
+/* Celulares baixos */
+@media (max-width: 560px) and (max-height: 620px) {
+  .tela--mapa .mapa-titulo-area p { display: none; }
+  .tela--mapa .mapa-logi__img { width: 48px; height: 48px; }
+  .tela--mapa .mapa-logi__texto { font-size: calc(12.5px * var(--escala-fonte)); }
+  .tela--mapa .comodo-card__icone-img { width: 46px; height: 46px; }
+  .tela--mapa .comodo-card__imagem-box { padding: 3px; }
+  .tela--mapa .comodo-card__skill { display: none; }
+  .tela--mapa .comodo-card__acao { min-height: 28px; }
+}
+
+@media (max-width: 360px) {
+  .tela--mapa .mapa-voltar { font-size: 0; }
+  .tela--mapa .mapa-voltar span { margin-right: 0; }
 }
 
 @media (max-height: 800px) and (min-width: 761px) {
@@ -397,18 +461,53 @@
   .tela--mapa .mapa-topo { margin-bottom: 0.6rem; }
   .tela--mapa .mapa-titulo-linha h1 { font-size: calc(28px * var(--escala-fonte)); }
   .tela--mapa .mapa-titulo-area p { font-size: calc(14px * var(--escala-fonte)); }
-  .tela--mapa .mapa-logi { grid-template-columns: 68px 1fr; margin-bottom: 0.6rem; }
-  .tela--mapa .mapa-logi__img { width: 66px; height: 66px; }
-  .tela--mapa .mapa-logi__balao { padding: 10px 16px; }
-  .tela--mapa .mapa-logi__balao p:last-child { font-size: calc(13px * var(--escala-fonte)); line-height: 1.35; }
-  .tela--mapa .mapa-grid { gap: 10px; margin-bottom: 0.65rem; }
-  .tela--mapa .comodo-card { min-height: 128px; }
-  .tela--mapa .comodo-card__imagem-box { padding: 10px; }
-  .tela--mapa .comodo-card__icone-img { width: 88px; height: 88px; }
-  .tela--mapa .comodo-card__conteudo { padding: 10px 12px; }
-  .tela--mapa .comodo-card__nome { font-size: calc(19px * var(--escala-fonte)); }
-  .tela--mapa .comodo-card__skill { margin-bottom: 4px; }
-  .tela--mapa .comodo-card__pts { margin-bottom: 3px; }
-  .tela--mapa .comodo-card__acao { min-height: 30px; margin-top: 3px; padding-inline: 14px; font-size: calc(13px * var(--escala-fonte)); }
+  .tela--mapa .mapa-logi { margin-bottom: 0.7rem; }
+  .tela--mapa .mapa-logi__img { width: 88px; height: 88px; }
+  .tela--mapa .mapa-logi__balao { padding: 10px 14px 10px 18px; }
+  .tela--mapa .mapa-logi__texto { font-size: calc(16px * var(--escala-fonte)); line-height: 1.4; }
+  .tela--mapa .mapa-grid { gap: 12px; margin-bottom: 0.7rem; }
   .tela--mapa .mapa-progresso-geral { padding: 9px 14px; }
+  .tela--mapa .comodo-card { min-height: 150px; }
+  .tela--mapa .comodo-card__imagem-box { padding: 10px; }
+  .tela--mapa .comodo-card__icone-img { width: 100px; height: 100px; }
+  .tela--mapa .comodo-card__conteudo { padding: 10px 12px; }
+  .tela--mapa .comodo-card__nome { font-size: calc(21px * var(--escala-fonte)); }
+  .tela--mapa .comodo-card__skill { margin-bottom: 6px; }
+  .tela--mapa .comodo-card__pts { margin-bottom: 4px; }
+  .tela--mapa .comodo-card__acao { min-height: 36px; margin-top: 4px; padding-inline: 16px; font-size: calc(14px * var(--escala-fonte)); }
+}
+
+/* Celular deitado: cômodos em 4 colunas */
+@media (orientation: landscape) and (max-height: 500px) {
+  .tela--mapa { padding: 0.5rem; }
+  .tela--mapa .mapa-topo { margin-bottom: 0.4rem; }
+  .tela--mapa .mapa-voltar, .tela--mapa .mapa-pontos { min-height: 36px; }
+  .tela--mapa .mapa-titulo-linha h1 { font-size: calc(22px * var(--escala-fonte)); }
+  .tela--mapa .mapa-titulo-area p { display: none; }
+  .tela--mapa .mapa-logi { margin-bottom: 0.4rem; }
+  .tela--mapa .mapa-logi__img { width: 48px; height: 48px; }
+  .tela--mapa .mapa-logi__balao { padding: 6px 8px 6px 12px; }
+  .tela--mapa .mapa-logi__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
+  .tela--mapa .mapa-logi .balao__play { width: 32px; height: 32px; }
+  .tela--mapa .mapa-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 0.4rem; }
+  .tela--mapa .mapa-progresso-geral { grid-template-columns: auto 1fr; gap: 10px; padding: 5px 12px; border-radius: 12px; }
+  .tela--mapa .mapa-progresso-geral p { font-size: calc(10.5px * var(--escala-fonte)); margin-bottom: 0; }
+  .tela--mapa .mapa-progresso-geral strong { font-size: calc(13px * var(--escala-fonte)); }
+  .tela--mapa .mapa-barra { height: 10px; }
+  .tela--mapa .comodo-card { grid-template-columns: 1fr; grid-template-rows: auto 1fr; min-height: 0; border-radius: 16px; }
+  .tela--mapa .comodo-card__imagem-box { padding: 4px; }
+  .tela--mapa .comodo-card__icone-img { width: 56px; height: 56px; }
+  .tela--mapa .comodo-card__conteudo { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 6px; text-align: center; padding: 4px 6px 8px; }
+  .tela--mapa .comodo-card__conteudo > * { grid-column: 1 / -1; justify-self: center; }
+  .tela--mapa .comodo-card__conteudo > .comodo-card__pts,
+  .tela--mapa .comodo-card__conteudo > .comodo-card__estrelas,
+  .tela--mapa .comodo-card__conteudo > .progresso { grid-column: auto; margin: 0; }
+  .tela--mapa .comodo-card__estrelas img { width: 16px; height: 16px; }
+  .tela--mapa .comodo-card__nome { font-size: calc(16px * var(--escala-fonte)); margin-bottom: 0; }
+  .tela--mapa .comodo-card__skill { font-size: calc(10.5px * var(--escala-fonte)); margin-bottom: 3px; }
+  .tela--mapa .comodo-card__pts { font-size: calc(11px * var(--escala-fonte)); margin-bottom: 2px; }
+  .tela--mapa .comodo-card__bloq-aviso { font-size: calc(10.5px * var(--escala-fonte)); margin-top: 2px; }
+  .tela--mapa .comodo-card__acao { min-height: 28px; margin-top: 2px; padding: 0 10px; font-size: calc(12px * var(--escala-fonte)); }
+  .tela--mapa .progresso,
+  .tela--mapa .comodo-card__estrelas { justify-content: center; }
 }

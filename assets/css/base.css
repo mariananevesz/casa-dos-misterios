@@ -912,6 +912,11 @@ body.alto-contraste .pontuacao-card__pts {
 
 body.alto-contraste .dica strong { color: #ffd700 !important; }
 
+body.alto-contraste .mapa-logi__balao::before {
+  background: #181818 !important;
+  border-color: #fff !important;
+}
+
 body.alto-contraste .modal-ajuda-objetivo,
 body.alto-contraste .modal-ajuda-mini-painel {
   background: #181818 !important;
@@ -966,6 +971,20 @@ body.alto-contraste .dica--erro {
   background: #ff5c8a !important;
   border: 3px dashed #fff !important;
   color: #000 !important;
+}
+
+/* Textos dentro de fundos coloridos claros (rosa/ciano/amarelo) ficam pretos */
+body.alto-contraste .dica--erro .dica__texto,
+body.alto-contraste .dica--erro strong,
+body.alto-contraste .bloco--erro .bloco__tag-erro,
+body.alto-contraste .item-card--selecionado .item-card__nome,
+body.alto-contraste .item-card--na-prateleira .item-card__nome,
+body.alto-contraste .item-card--incorreto .item-card__nome {
+  color: #000 !important;
+}
+
+body.alto-contraste .bloco--erro .bloco__tag-erro {
+  background: rgba(0, 0, 0, 0.15) !important;
 }
 
 body.alto-contraste .bloco--laranja,
