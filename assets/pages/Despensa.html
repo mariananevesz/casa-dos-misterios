@@ -20,7 +20,7 @@
       <section class="hud__info despensa-hud__info">
         <img src="../img/icone-despensa.png" alt="" class="hud__icone-img despensa-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa — Estoque Inteligente</p>
+          <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa<span class="despensa-hud__skill"> — Estoque Inteligente</span></p>
           <p class="hud__subtitulo hud__subtitulo--marrom despensa-hud__subtitulo" id="hud-subtitulo">Mini-jogo 4</p>
         </section>
       </section>
@@ -32,17 +32,14 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução atual do Logi">▶</button>
-      </section>
+      <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
       <div class="balao__corpo despensa-logi__corpo">
-        <p class="balao__nome despensa-logi__nome">Logi diz:</p>
         <p class="balao__texto balao__texto--marrom despensa-logi__texto" id="logi-boas-vindas"></p>
         <p class="balao__instrucao despensa-logi__instrucao" id="logi-instrucao"></p>
         <p class="balao__legenda-cor despensa-logi__legenda" id="logi-legenda-cor" style="display:none;">
         </p>
       </div>
+      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução atual do Logi">▶</button>
     </section>
 
     <section class="despensa-layout">
@@ -584,8 +581,8 @@
         const item = nivel.itens.find(it => it.id === id);
         const status = prateleiraStatus[i]; // 'ok' | 'erro' | ''
         const imgSize = nivel.criterio === 'tamanho' && item?.tamanho
-          ? tamanhoImagemPx(item.tamanho, true)
-          : 28;
+          ? tamanhoImagemPx(item.tamanho)
+          : 52;
 
         /* Item 2 — manter itens + destacar erros com borda vermelha */
         if (status === 'erro') {
@@ -605,9 +602,11 @@
 
         const imgSrc = item?.img || '';
         slot.innerHTML = `
-          <img src="${imgSrc}" alt="" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;">
+          <img src="${imgSrc}" alt="" class="prateleira__slot-img" style="--slot-img:${imgSize}px;">
           <span class="prateleira__slot-pos">${i+1}º</span>
-          ${textoStatus ? `<span class="prateleira__slot-status" aria-hidden="true">${status === 'erro' ? '✕' : '✓'}</span>` : ''}
+          ${textoStatus
+            ? `<span class="prateleira__slot-status" aria-hidden="true">${status === 'erro' ? '✕' : '✓'}</span>`
+            : '<span class="bloco-remover" aria-hidden="true">×</span>'}
         `;
         slot.addEventListener('click', () => removerItem(i));
 
