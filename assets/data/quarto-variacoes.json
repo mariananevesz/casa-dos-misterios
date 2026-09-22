@@ -1,0 +1,145 @@
+{
+  "_comentario": "4 variações por fase. Cada variação substitui 'sequenciaComErros' e 'sequenciaCorreta' da fase correspondente em quarto.json (mesma dificuldade, mesmo número de erros).",
+  "variacoes": [
+    {
+      "fases": [
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+            { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+        }
+      ]
+    },
+    {
+      "fases": [
+        {
+          "sequenciaComErros": [
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": true },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": true },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": true },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+        }
+      ]
+    },
+    {
+      "fases": [
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false },
+            { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+        }
+      ]
+    },
+    {
+      "fases": [
+        {
+          "sequenciaComErros": [
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": true },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+        },
+        {
+          "sequenciaComErros": [
+            { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
+            { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+            { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+            { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+            { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+            { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+          ],
+          "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+        }
+      ]
+    }
+  ]
+}
