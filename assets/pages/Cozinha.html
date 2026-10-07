@@ -23,7 +23,7 @@
           <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
         </section>
       </section>
-      <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
 
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
@@ -465,7 +465,7 @@
 
     document.getElementById('modal-sub').textContent =
       `Você acertou ${acertos} de ${gameData.perguntas.length} perguntas!`;
-    document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
+    document.getElementById('modal-pts').innerHTML = textoPontuacao(score, `Pontuação: ${score} / 25 pts`, 'Pontuação: ', 25);
     abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     if (score === 25) audio.conclusao();
@@ -476,7 +476,7 @@
     const pts = score !== undefined
       ? score
       : Math.round((acertos / (gameData?.perguntas.length || 5)) * 25);
-    document.getElementById('badge-pts').textContent = pts + ' pts';
+    document.getElementById('badge-pts').innerHTML = textoPontuacao(pts);
   }
 
   function beforeUnloadHandler() {

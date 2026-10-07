@@ -11,21 +11,21 @@
 
   <section class="tela tela--relativa" id="tela-principal">
 
+    <!-- Cabeçalho -->
+    <section class="inicio-header">
+      <h1 class="inicio-header__titulo" id="inicio-titulo">Casa dos Mistérios</h1>
+      <p class="inicio-header__subtitulo"><span aria-hidden="true">🔍</span> Aventura de lógica</p>
+    </section>
+
     <!-- Acesso às configurações de acessibilidade -->
     <button class="btn-config" id="btn-config"
             type="button"
-            aria-label="Abrir configurações de acessibilidade"
+            aria-label="Configurações"
             aria-haspopup="dialog"
             aria-controls="modal-config"
             aria-expanded="false">
       <img src="assets/img/config.png" alt="" aria-hidden="true" style="width:20px;height:20px;">
     </button>
-
-    <!-- Cabeçalho -->
-    <section class="inicio-header">
-      <h1 class="inicio-header__titulo">Casa dos Mistérios</h1>
-      <p class="inicio-header__subtitulo">🔍 Aventura de lógica</p>
-    </section>
 
     <!-- Mascote Logi de boas-vindas -->
     <section class="balao" style="margin-bottom:1.25rem;" aria-label="Mensagem do Logi">
@@ -44,20 +44,21 @@
     <div class="menu-botoes">
       <button class="btn--menu-principal btn--menu-laranja"
               onclick="window.location.href='assets/pages/MapaCasa.html'">
-        <span>▶</span>
+        <span aria-hidden="true">▶</span>
         <strong>Jogar</strong>
       </button>
-      <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
-        <span>📖</span>
+      <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar"
+              aria-haspopup="dialog" aria-controls="modal-como-jogar" aria-expanded="false">
+        <span aria-hidden="true">📖</span>
         <strong>Como jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline"
               onclick="window.location.href='assets/pages/TelaPontuacao.html'">
-        <span>🏆</span>
+        <span aria-hidden="true">🏆</span>
         <strong>Pontuações</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
-        <span>↻</span>
+        <span aria-hidden="true">↻</span>
         <strong>Reiniciar progresso</strong>
       </button>
     </div>
@@ -138,7 +139,7 @@
       <section class="config-linha" style="margin-top:1rem;">
         <label class="config-label" for="toggle-narracao">Narração</label>
         <button class="toggle-btn" id="toggle-narracao" role="switch"
-                type="button" aria-checked="true" aria-label="Narração de instruções">
+                type="button" aria-checked="true" aria-label="Narração">
           <span class="toggle-thumb"></span>
         </button>
       </section>
@@ -150,7 +151,7 @@
         <ul style="font-size:calc(11px * var(--escala-fonte));color:var(--texto-medio);line-height:2;">
           <li><kbd>Alt</kbd> + <kbd>A</kbd> — abrir acessibilidade</li>
           <li><kbd>Alt</kbd> + <kbd>R</kbd> — repetir instrução</li>
-          <li><kbd>Esc</kbd> — fechar menu ou janela aberta</li>
+          <li><span aria-hidden="true"><kbd>Esc</kbd></span><span class="texto-leitor">Escape</span> — fechar menu ou janela aberta</li>
           <li><kbd>Tab</kbd> — navegar entre elementos</li>
           <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> — selecionar / confirmar</li>
           <li><kbd>Delete</kbd> — remover bloco selecionado</li>
@@ -180,7 +181,7 @@
         Complete cada cômodo para desbloquear o próximo. Quanto menos erros, mais pontos!
       </p>
       <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
-              id="btn-fechar-cj" aria-label="Fechar instruções">
+              id="btn-fechar-cj">
         Entendi!
       </button>
     </section>
@@ -207,38 +208,28 @@
   }
 
   /* ===== Configurações ===== */
-  let modalAberto = null;
   let acionadorModal = null;
-
-  function elementosFocaveis(modal) {
-    return [...modal.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )].filter(el => !el.hidden && el.offsetParent !== null);
-  }
 
   function abrirModal(id, acionador) {
     const modal = document.getElementById(id);
-    modalAberto = modal;
+    if (!modal) return;
     acionadorModal = acionador || document.activeElement;
-    modal.style.display = 'flex';
+    preservarFocoAcessivel(modal, acionadorModal);
+    abrirModalFluxoAcessivel(modal);
     if (acionadorModal?.hasAttribute('aria-expanded')) {
       acionadorModal.setAttribute('aria-expanded', 'true');
     }
-    requestAnimationFrame(() => elementosFocaveis(modal)[0]?.focus());
   }
 
   function fecharModal(id) {
     const modal = document.getElementById(id);
-    if (modal.style.display === 'none') return;
+    if (!modal || modal.style.display === 'none') return;
     if (id === 'modal-como-jogar') restaurarNarracaoAposTutorial();
-    modal.style.display = 'none';
-    const acionador = acionadorModal;
-    if (acionador?.hasAttribute('aria-expanded')) {
-      acionador.setAttribute('aria-expanded', 'false');
+    if (acionadorModal?.hasAttribute('aria-expanded')) {
+      acionadorModal.setAttribute('aria-expanded', 'false');
     }
-    modalAberto = null;
     acionadorModal = null;
-    acionador?.focus();
+    fecharModalFluxoAcessivel(modal);
   }
 
   document.getElementById('btn-config').addEventListener('click', () => {
@@ -261,34 +252,6 @@
     document.getElementById(id).addEventListener('click', e => {
       if (e.target === e.currentTarget) fecharModal(id);
     });
-  });
-
-  // Mantém a navegação no modal aberto e permite fechá-lo com Esc.
-  document.addEventListener('keydown', e => {
-    if (!modalAberto) return;
-
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      fecharModal(modalAberto.id);
-      return;
-    }
-
-    if (e.key === 'Tab') {
-      const focaveis = elementosFocaveis(modalAberto);
-      if (!focaveis.length) {
-        e.preventDefault();
-        return;
-      }
-      const primeiro = focaveis[0];
-      const ultimo = focaveis[focaveis.length - 1];
-      if (e.shiftKey && document.activeElement === primeiro) {
-        e.preventDefault();
-        ultimo.focus();
-      } else if (!e.shiftKey && document.activeElement === ultimo) {
-        e.preventDefault();
-        primeiro.focus();
-      }
-    }
   });
 
   /* ---- Toggles ---- */
@@ -372,6 +335,14 @@
 
   atualizarStatus();
   sincronizarTogglles();
+  // Uma orientacao por carregamento, usando a base global de acessibilidade.
+  document.addEventListener('DOMContentLoaded', () => {
+    inicializarOrientacaoAcessivel({
+      titulo: 'Casa dos Mistérios',
+      mensagem: 'Menu principal. Use Tab para navegar pelos botões e Enter para selecionar. Escolha Jogar para começar.',
+      focoInicial: '#inicio-titulo'
+    });
+  }, { once: true });
   </script>
 
 </body>

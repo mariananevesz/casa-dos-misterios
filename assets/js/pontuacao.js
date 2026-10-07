@@ -49,7 +49,7 @@ function renderScoreScreen() {
   const completedRooms = COMODOS.filter(room => state.completed[room.id] === true).length;
   const fullyCompleted = gameState.isFullyCompleted();
 
-  document.getElementById('pontuacao-final').textContent = total;
+  document.getElementById('pontuacao-final').innerHTML = textoPontuacao(total, total);
   document.getElementById('tela-pontuacao').classList.toggle('tela--celebracao', fullyCompleted);
   document.getElementById('resultado-logi').hidden = !fullyCompleted;
   document.getElementById('resultado-icone').hidden = fullyCompleted;
@@ -75,7 +75,7 @@ function renderScoreScreen() {
     card.innerHTML = `
       <img src="${room.img}" alt="" class="pontuacao-card__icone-img">
       <p class="pontuacao-card__nome pontuacao-card__nome--${room.cor}">${room.nome}</p>
-      <p class="pontuacao-card__pts pontuacao-card__pts--${room.cor}">${points !== null ? `${points || 0} pts` : '—'}</p>
+      <p class="pontuacao-card__pts pontuacao-card__pts--${room.cor}">${points !== null ? textoPontuacao(points || 0) : '—'}</p>
       ${completed ? '<p class="pontuacao-card__status"><span aria-hidden="true">✓</span> Concluído!</p>' : ''}
     `;
     grid.appendChild(card);

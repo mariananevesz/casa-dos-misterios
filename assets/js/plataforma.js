@@ -83,6 +83,153 @@ function existeModalVisivel() {
   );
 }
 
+/* Base global: sem mensagens ou foco automatico especificos de telas. */
+let regiaoLeitor = null;
+const filaAnuncios = [];
+let anuncioEmCurso = false;
+const orientacoesInicializadas = new Set();
+const focosPreservados = new WeakMap();
+
+function obterRegiaoLeitorDeTela() {
+  if (regiaoLeitor?.isConnected) return regiaoLeitor;
+  if (!document.body) return null;
+  regiaoLeitor = document.getElementById('mensagens-leitor-global');
+  if (!regiaoLeitor) {
+    regiaoLeitor = document.createElement('div');
+    regiaoLeitor.id = 'mensagens-leitor-global';
+    regiaoLeitor.className = 'texto-leitor';
+    regiaoLeitor.setAttribute('aria-live', 'polite');
+    regiaoLeitor.setAttribute('aria-atomic', 'true');
+    regiaoLeitor.setAttribute('aria-relevant', 'additions text');
+    document.body.appendChild(regiaoLeitor);
+  }
+  return regiaoLeitor;
+}
+
+function processarAnunciosLeitor() {
+  if (anuncioEmCurso || !filaAnuncios.length) return;
+  const regiao = obterRegiaoLeitorDeTela();
+  if (!regiao) return; // DOMContentLoaded retoma a fila.
+  anuncioEmCurso = true;
+  const { mensagem, prioridade } = filaAnuncios[0];
+  regiao.textContent = '';
+  regiao.setAttribute('aria-live', prioridade);
+  // Atualizacao separada permite repetir a mesma mensagem e registra a prioridade.
+  window.setTimeout(() => {
+    regiao.textContent = mensagem;
+    window.setTimeout(() => {
+      filaAnuncios.shift();
+      anuncioEmCurso = false;
+      processarAnunciosLeitor();
+    }, 150);
+  }, 100);
+}
+
+function anunciarParaLeitorDeTela(mensagem, prioridade = 'polite') {
+  const texto = String(mensagem ?? '').trim();
+  if (!texto) return false;
+  const nivel = prioridade === 'assertive' ? 'assertive' : 'polite';
+  // Chamadas identicas pendentes geram apenas uma atualizacao.
+  if (filaAnuncios.some(item => item.mensagem === texto && item.prioridade === nivel)) return false;
+  filaAnuncios.push({ mensagem: texto, prioridade: nivel });
+  processarAnunciosLeitor();
+  return true;
+}
+
+function resolverElementoAcessivel(elemento) {
+  if (typeof elemento === 'string') {
+    try { return document.querySelector(elemento); } catch { return null; }
+  }
+  return elemento instanceof HTMLElement ? elemento : null;
+}
+
+function focarElementoAcessivel(elemento) {
+  const alvo = resolverElementoAcessivel(elemento);
+  if (!alvo?.isConnected || alvo.closest('[hidden], [inert], [aria-hidden="true"]') ||
+      alvo.matches(':disabled') || !alvo.getClientRects().length ||
+      window.getComputedStyle(alvo).visibility === 'hidden') return false;
+  const tabindexAnterior = alvo.getAttribute('tabindex');
+  const temporario = tabindexAnterior === null && alvo.tabIndex < 0;
+  const limparTabindexTemporario = () => {
+    alvo.removeEventListener('blur', aoPerderFoco);
+    // Nao sobrescreva uma alteracao feita por outro controle.
+    if (alvo.getAttribute('tabindex') === '-1') alvo.removeAttribute('tabindex');
+  };
+  const aoPerderFoco = () => {
+    // blur tambem ocorre ao sair da janela (por exemplo, para o DevTools).
+    // Durante o evento, activeElement pode ser transitorio. Confira depois
+    // que a transferencia terminou, sem retirar a capacidade de refocar.
+    window.setTimeout(() => {
+      if (document.activeElement !== alvo && document.hasFocus()) {
+        limparTabindexTemporario();
+      }
+    }, 0);
+  };
+  if (temporario) {
+    alvo.setAttribute('tabindex', '-1');
+    alvo.addEventListener('blur', aoPerderFoco);
+  }
+  try {
+    alvo.focus({ preventScroll: true });
+    if (document.activeElement !== alvo) {
+      if (temporario) limparTabindexTemporario();
+      return false;
+    }
+    return document.activeElement === alvo;
+  } catch {
+    if (temporario) limparTabindexTemporario();
+    return false;
+  }
+}
+
+function preservarFocoAcessivel(contexto, elemento = document.activeElement) {
+  const chave = resolverElementoAcessivel(contexto);
+  const alvo = resolverElementoAcessivel(elemento);
+  if (!chave || !alvo?.isConnected || focosPreservados.has(chave)) return false;
+  focosPreservados.set(chave, alvo);
+  return true;
+}
+
+function restaurarFocoAcessivel(contexto) {
+  const chave = resolverElementoAcessivel(contexto);
+  if (!chave) return false;
+  const alvo = focosPreservados.get(chave);
+  focosPreservados.delete(chave);
+  return focarElementoAcessivel(alvo);
+}
+
+function inicializarOrientacaoAcessivel({ titulo = '', mensagem = '', focoInicial = null } = {}) {
+  const texto = [titulo, mensagem].map(valor => String(valor).trim()).filter(Boolean).join('. ');
+  const chave = JSON.stringify([titulo, mensagem]);
+  if (orientacoesInicializadas.has(chave)) return false;
+  if (!document.body) {
+    document.addEventListener('DOMContentLoaded', () =>
+      inicializarOrientacaoAcessivel({ titulo, mensagem, focoInicial }), { once: true });
+    return false;
+  }
+  if (!texto && !focoInicial) return false;
+  orientacoesInicializadas.add(chave);
+  if (focoInicial) focarElementoAcessivel(focoInicial);
+  if (texto) anunciarParaLeitorDeTela(texto);
+  return true;
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    obterRegiaoLeitorDeTela();
+    processarAnunciosLeitor();
+  }, { once: true });
+} else {
+  obterRegiaoLeitorDeTela();
+}
+
+function focarInicioModalAcessivel(modal) {
+  window.requestAnimationFrame(() => {
+    if (modal !== tutorialAtivo && modal !== modalFluxoAtivo) return;
+    focarElementoAcessivel(elementosFocaveisTutorial(modal)[0] || modal);
+  });
+}
+
 let tutorialAtivo = null;
 let acionadorTutorial = null;
 let narracaoAnteriorTutorial = null;
@@ -91,16 +238,17 @@ let modalFluxoAtivo = null;
 function elementosFocaveisTutorial(modal) {
   return [...modal.querySelectorAll(
     'button:not([disabled]):not([tabindex="-1"]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  )].filter(elemento => !elemento.hidden && window.getComputedStyle(elemento).display !== 'none');
+  )].filter(elemento => !elemento.closest('[hidden], [inert], [aria-hidden="true"]') && elemento.getClientRects().length > 0 && window.getComputedStyle(elemento).visibility !== 'hidden');
 }
 
 function abrirTutorialAcessivel(modal, acionador) {
   if (!modal) return;
   tutorialAtivo = modal;
   acionadorTutorial = acionador || document.activeElement;
+  preservarFocoAcessivel(modal, acionadorTutorial);
   modal.style.display = 'flex';
   acionadorTutorial?.setAttribute?.('aria-expanded', 'true');
-  window.requestAnimationFrame(() => elementosFocaveisTutorial(modal)[0]?.focus());
+  focarInicioModalAcessivel(modal);
 }
 
 function narrarTutorialAcessivel(texto) {
@@ -128,20 +276,22 @@ function fecharTutorialAcessivel(modal = tutorialAtivo) {
   acionador?.setAttribute?.('aria-expanded', 'false');
   tutorialAtivo = null;
   acionadorTutorial = null;
-  acionador?.focus?.();
+  restaurarFocoAcessivel(modal);
 }
 
 function abrirModalFluxoAcessivel(modal) {
   if (!modal) return;
+  preservarFocoAcessivel(modal);
   modalFluxoAtivo = modal;
   modal.style.display = 'flex';
-  window.requestAnimationFrame(() => elementosFocaveisTutorial(modal)[0]?.focus());
+  focarInicioModalAcessivel(modal);
 }
 
 function fecharModalFluxoAcessivel(modal = modalFluxoAtivo) {
   if (!modal) return;
   modal.style.display = 'none';
   if (modalFluxoAtivo === modal) modalFluxoAtivo = null;
+  restaurarFocoAcessivel(modal);
 }
 
 document.addEventListener('keydown', event => {
@@ -152,16 +302,20 @@ document.addEventListener('keydown', event => {
     const focaveis = elementosFocaveisTutorial(modalComFoco);
     if (!focaveis.length) {
       event.preventDefault();
+      focarElementoAcessivel(modalComFoco);
       return;
     }
     const primeiro = focaveis[0];
     const ultimo = focaveis[focaveis.length - 1];
-    if (event.shiftKey && document.activeElement === primeiro) {
+    if (!modalComFoco.contains(document.activeElement)) {
       event.preventDefault();
-      ultimo.focus();
+      focarElementoAcessivel(event.shiftKey ? ultimo : primeiro);
+    } else if (event.shiftKey && document.activeElement === primeiro) {
+      event.preventDefault();
+      focarElementoAcessivel(ultimo);
     } else if (!event.shiftKey && document.activeElement === ultimo) {
       event.preventDefault();
-      primeiro.focus();
+      focarElementoAcessivel(primeiro);
     }
     return;
   }
@@ -191,3 +345,9 @@ document.addEventListener('keydown', event => {
     fechar.click();
   }
 });
+
+// Formata a leitura dos pontos e preserva o formato visual original.
+function textoPontuacao(pontos, visual = `${pontos} pts`, prefixo = '', maximo = null) {
+  const leitura = `${prefixo}${pontos} pontos${maximo === null ? '' : ` de ${maximo} pontos`}`;
+  return `<span aria-hidden="true">${visual}</span><span class="texto-leitor">${leitura}</span>`;
+}

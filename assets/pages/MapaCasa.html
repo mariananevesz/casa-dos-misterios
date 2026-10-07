@@ -29,7 +29,7 @@
 
       <span class="mapa-pontos" id="badge-total" aria-live="polite">
         <img src="../img/estrela.png" alt="">
-        <span id="total-pts">0</span>
+        <span id="total-pts"><span aria-hidden="true">0</span><span class="texto-leitor">0 pontos</span></span>
       </span>
     </section>
 
@@ -49,7 +49,7 @@
     <section class="mapa-progresso-geral" aria-label="Progresso geral do jogo">
       <div>
         <p>Total de progresso</p>
-        <strong><span id="mapa-progresso-texto">0</span>/100 pontos</strong>
+        <strong><span aria-hidden="true"><span id="mapa-progresso-texto">0</span>/100 pontos</span><span class="texto-leitor" id="mapa-progresso-leitura">0 pontos de 100 pontos</span></strong>
       </div>
       <div class="mapa-barra">
         <span id="mapa-barra-preenchida"></span>
@@ -108,8 +108,9 @@
   function renderMapa() {
     const state  = gameState.get();
     const total  = gameState.getTotalScore();
-    document.getElementById('total-pts').textContent = total;
+    document.getElementById('total-pts').innerHTML = textoPontuacao(total, total);
     document.getElementById('mapa-progresso-texto').textContent = Math.min(total, 100);
+    document.getElementById('mapa-progresso-leitura').textContent = `${Math.min(total, 100)} pontos de 100 pontos`;
     document.getElementById('mapa-barra-preenchida').style.width = Math.min(total, 100) + '%';
 
     const grid = document.getElementById('mapa-grid');
@@ -124,7 +125,7 @@
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
       const card = document.createElement('article');
-      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
+      card.setAttribute('aria-label', `${c.nome}, ${c.skill}${desbloqueado ? ', Explorar' : ''}${score !== null ? `, ${score} pontos` : ''} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
@@ -166,7 +167,7 @@
         }
 
         const ptsHtml = score !== null
-          ? `<p class="comodo-card__pts">${score} pts</p>`
+          ? `<p class="comodo-card__pts">${textoPontuacao(score)}</p>`
           : '<p class="comodo-card__pts comodo-card__pts--vazio">Ainda não iniciado</p>';
 
         card.innerHTML = `

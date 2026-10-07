@@ -54,9 +54,9 @@
   "blocosDisponiveis": [
   { "id": "cima", "rotulo": "Cima", "tipo": "direcao", "img": "../img/seta-cima.png" },
   { "id": "baixo", "rotulo": "Baixo", "tipo": "direcao", "img": "../img/seta-baixo.png" },
-  { "id": "esq", "rotulo": "Esq", "tipo": "direcao", "img": "../img/seta-esq.png" },
-  { "id": "dir", "rotulo": "Dir", "tipo": "direcao", "img": "../img/seta-dir.png" },
-  { "id": "repetir2", "rotulo": "Repetir 2x", "tipo": "controle", "img": "../img/repetir.png" },
-  { "id": "repetir3", "rotulo": "Repetir 3x", "tipo": "controle", "img": "../img/repetir.png" }
+  { "id": "esq", "rotulo": "Esq", "rotuloAcessivel": "Esquerda", "tipo": "direcao", "img": "../img/seta-esq.png" },
+  { "id": "dir", "rotulo": "Dir", "rotuloAcessivel": "Direita", "tipo": "direcao", "img": "../img/seta-dir.png" },
+  { "id": "repetir2", "rotulo": "Repetir 2x", "rotuloAcessivel": "Repetir 2 vezes", "tipo": "controle", "img": "../img/repetir.png" },
+  { "id": "repetir3", "rotulo": "Repetir 3x", "rotuloAcessivel": "Repetir 3 vezes", "tipo": "controle", "img": "../img/repetir.png" }
 ]
 }

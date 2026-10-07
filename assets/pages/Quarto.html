@@ -25,7 +25,7 @@
         </section>
       </section>
 
-      <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
 
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
@@ -457,8 +457,7 @@
   document.getElementById('modal-sub').textContent =
     `Você corrigiu a sequência da ${fase.titulo}!`;
 
-  document.getElementById('modal-pts').textContent =
-    `Pontuação da fase: ${scoreFase} / 25 pts`;
+  document.getElementById('modal-pts').innerHTML = textoPontuacao(scoreFase, `Pontuação da fase: ${scoreFase} / 25 pts`, 'Pontuação da fase: ', 25);
 
   const elEst = document.getElementById('modal-estrelas');
   elEst.innerHTML = '';
@@ -504,7 +503,7 @@
 
   function atualizarBadge(score) {
     const s = score !== undefined ? score : (gameState.get().scores.quarto || 0);
-    document.getElementById('badge-pts').textContent = s + ' pts';
+    document.getElementById('badge-pts').innerHTML = textoPontuacao(s);
   }
 
   function beforeUnloadHandler() {

@@ -28,7 +28,7 @@
         </section>
       </section>
 
-      <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
 
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
@@ -218,10 +218,10 @@
   "blocosDisponiveis": [
     { "id": "cima", "rotulo": "Cima", "tipo": "direcao", "img": "../img/seta-cima.png" },
     { "id": "baixo", "rotulo": "Baixo", "tipo": "direcao", "img": "../img/seta-baixo.png" },
-    { "id": "esq", "rotulo": "Esq", "tipo": "direcao", "img": "../img/seta-esq.png" },
-    { "id": "dir", "rotulo": "Dir", "tipo": "direcao", "img": "../img/seta-dir.png" },
-    { "id": "repetir2", "rotulo": "Repetir 2x", "tipo": "controle", "img": "../img/repetir.png" },
-    { "id": "repetir3", "rotulo": "Repetir 3x", "tipo": "controle", "img": "../img/repetir.png" }
+    { "id": "esq", "rotulo": "Esq", "rotuloAcessivel": "Esquerda", "tipo": "direcao", "img": "../img/seta-esq.png" },
+    { "id": "dir", "rotulo": "Dir", "rotuloAcessivel": "Direita", "tipo": "direcao", "img": "../img/seta-dir.png" },
+    { "id": "repetir2", "rotulo": "Repetir 2x", "rotuloAcessivel": "Repetir 2 vezes", "tipo": "controle", "img": "../img/repetir.png" },
+    { "id": "repetir3", "rotulo": "Repetir 3x", "rotuloAcessivel": "Repetir 3 vezes", "tipo": "controle", "img": "../img/repetir.png" }
   ]
 };
 
@@ -361,9 +361,9 @@ const FASE_KEY = 'sala_fase';
     el.draggable = true;
     el.dataset.blocoId = bloco.id;
     el.setAttribute('role', 'button');
-    el.setAttribute('aria-label', `Adicionar ${bloco.rotulo} à sequência`);
+    el.setAttribute('aria-label', `Adicionar ${bloco.rotuloAcessivel || bloco.rotulo} à sequência`);
     el.setAttribute('tabindex', '0');
-    el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
+    el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label" aria-hidden="true">${bloco.rotulo}</span><span class="texto-leitor">${bloco.rotuloAcessivel || bloco.rotulo}</span>`;
 
     el.addEventListener('dragstart', e => {
       e.dataTransfer.setData('blocoId', bloco.id);
@@ -400,9 +400,9 @@ const FASE_KEY = 'sala_fase';
       el.className = 'bloco bloco--laranja';
       el.dataset.idx = idx;
       el.setAttribute('role', 'button');
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
+      el.setAttribute('aria-label', `${bloco.rotuloAcessivel || bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span>`;
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label" aria-hidden="true">${bloco.rotulo}</span><span class="texto-leitor">${bloco.rotuloAcessivel || bloco.rotulo}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
@@ -625,7 +625,7 @@ async function executar() {
     document.getElementById('modal-titulo').textContent = score === 25 ? 'Perfeito!' : 'Muito bem!';
     document.getElementById('modal-sub').textContent =
       `Você levou o personagem até a estrela usando ${sequencia.length} blocos!`;
-    document.getElementById('modal-pts').textContent = `Pontuação: ${score} / 25 pts`;
+    document.getElementById('modal-pts').innerHTML = textoPontuacao(score, `Pontuação: ${score} / 25 pts`, 'Pontuação: ', 25);
 
     const elEstrelas = document.getElementById('modal-estrelas');
     elEstrelas.innerHTML = '';
@@ -668,7 +668,7 @@ async function executar() {
 
   function atualizarBadge(score) {
     const s = score !== undefined ? score : (gameState.get().scores.sala || 0);
-    document.getElementById('badge-pts').textContent = s + ' pts';
+    document.getElementById('badge-pts').innerHTML = textoPontuacao(s);
   }
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

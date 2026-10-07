@@ -25,7 +25,7 @@
         </section>
       </section>
 
-      <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
 
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
@@ -258,7 +258,7 @@
     const nivel = gameData.niveis[nivelIdx];
 
     /* Item 1 — instrução ativa do nível (destaque) */
-    document.getElementById('logi-instrucao').textContent = nivel.instrucao;
+    document.getElementById('logi-instrucao').innerHTML = nivel.instrucao.replace('VERMELHAS', '<span style="text-transform:uppercase;">vermelhas</span>');
     const textoAtual = [document.getElementById('logi-boas-vindas').textContent, nivel.instrucao]
       .filter(Boolean).join(' ');
     audio.definirNarracao(textoAtual);
@@ -296,7 +296,7 @@
       if (nivel.criterio === 'tamanho')   { esq.textContent = 'menor';   dir.textContent = 'maior';  }
       else if (nivel.criterio === 'selecao-sementes') { esq.textContent = 'escolhas'; dir.textContent = '3 frutas'; }
       else                                { esq.textContent = 'primeiro'; dir.textContent = 'último'; }
-      document.getElementById('prateleira-label').textContent = nivel.instrucao;
+      document.getElementById('prateleira-label').innerHTML = nivel.instrucao.replace('VERMELHAS', '<span style="text-transform:uppercase;">vermelhas</span>');
     }
 
     buildNivelTabs();
@@ -840,7 +840,7 @@
       elEst.appendChild(img);
     }
     document.getElementById('modal-sub').textContent  = 'Você organizou todos os níveis da despensa!';
-    document.getElementById('modal-pts').textContent  = `Pontuação: ${score} / 25 pts`;
+    document.getElementById('modal-pts').innerHTML = textoPontuacao(score, `Pontuação: ${score} / 25 pts`, 'Pontuação: ', 25);
     document.getElementById('btn-proximo-nivel').style.display = 'none';
     abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
     window.removeEventListener('beforeunload', beforeUnloadHandler);
@@ -860,7 +860,7 @@
 
   function atualizarBadge(score) {
     const s = score !== undefined ? score : (gameState.get().scores.despensa || 0);
-    document.getElementById('badge-pts').textContent = s + ' pts';
+    document.getElementById('badge-pts').innerHTML = textoPontuacao(s);
   }
 
   /* ================================================================
