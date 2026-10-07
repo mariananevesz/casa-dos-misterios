@@ -14,7 +14,7 @@
     <!-- HUD -->
     <section class="hud sala-hud">
       <button class="btn-voltar-mapa sala-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('sala','MapaCasa.html')"
               aria-label="Voltar ao mapa">
         <span aria-hidden="true">←</span>
         <strong>Mapa</strong>
@@ -23,7 +23,7 @@
       <section class="hud__info sala-hud__info">
         <img src="../img/icone-sala.png" alt="" class="hud__icone-img sala-hud__icone">
         <section>
-          <p class="hud__titulo sala-hud__titulo">Sala</p>
+          <p class="hud__titulo sala-hud__titulo" id="titulo-sala" role="heading" aria-level="1">Sala</p>
           <p class="hud__subtitulo sala-hud__subtitulo" id="fase-label">Mini-jogo 1</p>
         </section>
       </section>
@@ -35,21 +35,15 @@
 
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
-      </section>
-      <section class="sala-logi__conteudo">
-        <p class="balao__nome">Logi diz:</p>
-        <p class="balao__texto" id="logi-texto">Carregando…</p>
-      </section>
+      <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
+      <p class="balao__texto sala-logi__texto" id="logi-texto">Carregando…</p>
+      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
-    <!-- Indicador de fase oculto: mantido apenas para o JavaScript não quebrar -->
-    <section class="niveis sala-niveis sala-fases-hidden"
+    <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
+    <section class="niveis sala-niveis"
              id="indicador-fases"
-             aria-label="Progresso de fases"
-             hidden></section>
+             aria-label="Progresso de dificuldade"></section>
 
     <!-- Área principal da Sala -->
     <section class="sala-layout">
@@ -57,14 +51,8 @@
       <!-- Comandos disponíveis -->
       <aside class="sala-panel sala-comandos-panel" aria-label="Comandos disponíveis">
         <p class="sala-panel__title">Comandos disponíveis</p>
-        <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
+        <p class="sala-panel__hint"><span aria-hidden="true">Clique ou arraste os blocos para montar a sequência.</span><span class="texto-leitor">Use Tab para navegar pelos blocos e Enter ou Espaço para adicionar. Também é possível clicar ou arrastar.</span></p>
         <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
-
-        <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
-          <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
-          <p class="dica__texto dica__texto--ambar"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
-          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
-        </section>
       </aside>
 
       <!-- Jogo -->
@@ -72,16 +60,26 @@
         <section class="painel painel--tracejado sala-sequencia-panel"
                  id="painel-sequencia">
           <p class="sala-panel__title">Painel de comandos</p>
-          <section class="blocos sala-sequencia" id="sequencia-player" role="group" aria-label="Sequência montada" aria-live="polite" aria-atomic="true"></section>
+          <section class="blocos sala-sequencia" id="sequencia-player" role="group" aria-label="Sequência atual, ative um comando para remover"></section>
         </section>
 
         <section class="painel sala-grade-panel">
-          <p class="sala-panel__title">Grade do jogo</p>
-          <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
+          <p class="sala-panel__title">Grade do jogo</p><p class="texto-leitor" id="orientacao-grade">Linhas de cima para baixo e colunas da esquerda para a direita. Cada seta move uma casa. Repetir executa novamente a seta anterior duas ou três vezes, além do movimento já feito.</p>
+          <section class="sala-grade-area">
+            <section class="sala-grade-box">
+              <section class="grade sala-grade" id="game-grid" tabindex="0" aria-describedby="orientacao-grade" role="img" aria-label="Grade do jogo"></section>
+            </section>
+
+            <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
+              <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
+              <p class="dica__texto dica__texto--ambar" id="dica-texto"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
+              <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
+            </section>
+          </section>
         </section>
 
         <!-- Feedback -->
-        <section id="feedback-area" aria-live="polite" aria-atomic="true" style="display:none;" class="dica dica--erro sala-feedback">
+        <section id="feedback-area" style="display:none;" class="dica dica--erro sala-feedback">
           <span class="dica__emoji" aria-hidden="true">💡</span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
@@ -145,16 +143,16 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="conclusao-leitura modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
-      <p class="modal-sub" id="modal-sub">Você criou um algoritmo com passos!</p>
+      <p class="texto-leitor" id="conclusao-leitura">Sequência correta. Desafio concluído.</p><p class="modal-sub" id="modal-sub">Você criou um algoritmo com passos!</p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
         <button class="btn btn--laranja" id="btn-proxima-fase" style="display:none;">Próxima fase</button>
-        <button class="btn btn--outline" id="btn-mapa" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--outline" id="btn-mapa" onclick="gameState.sairMiniGame('sala','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
@@ -225,6 +223,32 @@
   ]
 };
 
+/* Fallback de variações — usado apenas quando o fetch falha (file://) */
+const SALA_VARIACOES_INLINE = {
+  "variacoes": [
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 1, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 2 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [ { "linha": 2, "coluna": 1 }, { "linha": 1, "coluna": 1 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 1 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [ { "linha": 1, "coluna": 2 }, { "linha": 2, "coluna": 2 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 2, "coluna": 0 }, "posicaoAlvo": { "linha": 0, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 3 }, "posicaoAlvo": { "linha": 0, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 1 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 0 }, "posicaoAlvo": { "linha": 3, "coluna": 3 }, "obstaculos": [] }
+    ] },
+    { "grades": [
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 3, "coluna": 0 }, "posicaoAlvo": { "linha": 1, "coluna": 3 }, "obstaculos": [] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [ { "linha": 1, "coluna": 1 }, { "linha": 2, "coluna": 2 } ] },
+      { "colunas": 4, "linhas": 4, "posicaoInicial": { "linha": 0, "coluna": 3 }, "posicaoAlvo": { "linha": 3, "coluna": 0 }, "obstaculos": [] }
+    ] }
+  ]
+};
+
 let gameData     = null;
 let faseAtual    = 0;
 let sequencia    = [];
@@ -248,11 +272,12 @@ const BLOCO_ICONS = {
   repetir3: '↻'
 };
 
-function blocoIconeHtml(bloco) {
-  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>`;
-}
+const BLOCO_VEZES = { repetir2: '2x', repetir3: '3x' };
 
-const FASE_KEY = 'sala_fase';
+function blocoIconeHtml(bloco) {
+  const vezes = BLOCO_VEZES[bloco.id] ? `<span class="bloco-vezes" aria-hidden="true">${BLOCO_VEZES[bloco.id]}</span>` : '';
+  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>${vezes}`;
+}
 
   /* ---- Inicialização ---- */
   async function init() {
@@ -261,11 +286,27 @@ const FASE_KEY = 'sala_fase';
     } catch (e) {
       gameData = SALA_INLINE; // fallback file://
     }
-    faseAtual = Math.min(
-      parseInt(localStorage.getItem(FASE_KEY) || '0'),
-      gameData.fases.length - 1
-    );
+
+    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real na Sala */
+    let variacoesData;
+    try {
+      variacoesData = await loadGameData('../data/sala-variacoes.json');
+    } catch (e) {
+      variacoesData = SALA_VARIACOES_INLINE;
+    }
+    const variacaoIdx = gameState.iniciarVariacao('sala', variacoesData.variacoes.length);
+    const variacao = variacoesData.variacoes[variacaoIdx];
+    gameData.fases.forEach((fase, i) => {
+      if (variacao.grades[i]) fase.grade = variacao.grades[i];
+    });
+
+    faseAtual = Math.min(gameState.getEstagio('sala'), gameData.fases.length - 1);
     renderFase();
+    inicializarOrientacaoAcessivel({
+      titulo: 'Sala. Desafio de algoritmos',
+      mensagem: 'Leve o personagem até a estrela. Use Tab para consultar a grade, seus obstáculos e os comandos. Enter ou Espaço adicionam comandos. Revise a sequência e ative Executar sequência. Ative um comando montado para removê-lo.',
+      focoInicial: '#titulo-sala'
+    });
   }
 
   /* ---- Renderiza a fase atual ---- */
@@ -291,7 +332,6 @@ const FASE_KEY = 'sala_fase';
     el.innerHTML = '';
     gameData.fases.forEach((f, i) => {
       const span = document.createElement('span');
-      const state = gameState.get();
       if (i < faseAtual)       span.className = 'nivel nivel--ok';
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                      span.className = 'nivel nivel--bloq';
@@ -309,7 +349,7 @@ const FASE_KEY = 'sala_fase';
     const obstaculosTexto = obstaculos.length
       ? ` Obstáculos em ${obstaculos.map(obs => `linha ${obs.linha + 1}, coluna ${obs.coluna + 1}`).join('; ')}.`
       : '';
-    grid.setAttribute('aria-label', `Grade de ${linhas} linhas por ${colunas} colunas. Personagem na linha ${posicaoInicial.linha + 1}, coluna ${posicaoInicial.coluna + 1}. Estrela na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}.${obstaculosTexto}`);
+    grid.setAttribute('aria-label', `Grade de ${linhas} linhas por ${colunas} colunas. Personagem na linha ${posicaoInicial.linha + 1}, coluna ${posicaoInicial.coluna + 1}. Estrela na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}.${obstaculosTexto} Limite de ${fase.maxBlocos || 8} comandos.`);
     grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
 
     for (let r = 0; r < linhas; r++) {
@@ -391,6 +431,7 @@ const FASE_KEY = 'sala_fase';
   /* ---- Sequência do jogador ---- */
   function renderSequencia() {
     const cont = document.getElementById('sequencia-player');
+    const indiceFocado = cont.contains(document.activeElement) ? Number(document.activeElement.dataset.idx) : null;
     cont.innerHTML = '';
     const fase = gameData.fases[faseAtual];
 
@@ -399,10 +440,12 @@ const FASE_KEY = 'sala_fase';
       const el = document.createElement('span');
       el.className = 'bloco bloco--laranja';
       el.dataset.idx = idx;
+      el.dataset.blocoId = bid;
       el.setAttribute('role', 'button');
       el.setAttribute('aria-label', `${bloco.rotuloAcessivel || bloco.rotulo}, posição ${idx + 1}. Ativar para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label" aria-hidden="true">${bloco.rotulo}</span><span class="texto-leitor">${bloco.rotuloAcessivel || bloco.rotulo}</span>`;
+      el.title = 'Ative para remover';
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label" aria-hidden="true">${bloco.rotulo}</span><span class="texto-leitor">${bloco.rotuloAcessivel || bloco.rotulo}</span><span class="bloco-remover" aria-hidden="true">×</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
@@ -413,12 +456,24 @@ const FASE_KEY = 'sala_fase';
       cont.appendChild(el);
     });
 
-    if (sequencia.length < (fase.maxBlocos || 8)) {
+    /* Um slot tracejado por posição livre: mostra quantos blocos ainda cabem */
+    const livres = (fase.maxBlocos || 8) - sequencia.length;
+    cont.setAttribute('aria-label', `Sequência atual: ${sequencia.length} comandos, ${livres} espaços livres. Ative um comando para remover.`);
+    for (let i = 0; i < livres; i++) {
       const empty = document.createElement('span');
       empty.className = 'bloco bloco--vazio';
-      empty.textContent = '+ bloco';
-      empty.setAttribute('aria-label', 'Slot vazio — arraste um bloco aqui');
+      empty.setAttribute('aria-hidden', 'true');
+      if (i === 0) {
+        empty.textContent = '+';
+        empty.setAttribute('aria-label', `Espaço vazio — ${livres} ${livres === 1 ? 'bloco restante' : 'blocos restantes'}`);
+      } else {
+        empty.setAttribute('aria-hidden', 'true');
+      }
       cont.appendChild(empty);
+    }
+
+    if (indiceFocado !== null) {
+      focarElementoAcessivel(cont.querySelector(`[data-idx="${Math.min(indiceFocado, sequencia.length - 1)}"]`) || document.querySelector('#blocos-disponiveis [role="button"]'));
     }
 
     // Drag-over na área de sequência
@@ -432,16 +487,25 @@ const FASE_KEY = 'sala_fase';
 
   function adicionarBloco(bid) {
     const fase = gameData.fases[faseAtual];
-    if (sequencia.length >= (fase.maxBlocos || 8)) return;
+    if (sequencia.length >= (fase.maxBlocos || 8)) {
+      anunciarParaLeitorDeTela('Sequência cheia. Remova um comando antes de adicionar outro.');
+      return;
+    }
     sequencia.push(bid);
     audio.clique();
     pararAtencaoDica();
+    document.getElementById('feedback-area').style.display = 'none';
     renderSequencia();
+    const bloco = gameData.blocosDisponiveis.find(b => b.id === bid);
+    anunciarParaLeitorDeTela(`${bloco.rotuloAcessivel || bloco.rotulo} adicionado à sequência. Posição ${sequencia.length}.`);
   }
 
   function removerBloco(idx) {
+    const bloco = gameData.blocosDisponiveis.find(b => b.id === sequencia[idx]);
+    if (!bloco) return;
     sequencia.splice(idx, 1);
     renderSequencia();
+    anunciarParaLeitorDeTela(`${bloco.rotuloAcessivel || bloco.rotulo} removido da posição ${idx + 1}.`);
   }
 
   /* ---- Touch drag ---- */
@@ -476,9 +540,21 @@ const FASE_KEY = 'sala_fase';
   }
 
   /* ---- Execução ---- */
+let focoAntesExecucao = null;
 async function executar() {
-  if (animando || sequencia.length === 0) return;
+  if (animando) return;
 
+  if (sequencia.length === 0) {
+    audio.erro();
+    mostrarFeedback('Ops! Escolha pelo menos um bloco de comando antes de executar.', 'aviso');
+    const painel = document.getElementById('painel-sequencia');
+    painel.classList.remove('shake');
+    void painel.offsetWidth;
+    painel.classList.add('shake');
+    return;
+  }
+
+  focoAntesExecucao = document.activeElement;
   animando = true;
   document.getElementById('btn-executar').disabled = true;
   document.getElementById('feedback-area').style.display = 'none';
@@ -592,6 +668,10 @@ async function executar() {
   ativarAtencaoDica();
 
   renderSequencia();
+  if (focoAntesExecucao === document.getElementById('btn-executar') &&
+      (document.activeElement === document.body || document.activeElement === focoAntesExecucao)) {
+    focarElementoAcessivel(focoAntesExecucao);
+  }
 }
 
   
@@ -610,9 +690,9 @@ async function executar() {
     gameState.setRoomScore('sala', totalSala, salaConcluida);
 
     if (proxFase < gameData.fases.length) {
-      localStorage.setItem(FASE_KEY, proxFase);
+      gameState.setEstagio('sala', proxFase);
     } else {
-      localStorage.removeItem(FASE_KEY);
+      gameState.limparEstagio('sala');
     }
 
     atualizarBadge(totalSala);
@@ -645,11 +725,14 @@ async function executar() {
         faseAtual = proxFaseIdx;
         fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
         renderFase();
+        focarElementoAcessivel('#titulo-sala');
+        anunciarParaLeitorDeTela(`Fase ${gameData.fases[faseAtual].id}. ${document.getElementById('game-grid').getAttribute('aria-label')}`);
       };
     } else {
       btnProx.style.display = 'none';
     }
 
+    preservarFocoAcessivel(document.getElementById('modal-conclusao'), focoAntesExecucao);
     abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     // beforeunload guard
@@ -664,6 +747,7 @@ async function executar() {
     txt.className  = `dica__texto dica__texto--${tipo === 'erro' ? 'erro' : 'ambar'}`;
     area.style.display = 'flex';
     txt.textContent = msg;
+    anunciarParaLeitorDeTela(msg);
   }
 
   function atualizarBadge(score) {
@@ -696,6 +780,14 @@ async function executar() {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('sala', 'MapaCasa.html');
+  });
+
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
   document.getElementById('dica-play').addEventListener('click', () => {
     pararAtencaoDica();
@@ -713,6 +805,7 @@ async function executar() {
     if (!gameData) return;
     sequencia = [];
     renderSequencia();
+    anunciarParaLeitorDeTela('Sequência limpa.');
     buildGrid(gameData.fases[faseAtual]);
     document.getElementById('feedback-area').style.display = 'none';
   });

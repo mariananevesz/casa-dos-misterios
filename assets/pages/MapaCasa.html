@@ -12,20 +12,20 @@
   <section class="tela tela--mapa">
 
     <section class="mapa-topo">
+      <section class="mapa-titulo-area" aria-labelledby="mapa-titulo">
+        <div class="mapa-titulo-linha">
+
+          <h1 id="mapa-titulo">Mapa da Casa</h1>
+        </div>
+        <p>Escolha um cômodo para explorar</p>
+      </section>
+
       <button class="mapa-voltar"
               onclick="window.location.href='../../index.html'"
               aria-label="Voltar ao menu principal">
         <span aria-hidden="true">←</span>
         Voltar
       </button>
-
-      <section class="mapa-titulo-area" aria-label="Título do mapa">
-        <div class="mapa-titulo-linha">
-          
-          <h1>Mapa da Casa</h1>
-        </div>
-        <p>Escolha um cômodo para explorar</p>
-      </section>
 
       <span class="mapa-pontos" id="badge-total" aria-live="polite">
         <img src="../img/estrela.png" alt="">
@@ -34,13 +34,10 @@
     </section>
 
     <section class="mapa-logi" aria-label="Mensagem do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
-      </section>
+      <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
       <div class="mapa-logi__balao">
-        <p class="mapa-logi__nome">Logi diz:</p>
-        <p id="logi-texto">Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
+        <p class="mapa-logi__texto" id="logi-texto">Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
+        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
       </div>
     </section>
 
@@ -125,32 +122,26 @@
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
       const card = document.createElement('article');
-      card.setAttribute('aria-label', `${c.nome}, ${c.skill}${desbloqueado ? ', Explorar' : ''}${score !== null ? `, ${score} pontos` : ''} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
+      const estado = !desbloqueado ? 'Bloqueado' : concluido ? 'Concluído' : 'Disponível';
+      card.setAttribute('aria-labelledby', `nome-${c.id}`);
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
-        card.setAttribute('aria-disabled', 'true');
         card.innerHTML = `
           <div class="comodo-card__imagem-box">
             <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
-            <p class="comodo-card__nome">${c.nome}</p>
+            <h2 class="comodo-card__nome" id="nome-${c.id}">${c.nome}<span class="texto-leitor" id="estado-${c.id}">. ${estado}</span></h2>
             <p class="comodo-card__skill comodo-card__skill--cinza">${c.skill}</p>
-            <p class="comodo-card__bloq-aviso">🔒 Complete ${anterior ? anterior : 'o anterior'}</p>
+            <p class="comodo-card__bloq-aviso"><span aria-hidden="true">🔒</span> Complete ${anterior ? anterior : 'o anterior'}</p>
           </div>
         `;
       } else {
         card.className = `comodo-card ${c.corCard}`;
-        card.setAttribute('role', 'button');
-        card.setAttribute('tabindex', '0');
+        // Mantem o clique no card para mouse. O botao nativo gera um unico
+        // click para mouse, Enter ou Espaco, sem handlers de teclado duplicados.
         card.addEventListener('click', () => { window.location.href = c.pagina; });
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            window.location.href = c.pagina;
-          }
-        });
 
         let tagHtml = '';
         if (c.tag) tagHtml = `<span class="comodo-card__tag comodo-card__tag--verde">${c.tag}</span>`;
@@ -176,11 +167,11 @@
             <img src="${c.img}" alt="" class="comodo-card__icone-img">
           </div>
           <div class="comodo-card__conteudo">
-            <p class="comodo-card__nome">${c.nome}</p>
+            <h2 class="comodo-card__nome" id="nome-${c.id}">${c.nome}<span class="texto-leitor" id="estado-${c.id}">. ${estado}</span></h2>
             <p class="comodo-card__skill ${c.corSkill}">${c.skill}</p>
             ${ptsHtml}
             ${estrelasHtml}
-            <span class="comodo-card__acao">Explorar</span>
+            <button class="comodo-card__acao" type="button" aria-label="Explorar ${c.nome}" aria-describedby="estado-${c.id}">Explorar</button>
           </div>
         `;
       }
@@ -196,7 +187,7 @@
     const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
     const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';
     const v3 = score !== null && score >= 25 ? '--ok'   : '--vazio';
-    return `<section class="progresso">
+    return `<section class="progresso" aria-hidden="true">
       <span class="progresso__bolinha progresso__bolinha${v1}"></span>
       <span class="progresso__bolinha progresso__bolinha${v2}"></span>
       <span class="progresso__bolinha progresso__bolinha${v3}"></span>
@@ -204,6 +195,13 @@
   }
 
   renderMapa();
+  document.addEventListener('DOMContentLoaded', () => {
+    inicializarOrientacaoAcessivel({
+      titulo: 'Mapa da Casa',
+      mensagem: 'Use Tab para navegar pelos cômodos disponíveis. Os cômodos bloqueados serão liberados conforme você avança. Para iniciar um desafio, escolha Explorar.',
+      focoInicial: '#mapa-titulo'
+    });
+  }, { once: true });
   </script>
 
 </body>

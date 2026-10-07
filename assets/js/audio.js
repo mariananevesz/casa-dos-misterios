@@ -35,8 +35,37 @@ const audio = (() => {
     return String(texto || '').replace(/\s+/g, ' ').trim();
   }
 
+  /* ---- Botão ▶ vira ❚❚ enquanto fala; clicar de novo pausa ---- */
+  let textoFalando = '';
+  let botaoFalando = null;
+  let ultimoBotaoPlay = null;
+
+  document.addEventListener('click', e => {
+    ultimoBotaoPlay = e.target.closest?.('.dica__play') || null;
+  }, true);
+
+  function marcarBotao(botao) {
+    desmarcarBotao();
+    if (!botao) return;
+    botaoFalando = botao;
+    botao.dataset.rotuloOriginal = botao.getAttribute('aria-label') || '';
+    botao.textContent = '❚❚';
+    botao.classList.add('dica__play--falando');
+    botao.setAttribute('aria-label', 'Pausar narração');
+  }
+
+  function desmarcarBotao() {
+    if (!botaoFalando) return;
+    botaoFalando.textContent = '▶';
+    botaoFalando.classList.remove('dica__play--falando');
+    botaoFalando.setAttribute('aria-label', botaoFalando.dataset.rotuloOriginal || 'Ouvir');
+    botaoFalando = null;
+  }
+
   function pararNarracao() {
     narracaoPendente = false;
+    textoFalando = '';
+    desmarcarBotao();
     try { window.speechSynthesis?.cancel(); } catch {}
   }
 
@@ -49,8 +78,23 @@ const audio = (() => {
     }
     if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false;
 
+    /* Mesmo texto já em andamento → o clique pausa */
+    if (fala === textoFalando && window.speechSynthesis.speaking) {
+      pararNarracao();
+      ultimoBotaoPlay = null;
+      return false;
+    }
+
     pararNarracao();
     const utterance = new SpeechSynthesisUtterance(fala);
+    textoFalando = fala;
+    utterance.onend = utterance.onerror = () => {
+      if (textoFalando !== fala) return;
+      textoFalando = '';
+      desmarcarBotao();
+    };
+    marcarBotao(ultimoBotaoPlay);
+    ultimoBotaoPlay = null;
     utterance.lang = 'pt-BR';
     const vozPtBr = window.speechSynthesis.getVoices().find(voz =>
       String(voz.lang).toLowerCase().replace('_', '-').startsWith('pt-br')
@@ -60,7 +104,8 @@ const audio = (() => {
     return true;
   }
 
-  function definirNarracao(texto, reproduzirAutomaticamente = true) {
+  /* A instrução só é falada quando a criança aperta o ▶ (ou Alt+R) */
+  function definirNarracao(texto, reproduzirAutomaticamente = false) {
     instrucaoAtual = limparTextoNarracao(texto);
     narracaoPendente = false;
     if (reproduzirAutomaticamente) falar(instrucaoAtual);
@@ -75,8 +120,7 @@ const audio = (() => {
   }
 
   function sincronizarNarracao() {
-    if (isNarracaoAtivada()) repetirNarracao();
-    else pararNarracao();
+    if (!isNarracaoAtivada()) pararNarracao();
   }
 
   function beep(freq, dur, type = 'sine', vol = 0.28) {

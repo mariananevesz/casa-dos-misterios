@@ -14,13 +14,13 @@
     <!-- HUD -->
     <section class="hud quarto-hud">
       <button class="btn-voltar-mapa quarto-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('quarto','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
 
       <section class="hud__info quarto-hud__info">
         <img src="../img/icone-quarto.png" alt="" class="hud__icone-img quarto-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto — Depuração</p>
+          <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo" id="titulo-quarto" role="heading" aria-level="1">Quarto<span class="quarto-hud__skill"> — Depuração</span></p>
           <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
         </section>
       </section>
@@ -32,24 +32,22 @@
 
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
-      </section>
-      <section>
-        <p class="balao__nome quarto-logi__nome">Logi diz:</p>
-        <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
-      </section>
+      <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
+      <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
+      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
+
+    <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
+    <section class="niveis quarto-niveis" id="niveis-tabs" aria-label="Progresso de dificuldade"></section>
 
     <section class="quarto-layout" aria-label="Área do desafio do quarto">
 
       <!-- Sequência com erros -->
       <aside class="quarto-card quarto-card--fonte" aria-label="Sequência com erros">
         <p class="quarto-card__titulo">Sequência com erros</p>
-        <p class="quarto-card__subtitulo">Clique ou arraste apenas os passos que fazem sentido.</p>
+        <p class="quarto-card__subtitulo"><span aria-hidden="true">Clique ou arraste apenas os passos que fazem sentido.</span><span class="texto-leitor">Use Tab para revisar os passos da sequência original. Enter ou Espaço adicionam o passo à sequência corrigida. Também é possível clicar ou arrastar.</span></p>
 
-        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
+        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="group" aria-label="Sequência original, blocos disponíveis, alguns com erro"></section>
 
         <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
           <img src="../img/icone-quarto.png" alt="" class="dica__icone-comodo">
@@ -64,12 +62,12 @@
           <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
-          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite"></section>
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida, ative um passo para remover"></section>
         </section>
 
-        <section class="quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite">
-          <p class="quarto-feedback__titulo">Resultado da verificação</p>
-          <section class="blocos quarto-feedback__blocos" id="feedback-blocos"></section>
+        <section class="dica dica--erro quarto-feedback" id="feedback-area" style="display:none;">
+          <span class="dica__emoji" aria-hidden="true">💡</span>
+          <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
 
         <section class="btn-grupo quarto-actions" aria-label="Ações do desafio">
@@ -200,6 +198,32 @@
   ]
 };
 
+  /* Fallback de variações — usado apenas quando o fetch falha (file://) */
+  const QUARTO_VARIACOES_INLINE = { "variacoes": [ { "fases": [
+    { "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
+    { "sequenciaComErros": [
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
+    { "sequenciaComErros": [
+        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
+        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
+        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
+        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
+        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
+        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
+      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"] }
+  ] } ] };
+
   let gameData   = null;
   let faseAtual = 0;
   let corrigida  = [];
@@ -207,7 +231,6 @@
   let erros      = 0;
   let touchBloco = null;
   let touchGhost = null;
-  const FASE_KEY = 'quarto_fase';
 
   async function init() {
     try {
@@ -215,11 +238,43 @@
     } catch(e) {
       gameData = QUARTO_INLINE; // fallback file://
     }
-    faseAtual = Math.min(
-    parseInt(localStorage.getItem(FASE_KEY) || '0'),
-    gameData.fases.length - 1
-);
+
+    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real no Quarto */
+    let variacoesData;
+    try {
+      variacoesData = await loadGameData('../data/quarto-variacoes.json');
+    } catch(e) {
+      variacoesData = QUARTO_VARIACOES_INLINE;
+    }
+    const variacaoIdx = gameState.iniciarVariacao('quarto', variacoesData.variacoes.length);
+    const variacao = variacoesData.variacoes[variacaoIdx];
+    gameData.fases.forEach((fase, i) => {
+      if (variacao.fases[i]) {
+        fase.sequenciaComErros = variacao.fases[i].sequenciaComErros;
+        fase.sequenciaCorreta  = variacao.fases[i].sequenciaCorreta;
+      }
+    });
+
+    faseAtual = Math.min(gameState.getEstagio('quarto'), gameData.fases.length - 1);
     renderFase();
+    inicializarOrientacaoAcessivel({
+      titulo: 'Quarto. Desafio de depuração',
+      mensagem: 'Analise a rotina com erros e monte a ordem correta. Use Tab para revisar os passos. Enter ou Espaço adicionam passos à sequência corrigida. Ative um passo montado para remover. Depois ative Verificar sequência.',
+      focoInicial: '#titulo-quarto'
+    });
+  }
+
+  function buildNivelTabs() {
+    const cont = document.getElementById('niveis-tabs');
+    cont.innerHTML = '';
+    gameData.fases.forEach((f, i) => {
+      const span = document.createElement('span');
+      if (i < faseAtual)        span.className = 'nivel nivel--ok';
+      else if (i === faseAtual) span.className = 'nivel nivel--ativo';
+      else                       span.className = 'nivel nivel--bloq';
+      span.textContent = f.dificuldade + (i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : '');
+      cont.appendChild(span);
+    });
   }
 
   function renderFase() {
@@ -237,6 +292,7 @@
   erros = 0;
   pararAtencaoDica();
 
+  buildNivelTabs();
   buildFonte();
   renderCorrigida();
 
@@ -247,9 +303,14 @@
 }
 
   /* ---- Blocos fonte (com erros marcados) ---- */
+  function nomePasso(bloco) {
+    return bloco.rotulo.replace(/^[^\p{L}\p{N}]+/u, '').trim();
+  }
+
   function buildFonte() {
     const fase = gameData.fases[faseAtual];
     const cont = document.getElementById('blocos-fonte');
+    cont.setAttribute('aria-label', `Sequência original: ${fase.titulo}. ${fase.sequenciaComErros.length} passos disponíveis. Monte ${fase.sequenciaCorreta.length} passos na sequência corrigida.`);
     cont.innerHTML = '';
 
     // IDs únicos disponíveis para montar a sequência corrigida
@@ -262,9 +323,9 @@
       el.draggable = true;
       el.dataset.index = index;
       el.dataset.blocoId = id;
-      el.setAttribute('role', 'option');
+      el.setAttribute('role', 'button');
       el.setAttribute('tabindex', '0');
-      el.setAttribute('aria-label', `${bloco.rotulo}${temErro ? ' — suspeito' : ''}`);
+      el.setAttribute('aria-label', `Posição ${index + 1}: ${nomePasso(bloco)}${temErro ? ' — suspeito' : ''}. Ative para adicionar.`);
 
       const img = imgTag(id);
       
@@ -297,20 +358,24 @@
   /* ---- Sequência corrigida (destino) ---- */
   function renderCorrigida() {
     const cont = document.getElementById('sequencia-corrigida');
+    const indiceFocado = cont.contains(document.activeElement) ? Number(document.activeElement.dataset.idx) : null;
     cont.innerHTML = '';
     const fase = gameData.fases[faseAtual];
     const total = fase.sequenciaCorreta.length;
+    cont.setAttribute('aria-label', `Sequência corrigida: ${corrigida.length} de ${total} passos. Ative um passo para remover.`);
 
     corrigida.forEach((bid, idx) => {
       const bloco = fase.sequenciaComErros.find(b => b.id === bid && !b.erro)
+                 || fase.sequenciaComErros.find(b => b.id === bid)
                  || { id: bid, rotulo: bid, erro: false };
       const el = document.createElement('span');
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
       el.setAttribute('role', 'button');
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ative para remover.`);
+      el.setAttribute('aria-label', `${nomePasso(bloco)}, posição ${idx+1}. Ative para remover.`);
       el.setAttribute('tabindex', '0');
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}`;
+      el.title = 'Ative para remover';
+      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}<span class="bloco-remover" aria-hidden="true">×</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
@@ -324,9 +389,13 @@
     for (let i = corrigida.length; i < total; i++) {
       const empty = document.createElement('span');
       empty.className = 'bloco bloco--vazio';
-      empty.textContent = '+ bloco';
-      empty.setAttribute('aria-label', 'Slot vazio');
+      empty.textContent = i === corrigida.length ? '+ bloco' : '';
+      empty.setAttribute('aria-hidden', 'true');
       cont.appendChild(empty);
+    }
+
+    if (indiceFocado !== null) {
+      focarElementoAcessivel(cont.querySelector(`[data-idx="${Math.min(indiceFocado, corrigida.length - 1)}"]`) || document.querySelector('#blocos-fonte [role="button"]'));
     }
 
     // drop na área
@@ -341,17 +410,25 @@
   function adicionarBloco(bid) {
     if (verificado) return;
     const fase = gameData.fases[faseAtual];
-    if (corrigida.length >= fase.sequenciaCorreta.length) return;
+    if (corrigida.length >= fase.sequenciaCorreta.length) {
+      anunciarParaLeitorDeTela('Sequência corrigida cheia. Remova um passo antes de adicionar outro.');
+      return;
+    }
     corrigida.push(bid);
     audio.clique();
     pararAtencaoDica();
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
+    const bloco = fase.sequenciaComErros.find(b => b.id === bid);
+    anunciarParaLeitorDeTela(`${nomePasso(bloco)} adicionado à sequência corrigida. Posição ${corrigida.length}.`);
   }
 
   function removerBloco(idx) {
     if (verificado) return;
+    const bloco = gameData.fases[faseAtual].sequenciaComErros.find(b => b.id === corrigida[idx]);
+    if (!bloco) return;
     corrigida.splice(idx, 1);
+    anunciarParaLeitorDeTela(`${nomePasso(bloco)} removido da posição ${idx + 1}.`);
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
   }
@@ -386,48 +463,55 @@
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < fase.sequenciaCorreta.length) {
       audio.erro();
-      mostrarFeedbackTexto('Complete todos os slots antes de verificar!');
+      mostrarFeedbackTexto(corrigida.length === 0
+        ? 'Ops! Escolha os blocos antes de verificar.'
+        : 'Ops! Preencha todos os espaços antes de verificar.');
+      const painel = document.getElementById('painel-destino');
+      painel.classList.remove('shake');
+      void painel.offsetWidth;
+      painel.classList.add('shake');
       return;
     }
     verificado = true;
 
     const correta = fase.sequenciaCorreta;
     let acertos = 0;
-    const area = document.getElementById('feedback-area');
-    const cont = document.getElementById('feedback-blocos');
-    cont.innerHTML = '';
-    area.style.display = 'block';
 
+    /* Marca certo/errado direto nos blocos montados */
+    const blocosEl = document.querySelectorAll('#sequencia-corrigida .bloco[data-idx]');
     corrigida.forEach((bid, i) => {
       const ok = bid === correta[i];
       if (ok) acertos++;
       const bloco = fase.sequenciaComErros.find(b => b.id === bid) || { rotulo: bid };
-      const el = document.createElement('span');
-      el.className = `bloco ${ok ? 'bloco--verde' : 'bloco--erro'}`;
-      el.setAttribute('aria-label', `${bloco.rotulo} — ${ok ? 'correto' : 'incorreto'}`);
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo} <strong aria-hidden="true">${ok ? '✓' : '✕'}</strong>`;
-      cont.appendChild(el);
+      const el = blocosEl[i];
+      el.classList.remove('bloco--roxo');
+      el.classList.add(ok ? 'bloco--verde' : 'bloco--erro');
+      el.querySelector('.bloco-remover')?.remove();
+      el.insertAdjacentHTML('beforeend', `<strong class="bloco-resultado" aria-hidden="true">${ok ? '✓' : '✕'}</strong>`);
+      el.setAttribute('aria-label', `${nomePasso(bloco)}, posição ${i + 1} — ${ok ? 'correto' : 'incorreto'}. Ative para remover.`);
     });
 
     if (acertos === correta.length) {
       audio.acerto();
+      mostrarFeedbackTexto('Muito bem! A rotina está na ordem certa!', 'ok');
       setTimeout(() => conclusao(), 600);
     } else {
       erros++;
       ativarAtencaoDica();
       audio.erro();
       verificado = false;
-      // Permite tentar novamente
-      setTimeout(() => {
-        mostrarFeedbackTexto(`${acertos} de ${correta.length} corretos. Ajuste sua sequência e tente novamente!`);
-      }, 1200);
+      mostrarFeedbackTexto(`${acertos} de ${correta.length} certos. Troque os blocos vermelhos!`);
     }
   }
 
-  function mostrarFeedbackTexto(msg) {
-    const cont = document.getElementById('feedback-blocos');
-    cont.innerHTML = `<span style="font-size:calc(12px * var(--escala-fonte));color:var(--vermelho);">${msg}</span>`;
-    document.getElementById('feedback-area').style.display = 'block';
+  function mostrarFeedbackTexto(msg, tipo = 'erro') {
+    const area = document.getElementById('feedback-area');
+    const txt  = document.getElementById('feedback-texto');
+    area.className = `dica quarto-feedback dica--${tipo === 'ok' ? 'verde' : 'erro'}`;
+    txt.className  = `dica__texto dica__texto--${tipo === 'ok' ? 'verde' : 'erro'}`;
+    txt.textContent = msg;
+    anunciarParaLeitorDeTela(tipo === 'ok' ? 'Sequência correta. Desafio concluído.' : `${msg.replace('Troque os blocos vermelhos!', 'Remova os passos anunciados como incorretos e monte novamente.')} Tente novamente.`);
+    area.style.display = 'flex';
   }
 
  function conclusao() {
@@ -449,9 +533,9 @@
   atualizarBadge(totalQuarto);
 
   if (proxFase < gameData.fases.length) {
-    localStorage.setItem(FASE_KEY, proxFase);
+    gameState.setEstagio('quarto', proxFase);
   } else {
-    localStorage.removeItem(FASE_KEY);
+    gameState.limparEstagio('quarto');
   }
 
   document.getElementById('modal-sub').textContent =
@@ -485,6 +569,8 @@
       faseAtual = proxFase;
       fecharModalFluxoAcessivel(document.getElementById('modal-conclusao'));
       renderFase();
+      focarElementoAcessivel('#titulo-quarto');
+      anunciarParaLeitorDeTela(`Fase ${gameData.fases[faseAtual].id}. ${gameData.fases[faseAtual].titulo}.`);
     };
     btnGrupo.appendChild(btnProx);
   }
@@ -493,7 +579,7 @@
   btnMapa.className = 'btn btn--outline-roxo';
   btnMapa.textContent = 'Voltar ao mapa';
   btnMapa.onclick = () => {
-    window.location.href = 'MapaCasa.html';
+    gameState.sairMiniGame('quarto', 'MapaCasa.html');
   };
   btnGrupo.appendChild(btnMapa);
 
@@ -528,6 +614,14 @@
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('quarto', 'MapaCasa.html');
+  });
+
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
   document.getElementById('dica-play').addEventListener('click', () => {
     pararAtencaoDica();
@@ -545,6 +639,7 @@
     corrigida = [];
     verificado = false;
     renderCorrigida();
+    anunciarParaLeitorDeTela('Sequência corrigida limpa.');
     document.getElementById('feedback-area').style.display = 'none';
   });
 

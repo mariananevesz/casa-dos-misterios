@@ -14,30 +14,25 @@
     <!-- HUD -->
     <section class="hud cozinha-hud">
       <button class="btn-voltar-mapa cozinha-voltar"
-              onclick="window.location.href='MapaCasa.html'"
+              onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')"
               aria-label="Voltar ao mapa">← Mapa</button>
       <section class="hud__info cozinha-hud__info">
         <img src="../img/icone-cozinha.png" alt="" class="hud__icone-img cozinha-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha — Verdadeiro ou Falso</p>
+          <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo" id="titulo-cozinha" role="heading" aria-level="1">Cozinha<span class="cozinha-hud__skill"> — Verdadeiro ou Falso</span></p>
           <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
         </section>
       </section>
-      <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
+      <span class="badge badge--verde cozinha-badge" id="badge-pts"><span aria-hidden="true">0 pts</span><span class="texto-leitor">0 pontos</span></span>
 
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
-      <section class="balao__mascote">
-        <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
-        <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
-      </section>
-      <section>
-        <p class="balao__nome cozinha-logi__nome">Logi diz:</p>
-        <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
-      </section>
+      <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
+      <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
+      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
     <section class="cozinha-layout" aria-label="Área do jogo da cozinha">
@@ -51,7 +46,7 @@
         </section>
 
         <!-- Caixa de pergunta -->
-        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite" aria-atomic="true">
+        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" role="group" tabindex="0" aria-labelledby="pergunta-numero" aria-describedby="pergunta-frase">
           <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
           <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
           <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
@@ -59,18 +54,18 @@
 
         <!-- Botões V/F -->
         <section class="vf-grid cozinha-vf" aria-label="Escolha verdadeiro ou falso">
-          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro">
+          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro" type="button" aria-keyshortcuts="V">
             <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Verdadeiro</span>
           </button>
-          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso">
+          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso" type="button" aria-keyshortcuts="F">
             <img src="../img/falso.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Falso</span>
           </button>
         </section>
 
         <!-- Feedback imediato -->
-        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" aria-atomic="true" style="display:none;">
+        <section id="feedback-area" class="cozinha-feedback" style="display:none;">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -131,15 +126,16 @@
   </div>
 
   <!-- Modal de conclusão -->
-  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
+  <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="conclusao-leitura modal-sub modal-pts" style="display:none;">
     <section class="modal">
       <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Cozinha concluída!</h2>
+      <p class="texto-leitor" id="conclusao-leitura">Desafio concluído.</p>
       <p class="modal-sub" id="modal-sub"></p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
-        <button class="btn btn--verde" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--verde" onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
@@ -289,6 +285,7 @@
   let perguntaIdx = 0;
   let acertos     = 0;
   let respondendo = false;
+  let respostaComFoco = null;
 
   async function init() {
     let fonte = COZINHA_INLINE;
@@ -301,8 +298,9 @@
     const f2 = fonte.blocos.filter(b => b.dificuldade === 'Médio');
     const f3 = fonte.blocos.filter(b => b.dificuldade === 'Difícil');
 
-    /* Seleciona um bloco de cada fase de forma cíclica a cada sessão */
-    const sessao = gameState.getCozinhaBloco();
+    /* Item 2.3 — gira para o próximo bloco a cada entrada real na Cozinha
+       (não a cada conclusão da partida inteira, e não num simples F5). */
+    const sessao = gameState.avancarBlocoSeNovaEntrada();
     const b1 = f1[sessao % f1.length];
     const b2 = f2[sessao % f2.length];
     const b3 = f3[sessao % f3.length];
@@ -324,8 +322,14 @@
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
     audio.definirNarracao(document.getElementById('logi-texto').textContent);
     document.getElementById('dica-texto').textContent  = gameData.dica;
-    renderPergunta();
+    renderPergunta(false);
     atualizarBadge();
+    inicializarOrientacaoAcessivel({
+      titulo: 'Cozinha. Desafio de verdadeiro ou falso',
+      mensagem: 'Ouça a afirmação e escolha Verdadeiro ou Falso. Use Tab para navegar e Enter ou Espaço para responder. Também pode usar V para Verdadeiro e F para Falso. ' +
+        `${document.getElementById('pergunta-numero').textContent}. ${gameData.perguntas[perguntaIdx].frase}`,
+      focoInicial: '#titulo-cozinha'
+    });
   }
 
   /* ---- Abas de nível — mesmo padrão da Despensa ---- */
@@ -347,7 +351,7 @@
   }
 
   /* ---- Renderiza pergunta atual ---- */
-  function renderPergunta() {
+  function renderPergunta(anunciar = true) {
     const p          = gameData.perguntas[perguntaIdx];
     const faseAtual  = p._fase;
     const idxNaFase  = perguntaIdx % gameData.tamFase;
@@ -360,6 +364,16 @@
     renderProgresso();
     habilitarBotoes(true);
     pararAtencaoDica();
+    // Os botoes ficam indisponiveis por ARIA sem perder o foco. Esta
+    // recuperacao cobre perda para o body, sem roubar foco de outro controle.
+    if (respostaComFoco && !existeModalVisivel() &&
+        (document.activeElement === document.body || document.activeElement === respostaComFoco)) {
+      focarElementoAcessivel(respostaComFoco);
+    }
+    respostaComFoco = null;
+    if (anunciar) {
+      anunciarParaLeitorDeTela(`Próxima pergunta. ${faseAtual}. Pergunta ${idxNaFase + 1} de ${gameData.tamFase}. ${p.frase}`);
+    }
   }
 
   function destacarFrase(frase, palavraChave) {
@@ -393,7 +407,10 @@
 
   /* ---- Resposta ---- */
   function responder(escolha) {
-    if (respondendo) return;
+    if (!gameData || respondendo || perguntaIdx >= gameData.perguntas.length || existeModalVisivel()) return;
+    const focoAtual = document.activeElement;
+    respostaComFoco = [document.getElementById('btn-verdadeiro'), document.getElementById('btn-falso')].includes(focoAtual)
+      ? focoAtual : null;
     respondendo = true;
     habilitarBotoes(false);
     pararAtencaoDica();
@@ -435,17 +452,22 @@
     txt.className  = `dica__texto dica__texto--${tipo === 'verde' ? 'verde' : 'erro'}`;
     document.getElementById('feedback-area').style.display = 'block';
     txt.textContent = msg;
+    const resultado = tipo === 'verde' ? 'Resposta correta.' : 'Resposta incorreta.';
+    const explicacao = msg.replace(/^Correto!\s*/, '');
+    const proximo = perguntaIdx + 1 < gameData.perguntas.length
+      ? 'A próxima pergunta será apresentada automaticamente.'
+      : 'O resultado do desafio será apresentado automaticamente.';
+    anunciarParaLeitorDeTela(`${resultado} ${explicacao} ${proximo}`);
   }
 
   function habilitarBotoes(on) {
-    document.getElementById('btn-verdadeiro').disabled = !on;
-    document.getElementById('btn-falso').disabled      = !on;
+    document.getElementById('btn-verdadeiro').setAttribute('aria-disabled', String(!on));
+    document.getElementById('btn-falso').setAttribute('aria-disabled', String(!on));
   }
 
   /* ---- Conclusão ---- */
   function conclusao() {
     pararAtencaoDica();
-    gameState.setCozinhaBloco(gameState.getCozinhaBloco() + 1);
     const erros = gameData.perguntas.length - acertos;
     const score = gameState.calcularScore(erros);
     gameState.setRoomScore('cozinha', score);
@@ -465,7 +487,8 @@
 
     document.getElementById('modal-sub').textContent =
       `Você acertou ${acertos} de ${gameData.perguntas.length} perguntas!`;
-    document.getElementById('modal-pts').innerHTML = textoPontuacao(score, `Pontuação: ${score} / 25 pts`, 'Pontuação: ', 25);
+    document.getElementById('modal-pts').innerHTML = textoPontuacao(score, `Pontuação: ${score} / 25 pts`, 'Você ganhou ', 25);
+    preservarFocoAcessivel(document.getElementById('modal-conclusao'), respostaComFoco || document.activeElement);
     abrirModalFluxoAcessivel(document.getElementById('modal-conclusao'));
 
     if (score === 25) audio.conclusao();
@@ -500,6 +523,14 @@
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
+  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
+    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
+    gameState.sairMiniGame('cozinha', 'MapaCasa.html');
+  });
+
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
   document.getElementById('dica-play').addEventListener('click', () => {
     pararAtencaoDica();
@@ -515,9 +546,12 @@
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
 
   document.addEventListener('keydown', e => {
-    if (!gameData || respondendo || e.repeat || e.altKey || e.ctrlKey || e.metaKey || existeModalVisivel()) return;
-    if (e.key.toLowerCase() === 'v') responder(true);
-    if (e.key.toLowerCase() === 'f') responder(false);
+    if (!gameData || respondendo || e.defaultPrevented || e.repeat || e.altKey || e.ctrlKey || e.metaKey ||
+        alvoEditavel(e.target) || existeModalVisivel()) return;
+    const tecla = String(e.key).toLowerCase();
+    if (tecla !== 'v' && tecla !== 'f') return;
+    e.preventDefault();
+    responder(tecla === 'v');
   });
 
   init();

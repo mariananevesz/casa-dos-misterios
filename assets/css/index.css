@@ -84,6 +84,17 @@
   margin-top: 2px;
 }
 
+/* ---------- Balão do Logi (Play à direita, igual aos cômodos) ---------- */
+.inicio-logi {
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.inicio-logi .balao__texto {
+  flex: 1;
+  min-width: 0;
+}
+
 /* ---------- Botões do menu principal ---------- */
 .menu-botoes {
   display: flex;
@@ -202,6 +213,8 @@
   .inicio-header__subtitulo { font-size: calc(14px * var(--escala-fonte)); }
   .btn--menu-principal      { font-size: calc(16px * var(--escala-fonte)); min-height: 54px; padding: 0 18px; }
   .menu-botoes              { margin: 1rem 0 1.5rem; }
+  .inicio-logi .balao__play { width: 36px; height: 36px; }
+  .inicio-header            { padding-inline: 44px; }
 }
 
 @media (max-width: 400px) {
@@ -215,6 +228,20 @@
   .inicio-comodo__icone-img { width: 60px; height: 60px; }
   .inicio-comodo__label     { font-size: calc(12px * var(--escala-fonte)); }
   .inicio-rodape            { font-size: calc(11px * var(--escala-fonte)); margin-top: 1rem; }
+}
+
+/* Celulares baixos (ex.: 360×560): tudo cabe sem rolagem */
+@media (max-width: 560px) and (max-height: 620px) {
+  .inicio-header { margin-bottom: 0.5rem !important; }
+  .inicio-logi { margin-bottom: 0.5rem; }
+  .inicio-logi .balao__texto { font-size: calc(13.5px * var(--escala-fonte)); line-height: 1.35; }
+  .menu-botoes { margin: 0.4rem 0 0.5rem !important; }
+  .menu-botoes .btn--menu-principal + .btn--menu-principal { margin-top: 8px !important; }
+  .btn--menu-principal { min-height: 42px !important; }
+  .inicio-comodos { margin-top: 0.4rem !important; padding-top: 4px !important; }
+  .inicio-comodos__titulo { margin-bottom: 6px !important; }
+  .inicio-comodo__icone-img { width: 44px !important; height: 44px !important; }
+  .inicio-rodape { margin-top: 0.4rem !important; }
 }
 
 @media (max-height: 800px) {
