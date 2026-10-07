@@ -165,18 +165,140 @@
   <!-- ===== Modal Como Jogar ===== -->
   <div class="modal-overlay" id="modal-como-jogar" role="dialog" aria-modal="true"
        aria-labelledby="cj-titulo" style="display:none;">
-    <section class="modal" style="max-width:340px;">
-      <h2 class="modal-titulo" id="cj-titulo" style="margin-bottom:1rem;">Como jogar</h2>
-      <ul style="font-size:calc(13px * var(--escala-fonte));line-height:2;color:var(--texto-medio);list-style:none;padding:0;">
-        <li><img src="assets/img/icone-sala.png"     alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Sala</strong> — Monte sequências de blocos para guiar o personagem até a estrela.</li>
-        <li style="margin-top:6px;"><img src="assets/img/icone-quarto.png"   alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Quarto</strong> — Encontre os erros na rotina e reconstrua a ordem correta.</li>
-        <li style="margin-top:6px;"><img src="assets/img/icone-cozinha.png"  alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Cozinha</strong> — Julgue cada frase: Verdadeiro ou Falso?</li>
-        <li style="margin-top:6px;"><img src="assets/img/icone-despensa.png" alt="" style="width:18px;vertical-align:middle;margin-right:6px;"> <strong>Despensa</strong> — Organize os itens por tamanho, cor ou categoria.</li>
-      </ul>
-      <p style="font-size:calc(12px * var(--escala-fonte));color:var(--cinza);margin-top:1rem;">
-        Complete cada cômodo para desbloquear o próximo. Quanto menos erros, mais pontos!
-      </p>
-      <button class="btn btn--laranja" style="margin-top:1.25rem;width:100%;"
+    <section class="modal cj-modal">
+      <button class="modal-fechar" id="btn-fechar-cj-x" type="button" aria-label="Fechar como jogar">✕</button>
+      <h2 class="modal-titulo cj-titulo" id="cj-titulo">Como jogar</h2>
+
+      <!-- Espaço reservado para vídeo de demonstração.
+           Para ativar: preencha data-video-src com o caminho do vídeo (ex.: assets/video/como-jogar.mp4)
+           e, se quiser, data-video-poster com uma imagem de capa. -->
+      <section class="cj-video" id="cj-video" data-video-src="" data-video-poster="" aria-label="Vídeo de demonstração">
+        <span class="cj-video__play" aria-hidden="true">▶</span>
+        <p class="cj-video__texto"><strong>Vídeo de demonstração</strong><br>Em breve aqui!</p>
+      </section>
+
+      <nav class="cj-tabs" role="tablist" aria-label="Etapas do como jogar">
+        <button class="cj-tab" role="tab" id="cj-tab-0" aria-controls="cj-etapa-0" type="button"><span aria-hidden="true">🎮</span> Início</button>
+        <button class="cj-tab" role="tab" id="cj-tab-1" aria-controls="cj-etapa-1" type="button"><img src="assets/img/icone-sala.png" alt=""> Sala</button>
+        <button class="cj-tab" role="tab" id="cj-tab-2" aria-controls="cj-etapa-2" type="button"><img src="assets/img/icone-quarto.png" alt=""> Quarto</button>
+        <button class="cj-tab" role="tab" id="cj-tab-3" aria-controls="cj-etapa-3" type="button"><img src="assets/img/icone-cozinha.png" alt=""> Cozinha</button>
+        <button class="cj-tab" role="tab" id="cj-tab-4" aria-controls="cj-etapa-4" type="button"><img src="assets/img/icone-despensa.png" alt=""> Despensa</button>
+      </nav>
+
+      <!-- Etapa 0 — botões do jogo -->
+      <section class="cj-etapa" id="cj-etapa-0" role="tabpanel" aria-labelledby="cj-tab-0">
+        <p class="cj-etapa__titulo"><img src="assets/img/logi_feliz.png" alt=""> Os botões do jogo</p>
+        <p class="cj-texto">Em todos os cômodos você vai achar estes botões. <strong>Toque em cada um</strong> para saber o que ele faz!</p>
+        <div class="cj-botoes-demo">
+          <button type="button" class="cj-demo-btn" data-info="← Mapa: volta para o mapa da casa, onde você escolhe o cômodo.">← Mapa</button>
+          <button type="button" class="cj-demo-btn cj-demo-btn--redondo" data-info="?: abre esta explicação de como jogar, quando você esquecer o que fazer.">?</button>
+          <button type="button" class="cj-demo-btn cj-demo-btn--redondo" data-info="▶: o Logi lê a dica ou a instrução em voz alta para você.">▶</button>
+          <button type="button" class="cj-demo-btn cj-demo-btn--verde" data-info="✓ Verificar: confere se a sua resposta está certa.">✓ Verificar</button>
+          <button type="button" class="cj-demo-btn cj-demo-btn--outline" data-info="↻ Limpar: tira tudo o que você montou para começar de novo.">↻ Limpar</button>
+          <button type="button" class="cj-demo-btn cj-demo-btn--estrela" data-info="Pontos: quanto menos erros, mais pontos e estrelas você ganha!"><img src="assets/img/estrela.png" alt=""> 25 pts</button>
+        </div>
+        <p class="cj-info" id="cj-info-botoes" role="status" aria-live="polite">👆 Toque em um botão acima.</p>
+        <p class="cj-texto cj-texto--pequeno">Complete cada cômodo para abrir o próximo. Se errar, é só tentar de novo!</p>
+      </section>
+
+      <!-- Etapa 1 — Sala -->
+      <section class="cj-etapa" id="cj-etapa-1" role="tabpanel" aria-labelledby="cj-tab-1" hidden>
+        <p class="cj-etapa__titulo"><img src="assets/img/icone-sala.png" alt=""> Sala — Algoritmos</p>
+        <ol class="cj-passos">
+          <li>Escolha as setas: <strong>cima, baixo, esquerda ou direita</strong>. Cada seta é um passo.</li>
+          <li>O botão <strong>repetir</strong> faz o último passo de novo.</li>
+          <li>Clique em <strong>Executar</strong> e veja o personagem andar.</li>
+          <li>Chegue até a <img class="cj-inline" src="assets/img/estrela.png" alt="estrela"> sem bater no <img class="cj-inline" src="assets/img/obstaculo.png" alt="obstáculo">.</li>
+        </ol>
+        <p class="cj-treine">📘 Exemplo de fase (já resolvida)</p>
+        <div class="cj-sala">
+          <div class="cj-grade" id="cj-grade" role="img" aria-label="Exemplo: o Logi sai de baixo, vai 3 passos à direita e 2 para cima até a estrela"></div>
+          <div class="cj-sala__controles">
+            <p class="cj-legenda">Sequência da resposta:</p>
+            <div class="cj-sequencia" id="cj-sala-seq"></div>
+          </div>
+        </div>
+        <div class="cj-acoes cj-acoes--centro"><button type="button" class="cj-btn cj-btn--verde" data-replay="sala">▶ Ver o exemplo</button></div>
+        <p class="cj-info" id="cj-sala-msg" role="status" aria-live="polite">Resposta: 3 passos → e 2 passos ↑ levam o Logi até a estrela.</p>
+      </section>
+
+      <!-- Etapa 2 — Quarto -->
+      <section class="cj-etapa" id="cj-etapa-2" role="tabpanel" aria-labelledby="cj-tab-2" hidden>
+        <p class="cj-etapa__titulo"><img src="assets/img/icone-quarto.png" alt=""> Quarto — Rotina para <span class="cj-destaque">IR À ESCOLA</span></p>
+        <ol class="cj-passos">
+          <li>Veja os passos para <span class="cj-destaque">IR À ESCOLA</span>.</li>
+          <li>Clique só nos passos que <strong>fazem sentido</strong>. Alguns não combinam!</li>
+          <li>Monte a <strong>ordem certa</strong> no painel. Clique no bloco montado para tirar.</li>
+          <li>Se precisar, clique na <strong>dica</strong>: o passo errado fica vermelho.</li>
+        </ol>
+        <p class="cj-treine">📘 Exemplo de fase (já resolvida)</p>
+        <div class="cj-quarto">
+          <p class="cj-legenda">Passos para <span class="cj-destaque">IR À ESCOLA</span>:</p>
+          <div class="cj-blocos">
+            <span class="cj-bloco cj-bloco--usado">🛁 Tomar banho</span>
+            <span class="cj-bloco cj-bloco--usado">👕 Vestir a camiseta</span>
+            <span class="cj-bloco cj-bloco--usado">👟 Calçar o tênis</span>
+            <span class="cj-bloco cj-bloco--erro">📺 Assistir TV <b>!</b></span>
+          </div>
+          <p class="cj-legenda">Rotina montada:</p>
+          <div class="cj-painel" id="cj-quarto-seq">
+            <span class="cj-bloco cj-bloco--ok cj-passo">🛁 Tomar banho ✓</span>
+            <span class="cj-bloco cj-bloco--ok cj-passo">👕 Vestir a camiseta ✓</span>
+            <span class="cj-bloco cj-bloco--ok cj-passo">👟 Calçar o tênis ✓</span>
+          </div>
+        </div>
+        <div class="cj-acoes cj-acoes--centro"><button type="button" class="cj-btn cj-btn--verde" data-replay="quarto">▶ Ver o exemplo</button></div>
+        <p class="cj-info" id="cj-quarto-msg" role="status" aria-live="polite">Resposta: banho, camiseta e tênis por último. A TV não combina com ir à escola!</p>
+      </section>
+
+      <!-- Etapa 3 — Cozinha -->
+      <section class="cj-etapa" id="cj-etapa-3" role="tabpanel" aria-labelledby="cj-tab-3" hidden>
+        <p class="cj-etapa__titulo"><img src="assets/img/icone-cozinha.png" alt=""> Cozinha — Verdadeiro ou Falso</p>
+        <ol class="cj-passos">
+          <li>Leia a frase com atenção.</li>
+          <li>Cuidado com palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.</li>
+          <li>Escolha <strong>Verdadeiro</strong> ou <strong>Falso</strong>. Dá para usar as teclas <kbd>V</kbd> e <kbd>F</kbd>.</li>
+        </ol>
+        <p class="cj-treine">📘 Exemplo de fase (já resolvida)</p>
+        <div class="cj-cozinha">
+          <p class="cj-frase cj-passo">“O sal <mark>não</mark> é doce.”</p>
+          <div class="cj-acoes">
+            <span class="cj-btn cj-btn--vf cj-btn--v cj-passo cj-btn--escolhido"><img src="assets/img/verdadeiro.png" alt=""> Verdadeiro ✓</span>
+            <span class="cj-btn cj-btn--vf cj-btn--f cj-btn--apagado"><img src="assets/img/falso.png" alt=""> Falso</span>
+          </div>
+        </div>
+        <div class="cj-acoes cj-acoes--centro"><button type="button" class="cj-btn cj-btn--verde" data-replay="cozinha">▶ Ver o exemplo</button></div>
+        <p class="cj-info" id="cj-cozinha-msg" role="status" aria-live="polite">Resposta: Verdadeiro! O sal NÃO é doce, então a frase está certa.</p>
+      </section>
+
+      <!-- Etapa 4 — Despensa -->
+      <section class="cj-etapa" id="cj-etapa-4" role="tabpanel" aria-labelledby="cj-tab-4" hidden>
+        <p class="cj-etapa__titulo"><img src="assets/img/icone-despensa.png" alt=""> Despensa — Estoque inteligente</p>
+        <ol class="cj-passos">
+          <li>Leia a regra que o Logi mostra: cor, tamanho ou tipo de fruta.</li>
+          <li><strong>Clique</strong> (ou arraste) os itens que seguem a regra.</li>
+          <li>Aperte <strong>Confirmar</strong> para conferir.</li>
+        </ol>
+        <p class="cj-treine">📘 Exemplo de fase (já resolvida)</p>
+        <div class="cj-despensa">
+          <p class="cj-legenda">Regra do Logi: <strong>escolha as frutas vermelhas</strong>.</p>
+          <div class="cj-frutas" id="cj-frutas" role="group" aria-label="Frutas do exemplo">
+            <span class="cj-fruta cj-fruta--sel cj-passo"><img src="assets/img/ma%C3%A7a.png" alt=""><span>Maçã ✓</span></span>
+            <span class="cj-fruta"><img src="assets/img/banana.png" alt=""><span>Banana</span></span>
+            <span class="cj-fruta cj-fruta--sel cj-passo"><img src="assets/img/morango.png" alt=""><span>Morango ✓</span></span>
+            <span class="cj-fruta"><img src="assets/img/uva.png" alt=""><span>Uva</span></span>
+          </div>
+        </div>
+        <div class="cj-acoes cj-acoes--centro"><button type="button" class="cj-btn cj-btn--verde" data-replay="despensa">▶ Ver o exemplo</button></div>
+        <p class="cj-info" id="cj-desp-msg" role="status" aria-live="polite">Resposta: maçã e morango são vermelhos, por isso foram escolhidos.</p>
+      </section>
+
+      <div class="cj-rodape">
+        <button type="button" class="btn btn--outline cj-nav" id="cj-anterior">← Voltar</button>
+        <span class="cj-pontos" id="cj-pontos" aria-hidden="true"></span>
+        <button type="button" class="btn btn--laranja cj-nav" id="cj-proximo">Próximo →</button>
+      </div>
+      <button class="btn btn--laranja" style="margin-top:.9rem;width:100%;"
               id="btn-fechar-cj" aria-label="Fechar instruções">
         Entendi!
       </button>
@@ -245,9 +367,11 @@
   document.getElementById('btn-fechar-config').addEventListener('click', () => fecharModal('modal-config'));
   document.getElementById('btn-como-jogar').addEventListener('click', e => {
     abrirModal('modal-como-jogar', e.currentTarget);
-    const modal = document.getElementById('modal-como-jogar');
-    const texto = [...modal.querySelectorAll('li, p')].map(el => el.textContent).join(' ');
-    narrarTutorialAcessivel(texto);
+    cj.reiniciar();
+    cj.narrar();
+  });
+  document.getElementById('btn-fechar-cj-x').addEventListener('click', () => {
+    fecharModal('modal-como-jogar');
   });
   document.getElementById('btn-fechar-cj').addEventListener('click', () => {
     fecharModal('modal-como-jogar');
@@ -366,6 +490,134 @@
       atualizarStatus();
     }
   });
+
+  /* ===== Como jogar — etapas, vídeo e demonstrações interativas ===== */
+  const cj = (() => {
+    const ETAPAS = 5;
+    let atual = 0;
+    const $ = id => document.getElementById(id);
+    const abas = [...document.querySelectorAll('.cj-tab')];
+    const paineis = [...document.querySelectorAll('.cj-etapa')];
+
+    /* Vídeo opcional: preencha data-video-src no #cj-video para ativar */
+    (function iniciarVideo() {
+      const box = $('cj-video');
+      const src = box.dataset.videoSrc;
+      if (!src) return;
+      const v = document.createElement('video');
+      v.src = src; v.controls = true; v.preload = 'metadata';
+      if (box.dataset.videoPoster) v.poster = box.dataset.videoPoster;
+      v.setAttribute('aria-label', 'Vídeo de demonstração do jogo');
+      box.replaceChildren(v);
+      box.classList.add('cj-video--ativo');
+    })();
+
+    const pontos = $('cj-pontos');
+    for (let i = 0; i < ETAPAS; i++) pontos.appendChild(document.createElement('span'));
+
+    function narrar() {
+      narrarTutorialAcessivel(paineis[atual].textContent.replace(/\s+/g, ' ').trim());
+    }
+
+    function ir(i, narrarAgora = true) {
+      atual = Math.max(0, Math.min(ETAPAS - 1, i));
+      abas.forEach((a, k) => {
+        a.setAttribute('aria-selected', k === atual ? 'true' : 'false');
+        a.tabIndex = k === atual ? 0 : -1;
+        a.classList.toggle('cj-tab--ativa', k === atual);
+      });
+      paineis.forEach((p, k) => { p.hidden = k !== atual; });
+      [...pontos.children].forEach((d, k) => d.classList.toggle('on', k === atual));
+      $('cj-anterior').disabled = atual === 0;
+      $('cj-proximo').disabled = atual === ETAPAS - 1;
+      if (narrarAgora) narrar();
+    }
+
+    abas.forEach((a, k) => {
+      a.addEventListener('click', () => ir(k));
+      a.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') { ir(k + 1); abas[atual].focus(); }
+        if (e.key === 'ArrowLeft')  { ir(k - 1); abas[atual].focus(); }
+      });
+    });
+    $('cj-anterior').addEventListener('click', () => ir(atual - 1));
+    $('cj-proximo').addEventListener('click', () => ir(atual + 1));
+
+    function msg(id, texto, tipo) {
+      const el = $(id);
+      el.textContent = texto;
+      el.className = 'cj-info' + (tipo ? ' cj-info--' + tipo : '');
+    }
+
+    /* ---- Etapa 0: botões ---- */
+    document.querySelectorAll('.cj-demo-btn').forEach(b => b.addEventListener('click', () => {
+      document.querySelectorAll('.cj-demo-btn').forEach(x => x.classList.remove('cj-demo-btn--sel'));
+      b.classList.add('cj-demo-btn--sel');
+      msg('cj-info-botoes', b.dataset.info);
+    }));
+
+    /* ---- Exemplos de fase já resolvida (Sala, Quarto, Cozinha, Despensa) ---- */
+    const COLS = 4, LINS = 3;
+    const INI = { x: 0, y: 2 }, ALVO = { x: 3, y: 0 }, OBST = { x: 1, y: 1 };
+    const RESPOSTA_SALA = [['→', 1, 0], ['→', 1, 0], ['→', 1, 0], ['↑', 0, -1], ['↑', 0, -1]];
+    let timers = [];
+    const esperar = ms => new Promise(r => timers.push(setTimeout(r, ms)));
+    function pararAnimacoes() { timers.forEach(clearTimeout); timers = []; }
+
+    function desenharGrade(pos) {
+      const g = $('cj-grade');
+      g.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+      g.innerHTML = '';
+      for (let y = 0; y < LINS; y++) for (let x = 0; x < COLS; x++) {
+        const c = document.createElement('div');
+        c.className = 'cj-celula';
+        if (x === ALVO.x && y === ALVO.y) c.innerHTML = '<img src="assets/img/estrela.png" alt="">';
+        else if (x === OBST.x && y === OBST.y) c.innerHTML = '<img src="assets/img/obstaculo.png" alt="">';
+        if (x === pos.x && y === pos.y) c.innerHTML += '<img class="cj-logi" src="assets/img/logi_feliz.png" alt="">';
+        g.appendChild(c);
+      }
+    }
+    function desenharSeq(ate) {
+      $('cj-sala-seq').innerHTML = RESPOSTA_SALA.map((p, i) =>
+        `<span class="cj-chip${i < ate ? ' cj-chip--feito' : ''}">${p[0]}</span>`).join('');
+    }
+    function salaPronta() { desenharGrade(ALVO); desenharSeq(RESPOSTA_SALA.length); }
+
+    /* Mostra a resolução aos poucos: cada elemento .cj-passo aparece em ordem */
+    async function reproduzir(qual, botao) {
+      pararAnimacoes();
+      botao.disabled = true;
+      const painel = botao.closest('.cj-etapa');
+      const passos = [...painel.querySelectorAll('.cj-passo')];
+      if (qual === 'sala') {
+        let pos = { ...INI };
+        desenharGrade(pos); desenharSeq(0);
+        for (let i = 0; i < RESPOSTA_SALA.length; i++) {
+          await esperar(600);
+          pos = { x: pos.x + RESPOSTA_SALA[i][1], y: pos.y + RESPOSTA_SALA[i][2] };
+          desenharGrade(pos); desenharSeq(i + 1);
+        }
+      } else {
+        passos.forEach(p => p.classList.add('cj-oculto'));
+        for (const p of passos) { await esperar(700); p.classList.remove('cj-oculto'); }
+      }
+      botao.disabled = false;
+    }
+    document.querySelectorAll('[data-replay]').forEach(b =>
+      b.addEventListener('click', () => reproduzir(b.dataset.replay, b)));
+
+    function reiniciar() {
+      pararAnimacoes();
+      salaPronta();
+      document.querySelectorAll('.cj-oculto').forEach(x => x.classList.remove('cj-oculto'));
+      document.querySelectorAll('[data-replay]').forEach(b => { b.disabled = false; });
+      msg('cj-info-botoes', '👆 Toque em um botão acima.');
+      document.querySelectorAll('.cj-demo-btn').forEach(x => x.classList.remove('cj-demo-btn--sel'));
+      ir(0, false);
+    }
+    reiniciar();
+    return { ir, reiniciar, narrar };
+  })();
 
   atualizarStatus();
   sincronizarTogglles();
