@@ -44,8 +44,8 @@
 
       <!-- Sequência com erros -->
       <aside class="quarto-card quarto-card--fonte" aria-label="Sequência com erros">
-        <p class="quarto-card__titulo">Sequência com erros</p>
-        <p class="quarto-card__subtitulo">Clique ou arraste apenas os passos que fazem sentido.</p>
+        <p class="quarto-card__titulo">Passos para <span class="destaque-escola">IR À ESCOLA</span></p>
+        <p class="quarto-card__subtitulo">Escolha só os passos que fazem sentido para <span class="destaque-escola">IR À ESCOLA</span>.</p>
 
         <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
 
@@ -59,7 +59,7 @@
       <!-- Área central -->
       <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
         <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino">
-          <p class="quarto-card__titulo quarto-card__titulo--centro">Corrija a sequência</p>
+          <p class="quarto-card__titulo quarto-card__titulo--centro">Monte a rotina para <span class="destaque-escola">IR À ESCOLA</span></p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
           <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite"></section>
@@ -90,15 +90,15 @@
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
           <li>
-            Observe a sequência com erros.
+            Observe os passos para <span class="destaque-escola">IR À ESCOLA</span>.
             <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="bloco bloco--erro">🦷 Escovar os dentes <span class="bloco__tag-erro">!</span></span>
+              <span class="bloco bloco--erro">📺 Assistir TV <span class="bloco__tag-erro">!</span></span>
             </span>
           </li>
           <li>
-            Escolha os blocos corretos.
+            Escolha só os blocos que combinam. A dica mostra o que está errado.
             <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="bloco bloco--roxo">🦷 Escovar os dentes</span>
+              <span class="bloco bloco--roxo">👕 Vestir a camiseta</span>
             </span>
           </li>
           <li>
@@ -120,7 +120,7 @@
         <p class="modal-ajuda-titulo">🎯 Objetivo</p>
         <section class="modal-ajuda-objetivo">
           <img src="../img/estrela.png" alt="">
-          <p>Corrigir a rotina do quarto, removendo erros e organizando os passos na ordem certa.</p>
+          <p>Montar a rotina para <span class="destaque-escola">IR À ESCOLA</span>, deixando de fora o que não combina e organizando os passos na ordem certa.</p>
         </section>
       </section>
     </section>
@@ -147,82 +147,107 @@
   /* ===== QUARTO — lógica do jogo ===== */
 
   /* Dados embutidos — fallback quando fetch não está disponível (file://) */
-    const QUARTO_INLINE = {
+  const QUARTO_INLINE = {
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
-  "instrucaoInstrutor": "Oi! Minha rotina está com alguns erros! Encontre o problema, monte a sequência correta e ajude a organizar o quarto.",
+  "instrucaoInstrutor": "Oi! Hoje é dia de IR À ESCOLA! Monte a sequência certa para me arrumar. Cuidado: tem passos que não combinam com a manhã de escola!",
+  "blocos": {
+    "banho": "🛁 Tomar banho",
+    "camiseta": "👕 Vestir a camiseta",
+    "calca": "👖 Vestir a calça",
+    "meia": "🧦 Calçar a meia",
+    "tenis": "👟 Calçar o tênis",
+    "van": "🚐 Pegar a van",
+    "onibus": "🚌 Pegar o ônibus",
+    "bicicleta": "🚲 Ir de bicicleta",
+    "carro": "🚗 Entrar no carro",
+    "dormir": "😴 Dormir de novo",
+    "tv": "📺 Assistir TV",
+    "videogame": "🎮 Jogar videogame",
+    "parque": "🏞️ Ir ao parque",
+    "piscina": "🏊 Nadar na piscina",
+    "filme": "🎬 Ver um filme"
+  },
+  "intrusos": [
+    "dormir",
+    "tv",
+    "videogame",
+    "parque",
+    "piscina",
+    "filme"
+  ],
   "fases": [
     {
       "id": 1,
-      "titulo": "Fase 1 — Um passo fora do lugar",
+      "titulo": "Fase 1 — Vestir para a escola",
       "dificuldade": "Fácil",
-      "dica": "Dica: há 1 bloco fora de ordem.",
-      "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+      "dica": "Dica: um bloco está repetido (o vermelho). Só o tênis tem lugar certo: por último!",
+      "repetidos": 1,
+      "intrusos": 0,
+      "passos": [
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ]
+      ]
     },
     {
       "id": 2,
-      "titulo": "Fase 2 — Tem coisa repetida",
+      "titulo": "Fase 2 — Manhã de escola",
       "dificuldade": "Médio",
-      "dica": "Dica: há 1 bloco repetido. Use cada ação apenas quando fizer sentido.",
-      "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+      "dica": "Dica: o bloco vermelho não combina com a manhã de escola. O banho vem primeiro e o tênis por último!",
+      "repetidos": 0,
+      "intrusos": 1,
+      "passos": [
+        [
+          "banho"
+        ],
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ]
+      ]
     },
     {
       "id": 3,
-      "titulo": "Fase 3 — Depuração completa",
+      "titulo": "Fase 3 — A caminho da escola",
       "dificuldade": "Difícil",
-      "dica": "Dica: há bloco repetido, bloco desnecessário e ações fora de ordem.",
-      "sequenciaComErros": [
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
-        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+      "dica": "Dica: o bloco vermelho não combina com ir à escola. Banho primeiro, tênis depois da roupa e, por último, como você chega lá!",
+      "repetidos": 0,
+      "intrusos": 1,
+      "passos": [
+        [
+          "banho"
+        ],
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ],
+        [
+          "@final"
+        ]
+      ]
     }
+  ],
+  "finais": [
+    "van",
+    "onibus",
+    "bicicleta",
+    "carro"
   ]
 };
-
-  /* Fallback de variações — usado apenas quando o fetch falha (file://) */
-  const QUARTO_VARIACOES_INLINE = { "variacoes": [ { "fases": [
-    { "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
-    { "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"] },
-    { "sequenciaComErros": [
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
-        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
-      ], "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"] }
-  ] } ] };
 
   let gameData   = null;
   let faseAtual = 0;
@@ -231,6 +256,87 @@
   let erros      = 0;
   let touchBloco = null;
   let touchGhost = null;
+  let faseMontada = null; /* { blocos, passos, total, intrusosRevelados } da fase atual */
+
+  const CHAVE_ULTIMOS_INTRUSOS = 'quarto_ultimos_intrusos';
+
+  function embaralhar(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /* Sorteia intrusos evitando repetir os da última partida (rotação a cada jogada) */
+  /* Sorteia o último passo (como chega à escola), evitando repetir o da partida anterior */
+  function sortearFinal() {
+    let ultimo = null;
+    try { ultimo = localStorage.getItem('quarto_ultimo_final'); } catch(e) {}
+    const opcoes = gameData.finais.filter(id => id !== ultimo);
+    const id = opcoes[Math.floor(Math.random() * opcoes.length)];
+    try { localStorage.setItem('quarto_ultimo_final', id); } catch(e) {}
+    return id;
+  }
+
+  function sortearIntrusos(qtd) {
+    if (qtd <= 0) return [];
+    let ultimos = [];
+    try { ultimos = JSON.parse(localStorage.getItem(CHAVE_ULTIMOS_INTRUSOS) || '[]'); } catch(e) {}
+    const novos = embaralhar(gameData.intrusos.filter(id => !ultimos.includes(id))).slice(0, qtd);
+    if (novos.length < qtd) {
+      const resto = embaralhar(gameData.intrusos.filter(id => !novos.includes(id)));
+      novos.push(...resto.slice(0, qtd - novos.length));
+    }
+    return novos;
+  }
+
+  function salvarIntrusos(ids) {
+    try { localStorage.setItem(CHAVE_ULTIMOS_INTRUSOS, JSON.stringify(ids)); } catch(e) {}
+  }
+
+  /* Monta os blocos da fase: passos corretos + repetido (fácil) ou intrusos (médio/difícil) */
+  function montarFase(fase) {
+    const rotulo = id => gameData.blocos[id];
+    const final = fase.passos.flat().includes('@final') ? sortearFinal() : null;
+    const passos = fase.passos.map(g => g.map(id => id === '@final' ? final : id));
+    const corretos = passos.flat();
+    const blocos = corretos.map(id => ({ id, rotulo: rotulo(id), erro: false, visivel: false }));
+
+    for (let i = 0; i < (fase.repetidos || 0); i++) {
+      const id = corretos[Math.floor(Math.random() * corretos.length)];
+      blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false }); /* repetição: só fica vermelha na dica */
+    }
+    const intrusos = sortearIntrusos(fase.intrusos || 0);
+    intrusos.forEach(id => blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false })); /* só fica vermelho na dica */
+
+    let ordem;
+    let tentativas = 0;
+    do {
+      ordem = embaralhar(blocos);
+      tentativas++;
+    } while (tentativas < 10 && ordem.slice(0, corretos.length).every((b, i) => b.id === corretos[i]));
+
+    return { blocos: ordem, passos, total: corretos.length, intrusos, temErro: blocos.some(b => b.erro), intrusosRevelados: false };
+  }
+
+  /* Cada posição pertence a um grupo; dentro do grupo a ordem é livre, sem repetir item */
+  function validarPosicoes(passos, escolhidos) {
+    const resultado = [];
+    let pos = 0;
+    passos.forEach(grupo => {
+      const usados = [];
+      grupo.forEach(() => {
+        const id = escolhidos[pos];
+        const ok = grupo.includes(id) && !usados.includes(id);
+        if (ok) usados.push(id);
+        resultado.push(ok);
+        pos++;
+      });
+    });
+    return resultado;
+  }
 
   async function init() {
     try {
@@ -238,22 +344,6 @@
     } catch(e) {
       gameData = QUARTO_INLINE; // fallback file://
     }
-
-    /* Item 2.3 — sorteia uma variação (mín. 4) a cada entrada real no Quarto */
-    let variacoesData;
-    try {
-      variacoesData = await loadGameData('../data/quarto-variacoes.json');
-    } catch(e) {
-      variacoesData = QUARTO_VARIACOES_INLINE;
-    }
-    const variacaoIdx = gameState.iniciarVariacao('quarto', variacoesData.variacoes.length);
-    const variacao = variacoesData.variacoes[variacaoIdx];
-    gameData.fases.forEach((fase, i) => {
-      if (variacao.fases[i]) {
-        fase.sequenciaComErros = variacao.fases[i].sequenciaComErros;
-        fase.sequenciaCorreta  = variacao.fases[i].sequenciaCorreta;
-      }
-    });
 
     faseAtual = Math.min(gameState.getEstagio('quarto'), gameData.fases.length - 1);
     renderFase();
@@ -275,12 +365,16 @@
   function renderFase() {
   const fase = gameData.fases[faseAtual];
 
-  document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
-  audio.definirNarracao(document.getElementById('logi-texto').textContent);
+  document.getElementById('logi-texto').innerHTML =
+    gameData.instrucaoInstrutor.replace('IR À ESCOLA', '<span class="destaque-escola">IR À ESCOLA</span>');
+  audio.definirNarracao(gameData.instrucaoInstrutor);
   document.querySelector('.hud__subtitulo--roxo').textContent =
     `Fase ${fase.id} de ${gameData.fases.length}`;
 
   document.getElementById('dica-texto').textContent = fase.dica;
+
+  faseMontada = montarFase(fase);
+  salvarIntrusos(faseMontada.intrusos);
 
   corrigida = [];
   verificado = false;
@@ -303,10 +397,9 @@
     const cont = document.getElementById('blocos-fonte');
     cont.innerHTML = '';
 
-    // IDs únicos disponíveis para montar a sequência corrigida
-    fase.sequenciaComErros.forEach((bloco, index) => {
+    faseMontada.blocos.forEach((bloco, index) => {
   const id = bloco.id;
-  const temErro = bloco.erro;
+  const temErro = bloco.visivel || (bloco.erro && faseMontada.intrusosRevelados);
 
       const el = document.createElement('span');
       el.className = `bloco ${temErro ? 'bloco--erro' : 'bloco--roxo'}`;
@@ -350,15 +443,14 @@
     const cont = document.getElementById('sequencia-corrigida');
     cont.innerHTML = '';
     const fase = gameData.fases[faseAtual];
-    const total = fase.sequenciaCorreta.length;
+    const total = faseMontada.total;
 
     corrigida.forEach((bid, idx) => {
-      const bloco = fase.sequenciaComErros.find(b => b.id === bid && !b.erro)
-                 || fase.sequenciaComErros.find(b => b.id === bid)
-                 || { id: bid, rotulo: bid, erro: false };
+      const bloco = { id: bid, rotulo: gameData.blocos[bid] || bid };
       const el = document.createElement('span');
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
+      el.dataset.blocoId = bid;
       el.setAttribute('role', 'button');
       el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ative para remover.`);
       el.setAttribute('tabindex', '0');
@@ -382,6 +474,8 @@
       cont.appendChild(empty);
     }
 
+    marcarUsados();
+
     // drop na área
     cont.ondragover = e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; };
     cont.ondrop = e => {
@@ -393,13 +487,34 @@
 
   function adicionarBloco(bid) {
     if (verificado) return;
-    const fase = gameData.fases[faseAtual];
-    if (corrigida.length >= fase.sequenciaCorreta.length) return;
+    /* Cada bloco da origem só pode ser usado uma vez (na fase 1, o bloco repetido tem 2 cópias selecionáveis) */
+    const copias = faseMontada.blocos.filter(b => b.id === bid).length;
+    if (corrigida.filter(x => x === bid).length >= copias) { balancarBloco(bid); return; }
+    if (corrigida.length >= faseMontada.total) return;
     corrigida.push(bid);
     audio.clique();
     pararAtencaoDica();
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
+  }
+
+  /* Efeito sutil nos blocos (origem e destino) quando a ação já foi usada */
+  function balancarBloco(bid) {
+    document.querySelectorAll(`#blocos-fonte .bloco[data-bloco-id="${bid}"], #sequencia-corrigida .bloco[data-bloco-id="${bid}"]`).forEach(el => {
+      el.classList.remove('bloco--aviso');
+      void el.offsetWidth;
+      el.classList.add('bloco--aviso');
+    });
+  }
+
+  function marcarUsados() {
+    const vistos = {};
+    document.querySelectorAll('#blocos-fonte .bloco').forEach(el => {
+      const id = el.dataset.blocoId;
+      const usados = corrigida.filter(x => x === id).length;
+      vistos[id] = (vistos[id] || 0) + 1;
+      el.classList.toggle('bloco--usado', vistos[id] <= usados);
+    });
   }
 
   function removerBloco(idx) {
@@ -437,7 +552,7 @@
   /* ---- Verificação ---- */
   function verificar() {
     const fase = gameData.fases[faseAtual];
-    if (corrigida.length < fase.sequenciaCorreta.length) {
+    if (corrigida.length < faseMontada.total) {
       audio.erro();
       mostrarFeedbackTexto(corrigida.length === 0
         ? 'Ops! Escolha os blocos antes de verificar.'
@@ -450,15 +565,16 @@
     }
     verificado = true;
 
-    const correta = fase.sequenciaCorreta;
+    const posicoes = validarPosicoes(faseMontada.passos, corrigida);
+    const total = faseMontada.total;
     let acertos = 0;
 
     /* Marca certo/errado direto nos blocos montados */
     const blocosEl = document.querySelectorAll('#sequencia-corrigida .bloco[data-idx]');
     corrigida.forEach((bid, i) => {
-      const ok = bid === correta[i];
+      const ok = posicoes[i];
       if (ok) acertos++;
-      const bloco = fase.sequenciaComErros.find(b => b.id === bid) || { rotulo: bid };
+      const bloco = { rotulo: gameData.blocos[bid] || bid };
       const el = blocosEl[i];
       el.classList.remove('bloco--roxo');
       el.classList.add(ok ? 'bloco--verde' : 'bloco--erro');
@@ -467,7 +583,7 @@
       el.setAttribute('aria-label', `${bloco.rotulo}, posição ${i + 1} — ${ok ? 'correto' : 'incorreto'}`);
     });
 
-    if (acertos === correta.length) {
+    if (acertos === total) {
       audio.acerto();
       mostrarFeedbackTexto('Muito bem! A rotina está na ordem certa!', 'ok');
       setTimeout(() => conclusao(), 600);
@@ -476,7 +592,7 @@
       ativarAtencaoDica();
       audio.erro();
       verificado = false;
-      mostrarFeedbackTexto(`${acertos} de ${correta.length} certos. Troque os blocos vermelhos!`);
+      mostrarFeedbackTexto(`${acertos} de ${total} certos. Troque os blocos vermelhos e clique na dica se precisar de ajuda!`);
     }
   }
 
@@ -599,11 +715,21 @@
   /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
   document.getElementById('dica-play').addEventListener('click', () => {
     pararAtencaoDica();
+    revelarIntrusos();
     audio.narrar(document.getElementById('dica-texto').textContent);
   });
+  document.getElementById('dica-erros').addEventListener('click', revelarIntrusos);
   document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
+  /* Intrusos só ficam vermelhos quando a criança pede a dica */
+  function revelarIntrusos() {
+    if (!faseMontada || faseMontada.intrusosRevelados || !faseMontada.temErro) return;
+    faseMontada.intrusosRevelados = true;
+    buildFonte();
+    marcarUsados();
+  }
+
   function ativarAtencaoDica() { document.getElementById('dica-erros').classList.add('dica--pulsar'); }
   function pararAtencaoDica() { document.getElementById('dica-erros').classList.remove('dica--pulsar'); }
 

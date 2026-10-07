@@ -1,53 +1,101 @@
 {
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
-  "instrucaoInstrutor": "Oi! Minha rotina está com alguns erros! Encontre o problema, monte a sequência correta e ajude a organizar o quarto.",
-  "dica": "Dica: há 1 bloco repetido e 1 fora de ordem!",
- "fases": [
-   {
+  "instrucaoInstrutor": "Oi! Hoje é dia de IR À ESCOLA! Monte a sequência certa para me arrumar. Cuidado: tem passos que não combinam com a manhã de escola!",
+  "blocos": {
+    "banho": "🛁 Tomar banho",
+    "camiseta": "👕 Vestir a camiseta",
+    "calca": "👖 Vestir a calça",
+    "meia": "🧦 Calçar a meia",
+    "tenis": "👟 Calçar o tênis",
+    "van": "🚐 Pegar a van",
+    "onibus": "🚌 Pegar o ônibus",
+    "bicicleta": "🚲 Ir de bicicleta",
+    "carro": "🚗 Entrar no carro",
+    "dormir": "😴 Dormir de novo",
+    "tv": "📺 Assistir TV",
+    "videogame": "🎮 Jogar videogame",
+    "parque": "🏞️ Ir ao parque",
+    "piscina": "🏊 Nadar na piscina",
+    "filme": "🎬 Ver um filme"
+  },
+  "intrusos": [
+    "dormir",
+    "tv",
+    "videogame",
+    "parque",
+    "piscina",
+    "filme"
+  ],
+  "fases": [
+    {
       "id": 1,
-      "titulo": "Fase 1 — Um passo fora do lugar",
+      "titulo": "Fase 1 — Vestir para a escola",
       "dificuldade": "Fácil",
-      "dica": "Dica: há 1 bloco fora de ordem.",
-      "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+      "dica": "Dica: um bloco está repetido (o vermelho). Só o tênis tem lugar certo: por último!",
+      "repetidos": 1,
+      "intrusos": 0,
+      "passos": [
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ]
+      ]
     },
-
     {
       "id": 2,
-      "titulo": "Fase 2 — Tem coisa repetida",
+      "titulo": "Fase 2 — Manhã de escola",
       "dificuldade": "Médio",
-      "dica": "Dica: há 1 bloco repetido. Use cada ação apenas quando fizer sentido.",
-      "sequenciaComErros": [
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true },
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": false }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe"]
+      "dica": "Dica: o bloco vermelho não combina com a manhã de escola. O banho vem primeiro e o tênis por último!",
+      "repetidos": 0,
+      "intrusos": 1,
+      "passos": [
+        [
+          "banho"
+        ],
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ]
+      ]
     },
-
     {
       "id": 3,
-      "titulo": "Fase 3 — Depuração completa",
+      "titulo": "Fase 3 — A caminho da escola",
       "dificuldade": "Difícil",
-      "dica": "Dica: há bloco repetido, bloco desnecessário e ações fora de ordem.",
-      "sequenciaComErros": [
-        { "id": "cafe", "rotulo": "🍳 Tomar café", "erro": true },
-        { "id": "dentes", "rotulo": "🦷 Escovar os dentes", "erro": false },
-        { "id": "brincar", "rotulo": "🧸 Brincar", "erro": true },
-        { "id": "mochila", "rotulo": "🎒 Arrumar a mochila", "erro": false },
-        { "id": "roupa", "rotulo": "👕 Vestir a roupa", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": false },
-        { "id": "tenis", "rotulo": "👟 Calçar o tênis", "erro": true }
-      ],
-      "sequenciaCorreta": ["dentes", "roupa", "tenis", "cafe", "mochila"]
+      "dica": "Dica: o bloco vermelho não combina com ir à escola. Banho primeiro, tênis depois da roupa e, por último, como você chega lá!",
+      "repetidos": 0,
+      "intrusos": 1,
+      "passos": [
+        [
+          "banho"
+        ],
+        [
+          "camiseta",
+          "calca",
+          "meia"
+        ],
+        [
+          "tenis"
+        ],
+        [
+          "@final"
+        ]
+      ]
     }
- ]
+  ],
+  "finais": [
+    "van",
+    "onibus",
+    "bicicleta",
+    "carro"
+  ]
 }

@@ -614,3 +614,27 @@
   .quarto-btn { min-height: 36px; font-size: calc(14px * var(--escala-fonte)); border-radius: 12px; }
   .quarto-btn--limpar { flex: 0 0 100px; }
 }
+
+/* Bloco já usado na sequência: esmaecido e com balanço sutil se clicado de novo */
+.quarto-blocos-fonte .bloco--usado { opacity: 0.55; }
+.bloco--aviso { animation: bloco-aviso 0.4s ease; }
+@keyframes bloco-aviso {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+@media (prefers-reduced-motion: reduce) { .bloco--aviso { animation: none; } }
+
+/* Destaque visual de "IR À ESCOLA" */
+.destaque-escola {
+  display: inline-block;
+  background: #FFD700;
+  color: #1a1a1a;
+  font-weight: 900;
+  padding: 0 0.4em;
+  border-radius: 0.4em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}

@@ -41,7 +41,7 @@ O jogo é estruturado em quatro mini-jogos independentes, acessados de forma pro
 O jogador organiza blocos de comando (cima, baixo, esquerda, direita, repetir) em uma sequência para mover um personagem em uma grade 4×4 até a posição alvo. A lógica de execução deve percorrer a sequência montada pelo jogador e mover o personagem célula a célula, verificando ao final se a posição coincide com o alvo.
 
 ### Mini-jogo 2 — Quarto (Depuração) `EF02CO02`
-É apresentada uma sequência de ações com blocos repetidos ou fora de ordem. O jogador deve identificar os erros, remover blocos indevidos e reorganizar os corretos. A verificação compara a sequência montada pelo jogador com `sequenciaCorreta` definida em `quarto.json`.
+O jogador monta a rotina para IR À ESCOLA (camiseta e calça em qualquer ordem, depois meia e tênis). No nível fácil há um bloco repetido (vermelho); nos níveis médio e difícil entram blocos intrusos sorteados a cada jogada (ex.: assistir TV), que só ficam vermelhos ao clicar na dica. A validação usa os grupos de `passos` definidos em `quarto.json`.
 
 ### Mini-jogo 3 — Cozinha (Verdadeiro ou Falso) `EF03CO01`
 São exibidas frases do cotidiano, algumas com negação. O jogador seleciona Verdadeiro ou Falso. O conteúdo (frases e respostas corretas) é carregado de `cozinha.json`. O progresso é exibido pelas bolinhas no topo da tela.
