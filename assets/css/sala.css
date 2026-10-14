@@ -243,6 +243,9 @@ body {
   min-height: auto;
 }
 
+/* Com um único bloco "Repetir", ele ocupa a linha inteira */
+.sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { grid-column: 1 / -1; }
+
 .sala-page #blocos-disponiveis .bloco {
   min-height: 58px;
   padding: 6px 4px;
@@ -436,7 +439,7 @@ body {
 
 .sala-grade {
   container-type: inline-size;
-  width: min(90cqw, 90cqh, 500px);
+  width: min(97cqw, 97cqh, 560px);
   aspect-ratio: 1;
   padding: 3%;
   gap: 2%;
@@ -569,7 +572,16 @@ body {
   flex: 1;
 }
 
+/* Feedback flutuante: não ocupa espaço no layout, então a tela
+   tem o mesmo tamanho antes e depois de executar */
 #feedback-area {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 24px));
+  z-index: 50;
+  box-shadow: 0 8px 22px rgba(111, 46, 15, 0.25);
   margin-bottom: 0;
   padding: 8px 14px;
   border: 1.5px solid rgba(226, 75, 74, 0.25);
@@ -744,6 +756,11 @@ body {
   .sala-niveis,
   .sala-grade-panel > .sala-panel__title { display: none; }
   .sala-grade-area { margin-top: 0; }
+  /* O painel de comandos fica mais baixo e a grade ganha a diferença */
+  .sala-sequencia-panel .sala-panel__title { display: none; }
+  .sala-sequencia-panel { padding: 8px 12px; }
+  .sala-sequencia { margin-top: 0; padding-top: 0; }
+  .sala-grade-panel { padding: 6px 10px; }
 }
 
 /* Desktop / notebook com pouca altura */
