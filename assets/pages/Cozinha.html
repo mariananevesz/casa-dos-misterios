@@ -6,6 +6,7 @@
   <title>Cozinha — Verdadeiro ou Falso</title>
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/cozinha.css">
+  <link rel="stylesheet" href="../css/tutorial.css">
 </head>
 <body class="pagina-cozinha">
 
@@ -142,6 +143,9 @@
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
+  <script src="../js/tutorial.js"></script>
+  <script src="../audio/logi/manifest.js"></script>
+  <script src="../js/tutoriais/cozinha-f1.js"></script>
   <script>
   /* ===== COZINHA — lógica do jogo ===== */
 
@@ -322,6 +326,8 @@
     document.getElementById('dica-texto').textContent  = gameData.dica;
     renderPergunta();
     atualizarBadge();
+    /* Tutorial do Logi: abre sozinho só na 1ª vez */
+    Tutorial.auto('cozinha-f1');
   }
 
   /* ---- Abas de nível — mesmo padrão da Despensa ---- */
@@ -389,6 +395,12 @@
 
   /* ---- Resposta ---- */
   function responder(escolha) {
+    /* Com o tutorial aberto, a resposta passa pelo Logi (sem pontos, sem avançar) */
+    if (window.Tutorial?.ativo) {
+      const letra = escolha ? 'v' : 'f';
+      Tutorial.tentar('responder', letra, () => cozinhaTutorial.acoes.marcar(letra));
+      return;
+    }
     if (respondendo) return;
     respondendo = true;
     habilitarBotoes(false);
@@ -523,6 +535,53 @@
     if (e.key.toLowerCase() === 'f') responder(false);
   });
 
+  /* ---- Tutorial do Logi: treino com a frase e os botões reais ---- */
+  const cozinhaTutorial = {
+    tutorialDaFase: () => 'cozinha-f1',
+    primeiroFoco: () => document.getElementById('btn-verdadeiro'),
+
+    preparar(def) {
+      respondendo = false;
+      document.getElementById('pergunta-numero').textContent = 'Treino com o Logi';
+      this.acoes.frase(def.treino.frase);
+      document.getElementById('feedback-area').style.display = 'none';
+      habilitarBotoes(true);
+    },
+
+    restaurar() {
+      this.acoes.limparMarcas();
+      if (gameData) renderPergunta();
+    },
+
+    acoes: {
+      /* Mostra uma frase de treino, com cada palavra em um <span> (NÃO/NUNCA marcadas) */
+      frase(txt) {
+        document.getElementById('pergunta-frase').innerHTML = txt.split(/\s+/).map(w => {
+          const neg = /^(não|nunca|sempre|jamais)$/i.test(w.replace(/[.,!?]/g, ''));
+          return `<span class="tut-palavra${neg ? ' tut-neg' : ''}">${w}</span>`;
+        }).join(' ');
+        this.limparMarcas();
+      },
+      marcar(letra) {
+        this.limparMarcas();
+        document.getElementById(letra === 'v' ? 'btn-verdadeiro' : 'btn-falso').classList.add('tut-certo');
+      },
+      limparMarcas() {
+        ['btn-verdadeiro', 'btn-falso'].forEach(id => document.getElementById(id).classList.remove('tut-certo'));
+      },
+      /* Acende cada palavra, como se a frase estivesse sendo lida */
+      async lerPalavras() {
+        for (const w of document.querySelectorAll('#pergunta-frase .tut-palavra')) {
+          if (!window.Tutorial?.ativo) return;
+          w.classList.add('tut-brilha');
+          await new Promise(r => setTimeout(r, 380));
+          w.classList.remove('tut-brilha');
+        }
+      }
+    }
+  };
+
+  Tutorial.configurar(cozinhaTutorial);
   init();
   </script>
 

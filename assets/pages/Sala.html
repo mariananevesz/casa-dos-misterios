@@ -6,6 +6,7 @@
   <title>Sala — Algoritmos</title>
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/sala.css">
+  <link rel="stylesheet" href="../css/tutorial.css">
 </head>
 <body>
 
@@ -160,6 +161,10 @@
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
+  <script src="../js/tutorial.js"></script>
+  <script src="../audio/logi/manifest.js"></script>
+  <script src="../js/tutoriais/sala-f1.js"></script>
+  <script src="../js/tutoriais/sala-f3.js"></script>
   <script>
   /* ===== SALA — lógica do jogo ===== */
 
@@ -254,6 +259,10 @@ let sequencia    = [];
 let animando     = false;
 let erros        = 0;
 let touchBloco   = null;
+let faseTreino   = null;   /* fase de treino do tutorial do Logi (null = jogo normal) */
+
+/* Fase em uso: a de treino enquanto o tutorial está aberto, senão a real */
+function faseVigente() { return faseTreino || gameData.fases[faseAtual]; }
 
 const MOVES = {
   cima: [-1, 0],
@@ -319,6 +328,8 @@ function blocoIconeHtml(bloco) {
     renderSequencia();
     document.getElementById('feedback-area').style.display = 'none';
     atualizarBadge();
+    /* Tutorial do Logi: abre sozinho só na 1ª vez de cada mecânica */
+    Tutorial.auto(salaTutorial.tutorialDaFase());
   }
 
   function buildIndicadorFases() {
@@ -384,6 +395,8 @@ function blocoIconeHtml(bloco) {
     const cont = document.getElementById('blocos-disponiveis');
     cont.innerHTML = '';
     gameData.blocosDisponiveis.forEach(bloco => {
+      /* No treino sem "Repetir" (Fase 1), o bloco de controle fica de fora */
+      if (faseTreino && !faseTreino.repetir && bloco.tipo === 'controle') return;
       const el = criarBlocoEl(bloco, 'disponivel');
       cont.appendChild(el);
     });
@@ -426,7 +439,7 @@ function blocoIconeHtml(bloco) {
   function renderSequencia() {
     const cont = document.getElementById('sequencia-player');
     cont.innerHTML = '';
-    const fase = gameData.fases[faseAtual];
+    const fase = faseVigente();
 
     sequencia.forEach((bid, idx) => {
       const bloco = gameData.blocosDisponiveis.find(b => b.id === bid);
@@ -472,8 +485,13 @@ function blocoIconeHtml(bloco) {
     };
   }
 
-  function adicionarBloco(bid) {
-    const fase = gameData.fases[faseAtual];
+  function adicionarBloco(bid, origem) {
+    /* Com o tutorial aberto, a ação da criança passa pelo Logi (acerta ou encoraja) */
+    if (window.Tutorial?.ativo && origem !== 'tutorial') {
+      Tutorial.tentar('adicionar', bid, () => adicionarBloco(bid, 'tutorial'));
+      return;
+    }
+    const fase = faseVigente();
     if (sequencia.length >= (fase.maxBlocos || 8)) return;
     sequencia.push(bid);
     audio.clique();
@@ -483,6 +501,7 @@ function blocoIconeHtml(bloco) {
   }
 
   function removerBloco(idx) {
+    if (window.Tutorial?.ativo) return;
     sequencia.splice(idx, 1);
     renderSequencia();
   }
@@ -521,6 +540,12 @@ function blocoIconeHtml(bloco) {
   /* ---- Execução ---- */
 async function executar() {
   if (animando) return;
+
+  /* Tutorial aberto: só a execução de treino acontece (sem pontos, sem erros, sem avançar de fase) */
+  if (window.Tutorial?.ativo) {
+    Tutorial.tentar('executar', null, () => executarTreino());
+    return;
+  }
 
   if (sequencia.length === 0) {
     audio.erro();
@@ -594,28 +619,7 @@ async function executar() {
         return;
       }
 
-      const deIdx = celulaIdx(pos.linha, pos.coluna, colunas);
-      const paraIdx = celulaIdx(nr, nc, colunas);
-
-      const celulaOrigemEhAlvo =
-        pos.linha === posicaoAlvo.linha && pos.coluna === posicaoAlvo.coluna;
-
-      const celulaOrigemEhObstaculo = obstaculos.some(
-        obs => obs.linha === pos.linha && obs.coluna === pos.coluna
-      );
-
-      if (celulaOrigemEhAlvo) {
-        cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}: estrela" class="grade-img grade-estrela">`;
-      } else if (celulaOrigemEhObstaculo) {
-        cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${pos.linha + 1}, coluna ${pos.coluna + 1}" class="grade-img">`;
-      } else {
-        cells[deIdx].innerHTML = '';
-      }
-
-      cells[deIdx].classList.remove('grade__celula--ativa');
-
-      cells[paraIdx].innerHTML += `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`;
-      cells[paraIdx].classList.add('grade__celula--ativa');
+      moverPersonagem(cells, pos, nr, nc, fase);
 
       audio.passo();
 
@@ -634,6 +638,143 @@ async function executar() {
   mostrarFeedback('Você ainda não chegou na estrela. Ajuste sua sequência e tente de novo!', 'erro');
   await resetarAposErro(fase);
 }
+
+  /* Move o personagem de `pos` para (nr, nc) na grade da fase informada */
+  function moverPersonagem(cells, pos, nr, nc, fase) {
+    const { colunas, posicaoAlvo, obstaculos = [] } = fase.grade;
+    const deIdx = celulaIdx(pos.linha, pos.coluna, colunas);
+    const paraIdx = celulaIdx(nr, nc, colunas);
+
+    const celulaOrigemEhAlvo =
+      pos.linha === posicaoAlvo.linha && pos.coluna === posicaoAlvo.coluna;
+
+    const celulaOrigemEhObstaculo = obstaculos.some(
+      obs => obs.linha === pos.linha && obs.coluna === pos.coluna
+    );
+
+    if (celulaOrigemEhAlvo) {
+      cells[deIdx].innerHTML = `<img src="../img/estrela.png" alt="Objetivo na linha ${posicaoAlvo.linha + 1}, coluna ${posicaoAlvo.coluna + 1}: estrela" class="grade-img grade-estrela">`;
+    } else if (celulaOrigemEhObstaculo) {
+      cells[deIdx].innerHTML = `<img src="../img/obstaculo.png" alt="Obstáculo na linha ${pos.linha + 1}, coluna ${pos.coluna + 1}" class="grade-img">`;
+    } else {
+      cells[deIdx].innerHTML = '';
+    }
+
+    cells[deIdx].classList.remove('grade__celula--ativa');
+
+    cells[paraIdx].innerHTML += `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`;
+    cells[paraIdx].classList.add('grade__celula--ativa');
+  }
+
+  /* ---- Tutorial do Logi: execução e ganchos de treino ---- */
+
+  /* Lista de passos do robô; "Repetir" refaz a seta anterior mais vezes */
+  function expandirSequencia(seq) {
+    const passos = [];
+    seq.forEach((cmd, i) => {
+      if (MOVES[cmd]) passos.push({ idx: i, mov: cmd });
+      else if (cmd === 'repetir2' && MOVES[seq[i - 1]]) {
+        for (let r = 0; r < 2; r++) passos.push({ idx: i, mov: seq[i - 1] });
+      }
+    });
+    return passos;
+  }
+
+  const SETAS_TRILHA = { cima: '↑', baixo: '↓', esq: '←', dir: '→' };
+
+  function mostrarTrilhaTreino() {
+    const fase = faseTreino;
+    if (!fase) return;
+    const { colunas, posicaoInicial } = fase.grade;
+    const cells = getCelulas();
+    let pos = { ...posicaoInicial };
+    expandirSequencia(sequencia).forEach(({ mov }) => {
+      pos = { linha: pos.linha + MOVES[mov][0], coluna: pos.coluna + MOVES[mov][1] };
+      const cell = cells[celulaIdx(pos.linha, pos.coluna, colunas)];
+      if (cell) cell.insertAdjacentHTML('beforeend', `<span class="tut-trilha" aria-hidden="true">${SETAS_TRILHA[mov]}</span>`);
+    });
+  }
+
+  async function executarTreino() {
+    const fase = faseTreino;
+    if (!fase || animando) return;
+    animando = true;
+    buildGrid(fase);
+    const { linhas, colunas, posicaoInicial } = fase.grade;
+    const cells = getCelulas();
+    let pos = { ...posicaoInicial };
+
+    for (const { idx, mov } of expandirSequencia(sequencia)) {
+      await sleep(450);
+      if (!window.Tutorial?.ativo || faseTreino !== fase) return;  /* tutorial fechou no meio */
+      document.querySelectorAll('#sequencia-player .tut-bloco-ativo').forEach(el => el.classList.remove('tut-bloco-ativo'));
+      document.querySelector(`#sequencia-player .bloco[data-idx="${idx}"]`)?.classList.add('tut-bloco-ativo');
+      const nr = pos.linha + MOVES[mov][0];
+      const nc = pos.coluna + MOVES[mov][1];
+      if (nr < 0 || nr >= linhas || nc < 0 || nc >= colunas) break;
+      moverPersonagem(cells, pos, nr, nc, fase);
+      audio.passo();
+      pos = { linha: nr, coluna: nc };
+    }
+    await sleep(350);
+    document.querySelectorAll('#sequencia-player .tut-bloco-ativo').forEach(el => el.classList.remove('tut-bloco-ativo'));
+    if (faseTreino === fase) animando = false;
+  }
+
+  let salvoTutorial = null;
+
+  const salaTutorial = {
+    /* Fases 1 e 2 usam o tutorial de direção; a 3 usa o de repetição */
+    tutorialDaFase() {
+      const id = gameData?.fases[faseAtual]?.id;
+      return { 1: 'sala-f1', 2: 'sala-f1', 3: 'sala-f3' }[id] || null;
+    },
+    primeiroFoco: () => document.querySelector('#blocos-disponiveis .bloco'),
+
+    preparar(def) {
+      const t = def.treino;
+      const pt = ([linha, coluna]) => ({ linha, coluna });
+      salvoTutorial = { sequencia: [...sequencia] };
+      faseTreino = {
+        id: 'treino',
+        maxBlocos: t.maxBlocos,
+        repetir: t.repetir,
+        grade: { linhas: 4, colunas: 4, posicaoInicial: pt(t.robo), posicaoAlvo: pt(t.estrela), obstaculos: [] }
+      };
+      sequencia = [];
+      animando = false;
+      document.getElementById('feedback-area').style.display = 'none';
+      buildGrid(faseTreino);
+      buildBlocos();
+      renderSequencia();
+    },
+
+    restaurar() {
+      faseTreino = null;
+      animando = false;
+      sequencia = salvoTutorial ? salvoTutorial.sequencia : [];
+      salvoTutorial = null;
+      buildGrid(gameData.fases[faseAtual]);
+      buildBlocos();
+      renderSequencia();
+    },
+
+    acoes: {
+      adicionar: id => adicionarBloco(id, 'tutorial'),
+      limpar() {
+        sequencia = [];
+        renderSequencia();
+        buildGrid(faseTreino);
+      },
+      definirGrade(robo, estrela) {
+        faseTreino.grade.posicaoInicial = { linha: robo[0], coluna: robo[1] };
+        faseTreino.grade.posicaoAlvo = { linha: estrela[0], coluna: estrela[1] };
+        buildGrid(faseTreino);
+      },
+      trilha: mostrarTrilhaTreino,
+      executar: executarTreino
+    }
+  };
 
   async function resetarAposErro(fase) {
   await sleep(700);
@@ -771,13 +912,14 @@ async function executar() {
   /* ---- Botões ---- */
   document.getElementById('btn-executar').addEventListener('click', () => { if (gameData) executar(); });
   document.getElementById('btn-limpar').addEventListener('click', () => {
-    if (!gameData) return;
+    if (!gameData || window.Tutorial?.ativo) return;
     sequencia = [];
     renderSequencia();
     buildGrid(gameData.fases[faseAtual]);
     document.getElementById('feedback-area').style.display = 'none';
   });
 
+  Tutorial.configurar(salaTutorial);
   init();
   </script>
 

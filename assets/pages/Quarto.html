@@ -6,6 +6,7 @@
   <title>Quarto — Depuração</title>
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/quarto.css">
+  <link rel="stylesheet" href="../css/tutorial.css">
 </head>
 <body class="pagina-quarto">
 
@@ -143,6 +144,9 @@
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
+  <script src="../js/tutorial.js"></script>
+  <script src="../audio/logi/manifest.js"></script>
+  <script src="../js/tutoriais/quarto-f1.js"></script>
   <script>
   /* ===== QUARTO — lógica do jogo ===== */
 
@@ -389,6 +393,8 @@
   document.getElementById('btn-verificar').disabled = false;
 
   atualizarBadge();
+  /* Tutorial do Logi: abre sozinho só na 1ª vez */
+  Tutorial.auto('quarto-f1');
 }
 
   /* ---- Blocos fonte (com erros marcados) ---- */
@@ -485,7 +491,12 @@
     };
   }
 
-  function adicionarBloco(bid) {
+  function adicionarBloco(bid, origem) {
+    /* Com o tutorial aberto, a ação da criança passa pelo Logi (acerta ou encoraja) */
+    if (window.Tutorial?.ativo && origem !== 'tutorial') {
+      Tutorial.tentar('adicionar', bid, () => adicionarBloco(bid, 'tutorial'));
+      return;
+    }
     if (verificado) return;
     /* Cada bloco da origem só pode ser usado uma vez (na fase 1, o bloco repetido tem 2 cópias selecionáveis) */
     const copias = faseMontada.blocos.filter(b => b.id === bid).length;
@@ -518,7 +529,7 @@
   }
 
   function removerBloco(idx) {
-    if (verificado) return;
+    if (verificado || window.Tutorial?.ativo) return;
     corrigida.splice(idx, 1);
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
@@ -551,6 +562,7 @@
 
   /* ---- Verificação ---- */
   function verificar() {
+    if (window.Tutorial?.ativo) return;
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < faseMontada.total) {
       audio.erro();
@@ -724,6 +736,7 @@
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   /* Intrusos só ficam vermelhos quando a criança pede a dica */
   function revelarIntrusos() {
+    if (window.Tutorial?.ativo) return;
     if (!faseMontada || faseMontada.intrusosRevelados || !faseMontada.temErro) return;
     faseMontada.intrusosRevelados = true;
     buildFonte();
@@ -735,13 +748,53 @@
 
   document.getElementById('btn-verificar').addEventListener('click', () => { if (gameData) verificar(); });
   document.getElementById('btn-limpar').addEventListener('click', () => {
-    if (!gameData) return;
+    if (!gameData || window.Tutorial?.ativo) return;
     corrigida = [];
     verificado = false;
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
   });
 
+  /* ---- Tutorial do Logi: treino com blocos reais ---- */
+  let salvoTutorial = null;
+
+  const quartoTutorial = {
+    tutorialDaFase: () => 'quarto-f1',
+    primeiroFoco: () => document.querySelector('#blocos-fonte .bloco'),
+
+    preparar(def) {
+      const t = def.treino;
+      salvoTutorial = { corrigida: [...corrigida], faseMontada, verificado };
+      const blocos = t.blocos.map(b => {
+        const o = typeof b === 'string' ? { id: b } : b;
+        const base = o.base || o.id;
+        return { id: o.id, rotulo: gameData.blocos[base] || base, erro: Boolean(o.erro), visivel: Boolean(o.erro) };
+      });
+      faseMontada = { blocos, passos: t.passos, total: t.total, intrusos: [], temErro: true, intrusosRevelados: true };
+      corrigida = [];
+      verificado = false;
+      document.getElementById('feedback-area').style.display = 'none';
+      buildFonte();
+      renderCorrigida();
+    },
+
+    restaurar() {
+      if (salvoTutorial) {
+        faseMontada = salvoTutorial.faseMontada;
+        corrigida = salvoTutorial.corrigida;
+        verificado = salvoTutorial.verificado;
+        salvoTutorial = null;
+      }
+      buildFonte();
+      renderCorrigida();
+    },
+
+    acoes: {
+      adicionar: id => adicionarBloco(id, 'tutorial')
+    }
+  };
+
+  Tutorial.configurar(quartoTutorial);
   init();
   </script>
 

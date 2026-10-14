@@ -1,0 +1,372 @@
+/* =============================================================
+   tutorial.css — Tutorial interativo do Logi
+   Depende de: base.css (tokens --laranja, --roxo, --escala-fonte…)
+   ============================================================= */
+
+/* ---------- Painel do Logi (fixo na base da tela) ---------- */
+.tut-painel {
+  --tut-card: #FFFFFF;
+  --tut-texto: #2C2C2A;
+  --tut-texto-2: #5F5E5A;
+  --tut-borda: var(--laranja);
+  --tut-chave-bg: #FFE3A3;
+  --tut-chave-fg: #4A1B0C;
+  --tut-brilho: #FFC531;
+
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  width: min(980px, calc(100vw - 16px));
+  max-height: 46vh;
+  overflow-y: auto;
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 12px 16px;
+
+  background: var(--tut-card);
+  color: var(--tut-texto);
+  border: 3px solid var(--tut-borda);
+  border-radius: 20px;
+  box-shadow: 0 -4px 26px rgba(74, 27, 12, 0.28);
+  font-size: calc(16px * var(--escala-fonte, 1));
+}
+
+.tut-painel[hidden] { display: none; }
+
+.tut-painel:focus-visible,
+.tut-painel *:focus-visible {
+  outline: 4px solid var(--roxo);
+  outline-offset: 3px;
+}
+
+/* A página ganha folga para o painel não cobrir os botões */
+body.tut-aberto {
+  padding-bottom: calc(var(--tut-h, 170px) + 24px);
+}
+
+/* ---------- Logi ---------- */
+.tut-logi-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 124px;
+}
+
+.tut-logi {
+  position: relative;
+  width: 118px;
+  aspect-ratio: 434 / 364;
+  max-width: 100%;
+  transform-origin: 50% 100%;
+}
+
+.tut-logi img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  transition: opacity 0.2s;
+}
+
+.tut-excl { opacity: 0; }
+
+.tut-lampada {
+  position: absolute;
+  left: 36%;
+  top: 12%;
+  width: 30%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 236, 130, 0.95) 0%, rgba(255, 214, 70, 0.6) 35%, rgba(255, 200, 40, 0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.tut-ondas { position: absolute; right: -6%; top: 42%; width: 22%; height: 30%; opacity: 0; }
+.tut-ondas i {
+  position: absolute; left: 0; top: 50%;
+  border: 3px solid var(--laranja);
+  border-left: 0; border-top-color: transparent; border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.tut-ondas i:nth-child(1) { width: 30%; height: 40%; animation: tut-onda 0.9s infinite; }
+.tut-ondas i:nth-child(2) { width: 60%; height: 70%; animation: tut-onda 0.9s 0.15s infinite; }
+.tut-ondas i:nth-child(3) { width: 90%; height: 100%; animation: tut-onda 0.9s 0.3s infinite; }
+@keyframes tut-onda { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+.tut-seta {
+  position: absolute; left: -16%; top: 46%; width: 22%; height: 16%;
+  opacity: 0; background: var(--laranja);
+  clip-path: polygon(0 50%, 45% 0, 45% 30%, 100% 30%, 100% 70%, 45% 70%, 45% 100%);
+}
+
+.tut-confete { position: absolute; inset: -20% -10% 0; pointer-events: none; opacity: 0; }
+.tut-confete i { position: absolute; width: 8px; height: 12px; border-radius: 2px; }
+
+/* Estados do Logi (trocados por passo) */
+.tut-logi[data-estado="falando"] { animation: tut-balanco 1.6s ease-in-out infinite; }
+.tut-logi[data-estado="falando"] .tut-ondas { opacity: 1; }
+.tut-logi[data-estado="falando"] .tut-feliz { animation: tut-boca 0.32s ease-in-out infinite alternate; }
+
+.tut-logi[data-estado="apontando"] { animation: tut-aponta 1s ease-in-out infinite; }
+.tut-logi[data-estado="apontando"] .tut-seta { opacity: 1; animation: tut-setinha 0.8s ease-in-out infinite; }
+.tut-logi[data-estado="apontando"] .tut-ondas { opacity: 0.8; }
+
+.tut-logi[data-estado="dica"] { animation: tut-surpresa 0.5s ease; }
+.tut-logi[data-estado="dica"] .tut-feliz { opacity: 0; }
+.tut-logi[data-estado="dica"] .tut-excl { opacity: 1; }
+.tut-logi[data-estado="dica"] .tut-lampada { left: 50%; top: 14%; width: 40%; opacity: 1; animation: tut-acende 1s ease-in-out infinite; }
+
+.tut-logi[data-estado="comemorando"] { animation: tut-pulo 0.6s cubic-bezier(0.3, 0.7, 0.4, 1) infinite; }
+.tut-logi[data-estado="comemorando"] .tut-confete { opacity: 1; }
+.tut-logi[data-estado="comemorando"] .tut-confete i { animation: tut-cai 1.2s linear infinite; }
+.tut-logi[data-estado="comemorando"] .tut-lampada { opacity: 0.9; }
+
+.tut-logi[data-estado="encorajando"] { animation: tut-aceno 2.2s ease-in-out infinite; }
+.tut-logi[data-estado="encorajando"] .tut-ondas { opacity: 0.7; }
+.tut-logi[data-estado="encorajando"] .tut-lampada { opacity: 0.45; }
+
+.tut-logi[data-estado="aguardando"] { animation: tut-respira 3s ease-in-out infinite; }
+
+.tut-logi.tut-entra { animation: tut-entra 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both !important; }
+
+@keyframes tut-balanco  { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes tut-boca     { from { transform: scaleY(1); } to { transform: scaleY(0.965) translateY(1.5%); } }
+@keyframes tut-aponta   { 0%, 100% { transform: rotate(-7deg) translateX(-4px); } 50% { transform: rotate(-4deg) translateX(-8px); } }
+@keyframes tut-setinha  { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-8px); } }
+@keyframes tut-acende   { 0%, 100% { opacity: 0.65; transform: translate(-50%, -50%) scale(0.9); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } }
+@keyframes tut-surpresa { 0% { transform: scale(0.92); } 60% { transform: scale(1.06); } 100% { transform: none; } }
+@keyframes tut-pulo     { 0%, 100% { transform: translateY(0) scale(1, 1); } 15% { transform: translateY(0) scale(1.06, 0.92); } 50% { transform: translateY(-22%) scale(0.97, 1.04); } }
+@keyframes tut-cai      { 0% { transform: translateY(-10px) rotate(0); } 100% { transform: translateY(140px) rotate(360deg); opacity: 0; } }
+@keyframes tut-aceno    { 0%, 100% { transform: rotate(0) scale(1); } 30% { transform: rotate(6deg) scale(1.02); } 60% { transform: rotate(-2deg) scale(1); } }
+@keyframes tut-respira  { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03, 0.98); } }
+@keyframes tut-entra    { 0% { transform: translateX(120%) translateY(-30%) rotate(20deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+.tut-painel.tut-pausado .tut-logi,
+.tut-painel.tut-pausado .tut-logi * { animation-play-state: paused !important; }
+
+.tut-selo-vez {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  white-space: nowrap;
+  padding: 3px 14px;
+  border-radius: 999px;
+  background: var(--roxo);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.9em;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+.tut-selo-vez[hidden] { display: none; }
+
+/* ---------- Texto, legenda e controles ---------- */
+.tut-corpo { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+
+.tut-topo {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px;
+  font-size: 0.8em; font-weight: 800; color: var(--tut-texto-2);
+}
+.tut-nome { text-transform: uppercase; letter-spacing: 0.6px; }
+.tut-passo { display: inline-flex; align-items: center; gap: 8px; }
+.tut-bolinhas { display: inline-flex; gap: 3px; }
+.tut-bolinhas i { width: 8px; height: 8px; border-radius: 50%; background: var(--cinza-claro, #D3D1C7); }
+.tut-bolinhas i.on { background: var(--laranja); }
+
+.tut-fala {
+  font-size: 1.35em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--tut-texto);
+}
+.tut-fala.tut-pop { animation: tut-pop 0.35s ease; }
+@keyframes tut-pop { 0% { transform: scale(0.94); opacity: 0.3; } 100% { transform: none; opacity: 1; } }
+
+mark.tut-chave {
+  background: var(--tut-chave-bg);
+  color: var(--tut-chave-fg);
+  font-weight: 800;
+  border-radius: 6px;
+  padding: 0 0.2em;
+  box-shadow: 0 0 0 2px var(--tut-chave-bg);
+}
+
+.tut-tecla {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  font-size: 0.85em; color: var(--tut-texto-2); min-height: 1.2em;
+}
+.tut-tecla svg { width: 20px; height: 20px; flex: none; }
+
+.tut-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tut-btn {
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 2px solid var(--laranja-borda);
+  border-radius: 12px;
+  background: var(--laranja-fundo);
+  color: var(--marrom);
+  font: inherit;
+  font-size: 0.9em;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tut-btn:hover { border-color: var(--laranja); }
+.tut-btn--pular { margin-left: auto; background: var(--branco); }
+.tut-btn[aria-pressed="true"]#tut-voz { background: var(--verde-fundo); border-color: var(--verde-claro); }
+
+.tut-atalhos { font-size: 0.72em; color: var(--tut-texto-2); }
+.tut-atalhos kbd {
+  font-family: ui-monospace, Consolas, monospace;
+  border: 2px solid var(--tut-texto-2);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  padding: 0 5px;
+  background: var(--tut-card);
+  color: var(--tut-texto);
+}
+
+.tut-sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.tut-btn-ajuda { margin-top: 1rem; width: 100%; }
+.tut-btn-ajuda[hidden] { display: none; }
+
+/* ---------- Mãozinha fantasma ---------- */
+.tut-mao {
+  position: fixed;
+  left: 0; top: 0;
+  width: 54px; height: 54px;
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.75s cubic-bezier(0.45, 0.05, 0.3, 1), opacity 0.3s;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+.tut-mao--on { opacity: 0.92; }
+.tut-mao .tut-anel { transform-origin: 16px 8px; opacity: 0; }
+.tut-mao--toque .tut-anel { animation: tut-anel 0.5s ease-out; }
+.tut-mao--toque .tut-dedo { animation: tut-aperta 0.5s ease; }
+@keyframes tut-anel   { 0% { opacity: 0.9; transform: scale(0.3); } 100% { opacity: 0; transform: scale(1.6); } }
+@keyframes tut-aperta { 50% { transform: translateY(3px) scale(0.95); } }
+
+/* ---------- Destaques nos elementos reais da fase ---------- */
+.tut-brilha {
+  position: relative;
+  z-index: 2;
+  animation: tut-brilha 1s ease-in-out infinite;
+}
+@keyframes tut-brilha {
+  0%, 100% { box-shadow: 0 0 0 3px #FFC531, 0 0 0 0 rgba(255, 197, 49, 0); }
+  50%      { box-shadow: 0 0 0 5px #FFC531, 0 0 22px 8px rgba(255, 197, 49, 0.65); }
+}
+
+.tut-alvo-vez {
+  outline: 4px dashed var(--roxo);
+  outline-offset: 5px;
+  animation: tut-brilha 1s ease-in-out infinite;
+}
+
+.tut-balanca { animation: tut-balanca 0.45s ease; }
+@keyframes tut-balanca { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+.tut-bloco-ativo { box-shadow: 0 0 0 4px #FFC531, 0 0 16px 4px rgba(255, 197, 49, 0.7) !important; }
+
+.tut-certo { outline: 5px solid #1D9E75; outline-offset: 4px; }
+
+.tut-palavra { display: inline-block; padding: 0 0.15em; margin: 0 0.04em; border-radius: 6px; }
+.tut-palavra.tut-neg { font-weight: 800; text-decoration: underline; }
+.tut-palavra.tut-brilha { background: #FFE3A3; color: #4A1B0C; animation: none; box-shadow: 0 0 0 3px #FFC531; }
+
+/* Caminho mostrado na grade da Sala */
+.tut-trilha {
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  font-size: 0.5em;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--roxo);
+  pointer-events: none;
+}
+.grade__celula { position: relative; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 820px) {
+  .tut-painel { gap: 10px; padding: 10px 12px; border-radius: 16px; }
+  .tut-logi-area { width: 84px; }
+  .tut-logi { width: 80px; }
+  .tut-fala { font-size: 1.15em; }
+  .tut-atalhos { display: none; }
+}
+
+@media (max-width: 560px) {
+  .tut-painel { grid-template-columns: 54px minmax(0, 1fr); align-items: start; max-height: 52vh; gap: 8px; bottom: 4px; width: calc(100vw - 8px); padding: 8px 10px; }
+  .tut-logi-area { width: 54px; margin-top: 18px; }
+  .tut-logi { width: 54px; }
+  .tut-selo-vez { top: -16px; font-size: 0.75em; padding: 2px 8px; }
+  .tut-corpo { padding-top: 0; gap: 4px; }
+  .tut-btn { min-height: 38px; padding: 4px 10px; font-size: 0.82em; }
+  .tut-fala { font-size: 1.08em; }
+}
+
+/* ---------- Movimento reduzido: sem mão animada, só destaques ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tut-mao { display: none; }
+  .tut-logi, .tut-logi *, .tut-fala.tut-pop, .tut-balanca { animation: none !important; }
+  .tut-brilha { animation: none; outline: 5px solid #FFC531; outline-offset: 3px; box-shadow: none; }
+  .tut-alvo-vez { animation: none; }
+  .tut-mao { transition: none; }
+}
+
+/* ---------- Alto contraste ---------- */
+body.alto-contraste .tut-painel {
+  --tut-card: #000;
+  --tut-texto: #fff;
+  --tut-texto-2: #fff;
+  --tut-borda: #fff;
+  --tut-chave-bg: #ffd700;
+  --tut-chave-fg: #000;
+  border-width: 4px;
+}
+body.alto-contraste .tut-btn,
+body.alto-contraste .tut-btn--pular {
+  background: #000; color: #fff; border: 3px solid #fff;
+}
+body.alto-contraste .tut-btn:hover { border-color: #ffd700; }
+body.alto-contraste .tut-btn[aria-pressed="true"]#tut-voz { background: #003b46; border-color: #00e5ff; }
+body.alto-contraste .tut-selo-vez { background: #ffd700; color: #000; }
+body.alto-contraste .tut-bolinhas i { background: #555; border: 1px solid #fff; }
+body.alto-contraste .tut-bolinhas i.on { background: #00e5ff; }
+body.alto-contraste mark.tut-chave { text-decoration: underline 3px; }
+body.alto-contraste .tut-brilha { box-shadow: 0 0 0 4px #ffd700, 0 0 0 8px #000; }
+body.alto-contraste .tut-alvo-vez { outline-color: #00e5ff; outline-width: 5px; }
+body.alto-contraste .tut-painel *:focus-visible,
+body.alto-contraste .tut-painel:focus-visible { outline-color: #00e5ff; }
+body.alto-contraste .tut-trilha { color: #ffd700; }
+body.alto-contraste .tut-btn-ajuda { background: #000 !important; color: #fff !important; border-color: #fff !important; }
+@media (prefers-reduced-motion: reduce) {
+  body.alto-contraste .tut-brilha { outline-color: #ffd700; }
+}

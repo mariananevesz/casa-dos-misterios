@@ -18,8 +18,10 @@ const DEFAULT_STATE = {
     tamanhoFonte:  100,
     somAtivado:    true,
     musicaAtivada: true,
-    narracaoAtivada: true
+    narracaoAtivada: true,
+    vozLogiAtivada:  true
   },
+  tutoriaisVistos: {},
   cozinhaBloco: 0,
   finalScoreSent: false,
   finalCelebrationShown: false
@@ -37,6 +39,7 @@ const gameState = {
         completed:    { ...DEFAULT_STATE.completed, ...saved.completed },
         unlocked:     { ...DEFAULT_STATE.unlocked,  ...saved.unlocked },
         settings:     { ...DEFAULT_STATE.settings,  ...saved.settings },
+        tutoriaisVistos: { ...(saved.tutoriaisVistos || {}) },
         cozinhaBloco: saved.cozinhaBloco ?? DEFAULT_STATE.cozinhaBloco,
         finalScoreSent: saved.finalScoreSent ?? DEFAULT_STATE.finalScoreSent,
         finalCelebrationShown: saved.finalCelebrationShown ?? DEFAULT_STATE.finalCelebrationShown
@@ -125,6 +128,20 @@ const gameState = {
 
   getSettings() {
     return this._load().settings;
+  },
+
+  /* Tutoriais do Logi: se o localStorage falhar, nada é gravado e o
+     tutorial simplesmente aparece sempre (nunca quebra o jogo). */
+  tutorialVisto(id) {
+    try { return Boolean(this._load().tutoriaisVistos[id]); } catch { return false; }
+  },
+
+  marcarTutorialVisto(id) {
+    try {
+      const state = this._load();
+      state.tutoriaisVistos = { ...state.tutoriaisVistos, [id]: true };
+      this._save(state);
+    } catch {}
   },
 
   calcularScore(erros) {

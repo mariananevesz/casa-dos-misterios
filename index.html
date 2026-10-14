@@ -140,6 +140,14 @@
         </button>
       </section>
 
+      <section class="config-linha" style="margin-top:1rem;">
+        <label class="config-label" for="toggle-voz-logi">Voz do Logi nos tutoriais</label>
+        <button class="toggle-btn" id="toggle-voz-logi" role="switch"
+                type="button" aria-checked="true" aria-label="Voz do Logi nos tutoriais">
+          <span class="toggle-thumb"></span>
+        </button>
+      </section>
+
       <section style="margin-top:1.25rem;" aria-labelledby="atalhos-titulo">
         <h3 id="atalhos-titulo" style="font-size:calc(11px * var(--escala-fonte));font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">
           Atalhos de teclado
@@ -419,6 +427,7 @@
     setToggle('toggle-som',       cfg.somAtivado);
     setToggle('toggle-musica',    cfg.musicaAtivada);
     setToggle('toggle-narracao',  cfg.narracaoAtivada);
+    setToggle('toggle-voz-logi',  cfg.vozLogiAtivada !== false);
     atualizarControleFonte(cfg.tamanhoFonte);
   }
 
@@ -444,6 +453,7 @@
   bindToggle('toggle-som',       'somAtivado');
   bindToggle('toggle-musica',    'musicaAtivada');
   bindToggle('toggle-narracao',  'narracaoAtivada');
+  bindToggle('toggle-voz-logi',  'vozLogiAtivada');
 
   const textoBoasVindas = document.getElementById('logi-boas-vindas').textContent;
   audio.definirNarracao(textoBoasVindas);
