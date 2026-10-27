@@ -183,7 +183,7 @@ body {
   flex-shrink: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 250px minmax(0, 1fr);
   /* Comandos + botões à esquerda; sequência + grade (alta) à direita */
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   grid-template-areas:
@@ -246,32 +246,36 @@ body {
 /* Com um único bloco "Repetir", ele ocupa a linha inteira */
 .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { grid-column: 1 / -1; }
 
+/* O display:flex dos blocos vence o atributo hidden; reforço para o "Como jogar" */
+.so-repetir[hidden],
+.sem-repetir[hidden] { display: none !important; }
+
 .sala-page #blocos-disponiveis .bloco {
-  min-height: 58px;
-  padding: 6px 4px;
-  border-radius: 13px;
-  font-size: calc(15px * var(--escala-fonte));
+  min-height: 78px;
+  padding: 8px 4px;
+  border-radius: 15px;
+  font-size: calc(16px * var(--escala-fonte));
   font-weight: 800;
   color: var(--branco);
   cursor: pointer;
   flex-direction: column;
   justify-content: center;
-  gap: 4px;
-  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.20);
+  gap: 6px;
+  box-shadow: 0 4px 0 rgba(111, 46, 15, 0.20);
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 
 /* Ícone é o destaque do botão; texto é rótulo de apoio */
 .sala-page #blocos-disponiveis .bloco-emoji {
-  font-size: calc(26px * var(--escala-fonte));
+  font-size: calc(36px * var(--escala-fonte));
   line-height: 1;
   flex-shrink: 0;
-  min-width: 26px;
+  min-width: 36px;
   text-align: center;
 }
 
 .sala-page #blocos-disponiveis .bloco-label {
-  font-size: calc(12px * var(--escala-fonte));
+  font-size: calc(15px * var(--escala-fonte));
   font-weight: 800;
   letter-spacing: 0.4px;
   text-transform: uppercase;
@@ -341,9 +345,9 @@ body {
   position: relative;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
-  min-height: 52px;
-  border-radius: 12px;
+  gap: 3px;
+  min-height: 68px;
+  border-radius: 13px;
   padding: 6px 4px;
   cursor: pointer;
   color: var(--branco);
@@ -352,12 +356,12 @@ body {
 }
 
 .sala-page #sequencia-player .bloco-emoji {
-  font-size: calc(22px * var(--escala-fonte));
+  font-size: calc(30px * var(--escala-fonte));
   line-height: 1;
 }
 
 .sala-page #sequencia-player .bloco-label {
-  font-size: calc(10px * var(--escala-fonte));
+  font-size: calc(12px * var(--escala-fonte));
   letter-spacing: 0.3px;
   text-transform: uppercase;
   text-align: center;
@@ -369,8 +373,8 @@ body {
   position: absolute;
   top: -6px;
   right: -6px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -378,7 +382,7 @@ body {
   background: var(--branco);
   color: var(--vermelho);
   border: 1.5px solid rgba(226, 75, 74, 0.45);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 900;
   line-height: 1;
   box-shadow: 0 2px 4px rgba(111, 46, 15, 0.22);
@@ -394,7 +398,7 @@ body {
   border: 2px dashed var(--laranja-borda);
   background: rgba(255, 248, 238, 0.72);
   color: var(--laranja-claro);
-  font-size: calc(22px * var(--escala-fonte));
+  font-size: calc(28px * var(--escala-fonte));
   font-weight: 900;
   box-shadow: none;
   cursor: default;
@@ -489,6 +493,27 @@ body {
   animation: sala-personagem-pulse 1.6s ease-in-out infinite;
 }
 
+/* Estrela coletada: sai do fluxo da célula (o robô fica centralizado sozinho) e some com brilho */
+.sala-page .grade__celula { position: relative; }
+
+.sala-page .grade-estrela--coletada {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  animation: sala-estrela-coletada 0.5s ease-in forwards;
+}
+
+@keyframes sala-estrela-coletada {
+  0%   { transform: scale(1);   opacity: 1; filter: brightness(1)   drop-shadow(0 0 0 rgba(255, 213, 74, 0)); }
+  40%  { transform: scale(1.5); opacity: 1; filter: brightness(1.6) drop-shadow(0 0 14px rgba(255, 213, 74, 1)); }
+  100% { transform: scale(0.4); opacity: 0; filter: brightness(1.6) drop-shadow(0 0 14px rgba(255, 213, 74, 1)); visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sala-page .grade-estrela--coletada { animation: none; opacity: 0; visibility: hidden; }
+}
+
 @keyframes sala-personagem-pulse {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.06); }
@@ -540,9 +565,9 @@ body {
 .sala-actions .sala-btn { flex: none; width: 100%; }
 
 .sala-btn {
-  min-height: 50px;
+  min-height: 60px;
   border-radius: 16px;
-  font-size: calc(17px * var(--escala-fonte));
+  font-size: calc(21px * var(--escala-fonte));
   font-weight: 900;
   display: inline-flex;
   align-items: center;
@@ -617,13 +642,18 @@ body {
   .sala-comandos-panel { flex-shrink: 0; padding: 8px 10px; }
   .sala-panel__hint { display: none; }
 
+  /* 4 setas numa linha; "Repetir" (só na última fase) ocupa a linha de baixo */
   .sala-comandos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
     margin-top: 6px;
   }
 
-  .sala-page #blocos-disponiveis .bloco { flex-direction: row; min-height: 44px; gap: 8px; }
+  .sala-page #blocos-disponiveis .bloco { min-height: 72px; gap: 4px; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(32px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(14px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { flex-direction: row; min-height: 56px; gap: 10px; }
+  .sala-page #sequencia-player .bloco { min-height: 60px; }
 
   .sala-game-area {
     flex: 1 1 auto;
@@ -667,11 +697,11 @@ body {
     font-size: calc(14px * var(--escala-fonte));
   }
   .sala-hud .btn-ajuda {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     margin-left: 0;
-    font-size: calc(17px * var(--escala-fonte));
+    font-size: calc(20px * var(--escala-fonte));
   }
 
   /* "Fase X de 3" já aparece no HUD */
@@ -684,30 +714,32 @@ body {
 
   .sala-panel__title { font-size: calc(11px * var(--escala-fonte)); }
 
+  .sala-comandos { gap: 6px; }
   .sala-page #blocos-disponiveis .bloco {
-    min-height: 38px;
-    padding: 3px 6px;
-    gap: 5px;
+    min-height: 68px;
+    padding: 4px 2px;
+    gap: 3px;
     justify-content: center;
-    border-radius: 11px;
+    border-radius: 13px;
   }
-  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(20px * var(--escala-fonte)); min-width: 18px; }
-  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(10px * var(--escala-fonte)); letter-spacing: 0; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(30px * var(--escala-fonte)); min-width: 0; }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(13px * var(--escala-fonte)); letter-spacing: 0; }
+  .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { min-height: 56px; }
 
-  /* Sequência: só ícones (o rótulo completo fica no aria-label) */
-  .sala-sequencia-panel { padding: 6px 8px; }
-  .sala-sequencia { gap: 5px; margin-top: 4px; }
-  .sala-page #sequencia-player .bloco { min-height: 38px; padding: 3px 1px; border-radius: 9px; }
+  /* Sequência: 4 por linha (alvo de toque grande); só ícones, o rótulo completo fica no aria-label */
+  .sala-sequencia-panel { padding: 8px 10px; }
+  .sala-sequencia { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 6px; }
+  .sala-page #sequencia-player .bloco { min-height: 56px; padding: 3px 2px; border-radius: 12px; }
   .sala-page #sequencia-player .bloco-label { display: none; }
   .sala-page #sequencia-player .bloco-vezes {
     display: block;
-    font-size: calc(9px * var(--escala-fonte));
+    font-size: calc(13px * var(--escala-fonte));
     font-weight: 900;
     line-height: 1;
   }
-  .sala-page #sequencia-player .bloco-emoji { font-size: calc(18px * var(--escala-fonte)); }
-  .sala-page #sequencia-player .bloco--vazio { font-size: calc(16px * var(--escala-fonte)); }
-  .sala-page .bloco-remover { width: 16px; height: 16px; top: -5px; right: -4px; font-size: 12px; }
+  .sala-page #sequencia-player .bloco-emoji { font-size: calc(28px * var(--escala-fonte)); }
+  .sala-page #sequencia-player .bloco--vazio { font-size: calc(22px * var(--escala-fonte)); }
+  .sala-page .bloco-remover { width: 22px; height: 22px; top: -7px; right: -6px; font-size: 15px; }
 
   .sala-grade-panel { padding: 6px 8px; }
   .sala-grade-area { gap: 8px; margin-top: 4px; }
@@ -716,14 +748,14 @@ body {
 
   .sala-mini-dica { flex: 0 1 112px; padding: 8px 6px; gap: 6px; }
   .sala-mini-dica .dica__icone-comodo { width: 28px; height: 28px; }
-  .sala-mini-dica .dica__texto { font-size: calc(12px * var(--escala-fonte)); line-height: 1.35; }
+  .sala-mini-dica .dica__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.35; }
   .sala-mini-dica .dica__play { width: 30px; height: 30px; }
 
-  #feedback-area { padding: 6px 10px; }
-  #feedback-area .dica__texto { font-size: calc(12.5px * var(--escala-fonte)); }
+  #feedback-area { padding: 8px 12px; }
+  #feedback-area .dica__texto { font-size: calc(14px * var(--escala-fonte)); }
 
   .sala-actions { flex-direction: row; gap: 8px; }
-  .sala-btn { min-height: 44px; font-size: calc(15px * var(--escala-fonte)); border-radius: 13px; }
+  .sala-btn { min-height: 56px; font-size: calc(19px * var(--escala-fonte)); border-radius: 14px; }
 }
 
 /* Celulares em pé com pouca altura (ex.: 360×560 com barra do navegador) */
@@ -733,6 +765,9 @@ body {
   .sala-sequencia { margin-top: 0; }
   .sala-grade-area { margin-top: 0; }
   .sala-grade-box { min-height: 120px; }
+  .sala-page #blocos-disponiveis .bloco { min-height: 60px; }
+  .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { min-height: 52px; }
+  .sala-page #sequencia-player .bloco { min-height: 52px; }
 
   .sala-logi__img { width: 46px; height: 42px; }
   .sala-logi .balao__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
@@ -746,7 +781,8 @@ body {
 /* Celulares bem estreitos */
 @media (max-width: 360px) {
   .sala-voltar strong { display: none; }
-  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(9px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(12px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(26px * var(--escala-fonte)); }
   .sala-mini-dica { flex-basis: 96px; }
 }
 
@@ -774,9 +810,10 @@ body {
   .sala-logi .balao__texto { font-size: calc(16px * var(--escala-fonte)); line-height: 1.35; }
   .sala-panel, .sala-game-area { padding: 9px; }
   .sala-game-area { gap: 8px; }
-  .sala-page #blocos-disponiveis .bloco { min-height: 50px; }
-  .sala-page #sequencia-player .bloco { min-height: 44px; }
-  .sala-btn { min-height: 42px; font-size: calc(15px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco { min-height: 60px; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(30px * var(--escala-fonte)); }
+  .sala-page #sequencia-player .bloco { min-height: 54px; }
+  .sala-btn { min-height: 50px; font-size: calc(18px * var(--escala-fonte)); }
 }
 
 /* Celular deitado */
@@ -786,7 +823,7 @@ body {
   .sala-hud__titulo { font-size: calc(20px * var(--escala-fonte)); }
   .sala-hud__subtitulo { font-size: calc(12px * var(--escala-fonte)); }
   .sala-voltar, .sala-score { padding-block: 5px; }
-  .sala-hud .btn-ajuda { width: 34px; height: 34px; min-width: 34px; }
+  .sala-hud .btn-ajuda { width: 40px; height: 40px; min-width: 40px; }
   .sala-niveis { display: none; }
   .sala-logi { padding: 4px 8px; }
   .sala-logi__img { width: 46px; height: 40px; }
@@ -815,15 +852,17 @@ body {
   .sala-layout .sala-panel__title,
   .sala-panel__hint { display: none; }
   .sala-comandos { grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 0; }
-  .sala-page #blocos-disponiveis .bloco { min-height: 32px; padding-inline: 6px; gap: 6px; }
-  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(18px * var(--escala-fonte)); min-width: 18px; }
-  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(9.5px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco { flex-direction: row; min-height: 46px; padding-inline: 6px; gap: 6px; }
+  .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(24px * var(--escala-fonte)); min-width: 22px; }
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(12px * var(--escala-fonte)); }
+  .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { min-height: 46px; }
 
   .sala-sequencia-panel { padding: 4px 8px; }
-  .sala-sequencia { margin-top: 0; }
-  .sala-page #sequencia-player .bloco { min-height: 32px; padding-block: 2px; }
+  .sala-sequencia { grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; margin-top: 0; }
+  .sala-page #sequencia-player .bloco { min-height: 46px; padding-block: 2px; }
   .sala-page #sequencia-player .bloco-label { display: none; }
-  .sala-page #sequencia-player .bloco-vezes { display: block; font-size: 9px; font-weight: 900; }
+  .sala-page #sequencia-player .bloco-emoji { font-size: calc(22px * var(--escala-fonte)); }
+  .sala-page #sequencia-player .bloco-vezes { display: block; font-size: 12px; font-weight: 900; }
   .sala-grade-panel { padding: 5px 8px; }
   .sala-grade-area { margin-top: 0; }
   .sala-grade-box { min-height: 110px; }
@@ -834,5 +873,8 @@ body {
   #feedback-area { padding: 4px 8px; }
   #feedback-area .dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
   .sala-actions { flex-direction: row; gap: 6px; }
-  .sala-btn { min-height: 36px; font-size: calc(14px * var(--escala-fonte)); border-radius: 12px; }
+  .sala-actions .sala-btn { width: auto; min-width: 0; }
+  .sala-actions .sala-btn--limpar { flex: 0.8; }
+  .sala-actions .sala-btn--executar { flex: 1.2; }
+  .sala-btn { min-height: 46px; font-size: calc(16px * var(--escala-fonte)); border-radius: 12px; }
 }

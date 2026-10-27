@@ -131,7 +131,7 @@ const Tutorial = (() => {
           <button type="button" class="tut-btn" id="tut-voz" aria-pressed="true">Voz: ligada</button>
           <button type="button" class="tut-btn tut-btn--pular" id="tut-pular">Pular</button>
         </div>
-        <p class="tut-atalhos">Atalhos: <kbd>P</kbd> pausa · <kbd>R</kbd> repete · <kbd>Esc</kbd> pula</p>
+        <p class="tut-atalhos">Atalhos: <kbd>P</kbd> pausa · <kbd>R</kbd> recomeça · <kbd>Esc</kbd> pula</p>
       </div>
       <div class="tut-sr" id="tut-live" aria-live="polite" aria-atomic="true"></div>`;
 
@@ -439,19 +439,22 @@ const Tutorial = (() => {
     if (t instanceof Element && t.matches('input, textarea, select, [contenteditable="true"]')) return;
     const k = String(e.key).toLowerCase();
     if (k === 'p') { e.preventDefault(); pausar(); }
-    else if (k === 'r') { e.preventDefault(); repetirPasso(); }
+    else if (k === 'r') { e.preventDefault(); reiniciar(); }
     else if (e.key === ' ' && t === ui.painel) { e.preventDefault(); pausar(); }
   }
 
-  function repetirPasso() {
-    if (!T.ativo || !exibido) return;
-    const p = exibido;
-    const base = espera ? espera.p : p;
-    pararVoz();
-    mostrar(p, base);
-    tocarVoz(p.id);
-    const alvo = p.alvo || base.alvo;
-    if (alvo && !reduz()) maoToque(alvo).then(maoSome).catch(() => {});
+  /* R com o tutorial fechado: abre de novo o tutorial da fase (se a página não estiver ocupada) */
+  function aoTeclaFora(e) {
+    if (T.ativo || !pagina || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (String(e.key).toLowerCase() !== 'r') return;
+    const t = e.target;
+    if (t instanceof Element && t.matches('input, textarea, select, [contenteditable="true"]')) return;
+    if ($$('.modal-overlay').some(m => getComputedStyle(m).display !== 'none')) return;
+    if (pagina.ocupado && pagina.ocupado()) return;
+    const id = pagina.tutorialDaFase ? pagina.tutorialDaFase() : null;
+    if (!id || !registro[id]) return;
+    e.preventDefault();
+    abrir(id);
   }
 
   function ajustarAltura() {
@@ -579,6 +582,7 @@ const Tutorial = (() => {
 
   function configurar(p) {
     pagina = p;
+    document.addEventListener('keydown', aoTeclaFora);
     const ajuda = document.getElementById('btn-ajuda');
     if (ajuda) ajuda.addEventListener('click', atualizarBotaoAjuda, true);
   }

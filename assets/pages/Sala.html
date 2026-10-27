@@ -112,10 +112,10 @@
         <p class="modal-ajuda-titulo">📋 Como jogar</p>
         <ol class="modal-ajuda-lista">
           <li>
-            Escolha os comandos: cima, baixo, esquerda, direita ou repetir.
+            Escolha os comandos: cima, baixo, esquerda<span class="so-repetir">, direita ou repetir</span><span class="sem-repetir" hidden> ou direita</span>.
             <span class="modal-ajuda-visual" aria-hidden="true">
               <span class="bloco bloco--laranja">↑ Cima</span>
-              <span class="bloco bloco--ambar">↻ Repetir</span>
+              <span class="bloco bloco--ambar so-repetir">↻ Repetir</span>
             </span>
           </li>
           <li>
@@ -394,12 +394,16 @@ function blocoIconeHtml(bloco) {
   function buildBlocos() {
     const cont = document.getElementById('blocos-disponiveis');
     cont.innerHTML = '';
+    /* "Repetir" só aparece na fase que usa (usarRepetir no sala.json) e no treino dela */
+    const usaRepetir = faseTreino ? Boolean(faseTreino.repetir) : Boolean(gameData.fases[faseAtual].usarRepetir);
     gameData.blocosDisponiveis.forEach(bloco => {
-      /* No treino sem "Repetir" (Fase 1), o bloco de controle fica de fora */
-      if (faseTreino && !faseTreino.repetir && bloco.tipo === 'controle') return;
+      if (!usaRepetir && bloco.tipo === 'controle') return;
       const el = criarBlocoEl(bloco, 'disponivel');
       cont.appendChild(el);
     });
+    /* O "Como jogar" só cita o Repetir quando ele está na tela */
+    document.querySelectorAll('.so-repetir').forEach(el => { el.hidden = !usaRepetir; });
+    document.querySelectorAll('.sem-repetir').forEach(el => { el.hidden = usaRepetir; });
   }
 
   function criarBlocoEl(bloco, origem) {
@@ -662,7 +666,16 @@ async function executar() {
 
     cells[deIdx].classList.remove('grade__celula--ativa');
 
-    cells[paraIdx].innerHTML += `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`;
+    /* Chegou na estrela: ela é coletada (some com brilho) e o robô fica sozinho, centralizado */
+    if (nr === posicaoAlvo.linha && nc === posicaoAlvo.coluna) {
+      const estrela = cells[paraIdx].querySelector('.grade-estrela');
+      if (estrela) {
+        estrela.classList.add('grade-estrela--coletada');
+        estrela.alt = 'Estrela coletada';
+      }
+    }
+
+    cells[paraIdx].insertAdjacentHTML('beforeend', `<span class="grade-emoji grade-personagem" id="personagem" role="img" aria-label="Personagem">🤖</span>`);
     cells[paraIdx].classList.add('grade__celula--ativa');
   }
 
@@ -730,6 +743,7 @@ async function executar() {
       return { 1: 'sala-f1', 2: 'sala-f1', 3: 'sala-f3' }[id] || null;
     },
     primeiroFoco: () => document.querySelector('#blocos-disponiveis .bloco'),
+    ocupado: () => animando,
 
     preparar(def) {
       const t = def.treino;
@@ -780,6 +794,9 @@ async function executar() {
   await sleep(700);
 
   buildGrid(fase);
+
+  /* Errou o caminho: o painel de comandos volta vazio para a criança montar de novo */
+  sequencia = [];
 
   animando = false;
   document.getElementById('btn-executar').disabled = false;
