@@ -125,10 +125,6 @@
   color: #085041;
 }
 
-.cozinha-logi .dica__play.balao__play {
-  background: var(--verde);
-  box-shadow: 0 3px 0 #0F6E56;
-}
 
 /* ---------- Layout principal ---------- */
 .cozinha-layout {
@@ -429,7 +425,6 @@
   .cozinha-logi { gap: 8px; padding: 6px 8px; border-radius: 14px; }
   .cozinha-logi__img { width: 50px; height: 46px; }
   .cozinha-logi__texto { font-size: calc(13.5px * var(--escala-fonte)); line-height: 1.35; }
-  .cozinha-logi .dica__play.balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
   .cozinha-centro { gap: 0.4rem; }
   .cozinha-status { gap: 0.6rem; padding: 0.4rem 0.5rem; border-radius: 14px; }
@@ -458,7 +453,6 @@
   .cozinha-dica { padding: 0.35rem 0.5rem; gap: 6px; }
   .cozinha-dica .dica__icone-comodo { width: 22px; height: 22px; }
   .cozinha-dica .dica__texto { font-size: calc(12px * var(--escala-fonte)); line-height: 1.3; }
-  .cozinha-dica .dica__play { width: 28px; height: 28px; }
 }
 
 @media (max-width: 620px) and (max-height: 620px) {
@@ -500,7 +494,6 @@
   .cozinha-logi { padding: 4px 8px; }
   .cozinha-logi__img { width: 44px; height: 40px; }
   .cozinha-logi__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
-  .cozinha-logi .dica__play.balao__play { width: 32px; height: 32px; }
 
   /* Pergunta à esquerda; status, V/F, feedback e dica à direita */
   .cozinha-centro {
@@ -530,5 +523,4 @@
   .cozinha-dica { padding: 0.25rem 0.4rem; gap: 5px; }
   .cozinha-dica .dica__icone-comodo { display: none; }
   .cozinha-dica .dica__texto { font-size: calc(11px * var(--escala-fonte)); line-height: 1.25; }
-  .cozinha-dica .dica__play { width: 26px; height: 26px; }
 }

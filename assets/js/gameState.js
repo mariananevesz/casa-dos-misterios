@@ -17,9 +17,7 @@ const DEFAULT_STATE = {
     altoContraste: false,
     tamanhoFonte:  100,
     somAtivado:    true,
-    musicaAtivada: true,
-    narracaoAtivada: true,
-    vozLogiAtivada:  true
+    musicaAtivada: true
   },
   tutoriaisVistos: {},
   cozinhaBloco: 0,

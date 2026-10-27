@@ -12,10 +12,8 @@
         criança, Tutorial.tentar(tipo, valor, fazer) enquanto
         Tutorial.ativo for verdadeiro.
 
-   Voz: cada passo tem um "slot" de áudio assets/audio/logi/<id>.mp3.
-   Só é pedido ao navegador o que estiver listado em
-   assets/audio/logi/manifest.js; sem áudio o passo usa a legenda e
-   duracaoPadrao. Nunca usa voz sintética.
+   Sem voz e sem som: cada passo usa só a legenda (balão do Logi),
+   os destaques e a mãozinha.
    ============================================================= */
 
 const Tutorial = (() => {
@@ -26,7 +24,6 @@ const Tutorial = (() => {
   })();
   const IMG_FELIZ = BASE + 'img/logi_feliz.png';
   const IMG_EXCL  = BASE + 'img/logi_exclamacao.png';
-  const AUDIO_DIR = BASE + 'audio/logi/';
 
   const CANC = Symbol('cancelado');
   const registro = {};
@@ -39,7 +36,6 @@ const Tutorial = (() => {
   let espera = null;      // passo "sua vez" aguardando a criança
   let exibido = null;     // passo (ou erro) mostrado agora
   let erroTk = 0;
-  let vozAtual = null;
   let ui = null;
   let resizeObs = null;
   let bloqueioAuto = 0;   // evita reabrir sozinho enquanto a página se restaura ao fechar
@@ -64,35 +60,6 @@ const Tutorial = (() => {
   }
 
   function checar(tk) { if (tk !== gen) throw CANC; }
-
-  /* ---------- Voz do Logi (slot de áudio) ---------- */
-  function vozPermitida() {
-    try {
-      const s = gameState.getSettings();
-      return s.somAtivado !== false && s.vozLogiAtivada !== false;
-    } catch { return true; }
-  }
-
-  function pararVoz() {
-    if (!vozAtual) return;
-    try { vozAtual.pause(); } catch {}
-    vozAtual = null;
-  }
-
-  /* Devolve uma Promise<boolean> (true = terminou) ou null se não há áudio */
-  function tocarVoz(id) {
-    pararVoz();
-    const lista = window.LOGI_AUDIOS;
-    if (!vozPermitida() || !Array.isArray(lista) || !lista.includes(id)) return null;
-    let a;
-    try { a = new Audio(AUDIO_DIR + id + '.mp3'); } catch { return null; }
-    vozAtual = a;
-    return new Promise(res => {
-      a.addEventListener('ended', () => res(true), { once: true });
-      a.addEventListener('error', () => res(false), { once: true });
-      try { a.play().catch(() => res(false)); } catch { res(false); }
-    });
-  }
 
   /* ---------- Interface ---------- */
   const ICONE_TECLADO = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
@@ -128,7 +95,6 @@ const Tutorial = (() => {
         <div class="tut-acoes">
           <button type="button" class="tut-btn" id="tut-pausar" aria-pressed="false">Pausar</button>
           <button type="button" class="tut-btn" id="tut-reiniciar">Ver de novo</button>
-          <button type="button" class="tut-btn" id="tut-voz" aria-pressed="true">Voz: ligada</button>
           <button type="button" class="tut-btn tut-btn--pular" id="tut-pular">Pular</button>
         </div>
         <p class="tut-atalhos">Atalhos: <kbd>P</kbd> pausa · <kbd>R</kbd> recomeça · <kbd>Esc</kbd> pula</p>
@@ -162,29 +128,11 @@ const Tutorial = (() => {
       tecla: $('#tut-tecla', painel),
       live: $('#tut-live', painel),
       pausar: $('#tut-pausar', painel),
-      voz: $('#tut-voz', painel),
     };
 
     $('#tut-pausar', painel).addEventListener('click', pausar);
     $('#tut-reiniciar', painel).addEventListener('click', reiniciar);
     $('#tut-pular', painel).addEventListener('click', () => fechar({ pulado: true }));
-    ui.voz.addEventListener('click', alternarVoz);
-  }
-
-  function atualizarBotaoVoz() {
-    if (!ui) return;
-    let ligada = true;
-    try { ligada = gameState.getSettings().vozLogiAtivada !== false; } catch {}
-    ui.voz.textContent = ligada ? 'Voz: ligada' : 'Voz: desligada';
-    ui.voz.setAttribute('aria-pressed', ligada ? 'true' : 'false');
-  }
-
-  function alternarVoz() {
-    let ligada = true;
-    try { ligada = gameState.getSettings().vozLogiAtivada !== false; } catch {}
-    try { gameState.updateSettings({ vozLogiAtivada: !ligada }); } catch {}
-    if (ligada) pararVoz();
-    atualizarBotaoVoz();
   }
 
   function pausar() {
@@ -193,9 +141,6 @@ const Tutorial = (() => {
     ui.painel.classList.toggle('tut-pausado', T.pausado);
     ui.pausar.textContent = T.pausado ? 'Continuar' : 'Pausar';
     ui.pausar.setAttribute('aria-pressed', T.pausado ? 'true' : 'false');
-    if (vozAtual) {
-      try { T.pausado ? vozAtual.pause() : vozAtual.play().catch(() => {}); } catch {}
-    }
     anunciar(T.pausado ? 'Tutorial pausado.' : 'Tutorial continuando.');
   }
 
@@ -253,9 +198,6 @@ const Tutorial = (() => {
     destacar(p.destaque !== undefined ? p.destaque : p.alvo);
     if (vez) destacar((base || p).alvo, 'tut-alvo-vez');
     anunciar(`${p.fala}. ${p.audiodescricao || ''}`.trim());
-    if (p.estadoLogi === 'comemorando') {
-      try { audio.acerto(); } catch {}
-    }
     ui.fala.classList.remove('tut-pop');
     void ui.fala.offsetWidth;
     ui.fala.classList.add('tut-pop');
@@ -309,7 +251,6 @@ const Tutorial = (() => {
       ui.logi.classList.add('tut-entra');
       setTimeout(() => ui.logi?.classList.remove('tut-entra'), 800);
     }
-    const voz = tocarVoz(p.id);
     const t0 = Date.now();
 
     if (p.tipo === 'vez') {
@@ -332,13 +273,7 @@ const Tutorial = (() => {
     }
 
     const restante = Math.max(400, (p.duracaoPadrao || 3000) - (Date.now() - t0));
-    if (voz) {
-      const terminou = await voz;
-      checar(tk);
-      if (!terminou) await esperar(restante, tk);
-    } else {
-      await esperar(restante, tk);
-    }
+    await esperar(restante, tk);
   }
 
   /* "Sua vez": espera a criança fazer a ação certa (via Tutorial.tentar) */
@@ -362,19 +297,16 @@ const Tutorial = (() => {
     if (!er) return;
     const tk = e.tk;
     const meu = ++erroTk;
-    try { audio.erro(); } catch {}
     mostrar(er, p);
     ui.selo.hidden = true;
     destacar(er.destaque !== undefined ? er.destaque : (er.alvo || p.alvo));
-    const voz = tocarVoz(er.id);
     if (er.efeito) { try { await er.efeito(getApi()); } catch (x) { if (x !== CANC) console.error(x); } }
     const alvo = er.alvo || p.alvo;
     if (alvo && !reduz()) {
       try { await maoToque(alvo, tk); maoSome(); } catch (x) { if (x !== CANC) console.error(x); }
     }
     try {
-      if (voz) { const ok = await voz; if (!ok) await esperar(er.duracaoPadrao || 2500, tk); }
-      else await esperar(er.duracaoPadrao || 2500, tk);
+      await esperar(er.duracaoPadrao || 2500, tk);
     } catch (x) { if (x === CANC) return; throw x; }
     if (meu === erroTk && espera === e && tk === gen) {
       mostrar(p);          /* volta ao convite "Sua vez!" */
@@ -468,7 +400,6 @@ const Tutorial = (() => {
     if (!d) return false;
     def = d;
     montarUI();
-    try { audio.pararNarracao(); } catch {}
     try { pagina.preparar && pagina.preparar(def); } catch (x) { console.error(x); }
     T.ativo = true;
     T.pausado = false;
@@ -476,7 +407,6 @@ const Tutorial = (() => {
     ui.painel.classList.remove('tut-pausado', 'tut-vez');
     ui.pausar.textContent = 'Pausar';
     ui.pausar.setAttribute('aria-pressed', 'false');
-    atualizarBotaoVoz();
     ui.painel.hidden = false;
     document.body.classList.add('tut-aberto');
     ajustarAltura();
@@ -495,7 +425,6 @@ const Tutorial = (() => {
     gen++;
     espera = null;
     erroTk++;
-    pararVoz();
     maoSome();
     limparDestaques();
     T.pausado = false;
@@ -516,7 +445,6 @@ const Tutorial = (() => {
     erroTk++;
     T.ativo = false;
     T.pausado = false;
-    pararVoz();
     maoSome();
     limparDestaques();
     window.removeEventListener('keydown', aoTecla, true);

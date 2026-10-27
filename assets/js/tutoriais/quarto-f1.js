@@ -1,7 +1,6 @@
 /* =============================================================
    Tutorial do Quarto — Fase 1 (Depuração)
    Falas provisórias do storyboard "Tutoriais do Logi".
-   O id vira o nome do áudio: assets/audio/logi/<id>.mp3
    ============================================================= */
 (() => {
   const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
@@ -26,12 +25,12 @@
       { id: 'quarto-f1-p2', momento: 'Demonstração 1', duracaoPadrao: 4000, estadoLogi: 'apontando',
         fala: 'Um bloco está REPETIDO: o vermelho.', palavraChave: ['REPETIDO'], destaque: FONTE('calcarep'),
         audiodescricao: 'Tem duas calças na lista. Uma delas é vermelha: ela está repetida.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'quarto-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 4000, estadoLogi: 'dica',
         fala: 'O vermelho fica FORA da fila.', palavraChave: ['FORA'], destaque: '#sequencia-corrigida',
         audiodescricao: 'O bloco vermelho é um erro. Ele não entra na fila.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'quarto-f1-p4', momento: 'Demonstração 3', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
         alvo: FONTE('camiseta'), efeito: a => a.adicionar('camiseta'),
@@ -43,7 +42,7 @@
         fala: 'O TÊNIS vem sempre por último.', palavraChave: ['TÊNIS'],
         destaque: `${FONTE('tenis')}, #sequencia-corrigida > :nth-child(4)`,
         audiodescricao: 'Calçar o tênis é sempre o último passo da fila.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'quarto-f1-p6', momento: 'Sua vez', estadoLogi: 'aguardando', tipo: 'vez',
         alvo: FONTE('calca'), vez: { tipo: 'adicionar', valor: 'calca' },
@@ -58,7 +57,7 @@
       { id: 'quarto-f1-p7', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
         fala: 'Isso! Você achou o bloco CERTO!', palavraChave: ['CERTO'], destaque: '#sequencia-corrigida',
         audiodescricao: 'Isso! A calça certa entrou na fila. Logi pula de alegria.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'quarto-f1-p8', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
         fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],

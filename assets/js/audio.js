@@ -1,6 +1,10 @@
 /* =============================================================
    audio.js — Sons sintetizados via Web Audio API
    Casa dos Mistérios Lógicos
+
+   O jogo não tem narração nem voz: só efeitos sonoros e música de
+   fundo. A música tem um botão visível para pausar/ligar em todas as
+   páginas (criarBotaoMusica).
    ============================================================= */
 
 const audio = (() => {
@@ -8,8 +12,6 @@ const audio = (() => {
   let musicaTocando = false;
   let musicaTimer = null;
   let usuarioInteragiu = false;
-  let instrucaoAtual = '';
-  let narracaoPendente = false;
   const osciladoresMusica = new Set();
   const NOTAS_MUSICA = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23];
 
@@ -25,102 +27,6 @@ const audio = (() => {
 
   function isMusicaAtivada() {
     try { return gameState.getSettings().musicaAtivada; } catch { return true; }
-  }
-
-  function isNarracaoAtivada() {
-    try { return gameState.getSettings().narracaoAtivada; } catch { return true; }
-  }
-
-  function limparTextoNarracao(texto) {
-    return String(texto || '').replace(/\s+/g, ' ').trim();
-  }
-
-  /* ---- Botão ▶ vira ❚❚ enquanto fala; clicar de novo pausa ---- */
-  let textoFalando = '';
-  let botaoFalando = null;
-  let ultimoBotaoPlay = null;
-
-  document.addEventListener('click', e => {
-    ultimoBotaoPlay = e.target.closest?.('.dica__play') || null;
-  }, true);
-
-  function marcarBotao(botao) {
-    desmarcarBotao();
-    if (!botao) return;
-    botaoFalando = botao;
-    botao.dataset.rotuloOriginal = botao.getAttribute('aria-label') || '';
-    botao.textContent = '❚❚';
-    botao.classList.add('dica__play--falando');
-    botao.setAttribute('aria-label', 'Pausar narração');
-  }
-
-  function desmarcarBotao() {
-    if (!botaoFalando) return;
-    botaoFalando.textContent = '▶';
-    botaoFalando.classList.remove('dica__play--falando');
-    botaoFalando.setAttribute('aria-label', botaoFalando.dataset.rotuloOriginal || 'Ouvir');
-    botaoFalando = null;
-  }
-
-  function pararNarracao() {
-    narracaoPendente = false;
-    textoFalando = '';
-    desmarcarBotao();
-    try { window.speechSynthesis?.cancel(); } catch {}
-  }
-
-  function falar(texto) {
-    const fala = limparTextoNarracao(texto);
-    if (!fala || !isNarracaoAtivada()) return false;
-    if (!usuarioInteragiu) {
-      narracaoPendente = true;
-      return false;
-    }
-    if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return false;
-
-    /* Mesmo texto já em andamento → o clique pausa */
-    if (fala === textoFalando && window.speechSynthesis.speaking) {
-      pararNarracao();
-      ultimoBotaoPlay = null;
-      return false;
-    }
-
-    pararNarracao();
-    const utterance = new SpeechSynthesisUtterance(fala);
-    textoFalando = fala;
-    utterance.onend = utterance.onerror = () => {
-      if (textoFalando !== fala) return;
-      textoFalando = '';
-      desmarcarBotao();
-    };
-    marcarBotao(ultimoBotaoPlay);
-    ultimoBotaoPlay = null;
-    utterance.lang = 'pt-BR';
-    const vozPtBr = window.speechSynthesis.getVoices().find(voz =>
-      String(voz.lang).toLowerCase().replace('_', '-').startsWith('pt-br')
-    );
-    if (vozPtBr) utterance.voice = vozPtBr;
-    window.speechSynthesis.speak(utterance);
-    return true;
-  }
-
-  /* A instrução só é falada quando a criança aperta o ▶ (ou Alt+R) */
-  function definirNarracao(texto, reproduzirAutomaticamente = false) {
-    instrucaoAtual = limparTextoNarracao(texto);
-    narracaoPendente = false;
-    if (reproduzirAutomaticamente) falar(instrucaoAtual);
-  }
-
-  function repetirNarracao() {
-    return falar(instrucaoAtual);
-  }
-
-  function obterNarracaoAtual() {
-    return instrucaoAtual;
-  }
-
-  function sincronizarNarracao() {
-    if (!isNarracaoAtivada()) pararNarracao();
   }
 
   function beep(freq, dur, type = 'sine', vol = 0.28) {
@@ -192,9 +98,56 @@ const audio = (() => {
     osciladoresMusica.clear();
   }
 
+  /* ---- Botão visível de pausar/ligar a música ---- */
+  let botaoMusica = null;
+
+  function atualizarBotaoMusica() {
+    if (!botaoMusica) return;
+    const ligada = isMusicaAtivada() !== false;
+    botaoMusica.querySelector('span').textContent = ligada ? '🔊' : '🔇';
+    botaoMusica.setAttribute('aria-label', ligada ? 'Pausar a música' : 'Ligar a música');
+    botaoMusica.title = ligada ? 'Pausar a música' : 'Ligar a música';
+  }
+
+  function alternarMusica() {
+    const nova = isMusicaAtivada() === false;
+    try { gameState.updateSettings({ musicaAtivada: nova }); } catch {}
+    sincronizarConfiguracoes();
+  }
+
+  /* No HUD das fases fica antes do "?"; no início, ao lado da engrenagem; no mapa, no topo */
+  function criarBotaoMusica() {
+    if (botaoMusica || document.getElementById('btn-musica')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'btn-musica';
+    btn.innerHTML = '<span aria-hidden="true"></span>';
+    botaoMusica = btn;
+
+    const ajuda = document.getElementById('btn-ajuda');
+    const config = document.getElementById('btn-config');
+    const topoMapa = document.querySelector('.mapa-topo');
+    if (ajuda) {
+      btn.className = 'btn-ajuda btn-musica';
+      ajuda.insertAdjacentElement('beforebegin', btn);
+    } else if (config) {
+      btn.className = 'btn-musica btn-musica--canto';
+      config.insertAdjacentElement('beforebegin', btn);
+    } else if (topoMapa) {
+      btn.className = 'btn-musica';
+      topoMapa.appendChild(btn);
+    } else {
+      btn.className = 'btn-musica btn-musica--flutuante';
+      document.body.appendChild(btn);
+    }
+    btn.addEventListener('click', alternarMusica);
+    atualizarBotaoMusica();
+  }
+
   function sincronizarConfiguracoes() {
     if (isMusicaAtivada()) iniciarMusica();
     else pararMusica();
+    atualizarBotaoMusica();
   }
 
   function registrarInteracao() {
@@ -203,18 +156,17 @@ const audio = (() => {
     document.removeEventListener('pointerdown', registrarInteracao, true);
     document.removeEventListener('keydown', registrarInteracao, true);
     sincronizarConfiguracoes();
-    if (narracaoPendente) repetirNarracao();
   }
 
   document.addEventListener('pointerdown', registrarInteracao, true);
   document.addEventListener('keydown', registrarInteracao, true);
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      pararMusica();
-      pararNarracao();
-    }
+    if (document.hidden) pararMusica();
     else sincronizarConfiguracoes();
   });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', criarBotaoMusica);
+  else criarBotaoMusica();
 
   return {
     clique()      { beep(440, 0.06, 'sine', 0.15); },
@@ -223,12 +175,6 @@ const audio = (() => {
     desbloqueio() { sequencia([[523,0.12],[659,0.12],[784,0.12],[1047,0.2]], 110); },
     conclusao()   { sequencia([[523,0.15],[659,0.15],[784,0.15],[1047,0.15],[1319,0.3]], 120); },
     passo()       { beep(330, 0.05, 'sine', 0.1); },
-    definirNarracao,
-    narrar(texto) { return falar(texto); },
-    repetirNarracao,
-    obterNarracaoAtual,
-    pararNarracao,
-    sincronizarNarracao,
     sincronizarConfiguracoes,
     iniciarMusica,
     pararMusica

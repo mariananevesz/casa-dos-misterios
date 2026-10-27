@@ -213,8 +213,7 @@
   .inicio-header__subtitulo { font-size: calc(14px * var(--escala-fonte)); }
   .btn--menu-principal      { font-size: calc(16px * var(--escala-fonte)); min-height: 54px; padding: 0 18px; }
   .menu-botoes              { margin: 1rem 0 1.5rem; }
-  .inicio-logi .balao__play { width: 36px; height: 36px; }
-  .inicio-header            { padding-inline: 44px; }
+  .inicio-header            { padding-inline: 56px; }
 }
 
 @media (max-width: 400px) {

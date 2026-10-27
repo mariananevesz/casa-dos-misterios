@@ -85,7 +85,6 @@ function existeModalVisivel() {
 
 let tutorialAtivo = null;
 let acionadorTutorial = null;
-let narracaoAnteriorTutorial = null;
 let modalFluxoAtivo = null;
 
 function elementosFocaveisTutorial(modal) {
@@ -103,26 +102,8 @@ function abrirTutorialAcessivel(modal, acionador) {
   window.requestAnimationFrame(() => elementosFocaveisTutorial(modal)[0]?.focus());
 }
 
-function narrarTutorialAcessivel(texto) {
-  if (typeof audio === 'undefined') return;
-  if (narracaoAnteriorTutorial === null && typeof audio.obterNarracaoAtual === 'function') {
-    narracaoAnteriorTutorial = audio.obterNarracaoAtual();
-  }
-  audio.definirNarracao(texto);
-}
-
-function restaurarNarracaoAposTutorial() {
-  if (typeof audio === 'undefined') return;
-  audio.pararNarracao();
-  if (narracaoAnteriorTutorial !== null) {
-    audio.definirNarracao(narracaoAnteriorTutorial, false);
-    narracaoAnteriorTutorial = null;
-  }
-}
-
 function fecharTutorialAcessivel(modal = tutorialAtivo) {
   if (!modal) return;
-  restaurarNarracaoAposTutorial();
   modal.style.display = 'none';
   const acionador = acionadorTutorial;
   acionador?.setAttribute?.('aria-expanded', 'false');
@@ -174,13 +155,6 @@ document.addEventListener('keydown', event => {
     if (!abrirAcessibilidade || abrirAcessibilidade.getAttribute('aria-expanded') === 'true') return;
     event.preventDefault();
     abrirAcessibilidade.click();
-    return;
-  }
-
-  if (somenteAlt && tecla === 'r') {
-    if (typeof audio === 'undefined' || typeof audio.repetirNarracao !== 'function') return;
-    event.preventDefault();
-    audio.repetirNarracao();
     return;
   }
 

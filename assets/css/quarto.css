@@ -125,10 +125,6 @@
   color: #3C3489;
 }
 
-.quarto-logi .dica__play.balao__play {
-  background: var(--roxo);
-  box-shadow: 0 3px 0 rgba(60, 52, 137, 0.35);
-}
 
 /* ---------- Abas de nível de dificuldade ---------- */
 .niveis,
@@ -479,7 +475,6 @@
   .quarto-logi { gap: 8px; padding: 6px 8px; border-radius: 14px; }
   .quarto-logi__img { width: 50px; height: 46px; }
   .quarto-logi__texto { font-size: calc(13.5px * var(--escala-fonte)); line-height: 1.35; }
-  .quarto-logi .dica__play.balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
   .quarto-card { padding: 0.5rem; border-radius: 14px; }
   .quarto-card__subtitulo { display: none; }
@@ -502,7 +497,6 @@
   .quarto-dica { padding: 0.35rem 0.5rem; gap: 6px; }
   .quarto-dica .dica__icone-comodo { width: 22px; height: 22px; }
   .quarto-dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
-  .quarto-dica .dica__play { width: 28px; height: 28px; }
 
   .quarto-sequencia {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -584,7 +578,6 @@
   .quarto-logi { padding: 4px 8px; }
   .quarto-logi__img { width: 44px; height: 40px; }
   .quarto-logi__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
-  .quarto-logi .dica__play.balao__play { width: 32px; height: 32px; }
 
   .quarto-layout {
     display: grid;
@@ -606,7 +599,6 @@
   .quarto-dica { padding: 0.25rem 0.4rem; gap: 5px; }
   .quarto-dica .dica__icone-comodo { display: none; }
   .quarto-dica__texto { font-size: calc(11px * var(--escala-fonte)); line-height: 1.25; }
-  .quarto-dica .dica__play { width: 26px; height: 26px; }
   .quarto-centro { gap: 0.35rem; }
   .quarto-sequencia { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(34px, auto); gap: 5px; margin-top: 0; }
   .quarto-feedback { padding: 4px 8px; }

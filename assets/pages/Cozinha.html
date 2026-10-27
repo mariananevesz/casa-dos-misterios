@@ -33,7 +33,6 @@
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
       <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
-      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
     <section class="cozinha-layout" aria-label="Área do jogo da cozinha">
@@ -77,7 +76,6 @@
         <section class="cozinha-dica dica dica--verde" id="dica-comodo">
           <img src="../img/icone-cozinha.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
-          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
         </section>
       </main>
 
@@ -144,7 +142,6 @@
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
-  <script src="../audio/logi/manifest.js"></script>
   <script src="../js/tutoriais/cozinha-f1.js"></script>
   <script>
   /* ===== COZINHA — lógica do jogo ===== */
@@ -322,7 +319,6 @@
     };
 
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
-    audio.definirNarracao(document.getElementById('logi-texto').textContent);
     document.getElementById('dica-texto').textContent  = gameData.dica;
     renderPergunta();
     atualizarBadge();
@@ -495,7 +491,6 @@
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
-    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
   }
   function fecharModalAjuda() {
     fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
@@ -514,13 +509,6 @@
     if (document.getElementById('modal-conclusao').style.display === 'flex') return;
     gameState.sairMiniGame('cozinha', 'MapaCasa.html');
   });
-
-  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  document.getElementById('dica-play').addEventListener('click', () => {
-    pararAtencaoDica();
-    audio.narrar(document.getElementById('dica-texto').textContent);
-  });
-  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }

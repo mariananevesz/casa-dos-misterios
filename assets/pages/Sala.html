@@ -38,7 +38,6 @@
     <section class="balao sala-logi" aria-label="Instruções do Logi">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
       <p class="balao__texto sala-logi__texto" id="logi-texto">Carregando…</p>
-      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
     <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
@@ -74,7 +73,6 @@
             <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
               <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
               <p class="dica__texto dica__texto--ambar" id="dica-texto"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
-              <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
             </section>
           </section>
         </section>
@@ -162,7 +160,6 @@
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
-  <script src="../audio/logi/manifest.js"></script>
   <script src="../js/tutoriais/sala-f1.js"></script>
   <script src="../js/tutoriais/sala-f3.js"></script>
   <script>
@@ -316,7 +313,6 @@ function blocoIconeHtml(bloco) {
   function renderFase() {
     const fase = gameData.fases[faseAtual];
     document.getElementById('logi-texto').textContent = gameData.instrucaoLogi;
-    audio.definirNarracao(document.getElementById('logi-texto').textContent);
     document.getElementById('fase-label').textContent = `Fase ${fase.id} de ${gameData.fases.length}`;
     document.getElementById('btn-executar').disabled = false;
     erros = 0;
@@ -895,7 +891,6 @@ async function executar() {
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
-    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
   }
   function fecharModalAjuda() {
     fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
@@ -914,13 +909,6 @@ async function executar() {
     if (document.getElementById('modal-conclusao').style.display === 'flex') return;
     gameState.sairMiniGame('sala', 'MapaCasa.html');
   });
-
-  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  document.getElementById('dica-play').addEventListener('click', () => {
-    pararAtencaoDica();
-    audio.narrar(document.getElementById('dica-texto').textContent);
-  });
-  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }

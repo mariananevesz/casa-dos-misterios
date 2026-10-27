@@ -398,7 +398,6 @@
   .tela--mapa .mapa-logi__balao { padding: 8px 8px 8px 12px; gap: 8px; border-radius: 14px; }
   .tela--mapa .mapa-logi__balao::before { width: 16px; height: 16px; left: -10px; }
   .tela--mapa .mapa-logi__texto { font-size: calc(13.5px * var(--escala-fonte)); line-height: 1.35; }
-  .tela--mapa .mapa-logi .balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
   /* Card do cômodo: imagem em cima, texto embaixo */
   .tela--mapa .mapa-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
@@ -488,7 +487,6 @@
   .tela--mapa .mapa-logi__img { width: 48px; height: 48px; }
   .tela--mapa .mapa-logi__balao { padding: 6px 8px 6px 12px; }
   .tela--mapa .mapa-logi__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
-  .tela--mapa .mapa-logi .balao__play { width: 32px; height: 32px; }
   .tela--mapa .mapa-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 0.4rem; }
   .tela--mapa .mapa-progresso-geral { grid-template-columns: auto 1fr; gap: 10px; padding: 5px 12px; border-radius: 12px; }
   .tela--mapa .mapa-progresso-geral p { font-size: calc(10.5px * var(--escala-fonte)); margin-bottom: 0; }
@@ -510,4 +508,15 @@
   .tela--mapa .comodo-card__acao { min-height: 28px; margin-top: 2px; padding: 0 10px; font-size: calc(12px * var(--escala-fonte)); }
   .tela--mapa .progresso,
   .tela--mapa .comodo-card__estrelas { justify-content: center; }
+}
+
+/* Botão de música (audio.js): ganha uma 4ª coluna no topo do mapa */
+.tela--mapa .mapa-topo:has(> .btn-musica) { grid-template-columns: 120px 1fr 120px auto; }
+
+@media (max-width: 760px) {
+  .tela--mapa .mapa-topo:has(> .btn-musica) { grid-template-columns: auto 1fr auto auto; }
+}
+
+@media (max-width: 560px) {
+  .tela--mapa .btn-musica { width: 40px; height: 40px; min-width: 40px; }
 }

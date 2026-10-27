@@ -1,7 +1,6 @@
 /* =============================================================
    Tutorial da Cozinha — Fase 1 (Verdadeiro ou falso)
    Falas provisórias do storyboard "Tutoriais do Logi".
-   O id vira o nome do áudio: assets/audio/logi/<id>.mp3
    ============================================================= */
 (() => {
   const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
@@ -21,7 +20,7 @@
         efeito: a => a.lerPalavras(),
         fala: 'Leia a FRASE com calma.', palavraChave: ['FRASE'], destaque: '#pergunta-frase',
         audiodescricao: 'A frase é: O fogo não é quente. Cada palavra acende enquanto é lida.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'cozinha-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 4000, estadoLogi: 'apontando',
         fala: 'VERDADEIRO é verde, FALSO é vermelho.', palavraChave: ['VERDADEIRO', 'FALSO'],
@@ -32,7 +31,7 @@
       { id: 'cozinha-f1-p4', momento: 'Demonstração 3', duracaoPadrao: 4000, estadoLogi: 'dica',
         fala: 'Leia com atenção a palavra NÃO.', palavraChave: ['NÃO'], destaque: '.tut-neg',
         audiodescricao: 'Atenção: a frase tem a palavra não. Ela muda tudo!',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'cozinha-f1-p5', momento: 'Demonstração 4', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
         alvo: '#btn-falso', efeito: a => a.marcar('f'),
@@ -56,7 +55,7 @@
       { id: 'cozinha-f1-p7', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
         fala: 'Isso! Você leu com muita ATENÇÃO!', palavraChave: ['ATENÇÃO'], destaque: '#btn-verdadeiro',
         audiodescricao: 'Isso! É verdadeiro: o gelo nunca é quente. Logi pula de alegria.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'cozinha-f1-p8', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
         fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],

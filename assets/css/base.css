@@ -214,22 +214,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Play do balão: maior e em destaque, alinhado à direita da fala */
-.dica__play.balao__play {
-  width: 42px;
-  height: 42px;
-  margin-left: auto;
-  align-self: center;
-  background: var(--laranja);
-  color: var(--branco);
-  font-size: calc(16px * var(--escala-fonte));
-  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.22);
-}
-
-.balao__mascote .dica__play.balao__play {
-  margin-left: 0;
-}
-
 /* ---------- Painel / card interno ---------- */
 .painel {
   background: var(--branco);
@@ -396,6 +380,47 @@ body {
 .btn-ajuda:hover  { opacity: 0.88; transform: translateY(-2px); }
 .btn-ajuda:active { transform: translateY(0); opacity: 0.75; }
 
+/* ---------- Botão de música (pausar / ligar), criado pelo audio.js ---------- */
+.btn-musica {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--laranja-borda);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--marrom-medio);
+  font-size: calc(20px * var(--escala-fonte));
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 rgba(111, 46, 15, 0.14);
+}
+
+/* Início: ao lado da engrenagem (canto superior direito) */
+.btn-musica--canto {
+  position: absolute;
+  top: 16px;
+  right: 68px;
+  width: 44px;
+  height: 44px;
+}
+
+/* Celular: vai para o canto oposto, para não cobrir o título */
+@media (max-width: 560px) {
+  .btn-musica--canto { left: 12px; right: auto; top: 18px; }
+}
+
+/* Páginas sem cabeçalho próprio */
+.btn-musica--flutuante {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+}
+
 /* ---------- Conteúdo do modal de ajuda (Como jogar / Objetivo) ---------- */
 .modal-ajuda {
   text-align: left;
@@ -512,27 +537,6 @@ body {
   object-fit: contain;
   flex-shrink: 0;
 }
-
-.dica__play {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  margin-left: auto;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.75);
-  color: inherit;
-  font-size: calc(12px * var(--escala-fonte));
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-  transition: transform 0.15s, opacity 0.15s;
-}
-
-.dica__play:hover  { opacity: 0.85; transform: scale(1.06); }
-.dica__play:active { transform: scale(0.94); }
 
 /* Item 8 — chama a atenção para a Dica após o primeiro erro do jogador */
 .dica--pulsar {
@@ -930,8 +934,7 @@ body.alto-contraste .btn-ajuda,
 body.alto-contraste .btn-config,
 body.alto-contraste .mapa-voltar,
 body.alto-contraste .comodo-card__acao,
-body.alto-contraste .balao__play,
-body.alto-contraste .dica__play,
+body.alto-contraste .btn-musica,
 body.alto-contraste .sala-btn,
 body.alto-contraste .quarto-btn,
 body.alto-contraste .despensa-btn {

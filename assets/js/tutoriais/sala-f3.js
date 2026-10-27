@@ -4,7 +4,6 @@
      id, momento, fala, palavraChave, alvo, destaque, estadoLogi,
      audiodescricao, teclado, duracaoPadrao, tipo ('toque' | 'vez'),
      efeito/antes (usam as ações da página), vez, erro.
-   O id vira o nome do áudio: assets/audio/logi/<id>.mp3
    ============================================================= */
 (() => {
   const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
@@ -25,7 +24,7 @@
       { id: 'sala-f3-p2', momento: 'Demonstração 1', duracaoPadrao: 3500, estadoLogi: 'apontando',
         fala: 'Só cabem QUATRO blocos na fila.', palavraChave: ['QUATRO'], destaque: '#sequencia-player',
         audiodescricao: 'A fila de comandos tem só quatro espaços vazios.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f3-p3', momento: 'Demonstração 2', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
         alvo: BLOCO('cima'), efeito: a => a.adicionar('cima'),
@@ -48,7 +47,7 @@
       { id: 'sala-f3-p6', momento: 'Demonstração 5', duracaoPadrao: 3500, estadoLogi: 'dica',
         fala: 'Dois blocos fizeram TRÊS passos!', palavraChave: ['TRÊS'], destaque: '#sequencia-player',
         audiodescricao: 'Com só dois blocos, o robô andou três passos.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f3-p7', momento: 'Sua vez', estadoLogi: 'aguardando', tipo: 'vez',
         antes: a => { a.limpar(); a.definirGrade([0, 0], [0, 3]); a.adicionar('dir'); },
@@ -74,7 +73,7 @@
       { id: 'sala-f3-p9', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
         fala: 'Isso! Você usou só DOIS blocos!', palavraChave: ['DOIS'], destaque: '#celula-alvo',
         audiodescricao: 'Isso! O robô pegou a estrela com só dois blocos. Logi pula de alegria.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f3-p10', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
         fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],

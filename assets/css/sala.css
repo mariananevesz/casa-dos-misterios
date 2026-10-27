@@ -549,12 +549,6 @@ body {
   color: var(--laranja);
 }
 
-.sala-mini-dica .dica__play {
-  margin-left: 0;
-  width: 36px;
-  height: 36px;
-  font-size: calc(14px * var(--escala-fonte));
-}
 
 /* ---------- Ações e feedback ---------- */
 .sala-actions {
@@ -710,7 +704,6 @@ body {
   .sala-logi { gap: 8px; padding: 6px 8px; border-radius: 14px; }
   .sala-logi__img { width: 56px; height: 50px; }
   .sala-logi .balao__texto { font-size: calc(14px * var(--escala-fonte)); line-height: 1.35; }
-  .sala-logi .balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
   .sala-panel__title { font-size: calc(11px * var(--escala-fonte)); }
 
@@ -749,7 +742,6 @@ body {
   .sala-mini-dica { flex: 0 1 112px; padding: 8px 6px; gap: 6px; }
   .sala-mini-dica .dica__icone-comodo { width: 28px; height: 28px; }
   .sala-mini-dica .dica__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.35; }
-  .sala-mini-dica .dica__play { width: 30px; height: 30px; }
 
   #feedback-area { padding: 8px 12px; }
   #feedback-area .dica__texto { font-size: calc(14px * var(--escala-fonte)); }
@@ -775,7 +767,6 @@ body {
   .sala-mini-dica { padding: 6px; gap: 4px; }
   .sala-mini-dica .dica__icone-comodo { display: none; }
   .sala-mini-dica .dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
-  .sala-mini-dica .dica__play { width: 28px; height: 28px; }
 }
 
 /* Celulares bem estreitos */
@@ -828,7 +819,6 @@ body {
   .sala-logi { padding: 4px 8px; }
   .sala-logi__img { width: 46px; height: 40px; }
   .sala-logi .balao__texto { font-size: calc(13px * var(--escala-fonte)); line-height: 1.3; }
-  .sala-logi .balao__play { width: 32px; height: 32px; }
 
   /* Comandos + botões à esquerda; sequência + grade à direita */
   .sala-layout {
@@ -869,7 +859,6 @@ body {
   .sala-mini-dica { flex-basis: 150px; padding: 6px; gap: 4px; }
   .sala-mini-dica .dica__icone-comodo { display: none; }
   .sala-mini-dica .dica__texto { font-size: calc(12px * var(--escala-fonte)); }
-  .sala-mini-dica .dica__play { width: 28px; height: 28px; }
   #feedback-area { padding: 4px 8px; }
   #feedback-area .dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
   .sala-actions { flex-direction: row; gap: 6px; }

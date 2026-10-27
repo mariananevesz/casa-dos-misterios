@@ -35,7 +35,6 @@
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
       <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
-      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução do Logi">▶</button>
     </section>
 
     <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
@@ -53,7 +52,6 @@
         <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
           <img src="../img/icone-quarto.png" alt="" class="dica__icone-comodo">
           <p class="dica__texto dica__texto--erro quarto-dica__texto" id="dica-texto"></p>
-          <button class="dica__play" id="dica-play" type="button" aria-label="Ouvir dica">▶</button>
         </section>
       </aside>
 
@@ -145,7 +143,6 @@
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
-  <script src="../audio/logi/manifest.js"></script>
   <script src="../js/tutoriais/quarto-f1.js"></script>
   <script>
   /* ===== QUARTO — lógica do jogo ===== */
@@ -371,7 +368,6 @@
 
   document.getElementById('logi-texto').innerHTML =
     gameData.instrucaoInstrutor.replace('IR À ESCOLA', '<span class="destaque-escola">IR À ESCOLA</span>');
-  audio.definirNarracao(gameData.instrucaoInstrutor);
   document.querySelector('.hud__subtitulo--roxo').textContent =
     `Fase ${fase.id} de ${gameData.fases.length}`;
 
@@ -704,7 +700,6 @@
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
-    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
   }
   function fecharModalAjuda() {
     fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
@@ -724,14 +719,11 @@
     gameState.sairMiniGame('quarto', 'MapaCasa.html');
   });
 
-  /* ---- Dica com áudio do mascote (handler preparado para integração futura) ---- */
-  document.getElementById('dica-play').addEventListener('click', () => {
+  /* ---- Dica: tocar nela mostra os blocos suspeitos em vermelho ---- */
+  document.getElementById('dica-erros').addEventListener('click', () => {
     pararAtencaoDica();
     revelarIntrusos();
-    audio.narrar(document.getElementById('dica-texto').textContent);
   });
-  document.getElementById('dica-erros').addEventListener('click', revelarIntrusos);
-  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   /* Intrusos só ficam vermelhos quando a criança pede a dica */

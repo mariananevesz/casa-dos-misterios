@@ -1,7 +1,6 @@
 /* =============================================================
    Tutorial da Sala — Fase 1 (Blocos de direção)
    Falas provisórias do storyboard "Tutoriais do Logi".
-   O id vira o nome do áudio: assets/audio/logi/<id>.mp3
    ============================================================= */
 (() => {
   const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
@@ -21,12 +20,12 @@
       { id: 'sala-f1-p2', momento: 'Demonstração 1', duracaoPadrao: 3500, estadoLogi: 'apontando',
         fala: 'Leve o robô até a ESTRELA.', palavraChave: ['ESTRELA'], destaque: '#celula-alvo',
         audiodescricao: 'O robô está embaixo, à esquerda. A estrela está uma casa acima e uma à direita.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 3500, estadoLogi: 'apontando',
         fala: 'As SETAS mostram o caminho.', palavraChave: ['SETAS'], destaque: '#blocos-disponiveis',
         audiodescricao: 'Tem quatro setas: cima, baixo, esquerda e direita.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f1-p4', momento: 'Demonstração 3', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
         alvo: BLOCO('cima'), efeito: a => a.adicionar('cima'),
@@ -70,7 +69,7 @@
       { id: 'sala-f1-p9', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
         fala: 'Isso! O robô chegou na ESTRELA!', palavraChave: ['ESTRELA'], destaque: '#celula-alvo',
         audiodescricao: 'Isso! O robô pegou a estrela. Logi pula de alegria.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'sala-f1-p10', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
         fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],

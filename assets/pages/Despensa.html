@@ -40,7 +40,6 @@
         <p class="balao__legenda-cor despensa-logi__legenda" id="logi-legenda-cor" style="display:none;">
         </p>
       </div>
-      <button class="dica__play balao__play" id="logi-play" type="button" aria-label="Repetir instrução atual do Logi">▶</button>
     </section>
 
     <section class="despensa-layout">
@@ -149,7 +148,6 @@
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
-  <script src="../audio/logi/manifest.js"></script>
   <script src="../js/tutoriais/despensa-f1.js"></script>
   <script>
   /* ===== DESPENSA — lógica do jogo ===== */
@@ -305,9 +303,6 @@
 
     /* Item 1 — instrução ativa do nível (destaque) */
     document.getElementById('logi-instrucao').textContent = nivel.instrucao;
-    const textoAtual = [document.getElementById('logi-boas-vindas').textContent, nivel.instrucao]
-      .filter(Boolean).join(' ');
-    audio.definirNarracao(textoAtual);
 
     /* Item 10 — legenda cromática no balão (apenas no nível Fácil) */
     const legendaCor = document.getElementById('logi-legenda-cor');
@@ -931,7 +926,6 @@
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
-    narrarTutorialAcessivel([...modal.querySelectorAll('.modal-ajuda-secao')].map(el => el.textContent).join(' '));
   }
   function fecharModalAjuda() {
     fecharTutorialAcessivel(document.getElementById('modal-ajuda'));
@@ -950,9 +944,6 @@
     if (document.getElementById('modal-conclusao').style.display === 'flex') return;
     gameState.sairMiniGame('despensa', 'MapaCasa.html');
   });
-
-  /* ---- Áudio do mascote (handler preparado para integração futura) ---- */
-  document.getElementById('logi-play').addEventListener('click', () => audio.repetirNarracao());
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 

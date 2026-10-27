@@ -3,7 +3,6 @@
    Falas provisórias do storyboard "Tutoriais do Logi", ajustadas
    ao jogo real: no nível Fácil a criança TOCA nas frutas vermelhas
    (não existe prateleira nem arrastar).
-   O id vira o nome do áudio: assets/audio/logi/<id>.mp3
    ============================================================= */
 (() => {
   const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
@@ -33,7 +32,7 @@
       { id: 'despensa-f1-p2', momento: 'Demonstração 1', duracaoPadrao: 5000, estadoLogi: 'apontando',
         fala: 'Hoje só escolhemos frutas VERMELHAS.', palavraChave: ['VERMELHAS'], destaque: '#logi-instrucao',
         audiodescricao: 'Só vale escolher frutas vermelhas. As frutas são: maçã, banana, uva, morango e mirtilo.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'despensa-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 5000, estadoLogi: 'apontando', tipo: 'toque',
         alvo: FRUTA('maca'), efeito: a => a.selecionar('maca'),
@@ -45,7 +44,7 @@
         antes: a => a.balancar('banana'),
         fala: 'A banana é AMARELA. Fica de fora!', palavraChave: ['AMARELA'], destaque: FRUTA('banana'),
         audiodescricao: 'A banana é amarela. Ela não é escolhida.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'despensa-f1-p5', momento: 'Sua vez', estadoLogi: 'aguardando', tipo: 'vez',
         alvo: FRUTA('morango'), vez: { tipo: 'selecionar', valor: 'morango' },
@@ -60,7 +59,7 @@
       { id: 'despensa-f1-p6', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
         fala: 'Isso! O morango também é VERMELHO!', palavraChave: ['VERMELHO'], destaque: '.item-card--selecionado',
         audiodescricao: 'Isso! A maçã e o morango estão escolhidos. Logi pula de alegria.',
-        teclado: '— (só ouvir)' },
+        teclado: '— (só olhar)' },
 
       { id: 'despensa-f1-p7', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
         fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],

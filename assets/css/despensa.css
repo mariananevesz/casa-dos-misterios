@@ -665,7 +665,6 @@ button.prateleira__slot {
   .despensa-logi__texto { font-size: calc(12.5px * var(--escala-fonte)); }
   .balao__instrucao, .despensa-logi__instrucao { font-size: calc(14.5px * var(--escala-fonte)); }
   .despensa-logi__legenda { font-size: calc(11.5px * var(--escala-fonte)); }
-  .despensa-logi .dica__play.balao__play { width: 36px; height: 36px; font-size: calc(14px * var(--escala-fonte)); }
 
   /* "Nível X de 3" já aparece no HUD */
   .despensa-niveis { display: none; }
@@ -748,7 +747,6 @@ button.prateleira__slot {
   .despensa-logi__img { width: 44px; height: 40px; }
   .despensa-logi__texto { font-size: calc(12px * var(--escala-fonte)); }
   .balao__instrucao, .despensa-logi__instrucao { font-size: calc(14px * var(--escala-fonte)); }
-  .despensa-logi .dica__play.balao__play { width: 32px; height: 32px; }
   .despensa-niveis { display: none; }
   .despensa-main { gap: 0.35rem; }
 
