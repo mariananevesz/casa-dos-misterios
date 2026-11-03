@@ -209,20 +209,21 @@
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 0.5rem;
+  gap: 0.65rem;
   min-height: 0;
 }
 
+/* Blocos do tamanho dos da Sala: grandes e fáceis de tocar */
 .quarto-page #blocos-fonte .bloco,
 .quarto-page #sequencia-corrigida .bloco {
-  border-radius: 14px;
-  min-height: 44px;
-  padding: 0.45rem 0.7rem;
-  font-size: calc(15px * var(--escala-fonte));
+  border-radius: 16px;
+  min-height: clamp(52px, 7vh, 66px);
+  padding: 0.5rem 0.9rem;
+  font-size: calc(19px * var(--escala-fonte));
   font-weight: 800;
   line-height: 1.2;
   cursor: pointer;
-  box-shadow: 0 3px 0 rgba(83, 74, 183, 0.18);
+  box-shadow: 0 4px 0 rgba(83, 74, 183, 0.22);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -235,6 +236,11 @@
 .quarto-page #blocos-fonte .bloco {
   width: 100%;
   justify-content: flex-start;
+}
+
+/* Fases com 6 ou 7 blocos (intrusos + resposta): um pouco menores, para a lista caber sem rolagem */
+.quarto-page #blocos-fonte[data-muitos="true"] .bloco {
+  min-height: clamp(44px, 5.8vh, 58px);
 }
 
 .quarto-page .bloco--roxo {
@@ -319,23 +325,12 @@
 .quarto-page .bloco--verde .bloco-resultado { color: var(--verde); }
 .quarto-page .bloco--erro  .bloco-resultado { color: var(--vermelho); }
 
-/* ---------- Dica da fase ---------- */
-.quarto-dica {
-  margin: auto 0 0;
-  padding: 0.6rem;
-  border-radius: 14px;
-  align-items: center;
-  background: rgba(252, 235, 235, 0.78);
-  border: 1.5px solid rgba(226, 75, 74, 0.25);
+/* ---------- Botão Dica ---------- */
+.quarto-btn-dica {
+  margin: auto auto clamp(10px, 2.2vh, 22px);   /* folga da borda de baixo do cartão */
 }
 
 .quarto-card--fonte .quarto-blocos-fonte { margin-bottom: 0.65rem; }
-
-.quarto-dica__texto {
-  font-size: calc(13px * var(--escala-fonte));
-  font-weight: 700;
-  line-height: 1.4;
-}
 
 /* ---------- Área central ---------- */
 .quarto-centro {
@@ -373,7 +368,7 @@
 .quarto-page #sequencia-corrigida .bloco {
   justify-content: center;
   text-align: center;
-  font-size: calc(17px * var(--escala-fonte));
+  font-size: calc(19px * var(--escala-fonte));
 }
 
 /* ---------- Feedback ---------- */
@@ -428,7 +423,7 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 
-  .quarto-dica { margin-top: 0; }
+  .quarto-btn-dica { margin-top: 14px; }
   .quarto-logi__img { width: 70px; height: 62px; }
   .quarto-logi__texto { font-size: calc(16px * var(--escala-fonte)); }
 }
@@ -494,9 +489,6 @@
     border-radius: 11px;
   }
 
-  .quarto-dica { padding: 0.35rem 0.5rem; gap: 6px; }
-  .quarto-dica .dica__icone-comodo { width: 22px; height: 22px; }
-  .quarto-dica__texto { font-size: calc(11.5px * var(--escala-fonte)); line-height: 1.3; }
 
   .quarto-sequencia {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -538,8 +530,6 @@
     font-size: calc(11.5px * var(--escala-fonte));
   }
   .quarto-sequencia { grid-auto-rows: minmax(32px, auto); }
-  .quarto-dica .dica__icone-comodo { display: none; }
-  .quarto-dica__texto { font-size: calc(11px * var(--escala-fonte)); }
   .quarto-btn { min-height: 40px; }
 }
 
@@ -561,7 +551,7 @@
   .quarto-logi__texto { font-size: calc(16px * var(--escala-fonte)); line-height: 1.35; }
   .quarto-layout { gap: 0.6rem; }
   .quarto-card { padding: 0.6rem; }
-  .quarto-page #blocos-fonte .bloco { min-height: 40px; }
+  .quarto-page #blocos-fonte[data-muitos="true"] .bloco { min-height: 40px; }
   .quarto-btn { min-height: 44px; font-size: calc(16px * var(--escala-fonte)); }
 }
 
@@ -596,9 +586,7 @@
     font-size: calc(11px * var(--escala-fonte));
     border-radius: 10px;
   }
-  .quarto-dica { padding: 0.25rem 0.4rem; gap: 5px; }
-  .quarto-dica .dica__icone-comodo { display: none; }
-  .quarto-dica__texto { font-size: calc(11px * var(--escala-fonte)); line-height: 1.25; }
+  .quarto-btn-dica { margin-bottom: 4px; }
   .quarto-centro { gap: 0.35rem; }
   .quarto-sequencia { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(34px, auto); gap: 5px; margin-top: 0; }
   .quarto-feedback { padding: 4px 8px; }

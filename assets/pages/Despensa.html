@@ -53,6 +53,11 @@
           <section class="painel despensa-card despensa-card--itens" id="painel-itens">
             <p class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</p>
             <section class="itens-grid despensa-itens-grid" id="itens-grid" role="listbox" aria-label="Itens disponíveis"></section>
+
+            <button type="button" class="btn-dica despensa-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+              <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Dica</span>
+            </button>
           </section>
 
           <!-- Painel: prateleira (oculto no nível Fácil) -->
@@ -166,6 +171,7 @@
         "nivel": "Fácil",
         "criterio": "selecao-cor",
         "instrucao": "Clique nas frutas VERMELHAS!",
+        "dica": { "errado": "Esta fruta NÃO é vermelha. Toque de novo para tirar.", "certo": "Esta fruta é VERMELHA. Toque nela!" },
         "itens": [
           { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png"    },
           { "id": "morango", "nome": "Morango", "cor": "vermelho", "img": "../img/morango.png"                   },
@@ -178,7 +184,8 @@
       {
         "nivel": "Médio",
         "criterio": "tamanho",
-        "instrucao": "Clique ou arraste por tamanho: do menor para o maior.",
+        "instrucao": "Clique ou arraste por TAMANHO: do menor para o maior.",
+        "dica": { "errado": "Esta fruta está no lugar ERRADO. Toque para tirar.", "certo": "A próxima é a MENOR que sobrou." },
         "itens": [
           { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png"      },
           { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
@@ -191,7 +198,8 @@
       {
         "nivel": "Difícil",
         "criterio": "selecao-sementes",
-        "instrucao": "Escolha apenas as frutas que têm sementes por dentro.",
+        "instrucao": "Escolha apenas as frutas que têm SEMENTES por dentro.",
+        "dica": { "errado": "Esta fruta NÃO tem sementes por dentro.", "certo": "Esta fruta tem SEMENTES por dentro." },
         "itens": [
           { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
           { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png"     },
@@ -301,8 +309,8 @@
   function renderNivel() {
     const nivel = gameData.niveis[nivelIdx];
 
-    /* Item 1 — instrução ativa do nível (destaque) */
-    document.getElementById('logi-instrucao').textContent = nivel.instrucao;
+    /* Item 1 — instrução ativa do nível (destaque); palavras em MAIÚSCULAS ganham marca */
+    destacarPalavras(document.getElementById('logi-instrucao'), nivel.instrucao);
 
     /* Item 10 — legenda cromática no balão (apenas no nível Fácil) */
     const legendaCor = document.getElementById('logi-legenda-cor');
@@ -337,7 +345,7 @@
       if (nivel.criterio === 'tamanho')   { esq.textContent = 'menor';   dir.textContent = 'maior';  }
       else if (nivel.criterio === 'selecao-sementes') { esq.textContent = 'escolhas'; dir.textContent = '3 frutas'; }
       else                                { esq.textContent = 'primeiro'; dir.textContent = 'último'; }
-      document.getElementById('prateleira-label').textContent = nivel.instrucao;
+      destacarPalavras(document.getElementById('prateleira-label'), nivel.instrucao);
     }
 
     buildNivelTabs();
@@ -345,9 +353,27 @@
     if (mostraPrateleira) renderPrateleira(nivel);
 
     document.getElementById('feedback-area').style.display = 'none';
+    pararAtencaoDica();
     atualizarBadge();
     /* Tutorial do Logi: só no nível Fácil, e só na 1ª vez */
     Tutorial.auto(despensaTutorial.tutorialDaFase());
+  }
+
+  /* Escreve o texto no elemento e põe <mark> nas palavras em MAIÚSCULAS (3+ letras).
+     Monta com nós de texto, sem innerHTML. */
+  function destacarPalavras(el, texto) {
+    el.textContent = '';
+    String(texto).split(/((?<!\p{L})\p{Lu}{3,}(?!\p{L}))/u).forEach((parte, i) => {
+      if (!parte) return;
+      if (i % 2 === 1) {
+        const m = document.createElement('mark');
+        m.className = 'destaque-palavra';
+        m.textContent = parte;
+        el.appendChild(m);
+      } else {
+        el.appendChild(document.createTextNode(parte));
+      }
+    });
   }
 
   function organizarPainelNivel(nivel, mostraPrateleira) {
@@ -486,9 +512,10 @@
         card.addEventListener('touchstart', touchStart, { passive: true });
         card.addEventListener('touchmove',  touchMove,  { passive: false });
         card.addEventListener('touchend',   touchEnd,   { passive: true });
-        card.addEventListener('click', () => adicionarItem(item.id));
+        /* Clique/Enter alterna: tocar de novo numa fruta que já está na prateleira a tira de lá */
+        card.addEventListener('click', () => adicionarItem(item.id, true));
         card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarItem(item.id); }
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarItem(item.id, true); }
         });
       }
 
@@ -507,6 +534,7 @@
       Tutorial.tentar('selecionar', id, () => toggleSelecao(id, 'tutorial'));
       return;
     }
+    pararAtencaoDica();
     const idx = selecionados.indexOf(id);
     if (idx >= 0) {
       selecionados.splice(idx, 1);
@@ -562,7 +590,7 @@
       card.setAttribute(
         'aria-label',
         naPrateleira
-          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Clique no item da prateleira para remover.`
+          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Clique de novo para tirar.`
           : card.dataset.defaultAriaLabel
       );
     });
@@ -645,13 +673,20 @@
     };
   }
 
-  function adicionarItem(id) {
+  /* `alternar`: vem de clique/Enter na fruta (tira se já estiver na prateleira).
+     Arrastar ou soltar uma fruta que já está lá não faz nada. */
+  function adicionarItem(id, alternar = false) {
     const nivel = gameData.niveis[nivelIdx];
     const limite = nivel.criterio === 'selecao-sementes'
       ? nivel.corretos.length
       : nivel.itens.length;
+    const ja = prateleira.indexOf(id);
+    if (ja >= 0) {
+      if (alternar) { audio.clique(); removerItem(ja); }
+      return;
+    }
     if (prateleira.length >= limite) return;
-    if (prateleira.includes(id)) return;
+    pararAtencaoDica();
     prateleira.push(id);
     prateleiraStatus = []; // limpa status ao adicionar novo item
     audio.clique();
@@ -716,6 +751,7 @@
   function registrarErro() {
     erros++;
     localStorage.setItem(ERROS_KEY, erros);
+    ativarAtencaoDica();
   }
 
   /* --- Validação do nível Fácil (seleção de cor) --- */
@@ -965,10 +1001,50 @@
     document.getElementById('feedback-area').style.display = 'none';
   });
 
+  /* ---- Dica do Logi: aponta a fruta errada ou a próxima a escolher (não conta erro nem ponto) ---- */
+  function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('btn-dica').classList.remove('btn-dica--pulsar'); }
+
+  function passosDaDica() {
+    const nivel = gameData.niveis[nivelIdx];
+    const d = nivel.dica || {};
+    const marcas = txt => txt.match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [];
+    const passo = (destaque, fala) => ({ destaque, fala, palavraChave: marcas(fala) });
+    const carta = id => document.querySelector(`#itens-grid [data-item-id="${id}"]`);
+    const casa = i => document.querySelector(`#prateleira .prateleira__slot:nth-child(${i + 1})`);
+    const confirmar = () => [passo('#btn-confirmar', 'Tudo certo! Toque em CONFIRMAR.')];
+
+    if (nivel.criterio === 'selecao-cor') {
+      const errada = selecionados.find(id => !nivel.corretos.includes(id));
+      if (errada) return [passo(carta(errada), d.errado)];
+      const falta = nivel.corretos.find(id => !selecionados.includes(id));
+      return falta ? [passo(carta(falta), d.certo)] : confirmar();
+    }
+    if (nivel.criterio === 'tamanho') {
+      const i = prateleira.findIndex((id, k) => id !== nivel.ordemCorreta[k]);
+      if (i >= 0) return [passo(casa(i), d.errado)];
+      if (prateleira.length < nivel.ordemCorreta.length) return [passo(carta(nivel.ordemCorreta[prateleira.length]), d.certo)];
+      return confirmar();
+    }
+    /* selecao-sementes */
+    const i = prateleira.findIndex(id => !nivel.corretos.includes(id));
+    if (i >= 0) return [passo(casa(i), d.errado)];
+    const falta = nivel.corretos.find(id => !prateleira.includes(id));
+    return falta ? [passo(carta(falta), d.certo)] : confirmar();
+  }
+
+  document.getElementById('btn-dica').addEventListener('click', () => {
+    if (!gameData || window.Tutorial?.ativo) return;
+    audio.clique();
+    pararAtencaoDica();
+    Tutorial.dica({ comodo: 'despensa', passos: passosDaDica() });
+  });
+
   /* ---- Tutorial do Logi: treino com frutas de teste (nível Fácil) ---- */
   let salvoTutorial = null;
 
   const despensaTutorial = {
+    comodo: 'despensa',
     /* Só o nível Fácil (selecionar por cor) tem tutorial */
     tutorialDaFase: () => gameData?.niveis[nivelIdx]?.criterio === 'selecao-cor' ? 'despensa-f1' : null,
     primeiroFoco: () => document.querySelector('#itens-grid .item-card'),

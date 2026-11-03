@@ -7,6 +7,7 @@
       "nivel": "Fácil",
       "criterio": "selecao-cor",
       "instrucao": "Clique nas frutas VERMELHAS!",
+      "dica": { "errado": "Esta fruta NÃO é vermelha. Toque de novo para tirar.", "certo": "Esta fruta é VERMELHA. Toque nela!" },
       "itens": [
         { "id": "maca",    "nome": "Maçã",    "cor": "vermelho", "img": "../img/maça.png"    },
         { "id": "morango", "nome": "Morango", "cor": "vermelho", "img": "../img/morango.png"                   },
@@ -19,7 +20,8 @@
     {
       "nivel": "Médio",
       "criterio": "tamanho",
-      "instrucao": "Clique ou arraste por tamanho: do menor para o maior.",
+      "instrucao": "Clique ou arraste por TAMANHO: do menor para o maior.",
+      "dica": { "errado": "Esta fruta está no lugar ERRADO. Toque para tirar.", "certo": "A próxima é a MENOR que sobrou." },
       "itens": [
         { "id": "uva",      "nome": "Uva",      "tamanho": 2, "img": "../img/uva.png"      },
         { "id": "melancia", "nome": "Melancia", "tamanho": 5, "img": "../img/melancia.png" },
@@ -32,7 +34,8 @@
     {
       "nivel": "Difícil",
       "criterio": "selecao-sementes",
-      "instrucao": "Escolha apenas as frutas que têm sementes por dentro.",
+      "instrucao": "Escolha apenas as frutas que têm SEMENTES por dentro.",
+      "dica": { "errado": "Esta fruta NÃO tem sementes por dentro.", "certo": "Esta fruta tem SEMENTES por dentro." },
       "itens": [
         { "id": "melancia", "nome": "Melancia", "tipo": "sementes", "img": "../img/melancia.png" },
         { "id": "kiwi",     "nome": "Kiwi",     "tipo": "sementes", "img": "../img/kiwi.png"     },

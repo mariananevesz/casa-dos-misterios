@@ -72,11 +72,11 @@
           </section>
         </section>
 
-        <!-- Dica padronizada -->
-        <section class="cozinha-dica dica dica--verde" id="dica-comodo">
-          <img src="../img/icone-cozinha.png" alt="" class="dica__icone-comodo">
-          <p class="dica__texto dica__texto--verde" id="dica-texto"></p>
-        </section>
+        <!-- Dica do Logi -->
+        <button type="button" class="btn-dica cozinha-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+          <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dica</span>
+        </button>
       </main>
 
     </section>
@@ -151,7 +151,6 @@
   const COZINHA_INLINE = {
     miniJogo:"Cozinha — Verdadeiro ou Falso", habilidadeBNCC:"EF03CO01",
     instrucaoInstrutor:"Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
-    dica:"Dica: fique de olho nas palavras não, nunca, jamais e sempre!",
     blocos:[
       {id:1,  dificuldade:"Fácil", perguntas:[
         {id:1,  frase:"O fogão serve para aquecer a comida.",       resposta:true,  explicacao:"Sim! O fogão esquenta e cozinha os alimentos."},
@@ -313,13 +312,11 @@
 
     gameData = {
       instrucaoInstrutor: fonte.instrucaoInstrutor,
-      dica:               fonte.dica,
       perguntas,
       tamFase: 3   /* perguntas por fase */
     };
 
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
-    document.getElementById('dica-texto').textContent  = gameData.dica;
     renderPergunta();
     atualizarBadge();
     /* Tutorial do Logi: abre sozinho só na 1ª vez */
@@ -511,8 +508,39 @@
   });
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
-  function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }
-  function pararAtencaoDica() { document.getElementById('dica-comodo').classList.remove('dica--pulsar'); }
+  function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('btn-dica').classList.remove('btn-dica--pulsar'); }
+
+  /* ---- Dica do Logi: aponta a palavra que muda o sentido da frase (não conta erro nem ponto) ---- */
+  function passosDaDica() {
+    const p = gameData.perguntas[perguntaIdx];
+    const frase = document.getElementById('pergunta-frase');
+    const negacoes = [...frase.querySelectorAll('u')];
+    const chaves = [...frase.querySelectorAll('strong')];
+    const palavras = els => [...new Set(els.map(e => e.textContent.trim().toUpperCase()))];
+    const lista = ps => ps.join(' e ');
+    const passos = [];
+
+    if (negacoes.length) {
+      const ps = palavras(negacoes);
+      passos.push({ destaque: negacoes, evitar: '.cozinha-vf', fala: `Cuidado com a palavra ${lista(ps)}.`, palavraChave: ps });
+    }
+    if (chaves.length) {
+      const ps = palavras(chaves);
+      passos.push({ destaque: chaves, evitar: '.cozinha-vf', fala: negacoes.length ? `Agora, pense em ${lista(ps)}.` : `Atenção na palavra ${lista(ps)}.`, palavraChave: ps });
+    }
+    if (!passos.length) {
+      passos.push({ destaque: frase, evitar: '.cozinha-vf', fala: 'Leia a FRASE com calma.', palavraChave: ['FRASE'] });
+    }
+    return passos;
+  }
+
+  document.getElementById('btn-dica').addEventListener('click', () => {
+    if (!gameData || respondendo || window.Tutorial?.ativo) return;
+    audio.clique();
+    pararAtencaoDica();
+    Tutorial.dica({ comodo: 'cozinha', passos: passosDaDica() });
+  });
 
   document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
@@ -525,6 +553,8 @@
 
   /* ---- Tutorial do Logi: treino com a frase e os botões reais ---- */
   const cozinhaTutorial = {
+    comodo: 'cozinha',
+    ocupado: () => respondendo,
     tutorialDaFase: () => 'cozinha-f1',
     primeiroFoco: () => document.getElementById('btn-verdadeiro'),
 

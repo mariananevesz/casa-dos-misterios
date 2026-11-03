@@ -2,6 +2,7 @@
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
   "instrucaoInstrutor": "Oi! Hoje é dia de IR À ESCOLA! Monte a sequência certa para me arrumar. Cuidado: tem passos que não combinam com a manhã de escola!",
+  "dicaGeral": { "lugar": "Este bloco está no lugar ERRADO.", "proximo": "Um destes vem AGORA." },
   "blocos": {
     "banho": "🛁 Tomar banho",
     "camiseta": "👕 Vestir a camiseta",
@@ -32,7 +33,7 @@
       "id": 1,
       "titulo": "Fase 1 — Vestir para a escola",
       "dificuldade": "Fácil",
-      "dica": "Dica: um bloco está repetido (o vermelho). Só o tênis tem lugar certo: por último!",
+      "dica": { "suspeito": "Este bloco está REPETIDO. Ele fica de fora!" },
       "repetidos": 1,
       "intrusos": 0,
       "passos": [
@@ -50,7 +51,7 @@
       "id": 2,
       "titulo": "Fase 2 — Manhã de escola",
       "dificuldade": "Médio",
-      "dica": "Dica: o bloco vermelho não combina com a manhã de escola. O banho vem primeiro e o tênis por último!",
+      "dica": { "suspeito": "Este bloco não combina com a ESCOLA." },
       "repetidos": 0,
       "intrusos": 1,
       "passos": [
@@ -71,7 +72,7 @@
       "id": 3,
       "titulo": "Fase 3 — A caminho da escola",
       "dificuldade": "Difícil",
-      "dica": "Dica: o bloco vermelho não combina com ir à escola. Banho primeiro, tênis depois da roupa e, por último, como você chega lá!",
+      "dica": { "suspeito": "Este bloco não combina com a ESCOLA." },
       "repetidos": 0,
       "intrusos": 1,
       "passos": [

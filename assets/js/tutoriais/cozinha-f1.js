@@ -1,66 +1,55 @@
 /* =============================================================
-   Tutorial da Cozinha — Fase 1 (Verdadeiro ou falso)
-   Falas provisórias do storyboard "Tutoriais do Logi".
+   Tutorial 4 — Cozinha, fase 1 (Verdadeiro ou Falso)
+   Cada passo é uma ação real. No passo da vez, os DOIS botões ficam
+   em destaque (a criança escolhe entre Verdadeiro e Falso) e a mão
+   não aponta para nenhum deles. Se errar, o Logi explica o porquê, a
+   criança toca em OK e tenta de novo com OUTRA frase de exemplo.
    ============================================================= */
 (() => {
-  const NAV = 'Tab chega em Ver de novo e Pular';
+  /* Frases de treino, na ordem em que aparecem a cada erro (volta ao começo no fim) */
+  const EXEMPLOS = [
+    { frase: 'O gelo NUNCA é quente.', resposta: 'v',
+      porque: 'Quase! O gelo é FRIO. Ele NUNCA é quente. É VERDADEIRO!' },
+    { frase: 'O sol NÃO é quente.', resposta: 'f',
+      porque: 'Quase! O sol é QUENTE. A frase diz que NÃO é. É FALSO!' },
+    { frase: 'O fogo NUNCA é frio.', resposta: 'v',
+      porque: 'Quase! O fogo é QUENTE. Ele NUNCA é frio. É VERDADEIRO!' }
+  ];
+  let atual = 0;
 
   Tutorial.registrar({
     id: 'cozinha-f1',
     comodo: 'Cozinha',
     titulo: 'Cozinha · Fase 1',
-    treino: { frase: 'O fogo NÃO é quente.' },
+    treino: { frase: EXEMPLOS[0].frase },
     passos: [
-      { id: 'cozinha-f1-p1', momento: 'Abertura', duracaoPadrao: 3500, estadoLogi: 'falando', entra: true,
-        fala: 'Oi, parceira! Que bom ver você na COZINHA!', palavraChave: ['COZINHA'],
-        audiodescricao: 'Logi chega pulando na Cozinha. Tem uma frase e dois botões: Verdadeiro e Falso.',
-        teclado: NAV },
+      { id: 'cozinha-f1-p1', acao: 'ok', estadoLogi: 'falando', entra: true,
+        antes: () => { atual = 0; },
+        destaque: '.tut-neg', evitar: '.cozinha-vf',
+        fala: 'Oi, {tratamento}! Atenção na palavra NUNCA.', palavraChave: ['NUNCA'],
+        audiodescricao: 'Logi chega pulando na Cozinha. A frase é: O gelo nunca é quente. Repare na palavra nunca, ela muda o sentido da frase.',
+        teclado: 'Enter no botão “OK”' },
 
-      { id: 'cozinha-f1-p2', momento: 'Demonstração 1', duracaoPadrao: 4500, estadoLogi: 'apontando',
-        efeito: a => a.lerPalavras(),
-        fala: 'Leia a FRASE com calma.', palavraChave: ['FRASE'], destaque: '#pergunta-frase',
-        audiodescricao: 'A frase é: O fogo não é quente. Cada palavra acende enquanto é lida.',
-        teclado: '— (só olhar)' },
+      { id: 'cozinha-f1-p2', acao: 'click', estadoLogi: 'aguardando', semMao: true,
+        alvo: '#btn-verdadeiro, #btn-falso', foco: '#pergunta-box', evitar: '#pergunta-box',
+        vez: () => ({ tipo: 'responder', valor: EXEMPLOS[atual].resposta }),
+        fala: 'É VERDADEIRO ou FALSO? Toque em um botão.', palavraChave: ['VERDADEIRO', 'FALSO'],
+        audiodescricao: 'Sua vez! Leia a frase e escolha: o botão verde é Verdadeiro, tecla V. O botão vermelho é Falso, tecla F.',
+        teclado: 'V = Verdadeiro · F = Falso',
+        erro: {
+          estadoLogi: 'encorajando', ok: true, destaque: '.tut-neg',
+          fala: () => EXEMPLOS[atual].porque,
+          audiodescricao: 'Quase! Leia o motivo e toque em OK para tentar de novo com outra frase.',
+          teclado: 'Enter no botão “OK”',
+          depois: a => { atual = (atual + 1) % EXEMPLOS.length; a.frase(EXEMPLOS[atual].frase); },
+          falaDepois: 'Outra FRASE! Tente de novo.', palavraChaveDepois: ['FRASE']
+        } },
 
-      { id: 'cozinha-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 4000, estadoLogi: 'apontando',
-        fala: 'VERDADEIRO é verde, FALSO é vermelho.', palavraChave: ['VERDADEIRO', 'FALSO'],
-        destaque: '#btn-verdadeiro, #btn-falso',
-        audiodescricao: 'O botão verde é Verdadeiro, tecla V. O botão vermelho é Falso, tecla F.',
-        teclado: 'V = Verdadeiro · F = Falso' },
-
-      { id: 'cozinha-f1-p4', momento: 'Demonstração 3', duracaoPadrao: 4000, estadoLogi: 'dica',
-        fala: 'Leia com atenção a palavra NÃO.', palavraChave: ['NÃO'], destaque: '.tut-neg',
-        audiodescricao: 'Atenção: a frase tem a palavra não. Ela muda tudo!',
-        teclado: '— (só olhar)' },
-
-      { id: 'cozinha-f1-p5', momento: 'Demonstração 4', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
-        alvo: '#btn-falso', efeito: a => a.marcar('f'),
-        fala: 'O fogo é quente. Então é FALSO!', palavraChave: ['FALSO'],
-        audiodescricao: 'O fogo é quente, então a frase está errada. A mãozinha aperta Falso.',
-        teclado: 'Tecla F' },
-
-      { id: 'cozinha-f1-p6', momento: 'Sua vez', estadoLogi: 'aguardando', tipo: 'vez',
-        antes: a => { a.frase('O gelo NUNCA é quente.'); },
-        alvo: '#btn-verdadeiro', foco: '#pergunta-box', destaque: '.tut-neg',
-        vez: { tipo: 'responder', valor: 'v' },
-        fala: 'Sua vez! Cuidado com a palavra NUNCA.', palavraChave: ['NUNCA'],
-        audiodescricao: 'Sua vez! A frase é: O gelo nunca é quente. É verdadeiro ou falso? Aperte V ou F.',
-        teclado: 'V ou F (ou Tab até o botão e Enter)',
-        erro: { id: 'cozinha-f1-p6-erro', momento: 'Erro na vez', estadoLogi: 'encorajando',
-          efeito: a => a.lerPalavras(), destaque: '.tut-neg',
-          fala: 'Quase! Leia de novo a palavra NUNCA.', palavraChave: ['NUNCA'],
-          audiodescricao: 'Quase! O gelo é sempre frio. Ele nunca é quente. Tente de novo.',
-          teclado: 'V ou F' } },
-
-      { id: 'cozinha-f1-p7', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
-        fala: 'Isso! Você leu com muita ATENÇÃO!', palavraChave: ['ATENÇÃO'], destaque: '#btn-verdadeiro',
-        audiodescricao: 'Isso! É verdadeiro: o gelo nunca é quente. Logi pula de alegria.',
-        teclado: '— (só olhar)' },
-
-      { id: 'cozinha-f1-p8', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
-        fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],
-        audiodescricao: 'Agora começa a fase de verdade.',
-        teclado: '— (V e F continuam valendo)' }
+      { id: 'cozinha-f1-p3', acao: 'ok', estadoLogi: 'comemorando',
+        destaque: '.tut-certo', evitar: '#pergunta-box',
+        fala: 'Isso! Você leu com ATENÇÃO!', palavraChave: ['ATENÇÃO'],
+        audiodescricao: 'Isso! Você acertou. Logi pula de alegria.',
+        teclado: 'Enter no botão “OK”' }
     ]
   });
 })();

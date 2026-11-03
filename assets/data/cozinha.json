@@ -2,7 +2,6 @@
   "miniJogo": "Cozinha — Verdadeiro ou Falso",
   "habilidadeBNCC": "EF03CO01",
   "instrucaoInstrutor": "Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
-  "dica": "Dica: fique de olho nas palavras não, nunca, jamais e sempre!",
   "blocos": [
     {
       "id": 1,

@@ -362,7 +362,7 @@
 .item-card--na-prateleira {
   border: 2px solid var(--verde);
   background: var(--verde-fundo);
-  cursor: default;
+  cursor: pointer;   /* tocar de novo tira a fruta da prateleira */
   box-shadow: inset 0 0 0 2px rgba(29, 158, 117, 0.08);
 }
 
@@ -556,6 +556,12 @@ button.prateleira__slot {
 
 .despensa-btn--limpar {
   flex: 0 0 120px;
+}
+
+/* Dica no fim do cartão das frutas, separada de Confirmar e Limpar e com folga da borda */
+.despensa-btn-dica {
+  align-self: center;
+  margin: 14px 0 20px;
 }
 
 /* Pequeno "×" indicando que o item da prateleira pode ser removido */

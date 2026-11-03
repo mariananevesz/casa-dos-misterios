@@ -10,7 +10,10 @@
   --tut-card: #FFFFFF;
   --tut-texto: #2C2C2A;
   --tut-texto-2: #5F5E5A;
-  --tut-borda: var(--laranja);
+  /* Cor do cômodo: borda do balão, botão OK e bolinhas (trocada por [data-comodo] abaixo) */
+  --tut-cor: var(--laranja);
+  --tut-botao: var(--laranja);
+  --tut-borda: var(--tut-cor);
   --tut-chave-bg: #FFE3A3;
   --tut-chave-fg: #4A1B0C;
   --tut-brilho: #FFC531;
@@ -25,6 +28,12 @@
   font-size: calc(16px * var(--escala-fonte, 1));
 }
 .tut[hidden] { display: none; }
+
+/* Cada cômodo tem a sua cor: o balão do tutorial combina com a página.
+   --tut-botao é um tom mais escuro, para o texto branco do OK ter contraste. */
+.tut[data-comodo="quarto"]   { --tut-cor: var(--roxo);  --tut-botao: #534AB7; }
+.tut[data-comodo="cozinha"]  { --tut-cor: var(--verde); --tut-botao: #0F6E56; }
+.tut[data-comodo="despensa"] { --tut-cor: #8D4E00;      --tut-botao: #8D4E00; }
 .tut--on { opacity: 1; }
 .tut--saindo { opacity: 0; transition-duration: 0.15s; transition-timing-function: cubic-bezier(0.3, 0, 1, 1); }
 
@@ -124,7 +133,7 @@
   cursor: pointer;
 }
 .tut-btn svg { width: 18px; height: 18px; flex: none; }
-.tut-btn:hover { border-color: var(--laranja); }
+.tut-btn:hover { border-color: var(--tut-cor); }
 
 /* ---------- Balão do Logi ---------- */
 .tut-tip {
@@ -149,6 +158,25 @@
 @keyframes tut-tip-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 .tut-tip-corpo { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+
+/* Cena de dica: etiqueta "Dica" no balão e sem o "Ver de novo" */
+.tut-etiqueta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px 2px 6px;
+  border-radius: 999px;
+  background: var(--tut-chave-bg);
+  color: var(--tut-chave-fg);
+  font-size: 0.8em;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tut-etiqueta[hidden] { display: none; }
+.tut-etiqueta svg { width: 18px; height: 18px; flex: none; }
+.tut--dica #tut-reiniciar { display: none; }
 
 .tut-fala {
   font-size: calc(19px * var(--escala-fonte, 1));
@@ -179,7 +207,7 @@ mark.tut-chave {
 .tut-passo { font-size: 0.8em; }
 .tut-bolinhas { display: inline-flex; gap: 3px; }
 .tut-bolinhas i { width: 8px; height: 8px; border-radius: 50%; background: var(--cinza-claro, #D3D1C7); }
-.tut-bolinhas i.on { background: var(--laranja); }
+.tut-bolinhas i.on { background: var(--tut-cor); }
 
 .tut-ok {
   min-width: 96px;
@@ -187,7 +215,7 @@ mark.tut-chave {
   padding: 8px 22px;
   border: 0;
   border-radius: 14px;
-  background: var(--laranja);
+  background: var(--tut-botao);
   color: #fff;
   font: inherit;
   font-size: 1.1em;
@@ -236,13 +264,13 @@ mark.tut-chave {
   flex: 1 1 140px;
   min-height: 64px;
   border-radius: 16px;
-  border: 3px solid var(--laranja);
+  border: 3px solid var(--tut-cor);
   font: inherit;
   font-size: 1.15em;
   font-weight: 800;
   cursor: pointer;
 }
-.tut-grande--nao { background: var(--laranja); color: #fff; }
+.tut-grande--nao { background: var(--tut-botao); color: #fff; }
 .tut-grande--sim { background: #fff; color: var(--marrom, #4A1B0C); }
 
 .tut-btn-ajuda { margin-top: 1rem; width: 100%; }
@@ -285,7 +313,7 @@ mark.tut-chave {
 .tut-ondas { position: absolute; right: -6%; top: 42%; width: 22%; height: 30%; opacity: 0; }
 .tut-ondas i {
   position: absolute; left: 0; top: 50%;
-  border: 3px solid var(--laranja);
+  border: 3px solid var(--tut-cor);
   border-left: 0; border-top-color: transparent; border-bottom-color: transparent;
   border-radius: 50%;
   transform: translateY(-50%);
@@ -297,7 +325,7 @@ mark.tut-chave {
 
 .tut-seta {
   position: absolute; left: -16%; top: 46%; width: 22%; height: 16%;
-  opacity: 0; background: var(--laranja);
+  opacity: 0; background: var(--tut-cor);
   clip-path: polygon(0 50%, 45% 0, 45% 30%, 100% 30%, 100% 70%, 45% 70%, 45% 100%);
 }
 

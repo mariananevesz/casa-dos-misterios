@@ -19,7 +19,7 @@
     passos: [
       { id: 'sala-f3-p1', acao: 'ok', estadoLogi: 'falando', entra: true,
         alvo: BLOCO('repetir2'),
-        fala: 'Oi, parceira! Hoje tem um bloco NOVO!', palavraChave: ['NOVO'],
+        fala: 'Oi, {tratamento}! Hoje tem um bloco NOVO!', palavraChave: ['NOVO'],
         audiodescricao: 'Logi, o robozinho laranja de lâmpada na cabeça, chega pulando na Sala. Tem um bloco novo, amarelo, chamado Repetir 2x.',
         teclado: 'Enter no botão “OK”' },
 

@@ -49,10 +49,10 @@
 
         <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
 
-        <section class="dica dica--erro quarto-dica" id="dica-erros" aria-label="Dica da fase">
-          <img src="../img/icone-quarto.png" alt="" class="dica__icone-comodo">
-          <p class="dica__texto dica__texto--erro quarto-dica__texto" id="dica-texto"></p>
-        </section>
+        <button type="button" class="btn-dica quarto-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+          <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dica</span>
+        </button>
       </aside>
 
       <!-- Área central -->
@@ -152,6 +152,7 @@
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
   "instrucaoInstrutor": "Oi! Hoje é dia de IR À ESCOLA! Monte a sequência certa para me arrumar. Cuidado: tem passos que não combinam com a manhã de escola!",
+  "dicaGeral": { "lugar": "Este bloco está no lugar ERRADO.", "proximo": "Um destes vem AGORA." },
   "blocos": {
     "banho": "🛁 Tomar banho",
     "camiseta": "👕 Vestir a camiseta",
@@ -182,7 +183,7 @@
       "id": 1,
       "titulo": "Fase 1 — Vestir para a escola",
       "dificuldade": "Fácil",
-      "dica": "Dica: um bloco está repetido (o vermelho). Só o tênis tem lugar certo: por último!",
+      "dica": { "suspeito": "Este bloco está REPETIDO. Ele fica de fora!" },
       "repetidos": 1,
       "intrusos": 0,
       "passos": [
@@ -200,7 +201,7 @@
       "id": 2,
       "titulo": "Fase 2 — Manhã de escola",
       "dificuldade": "Médio",
-      "dica": "Dica: o bloco vermelho não combina com a manhã de escola. O banho vem primeiro e o tênis por último!",
+      "dica": { "suspeito": "Este bloco não combina com a ESCOLA." },
       "repetidos": 0,
       "intrusos": 1,
       "passos": [
@@ -221,7 +222,7 @@
       "id": 3,
       "titulo": "Fase 3 — A caminho da escola",
       "dificuldade": "Difícil",
-      "dica": "Dica: o bloco vermelho não combina com ir à escola. Banho primeiro, tênis depois da roupa e, por último, como você chega lá!",
+      "dica": { "suspeito": "Este bloco não combina com a ESCOLA." },
       "repetidos": 0,
       "intrusos": 1,
       "passos": [
@@ -371,8 +372,6 @@
   document.querySelector('.hud__subtitulo--roxo').textContent =
     `Fase ${fase.id} de ${gameData.fases.length}`;
 
-  document.getElementById('dica-texto').textContent = fase.dica;
-
   faseMontada = montarFase(fase);
   salvarIntrusos(faseMontada.intrusos);
 
@@ -398,6 +397,7 @@
     const fase = gameData.fases[faseAtual];
     const cont = document.getElementById('blocos-fonte');
     cont.innerHTML = '';
+    cont.dataset.muitos = String(faseMontada.blocos.length > 5);
 
     faseMontada.blocos.forEach((bloco, index) => {
   const id = bloco.id;
@@ -558,7 +558,11 @@
 
   /* ---- Verificação ---- */
   function verificar() {
-    if (window.Tutorial?.ativo) return;
+    /* Tutorial aberto: só vale como o passo "conferir"; marca a fila de treino como certa */
+    if (window.Tutorial?.ativo) {
+      Tutorial.tentar('verificar', null, () => quartoTutorial.acoes.verificar());
+      return;
+    }
     const fase = gameData.fases[faseAtual];
     if (corrigida.length < faseMontada.total) {
       audio.erro();
@@ -719,10 +723,49 @@
     gameState.sairMiniGame('quarto', 'MapaCasa.html');
   });
 
-  /* ---- Dica: tocar nela mostra os blocos suspeitos em vermelho ---- */
-  document.getElementById('dica-erros').addEventListener('click', () => {
+  /* ---- Dica do Logi (não conta erro nem ponto) ----
+     1) mostra em vermelho o bloco que não combina (repetido ou intruso) e aponta para ele;
+     2) se já há bloco no lugar errado na fila, aponta qual é;
+     3) senão, destaca os blocos de onde pode vir o próximo passo. */
+  function passosDaDica() {
+    const fase = gameData.fases[faseAtual];
+    const geral = gameData.dicaGeral || {};
+    const marcas = txt => txt.match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [];
+    const passo = (destaque, fala, evitar) => ({ destaque, fala, palavraChave: marcas(fala), evitar });
+    const fonte = '#blocos-fonte', fila = '#sequencia-corrigida';
+
+    if (faseMontada.temErro && !faseMontada.intrusosRevelados && fase.dica?.suspeito) {
+      revelarIntrusos();
+      return [passo([...document.querySelectorAll(`${fonte} .bloco--erro`)], fase.dica.suspeito, fila)];
+    }
+
+    const posicoes = validarPosicoes(faseMontada.passos, corrigida);
+    const errado = corrigida.findIndex((_, i) => !posicoes[i]);
+    if (errado >= 0) {
+      return [passo(document.querySelector(`${fila} .bloco[data-idx="${errado}"]`), geral.lugar, fonte)];
+    }
+
+    if (corrigida.length >= faseMontada.total) {
+      return [passo('#btn-verificar', 'Tudo certo! Toque em VERIFICAR.', fonte)];
+    }
+
+    /* Grupo em que a próxima posição cai; os blocos que ainda faltam nele */
+    let inicio = 0, grupo = [];
+    for (const g of faseMontada.passos) {
+      if (corrigida.length < inicio + g.length) { grupo = g.filter(id => !corrigida.slice(inicio).includes(id)); break; }
+      inicio += g.length;
+    }
+    const candidatos = [...document.querySelectorAll(`${fonte} .bloco:not(.bloco--usado):not(.bloco--erro)`)]
+      .filter(el => grupo.includes(el.dataset.blocoId));
+    return [passo(candidatos, geral.proximo, fila)];
+  }
+
+  document.getElementById('btn-dica').addEventListener('click', () => {
+    if (!gameData || !faseMontada || window.Tutorial?.ativo) return;
+    const passos = passosDaDica();
+    audio.clique();
     pararAtencaoDica();
-    revelarIntrusos();
+    Tutorial.dica({ comodo: 'quarto', passos });
   });
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
@@ -735,8 +778,8 @@
     marcarUsados();
   }
 
-  function ativarAtencaoDica() { document.getElementById('dica-erros').classList.add('dica--pulsar'); }
-  function pararAtencaoDica() { document.getElementById('dica-erros').classList.remove('dica--pulsar'); }
+  function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('btn-dica').classList.remove('btn-dica--pulsar'); }
 
   document.getElementById('btn-verificar').addEventListener('click', () => { if (gameData) verificar(); });
   document.getElementById('btn-limpar').addEventListener('click', () => {
@@ -751,6 +794,7 @@
   let salvoTutorial = null;
 
   const quartoTutorial = {
+    comodo: 'quarto',
     tutorialDaFase: () => 'quarto-f1',
     primeiroFoco: () => document.querySelector('#blocos-fonte .bloco'),
 
@@ -782,7 +826,16 @@
     },
 
     acoes: {
-      adicionar: id => adicionarBloco(id, 'tutorial')
+      adicionar: id => adicionarBloco(id, 'tutorial'),
+      /* Treino: mostra a fila montada como certa (✓ verde), sem contar erro nem ponto */
+      verificar() {
+        document.querySelectorAll('#sequencia-corrigida .bloco[data-idx]').forEach(el => {
+          el.classList.remove('bloco--roxo');
+          el.classList.add('bloco--verde');
+          el.querySelector('.bloco-remover')?.remove();
+          el.insertAdjacentHTML('beforeend', '<strong class="bloco-resultado" aria-hidden="true">✓</strong>');
+        });
+      }
     }
   };
 

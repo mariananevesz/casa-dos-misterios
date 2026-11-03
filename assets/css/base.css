@@ -197,6 +197,17 @@ body {
 .balao__texto--verde { color: #085041; }
 .balao__texto--marrom{ color: var(--marrom-medio); }
 
+/* Palavra-chave de uma instrução (escrita em MAIÚSCULAS no JSON): mesmo destaque do balão do tutorial */
+.destaque-palavra {
+  background: #FFE3A3;
+  color: #4A1B0C;
+  font-weight: 900;
+  border-radius: 6px;
+  padding: 0 0.25em;
+  box-shadow: 0 0 0 2px #FFE3A3;
+}
+body.alto-contraste .destaque-palavra { background: #ffd700; color: #000; box-shadow: 0 0 0 2px #ffd700; text-decoration: underline; }
+
 /* Imagem do mascote Logi dentro do balão */
 .logi-mascote {
   width: 76px;
@@ -551,6 +562,57 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .dica--pulsar { animation: none; }
+}
+
+/* ---------- Botão Dica (igual em todas as telas de jogo) ----------
+   Lâmpada + a palavra "Dica". Ao tocar, o Logi mostra uma cena curta que aponta o problema. */
+.btn-dica {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60px;
+  min-width: 156px;
+  padding: 10px 26px;
+  border: 3px solid #E0A020;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #FFF0B8, #FFD866);
+  color: var(--marrom);
+  font: inherit;
+  font-size: calc(21px * var(--escala-fonte));
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #BA7517;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.btn-dica__icone { width: 32px; height: 32px; flex: none; }
+
+/* Tamanho único em todas as salas; só encolhe um pouco em tela pequena ou baixa */
+@media (max-width: 560px), (max-height: 500px) {
+  .btn-dica { min-height: 52px; min-width: 128px; padding: 6px 18px; font-size: calc(18px * var(--escala-fonte)); }
+  .btn-dica__icone { width: 28px; height: 28px; }
+}
+.btn-dica:hover { filter: brightness(1.04); }
+.btn-dica:active { transform: translateY(3px); box-shadow: 0 1px 0 #BA7517; }
+.btn-dica:focus-visible { outline: 4px solid var(--roxo); outline-offset: 3px; }
+.btn-dica:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Depois de um erro, o botão pulsa para a criança lembrar que a dica existe */
+.btn-dica--pulsar {
+  animation: dica-pulsar 1.3s ease-in-out infinite;
+  box-shadow: 0 4px 0 #BA7517, 0 0 0 5px rgba(239, 159, 39, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-dica { transition: none; }
+  .btn-dica--pulsar { animation: none; }
+}
+
+body.alto-contraste .btn-dica {
+  background: #000;
+  color: #ffd700;
+  border: 3px solid #ffd700;
+  box-shadow: 0 4px 0 #fff;
 }
 
 /* ---------- Botão de configurações (⚙) ---------- */

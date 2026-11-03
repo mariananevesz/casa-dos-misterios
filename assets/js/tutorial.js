@@ -38,6 +38,11 @@ const Tutorial = (() => {
   const IMG_FELIZ = BASE + 'img/logi_feliz.png';
   const IMG_EXCL  = BASE + 'img/logi_exclamacao.png';
 
+  /* Como o Logi chama a criança. Termo neutro e provisório (decisão de 03/11/2026):
+     troque aqui para mudar em todas as falas, que usam {tratamento} */
+  const TRATAMENTO = 'explorador';
+  const tratar = s => (typeof s === 'string' ? s.replace(/\{tratamento\}/g, TRATAMENTO) : s);
+
   const CANC = Symbol('cancelado');
   const registro = {};
 
@@ -69,6 +74,9 @@ const Tutorial = (() => {
   let desfazerInert = [];
   let focoAnterior = null;
   let bloqueioAuto = 0;      // evita reabrir sozinho enquanto a página se restaura ao fechar
+  let modoDica = false;      // true na "cena de dica" (botão Dica): só destaca e explica, sem treino
+  let emErro = false;        // mostrando a explicação de um erro (toques ficam de lado até o OK)
+  let destaqueTemp;          // destaque provisório durante a explicação de um erro (undefined = o do passo)
 
   const $  = (sel, raiz = document) => raiz.querySelector(sel);
   const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
@@ -99,7 +107,9 @@ const Tutorial = (() => {
   /* ---------- Interface ---------- */
   const SVG_REINICIAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const SVG_PULAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5l9 7-9 7zM18 5v14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const SVG_TECLADO = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const SVG_FECHAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>';
+  const SVG_LAMPADA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_TECLADO ='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
   function montarUI() {
     if (ui) return;
@@ -124,6 +134,7 @@ const Tutorial = (() => {
           <span class="tut-confete"></span>
         </div>
         <div class="tut-tip-corpo">
+          <p class="tut-etiqueta" id="tut-etiqueta" hidden>${SVG_LAMPADA}<span>Dica</span></p>
           <p class="tut-fala" id="tut-text"></p>
           <p class="tut-tecla" id="tut-tecla"></p>
           <div class="tut-tip-rodape">
@@ -165,6 +176,8 @@ const Tutorial = (() => {
       dimPath: $('.tut-dim-path', raiz),
       alvo: $('.tut-alvo', raiz),
       tip: $('#tut-tip', raiz),
+      etiqueta: $('#tut-etiqueta', raiz),
+      pular: $('#tut-pular', raiz),
       logi: $('.tut-logi', raiz),
       fala: $('#tut-text', raiz),
       tecla: $('#tut-tecla', raiz),
@@ -192,6 +205,8 @@ const Tutorial = (() => {
   }
 
   function marca(txt, chaves) {
+    /* Sem lista, vale toda palavra em MAIÚSCULAS (3+ letras) */
+    if (chaves == null) chaves = [...new Set(String(txt).match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [])];
     let h = esc(txt);
     [].concat(chaves || []).forEach(k => {
       const re = new RegExp('(' + String(k).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'u');
@@ -208,8 +223,11 @@ const Tutorial = (() => {
     return r.width > 0 && r.height > 0;
   }
 
+  /* `sel` é um seletor CSS ou, nas cenas de dica, um elemento / lista de elementos já escolhidos pela página */
   function elementosDe(sel) {
-    return sel ? $$(sel).filter(visivel) : [];
+    if (!sel) return [];
+    const lista = typeof sel === 'string' ? $$(sel) : [].concat(sel).filter(x => x instanceof Element);
+    return lista.filter(visivel);
   }
 
   function seletorDestaque(p) {
@@ -227,10 +245,12 @@ const Tutorial = (() => {
     return { l, t, r, b };
   }
 
-  /* Folga do buraco: max(12 px, 6% do alvo), sem sair da tela */
+  /* Folga do buraco: 6% do alvo, entre 12 e 16 px, sem sair da tela.
+     (Sem o teto, um alvo largo e baixo, como o balão do Logi, ganhava dezenas de
+     pixels de cada lado e o anel ficava torto em relação a ele.) */
   function comFolga(u) {
     if (!u) return null;
-    const pad = Math.max(12, 0.06 * Math.max(u.r - u.l, u.b - u.t));
+    const pad = Math.min(16, Math.max(12, 0.06 * Math.max(u.r - u.l, u.b - u.t)));
     const vw = window.innerWidth, vh = window.innerHeight;
     return {
       l: Math.max(4, u.l - pad), t: Math.max(4, u.t - pad),
@@ -417,12 +437,12 @@ const Tutorial = (() => {
 
   function armarInatividade() {
     limparInatividade();
-    if (!T.ativo || confirmando) return;
+    if (!T.ativo || confirmando || modoDica) return;
     const tk = gen;
     inatTimer = setTimeout(() => {
       if (tk !== gen || !T.ativo || confirmando || !atual) return;
       const el = elementosDe(atual.p.alvo)[0] || elementosDe(seletorDestaque(atual.p))[0];
-      if (el) maoToca(el, 2);
+      if (el && !atual.p.semMao) maoToca(el, 2);
       setEstado('dica');
       chegada();
       armarInatividade();
@@ -433,12 +453,14 @@ const Tutorial = (() => {
   function mostrar(p, i) {
     atual = { p, i };
     foras = 0;
+    destaqueTemp = undefined;
     ui.raiz.classList.remove('tut--forte');
     ui.alvo.classList.remove('tut-alvo--certo');
     liberadoEm = Date.now() + MS_IGNORAR_TOQUE;
 
     const n = passos.length;
-    ui.passo.innerHTML =
+    /* Cena de dica com um passo só não precisa de bolinhas */
+    ui.passo.innerHTML = modoDica && n === 1 ? '' :
       `<span class="tut-sr">Passo ${i + 1} de ${n}. </span>` +
       `<span class="tut-bolinhas" aria-hidden="true">${passos.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</span>`;
     ui.fala.innerHTML = marca(p.fala, p.palavraChave);
@@ -475,7 +497,7 @@ const Tutorial = (() => {
   function reposicionar() {
     if (!T.ativo || !atual) return;
     const p = atual.p;
-    const rect = comFolga(uniao(elementosDe(seletorDestaque(p))));
+    const rect = comFolga(uniao(elementosDe(destaqueTemp !== undefined ? destaqueTemp : seletorDestaque(p))));
     tweenTk++;
     buracoAtual = rect;
     desenhar(rect);
@@ -490,7 +512,17 @@ const Tutorial = (() => {
   /* ---------- Fluxo dos passos ---------- */
   function normalizar(p) {
     if (!p.acao) p.acao = p.tipo === 'vez' ? 'click' : p.tipo === 'toque' ? 'demo' : 'ok';
+    [p, p.erro].forEach(t => {
+      if (!t) return;
+      t.fala = tratar(t.fala);
+      t.audiodescricao = tratar(t.audiodescricao);
+    });
     return p;
+  }
+
+  /* Cópia dos passos: o erro pode trocar a fala do convite (falaDepois) e isso não pode ficar no registro */
+  function copiarPassos(d) {
+    return d.passos.map(p => normalizar({ ...p }));
   }
 
   function getApi() {
@@ -526,7 +558,8 @@ const Tutorial = (() => {
     espera = slot;
     const promessa = aguardar(slot);
     const alvo = elementosDe(p.alvo)[0] || elementosDe(seletorDestaque(p))[0];
-    if (alvo) maoToca(alvo, 2);
+    /* "semMao": passo de escolha entre alvos (ex.: Verdadeiro ou Falso), a mão não aponta para nenhum */
+    if (alvo && !p.semMao) maoToca(alvo, 2);
     armarInatividade();
     await promessa;
     checar(tk);
@@ -585,7 +618,7 @@ const Tutorial = (() => {
         await passo(passos[i], i, tk);
         checar(tk);
       }
-      await finalizar(tk);
+      if (!modoDica) await finalizar(tk);
       fechar({ concluido: true });
     } catch (x) {
       if (x !== CANC) console.error(x);
@@ -603,47 +636,73 @@ const Tutorial = (() => {
 
   /* Toque fora do alvo: sem mensagem de erro. A mão e o zoom repetem e o Logi encoraja */
   function foraDoAlvo() {
-    if (!T.ativo || confirmando || !espera || Date.now() < liberadoEm) return;
+    if (!T.ativo || confirmando || emErro || !espera || Date.now() < liberadoEm) return;
     foras++;
     ui.raiz.classList.toggle('tut--forte', foras >= FORA_FORTE);
     setEstado('encorajando');
     chegada();
     const alvo = elementosDe(espera.p.alvo)[0];
-    if (alvo) maoToca(alvo, 1);
+    if (alvo && !espera.p.semMao) maoToca(alvo, 1);
     armarInatividade();
   }
 
-  /* Erro com mensagem própria (tutoriais antigos com "erro"): mostra e volta ao convite */
-  async function erroComTexto(e, el) {
+  /* Erro com mensagem própria: o Logi explica e depois volta ao convite.
+     Campos de "erro": fala (texto ou função), palavraChave, estadoLogi, audiodescricao, teclado,
+       destaque (o que acender enquanto explica), efeito (roda ao mostrar),
+       ok: true (espera o botão "→ OK" em vez de um tempo), duracaoPadrao (ms, sem "ok"),
+       depois (roda depois do OK, ex.: trocar a frase de exemplo),
+       falaDepois (texto novo do convite, para tentar de novo). */
+  async function erroComTexto(e, el, valor) {
     const p = e.p;
     const er = p.erro;
     const meu = ++erroTk;
-    ui.fala.innerHTML = marca(er.fala, er.palavraChave);
+    const tk = gen;
+    const api = getApi();
+    /* fala(api, valor): "valor" é o que a criança tocou (ex.: o id da fruta), para explicar o erro certo */
+    const fala = typeof er.fala === 'function' ? tratar(er.fala(api, valor)) : er.fala;
+    emErro = true;
+    ui.fala.innerHTML = marca(fala, er.palavraChave);
     ui.tecla.innerHTML = er.teclado && !/^—/.test(er.teclado) ? `${SVG_TECLADO}<span>${esc(er.teclado)}</span>` : '';
     setEstado(er.estadoLogi || 'encorajando');
-    anunciar(`${er.fala}. ${er.audiodescricao || ''}`.trim());
-    if (er.efeito) { try { await er.efeito(getApi()); } catch (x) { if (x !== CANC) console.error(x); } }
-    const tk = gen;
-    try { await esperar(er.duracaoPadrao || 2500, tk); } catch (x) { if (x === CANC) return; throw x; }
-    if (meu === erroTk && espera === e && tk === gen) {
-      ui.fala.innerHTML = marca(p.fala, p.palavraChave);
-      ui.tecla.innerHTML = p.teclado && !/^—/.test(p.teclado) ? `${SVG_TECLADO}<span>${esc(p.teclado)}</span>` : '';
-      setEstado(p.estadoLogi);
+    anunciar(`${fala}. ${er.audiodescricao || ''}`.trim());
+    if (er.destaque !== undefined) { destaqueTemp = er.destaque; reposicionar(); }
+    try {
+      if (er.efeito) await er.efeito(api);
+      checar(tk);
+      if (er.ok) { await esperarOk(tk); ui.ok.hidden = true; }
+      else await esperar(er.duracaoPadrao || 2500, tk);
+      checar(tk);
+      if (er.depois) await er.depois(api);
+      checar(tk);
+    } catch (x) {
+      if (x === CANC) return;   /* o tutorial reiniciou ou fechou: quem fez isso já limpou o estado */
+      console.error(x);
     }
+    if (meu !== erroTk || espera !== e || tk !== gen) return;
+    emErro = false;
+    destaqueTemp = undefined;
+    if (er.falaDepois) { p.fala = tratar(er.falaDepois); p.palavraChave = er.palavraChaveDepois; }
+    ui.fala.innerHTML = marca(p.fala, p.palavraChave);
+    ui.tecla.innerHTML = p.teclado && !/^—/.test(p.teclado) ? `${SVG_TECLADO}<span>${esc(p.teclado)}</span>` : '';
+    setEstado(p.estadoLogi);
+    reposicionar();
+    if (er.ok) focar(elementosDe(p.alvo)[0]);
+    armarInatividade();
   }
 
   /* Chamado pela página quando a criança age enquanto o tutorial está aberto.
      Devolve true se a ação era a esperada (e executa "fazer"). */
   async function tentar(tipo, valor, fazer, el) {
     const e = espera;
-    if (!T.ativo || !e || confirmando) return false;   /* sem passo de ação, o jogo ignora cliques */
+    if (!T.ativo || !e || confirmando || emErro) return false;   /* sem passo de ação, o jogo ignora cliques */
     if (Date.now() < liberadoEm) return false;          /* crianças repetem o toque do passo anterior */
-    const v = e.p.vez || {};
+    /* "vez" pode ser uma função (a resposta certa muda, ex.: outra frase de exemplo) */
+    const v = (typeof e.p.vez === 'function' ? e.p.vez() : e.p.vez) || {};
     const alvos = v.valor === undefined || v.valor === null ? null : [].concat(v.valor);
     const certo = v.tipo === tipo && (!alvos || alvos.includes(valor));
     if (!certo) {
       balancar(el || document.activeElement);
-      if (e.p.erro) erroComTexto(e, el); else foraDoAlvo();
+      if (e.p.erro) erroComTexto(e, el, valor); else foraDoAlvo();
       return false;
     }
     espera = null;
@@ -658,6 +717,8 @@ const Tutorial = (() => {
   /* ---------- Pular com confirmação ---------- */
   function pedirPular() {
     if (!T.ativo || confirmando) return;
+    /* Dica: "Fechar" fecha direto, sem confirmação */
+    if (modoDica) { fechar({ pulado: true }); return; }
     confirmando = true;
     limparInatividade();
     ui.confirma.hidden = false;
@@ -721,14 +782,42 @@ const Tutorial = (() => {
     const d = registro[id];
     if (!d) return false;
     def = d;
-    passos = def.passos.map(normalizar);
+    passos = copiarPassos(def);
+    comecar(false);
+    return true;
+  }
+
+  /* Cena de dica (botão Dica): a mesma tela do tutorial, mas sem treino. Escurece, destaca onde
+     está o problema e o Logi explica em uma frase curta. Não mexe no jogo, não conta pontos nem
+     erros e não marca tutorial como visto.
+     cena = { comodo, passos: [{ destaque | alvo (seletor ou elementos), fala, palavraChave,
+              estadoLogi, audiodescricao, evitar }] } */
+  function dica(cena) {
+    if (T.ativo || !pagina || !cena || !cena.passos || !cena.passos.length) return false;
+    if (pagina.ocupado && pagina.ocupado()) return false;
+    if ($$('.modal-overlay').some(m => getComputedStyle(m).display !== 'none')) return false;
+    def = { id: 'dica', comodo: cena.comodo };
+    passos = cena.passos.map((p, i) => normalizar(Object.assign({ estadoLogi: 'dica', entra: i === 0 }, p)));
+    comecar(true);
+    return true;
+  }
+
+  function comecar(ehDica) {
+    modoDica = ehDica;
     montarUI();
+    /* A cor do balão acompanha o cômodo (ver tutorial.css) */
+    ui.raiz.dataset.comodo = String(def.comodo || pagina.comodo || '').toLowerCase();
+    ui.raiz.classList.toggle('tut--dica', ehDica);
+    ui.etiqueta.hidden = !ehDica;
+    ui.pular.innerHTML = ehDica ? `${SVG_FECHAR}<span>Fechar</span>` : `${SVG_PULAR}<span>Pular</span>`;
     focoAnterior = document.activeElement;
-    try { pagina.preparar && pagina.preparar(def); } catch (x) { console.error(x); }
+    if (!ehDica) { try { pagina.preparar && pagina.preparar(def); } catch (x) { console.error(x); } }
     T.ativo = true;
     espera = null;
     esperaOk = null;
     confirmando = false;
+    emErro = false;
+    destaqueTemp = undefined;
     buracoAtual = null;
     escondeConfirmacao();
     ui.raiz.hidden = false;
@@ -744,13 +833,16 @@ const Tutorial = (() => {
   }
 
   function reiniciar() {
-    if (!T.ativo) return;
+    if (!T.ativo || modoDica) return;
     gen++;
     cancelarEsperas();
     erroTk++;
+    emErro = false;
+    destaqueTemp = undefined;
     limparInatividade();
     maoSome();
     escondeConfirmacao();
+    passos = copiarPassos(def);
     try { pagina.restaurar && pagina.restaurar(); } catch (x) { console.error(x); }
     try { pagina.preparar && pagina.preparar(def); } catch (x) { console.error(x); }
     rodar(0);
@@ -758,8 +850,12 @@ const Tutorial = (() => {
 
   function fechar(opcoes = {}) {
     if (!T.ativo) return;
+    const eraDica = modoDica;
     bloqueioAuto = Date.now() + 1500;
-    try { gameState.marcarTutorialVisto(def.id); } catch {}
+    if (!eraDica) { try { gameState.marcarTutorialVisto(def.id); } catch {} }
+    modoDica = false;
+    emErro = false;
+    destaqueTemp = undefined;
     gen++;
     cancelarEsperas();
     erroTk++;
@@ -780,18 +876,20 @@ const Tutorial = (() => {
       if (!T.ativo && ui) { ui.raiz.hidden = true; ui.raiz.classList.remove('tut--saindo'); escondeConfirmacao(); }
     }, 170);
     document.body.classList.remove('tut-aberto');
-    try { pagina.restaurar && pagina.restaurar(); } catch (x) { console.error(x); }
+    /* A dica não trocou nada no jogo, então não há o que restaurar */
+    if (!eraDica) { try { pagina.restaurar && pagina.restaurar(); } catch (x) { console.error(x); } }
     atualizarBotaoAjuda();
 
-    /* Foco volta para o primeiro elemento da fase */
+    /* Foco volta para o primeiro elemento da fase (na dica, para o botão Dica) */
     window.setTimeout(() => {
       let alvo = null;
-      try { alvo = pagina.primeiroFoco && pagina.primeiroFoco(); } catch {}
+      if (eraDica && focoAnterior && document.contains(focoAnterior)) alvo = focoAnterior;
+      if (!alvo) { try { alvo = pagina.primeiroFoco && pagina.primeiroFoco(); } catch {} }
       if (!alvo && focoAnterior && document.contains(focoAnterior)) alvo = focoAnterior;
       if (!alvo) alvo = document.querySelector('[tabindex="0"], button:not([disabled])');
       try { alvo && alvo.focus(); } catch {}
     }, 30);
-    anunciarFora(opcoes.pulado ? 'Tutorial pulado.' : 'Tutorial concluído. A fase começa.');
+    anunciarFora(eraDica ? 'Dica fechada.' : opcoes.pulado ? 'Tutorial pulado.' : 'Tutorial concluído. A fase começa.');
   }
 
   /* A região viva do overlay some ao fechar; usa uma região própria */
@@ -851,8 +949,10 @@ const Tutorial = (() => {
   }
 
   return {
-    registrar, configurar, auto, abrir, fechar, tentar,
+    registrar, configurar, auto, abrir, fechar, tentar, dica,
     get ativo() { return T.ativo; },
+    tratamento: TRATAMENTO,
+    tratar,
     tem: id => Boolean(registro[id]),
   };
 })();

@@ -1,10 +1,16 @@
 /* =============================================================
-   Tutorial do Quarto — Fase 1 (Depuração)
-   Falas provisórias do storyboard "Tutoriais do Logi".
+   Tutorial 3 — Quarto, fase 1 (achar o bloco que não combina)
+   Interativo: o primeiro passo já é a vez da criança. O bloco
+   vermelho ("calcarep") é a calça REPETIDA e fica fora da fila.
+   Se tocar no bloco errado, o Logi explica o porquê e a criança
+   tenta de novo.
    ============================================================= */
 (() => {
-  const NAV = 'Tab chega em Ver de novo e Pular';
   const FONTE = id => `#blocos-fonte [data-bloco-id="${id}"]`;
+  const NOME = { camiseta: 'A camiseta', calca: 'A calça', tenis: 'O tênis' };
+
+  /* Explicação do erro, conforme o bloco em que a criança tocou */
+  const jaNaFila = id => NOME[id] ? `${NOME[id]} já está na fila.` : '';
 
   Tutorial.registrar({
     id: 'quarto-f1',
@@ -12,57 +18,51 @@
     titulo: 'Quarto · Fase 1',
     /* Blocos de treino: "calcarep" é a calça REPETIDA (vermelha), que fica fora da fila */
     treino: {
-      blocos: ['camiseta', { id: 'calcarep', base: 'calca', erro: true }, 'calca', 'meia', 'tenis'],
-      passos: [['camiseta', 'calca', 'meia'], ['tenis']],
-      total: 4
+      blocos: ['camiseta', { id: 'calcarep', base: 'calca', erro: true }, 'calca', 'tenis'],
+      passos: [['camiseta', 'calca'], ['tenis']],
+      total: 3
     },
     passos: [
-      { id: 'quarto-f1-p1', momento: 'Abertura', duracaoPadrao: 3500, estadoLogi: 'falando', entra: true,
-        fala: 'Oi, parceira! Vamos nos arrumar para a ESCOLA!', palavraChave: ['ESCOLA'],
-        audiodescricao: 'Logi chega pulando no Quarto. Vamos montar a rotina para ir à escola.',
-        teclado: NAV },
+      { id: 'quarto-f1-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
+        alvo: FONTE('camiseta'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'camiseta' },
+        fala: 'Oi, {tratamento}! Toque na CAMISETA para pôr na fila.', palavraChave: ['CAMISETA'],
+        audiodescricao: 'Logi chega pulando no Quarto. Vamos montar a rotina para ir à escola. Toque em vestir a camiseta: ela entra no primeiro lugar da fila.',
+        teclado: 'Foco já em “Vestir a camiseta”: Enter ou Espaço',
+        erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
+          fala: (a, id) => id === 'calcarep' ? 'Esse bloco está REPETIDO. Comece pela CAMISETA.' : 'Quase! Comece pela CAMISETA.',
+          audiodescricao: 'Quase! Procure o bloco vestir a camiseta.', teclado: 'Tab até “Vestir a camiseta” e Enter' } },
 
-      { id: 'quarto-f1-p2', momento: 'Demonstração 1', duracaoPadrao: 4000, estadoLogi: 'apontando',
-        fala: 'Um bloco está REPETIDO: o vermelho.', palavraChave: ['REPETIDO'], destaque: FONTE('calcarep'),
-        audiodescricao: 'Tem duas calças na lista. Uma delas é vermelha: ela está repetida.',
-        teclado: '— (só olhar)' },
+      { id: 'quarto-f1-p2', acao: 'ok', estadoLogi: 'dica',
+        destaque: FONTE('calcarep'), evitar: '#sequencia-corrigida',
+        fala: 'Este bloco está REPETIDO. Ele fica FORA!', palavraChave: ['REPETIDO', 'FORA'],
+        audiodescricao: 'Tem duas calças na lista. A vermelha está repetida: ela não entra na fila.',
+        teclado: 'Enter no botão “OK”' },
 
-      { id: 'quarto-f1-p3', momento: 'Demonstração 2', duracaoPadrao: 4000, estadoLogi: 'dica',
-        fala: 'O vermelho fica FORA da fila.', palavraChave: ['FORA'], destaque: '#sequencia-corrigida',
-        audiodescricao: 'O bloco vermelho é um erro. Ele não entra na fila.',
-        teclado: '— (só olhar)' },
-
-      { id: 'quarto-f1-p4', momento: 'Demonstração 3', duracaoPadrao: 4500, estadoLogi: 'apontando', tipo: 'toque',
-        alvo: FONTE('camiseta'), efeito: a => a.adicionar('camiseta'),
-        fala: 'Clique na CAMISETA para pôr na fila.', palavraChave: ['CAMISETA'],
-        audiodescricao: 'A mãozinha toca em vestir a camiseta. Ela entra no primeiro lugar da fila.',
-        teclado: 'Tab até “Vestir a camiseta” e Enter (ou arrastar)' },
-
-      { id: 'quarto-f1-p5', momento: 'Demonstração 4', duracaoPadrao: 4000, estadoLogi: 'dica',
-        fala: 'O TÊNIS vem sempre por último.', palavraChave: ['TÊNIS'],
-        destaque: `${FONTE('tenis')}, #sequencia-corrigida > :nth-child(4)`,
-        audiodescricao: 'Calçar o tênis é sempre o último passo da fila.',
-        teclado: '— (só olhar)' },
-
-      { id: 'quarto-f1-p6', momento: 'Sua vez', estadoLogi: 'aguardando', tipo: 'vez',
-        alvo: FONTE('calca'), vez: { tipo: 'adicionar', valor: 'calca' },
+      { id: 'quarto-f1-p3', acao: 'click', estadoLogi: 'aguardando',
+        alvo: FONTE('calca'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'calca' },
         fala: 'Sua vez! Coloque a CALÇA certa na fila.', palavraChave: ['CALÇA'],
-        audiodescricao: 'Sua vez! O foco está na calça certa, a que não é vermelha. Aperte Enter.',
+        audiodescricao: 'Sua vez! Toque na calça que não é vermelha.',
         teclado: 'Foco já na calça certa: Enter ou Espaço',
-        erro: { id: 'quarto-f1-p6-erro', momento: 'Erro na vez', estadoLogi: 'encorajando',
-          fala: 'Quase! Pegue a CALÇA que não é vermelha.', palavraChave: ['CALÇA'],
-          audiodescricao: 'Quase! Essa não. Procure a calça que não é vermelha, a última da lista.',
-          teclado: 'Tab até a calça sem “repetido” e Enter' } },
+        erro: { estadoLogi: 'encorajando', duracaoPadrao: 4000, destaque: FONTE('calcarep'),
+          fala: (a, id) => id === 'calcarep' ? 'Esse é o REPETIDO, o vermelho. Toque na outra CALÇA.'
+            : id === 'tenis' ? 'O TÊNIS vem por último. Primeiro, a CALÇA.'
+            : `${jaNaFila(id)} Toque na CALÇA.`,
+          audiodescricao: 'Quase! Procure a calça que não é vermelha.', teclado: 'Tab até a calça sem “repetido” e Enter' } },
 
-      { id: 'quarto-f1-p7', momento: 'Acerto', duracaoPadrao: 3200, estadoLogi: 'comemorando',
-        fala: 'Isso! Você achou o bloco CERTO!', palavraChave: ['CERTO'], destaque: '#sequencia-corrigida',
-        audiodescricao: 'Isso! A calça certa entrou na fila. Logi pula de alegria.',
-        teclado: '— (só olhar)' },
+      { id: 'quarto-f1-p4', acao: 'click', estadoLogi: 'dica',
+        alvo: FONTE('tenis'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'tenis' },
+        fala: 'O TÊNIS vem sempre por ÚLTIMO.', palavraChave: ['TÊNIS', 'ÚLTIMO'],
+        audiodescricao: 'Calçar o tênis é sempre o último passo. Toque em calçar o tênis.',
+        teclado: 'Foco já em “Calçar o tênis”: Enter ou Espaço',
+        erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
+          fala: (a, id) => id === 'calcarep' ? 'Esse bloco é REPETIDO. Toque no TÊNIS.' : `${jaNaFila(id)} Toque no TÊNIS.`,
+          audiodescricao: 'Quase! Falta o tênis, que vai por último.', teclado: 'Tab até “Calçar o tênis” e Enter' } },
 
-      { id: 'quarto-f1-p8', momento: 'Fase começa', duracaoPadrao: 2600, estadoLogi: 'falando',
-        fala: 'A FASE começa agora. Vamos lá!', palavraChave: ['FASE'],
-        audiodescricao: 'Agora começa a fase de verdade.',
-        teclado: '— (a fase abre com o foco no primeiro bloco)' }
+      { id: 'quarto-f1-p5', acao: 'click', estadoLogi: 'apontando',
+        alvo: '#btn-verificar', evitar: '#sequencia-corrigida', vez: { tipo: 'verificar' },
+        fala: 'Aperte VERIFICAR para conferir.', palavraChave: ['VERIFICAR'],
+        audiodescricao: 'A fila está pronta. Aperte Verificar sequência para conferir.',
+        teclado: 'Foco já em “Verificar sequência”: Enter ou Espaço' }
     ]
   });
 })();

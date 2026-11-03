@@ -2,7 +2,7 @@
 
 > Arquivo de contexto. Guarde em `.claude/contexto-casa-dos-misterios.md`. Ele fica fora do git (ver Etapa 0).
 > Leia este arquivo inteiro antes de começar qualquer etapa.
-> **Última atualização: 27/10/2026** (fim da Etapa 2). Comece pela seção 0.
+> **Última atualização: 03/11/2026** (nova rodada de pedidos; Fase 1 dela em andamento). Comece pela seção 0.
 
 ## 0. Estado atual do trabalho (leia primeiro)
 
@@ -15,11 +15,77 @@
 | 2. Remover narração e botões falantes | **Feita** (ver seção 2). Na máquina do usuário, conferir com `git status` se já foi commitada | **#110** |
 | 3. Motor do tutorial (Tutorial 2, Sala fase 3) | **Feita, ainda não commitada** (ver "Etapa 3" abaixo). Conferir `git status` | **#111** |
 | 4. Escolha do tutorial no Mapa | **Próxima. Não iniciada** | sem task ainda |
-| 5. Tutorial 1 (Sala fase 1) | Pendente | sem task ainda |
-| 6. Tutoriais 3, 4 e 5 (Quarto, Cozinha, Despensa) | Pendente | sem task ainda |
+| 5. Tutorial 1 (Sala fase 1) | **Feita em 03/11/2026, sem commit** (ver "Fase 3" abaixo) | sem task ainda |
+| 6. Tutoriais 3, 4 e 5 (Quarto, Cozinha, Despensa) | **Feita em 03/11/2026, sem commit** (Cozinha na Fase 3; Quarto e Despensa depois). Testada no navegador, passo a passo, com toques certos e errados. **Não testado:** leitor de tela, movimento reduzido, celular deitado | sem task ainda |
 | 7. Intro animada | Pendente (menor prioridade) | sem task ainda |
 
 O usuário pausou o desenvolvimento e retoma depois. Ao retomar, rode `git status` e `git log --oneline -5` para ver o que já foi commitado antes de mexer em qualquer coisa.
+
+### Rodada de ajustes de 03/11/2026 (pedidos do usuário, em ordem de prioridade)
+
+**Regra de trabalho desta rodada:** fazer **uma fase por vez** (cada fase junta pedidos que combinam entre si). Ao terminar uma fase, atualizar este arquivo e **perguntar ao usuário se pode começar a próxima**. Nunca encadear fases sem o ok.
+
+| Fase | Pedidos | Situação |
+|---|---|---|
+| **1. Ajustes rápidos** | 1.1 a 1.4 (abaixo) | **Feita em 03/11/2026, sem commit.** Testada no navegador (Despensa, Cozinha, Sala, Quarto). **Aguardando o ok do usuário para começar a Fase 2** |
+| **2. Dica clicável em todo o jogo** | 2.1 a 2.3 | **Feita em 03/11/2026, sem commit.** Testada no navegador nas 4 salas. **Aguardando o ok do usuário para a Fase 3** |
+| **3. Tutoriais 100% interativos** | 3.1 a 3.3 | **Feita em 03/11/2026, sem commit.** Testada no navegador (Sala e Cozinha, passo a passo, com erro e com "Ver de novo"). **Fim da rodada de 03/11**: o usuário decide o que vem depois (ver "Próximos passos" abaixo) |
+
+**Fase 1: ajustes rápidos**
+- **1.1** Trocar "parceira" (feminino, e é uma criança qualquer) por um termo **neutro**. Por ora **"explorador"** (alternativa: "aventureiro"). O termo fica num lugar só: `TRATAMENTO` em `assets/js/tutorial.js`; as falas dos tutoriais usam `{tratamento}`. O usuário disse "por enquanto": pode mudar de novo.
+- **1.2** Despensa, tutorial: o retângulo de destaque do passo "Hoje só escolhemos frutas VERMELHAS" ficava **torto, maior e deslocado** em relação ao balão do Logi (a folga de 6% do lado maior fazia o buraco de um elemento largo e baixo sobrar 50 px para cada lado). Corrigir o cálculo da folga e destacar o balão inteiro. Além disso, a palavra **VERMELHAS não tinha destaque na própria página** (só no balão do tutorial): destacar as palavras em maiúsculas do `instrucao` do nível.
+- **1.3** Despensa (Médio e Difícil, onde há prateleira em cima): **clicar de novo numa fruta que já está na prateleira a tira de lá** (desmarca). Arrastar uma fruta que já está lá não a remove.
+- **1.4** **Cor do balão do tutorial por cômodo:** Sala laranja, Quarto roxo, **Cozinha verde**, Despensa marrom. Vale para borda do balão, botão OK, bolinhas de passo. O anel de destaque continua amarelo (contraste).
+
+**O que foi feito na Fase 1 (arquivos):**
+- `tutorial.js`: constante `TRATAMENTO` + `tratar()` (troca `{tratamento}` nas falas e audiodescrições, inclusive nas de erro); `comFolga()` agora limita a folga a 12–16 px; `abrir()` grava `data-comodo` no `#tut`; a API expõe `Tutorial.tratamento` e `Tutorial.tratar`.
+- `tutorial.css`: variáveis `--tut-cor` e `--tut-botao` por `[data-comodo]` (quarto roxo `#534AB7`, cozinha verde `#1D9E75` e botão `#0F6E56`, despensa marrom `#8D4E00`, sala laranja, que é o padrão). Usadas na borda do balão, botão OK, bolinhas, ondas e seta do Logi, botões da confirmação de Pular.
+- Falas dos 5 tutoriais em `assets/js/tutoriais/*.js`: "parceira" virou `{tratamento}`.
+- `despensa-f1.js`: o passo "frutas VERMELHAS" agora destaca `.despensa-logi` (o balão inteiro).
+- `Despensa.html`: `destacarPalavras()` põe `<mark class="destaque-palavra">` nas palavras em MAIÚSCULAS (3+ letras) de `nivel.instrucao`, no balão do Logi e no título da prateleira; `adicionarItem(id, alternar)` tira a fruta da prateleira quando clique/Enter repete (arrastar não tira); a etiqueta de acessibilidade diz "Clique de novo para tirar".
+- `base.css`: `.destaque-palavra` (com variante de alto contraste, reutilizável pela Dica da Fase 2). `despensa.css`: o cartão que já está na prateleira ganhou `cursor: pointer`.
+- `despensa.json` e `DESPENSA_INLINE` (mantidos em sincronia): `instrucao` do Médio e do Difícil ganhou palavra em maiúsculas (`TAMANHO`, `SEMENTES`) para receber o destaque.
+- **Não testado:** leitor de tela real e movimento reduzido.
+
+**Fase 2: Dica clicável em todo o jogo**
+- **2.1** A **Dica tem que existir em todo o jogo**: Sala, Quarto, Cozinha e Despensa, em **todas as fases/níveis/perguntas**. Hoje a Cozinha e a Sala têm só uma caixa de texto fixa (`#dica-comodo`) e a Despensa e o Quarto não têm (conferir o Quarto).
+- **2.2** A Dica vira um **botão clicável e intuitivo** (ícone de lâmpada + palavra curta "Dica"), com **menos texto**.
+- **2.3** Ao clicar, aparece uma **cena parecida com a do tutorial** (a tela escurece, o Logi aparece com uma frase curta e o ponto do erro fica em destaque), que **mostra/explica o que está errado naquela parte ou frase**, em vez de um parágrafo. Reaproveitar o motor do `tutorial.js`.
+- Pergunta em aberto: a Dica desconta pontos? Sugestão: **não** (crianças de 7 a 9 anos). Confirmar com o usuário antes de decidir. **Por ora a Dica não conta erro nem ponto** (decisão provisória, aguardando confirmação).
+
+**O que foi feito na Fase 2 (arquivos):**
+- **Botão Dica** (`.btn-dica`, em `base.css`): lâmpada em SVG + a palavra "Dica", 52 px de altura, âmbar, igual nas 4 salas, com variante de alto contraste e `prefers-reduced-motion`. Todas as páginas usam `id="btn-dica"`. Depois de um erro ele pulsa (`.btn-dica--pulsar`). **Substituiu** as caixas de texto de dica (`#dica-comodo` na Sala e na Cozinha, `#dica-erros` no Quarto). Posição: Sala, ao lado da grade; Cozinha, embaixo; Quarto, no fim do cartão dos passos; Despensa, na linha dos botões, antes de Confirmar.
+- **Cena de dica no motor** (`tutorial.js`): `Tutorial.dica({ comodo, passos })`, onde cada passo é `{ destaque | alvo, fala, palavraChave, evitar, estadoLogi }` e `destaque`/`alvo` podem ser **seletor ou elemento(s) escolhidos pela página**. É a mesma tela do tutorial (escurece, anel, balão do Logi, → OK), mas com etiqueta "DICA", botão **Fechar** no lugar de Pular (Esc também fecha, sem confirmação), sem "Ver de novo"/tecla R, sem treino (não chama `preparar`/`restaurar`), sem mãozinha, sem dica de inatividade, sem "A FASE começa agora" e sem marcar tutorial como visto. O foco volta para o botão Dica. A página passa `comodo` no adaptador (cor do balão) e `ocupado()` impede abrir a dica no meio de uma animação; a dica também não abre com modal aberto.
+- **O que cada sala mostra** (função `passosDaDica()` em cada página):
+  - **Sala:** simula a fila como o Executar faz. Mostra o bloco que sai da grade, bate no obstáculo ou o Repetir sem seta antes; se a fila está certa, mostra a estrela e a próxima seta de um caminho curto (que segue reto, para combinar com o Repetir); se chega na estrela, aponta Executar; se a fila está cheia, aponta Limpar.
+  - **Quarto:** 1º toque revela em vermelho e aponta o bloco repetido/intruso (texto `dica.suspeito` de cada fase em `quarto.json`); depois aponta o bloco no lugar errado; senão destaca de onde vem o próximo passo (`dicaGeral` no JSON); no fim aponta Verificar.
+  - **Cozinha:** destaca na frase a palavra NÃO/NUNCA/SEMPRE/JAMAIS e depois a `palavraChave` da pergunta; sem nenhuma, "Leia a FRASE com calma".
+  - **Despensa:** por nível (`dica.errado` e `dica.certo` em `despensa.json` e `DESPENSA_INLINE`): aponta a fruta errada, ou a que falta, ou a próxima do tamanho; no fim aponta Confirmar.
+- **Dados:** `quarto.json` e `QUARTO_INLINE`: `fases[].dica` virou objeto `{ suspeito }` e entrou `dicaGeral`. `cozinha.json` e `COZINHA_INLINE`: removido o campo `dica` (texto fixo). CSS antigo das caixas de dica foi trocado pelo do botão em `sala.css`, `cozinha.css`, `quarto.css`, `despensa.css` (sobraram só seletores de alto contraste antigos em `base.css`).
+- **Falas curtas:** as palavras em MAIÚSCULAS ganham destaque no balão. Despensa e Quarto detectam sozinhos as palavras em maiúsculas (3+ letras) do texto do JSON.
+- **Não testado:** leitor de tela real, movimento reduzido, celular deitado e a posição do botão nos tamanhos pequenos (só testei ~456×854 e a janela do painel). O balão às vezes cobre outros blocos (só escurecidos).
+- **Para a Fase 3:** o passo da Sala que aponta o botão Dica deve usar `alvo: '#btn-dica'` (acao `ok`).
+
+**Ajustes da Fase 2 pedidos pelo usuário (03/11/2026, depois de ver na tela, feitos):**
+- **Botão Dica padrão e maior, igual em todas as salas:** 156×60 px, fonte 21 px, ícone 32 px (`base.css`). Em tela estreita (até 560 px) ou baixa (até 500 px) fica 128×52 px, igual nas 4 salas. As regras de tamanho que cada sala tinha foram apagadas: as CSS das salas só guardam a **posição**. Única exceção: Sala em celular deitado (altura ≤ 500 px) usa 46 px de altura para não criar rolagem.
+- **Onde fica, sempre embaixo e com folga da borda (não colado em outros botões nem na linha):** Sala, no fim do painel "Comandos disponíveis" (no celular/tablet ele vai para a linha do título do painel, à direita); Quarto, no fim do cartão dos passos, 22 px acima da borda (diminui com a altura da tela); Despensa, no fim do cartão das frutas (saiu da linha de Confirmar/Limpar); Cozinha, embaixo (sem mudança de lugar).
+- **Quarto, blocos maiores como os da Sala:** blocos de passo com `min-height: clamp(52px, 7vh, 66px)`, fonte 19 px, raio 16 px (antes 44 px e 15 px). Fases com 6 ou 7 blocos (intrusos) usam `data-muitos="true"` em `#blocos-fonte` e blocos um pouco menores (`clamp(44px, 5.8vh, 58px)`; 40 px em notebook baixo) para a lista caber sem rolagem. Medido sem rolagem em 1920×1080, 1440×900 e 1366×768, e também em 390×844, 360×640, 820×1180 e 844×390 (Sala, Quarto, Cozinha, Despensa).
+- **Aviso sobre o `sala.css`:** durante este trabalho o arquivo foi **sobrescrito no disco** por uma versão antiga (um editor aberto com cópia desatualizada: apareceu `gap: 800px` e `gap: 8x` no `.sala-btn-dica`). Refeito. Se for mexer no `sala.css` no VS Code, recarregue o arquivo do disco antes de salvar.
+- Ao testar com `python -m http.server`, o Chrome guarda os CSS em cache: recarregar com Ctrl+F5.
+
+**Fase 3: tutoriais 100% interativos**
+- **3.1** **Sala:** o primeiro contato já tem que ser a **vez da criança**. Hoje o `sala-f1` mostra primeiro os blocos rodando e telas explicativas. Converter para o formato novo (`acao: 'ok' | 'click'`), como o `sala-f3` (é a Etapa 5 do plano).
+- **3.2** **Só na Sala:** um passo que **aponta o botão de Dica** e diz que é para tocar quando estiver com dificuldade ou presa na fase (precisa da Fase 2).
+- **3.3** **Cozinha:** no passo da vez, está **pouco explícito qual botão clicar**. Destacar **os dois botões, Verdadeiro e Falso**, para a criança escolher. Se errar: **explicar o porquê e pedir para tentar de novo com outra frase de exemplo.**
+- A conversão da **Despensa** e do **Quarto** para o formato novo continua na Etapa 6 (não foi pedida nesta rodada).
+
+**O que foi feito na Fase 3 (arquivos):**
+- **`sala-f1.js` reescrito** (era a Etapa 5): 5 passos, **sem demonstração**, o primeiro já é a vez da criança. p1 toque em CIMA (com a saudação "Oi, {tratamento}! Leve o robô à ESTRELA. Toque em CIMA."), p2 DIREITA (mostra a trilha), p3 EXECUTAR, p4 `ok` com o robô na estrela, **p5 toque no botão Dica** (`#btn-dica`, só na Sala; tocar nele no tutorial só conta como o passo, não abre cena). Toque na seta errada: sem mensagem, a mão e o zoom repetem. Fases 1 e 2 usam esse tutorial; o `sala-f3.js` não mudou e não tem passo da Dica. `Sala.html`: o botão Dica, com o tutorial aberto, chama `Tutorial.tentar('dica', null)`.
+- **`cozinha-f1.js` reescrito:** p1 `ok` aponta a palavra NUNCA; **p2 é a vez, com os dois botões Verdadeiro e Falso em um único destaque e a mãozinha desligada (`semMao: true`)**, para a criança escolher entre os dois; p3 comemora. **Se errar:** o Logi mostra o porquê (a palavra da frase fica acesa), a criança toca em **OK** (nada passa por tempo) e a frase troca para **outro exemplo**, com o convite "Outra FRASE! Tente de novo.". Exemplos, em ordem, voltando ao 1º no fim: "O gelo NUNCA é quente." (V), "O sol NÃO é quente." (F), "O fogo NUNCA é frio." (V). Toques em V/F durante a explicação são ignorados.
+- **Motor (`tutorial.js`), campos novos de passo:** `vez` pode ser **função** (a resposta certa muda); `semMao`; em `erro`: `fala` pode ser função, `destaque` (o que acender enquanto explica), `ok: true` (espera o OK em vez de um tempo), `depois` (roda depois do OK, ex.: trocar a frase), `falaDepois` e `palavraChaveDepois` (novo convite). Sem `palavraChave`, vale toda palavra em MAIÚSCULAS (3+ letras). Os passos agora são **copiados** a cada abertura/"Ver de novo", para a `falaDepois` não vazar para o registro.
+- **Não testado:** leitor de tela real, movimento reduzido e celular deitado nesses dois tutoriais. Só vi o balão com a tela escurecendo (captura no meio do fade) e os passos por script.
+
+**Próximos passos possíveis (nada começado, depende do usuário):** Etapa 4 (escolha do tutorial no Mapa), Etapa 7 (intro animada), decidir se a Dica desconta pontos, tutoriais para o Médio e o Difícil da Despensa (prateleira e arrastar; o passo `drag` ainda não existe no motor), e blocos/botões ampliados no resto do jogo (Cozinha e Despensa ainda têm botões menores que os da Sala). **Os 5 tutoriais já estão no formato interativo** (o modo de compatibilidade do motor, abaixo, não é mais usado por nenhum deles).
 
 ### Como rodar e testar
 - O git fica na subpasta `casa-dos-misterios/` (remoto GitHub `mariananevesz/casa-dos-misterios`, branch `main`).
@@ -37,7 +103,7 @@ O usuário pausou o desenvolvimento e retoma depois. Ao retomar, rode `git statu
 ### Etapa 3 (feita em 03/11/2026, sem commit)
 - `assets/js/tutorial.js` e `assets/css/tutorial.css` foram **reescritos** como overlay (seção 4): escurece com buraco no alvo (SVG evenodd), anel com pulso/ripple/zoom, mãozinha de 2 ciclos, balão do Logi que troca de lado, botão **→ OK**, **Pular** (Esc) com confirmação ✓/↩, **Ver de novo** e tecla **R**, `inert` nos irmãos do alvo, ARIA, `prefers-reduced-motion`, alto contraste. **Nenhum avanço por tempo.** Toques nos primeiros 400 ms são ignorados; toque fora do alvo = mão e zoom repetem, Logi `encorajando`, anel engrossa no 3º; 10 s parado = dica volta.
 - Formato de passo novo: `acao: 'ok' | 'click'` (+ `vez: {tipo, valor}` no click), `alvo`, `destaque`, `evitar` (região que o balão tenta não cobrir), `depois` (hook após a ação), `fala`, `palavraChave`, `estadoLogi`, `audiodescricao`, `teclado`. A fala final "A FASE começa agora!" é automática.
-- **Modo de compatibilidade:** os tutoriais antigos (`sala-f1`, `quarto-f1`, `cozinha-f1`, `despensa-f1`) continuam funcionando sem reescrever: passo sem `tipo` = `ok`, `toque` = `demo` (a mão faz a ação e espera o OK), `vez` = `click`. Eles serão convertidos nas Etapas 5 e 6.
+- **Modo de compatibilidade (histórico):** os tutoriais antigos funcionavam sem reescrever: passo sem `tipo` = `ok`, `toque` = `demo` (a mão faz a ação e espera o OK), `vez` = `click`. **Todos os 5 já foram convertidos (03/11/2026)**; o código de `demo` e `tipo` continua no motor e pode ser removido depois.
 - `sala-f3.js` está no formato novo (5 passos da seção 6). Testado no celular (390 px), em 1280×720, com alto contraste e fonte 140%, por clique e por teclado. **Não testado:** movimento reduzido (emulação) e leitor de tela real.
 - Ainda não existe passo `drag` (arrastar). Fica para a Despensa (Etapa 6).
 - Botão "Pausar" e tecla P foram removidos (não há mais tempo para pausar).
@@ -63,7 +129,7 @@ O usuário pausou o desenvolvimento e retoma depois. Ao retomar, rode `git statu
   - `assets/css/base.css`: tokens (`--laranja #D85A30`, `--ambar`, `--roxo`, `--verde`, `--escala-fonte`…).
   - `assets/data/*.json`: todo o conteúdo do jogo. O README proíbe deixar conteúdo hardcoded.
 - Pontuação: até 25 pontos por cômodo (0 erros = 25, 1 = 20, 2 = 15, 3 ou mais = 10). **O tutorial nunca conta erros nem pontos.**
-- Mascote **Logi**: robozinho laranja de peças de quebra-cabeça, com uma lâmpada na cabeça. É gentil, paciente e animado e chama a criança de "parceira de investigação". Fora isso, as falas não usam adjetivos com gênero. Artes: `assets/img/logi_feliz.png` e `assets/img/logi_exclamacao.png`.
+- Mascote **Logi**: robozinho laranja de peças de quebra-cabeça, com uma lâmpada na cabeça. É gentil, paciente e animado e chama a criança de **"explorador"** (termo neutro e provisório, decisão de 03/11/2026; antes era "parceira de investigação"; fica em `TRATAMENTO` no `tutorial.js`). Fora isso, as falas não usam adjetivos com gênero. Artes: `assets/img/logi_feliz.png` e `assets/img/logi_exclamacao.png`.
 - Protótipo visual anterior dos tutoriais (só como referência de conteúdo): https://claude.ai/artifact/6HzaPcLvrzTGvCpDLEK6jo
 
 ## 2. Decisões já tomadas
@@ -212,59 +278,63 @@ Legenda: **[F]** valor de fonte · **[E]** estimativa a validar com as crianças
 Formato: `id` | alvo | ação | texto do balão (CHAVE em maiúsculas) | estado do Logi.
 Nos tutoriais da Sala, use uma **grade de treino** (posições diferentes da fase real) e restaure a fase ao terminar.
 
-### Tutorial 1: Sala, fase 1 (setas)
-Grade de treino: robô em (3,0), estrela em (2,1).
+### Tutorial 1: Sala, fases 1 e 2 (setas e botão Dica) — **implementado em 03/11/2026**
+Grade de treino: robô em (3,0), estrela em (2,1). **Sem demonstração: o primeiro passo já é a vez da criança.**
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| sala-f1-p1 | (nenhum, Logi no centro) | ok | Oi, parceira! Leve o robô até a ESTRELA. | falando |
-| sala-f1-p2 | bloco ↑ Cima | click | Toque na seta para CIMA. | apontando |
-| sala-f1-p3 | bloco → Dir | click | Agora a seta para a DIREITA. | apontando |
-| sala-f1-p4 | botão Executar | click | Aperte EXECUTAR e veja o robô! | apontando |
-| sala-f1-p5 | estrela (após o robô andar) | ok | Isso! O robô chegou na ESTRELA! | comemorando |
+| sala-f1-p1 | bloco ↑ Cima | click | Oi, {tratamento}! Leve o robô à ESTRELA. Toque em CIMA. | apontando |
+| sala-f1-p2 | bloco → Dir | click | Agora, a seta para a DIREITA. | apontando |
+| sala-f1-p3 | botão Executar | click | Aperte EXECUTAR e veja o robô andar. | dica |
+| sala-f1-p4 | estrela (após o robô andar) | ok | Isso! O robô pegou a ESTRELA! | comemorando |
+| sala-f1-p5 | botão Dica | click | Travou? Toque na DICA que eu ajudo! | dica |
 
 ### Tutorial 2: Sala, fase 3 (Repetir)
 Grade de treino: robô em (3,0), estrela em (0,0), 4 espaços.
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| sala-f3-p1 | bloco ↻ Repetir 2x | ok | Oi, parceira! Hoje tem um bloco NOVO! | falando |
+| sala-f3-p1 | bloco ↻ Repetir 2x | ok | Oi, {tratamento}! Hoje tem um bloco NOVO! | falando |
 | sala-f3-p2 | bloco ↑ Cima | click | Primeiro, a seta para CIMA. | apontando |
 | sala-f3-p3 | bloco ↻ Repetir 2x | click | O REPETIR faz a seta mais 2 vezes. | dica |
 | sala-f3-p4 | botão Executar | click | Aperte EXECUTAR e veja o robô subir. | apontando |
 | sala-f3-p5 | fila de comandos | ok | Dois blocos fizeram TRÊS passos! | comemorando |
 
-### Tutorial 3: Quarto, fase 1 (achar o erro)
+### Tutorial 3: Quarto, fase 1 (achar o erro) — **implementado em 03/11/2026**
+Blocos de treino: camiseta, calça repetida (vermelha, `calcarep`), calça, tênis; fila de 3 espaços (camiseta e calça em qualquer ordem, tênis por último). Sem demonstração: o primeiro passo já é a vez da criança.
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| quarto-f1-p1 | bloco vermelho (calça repetida) | ok | Este bloco está REPETIDO. Ele fica fora! | dica |
-| quarto-f1-p2 | bloco Camiseta | click | Toque na CAMISETA para pôr na fila. | apontando |
-| quarto-f1-p3 | bloco Calça (a certa, não vermelha) | click | Agora a CALÇA certa. | apontando |
-| quarto-f1-p4 | bloco Tênis + último espaço | ok | O TÊNIS vem sempre por último. | dica |
+| quarto-f1-p1 | bloco Camiseta | click | Oi, {tratamento}! Toque na CAMISETA para pôr na fila. | apontando |
+| quarto-f1-p2 | bloco vermelho (calça repetida) | ok | Este bloco está REPETIDO. Ele fica FORA! | dica |
+| quarto-f1-p3 | bloco Calça (a certa, não vermelha) | click | Sua vez! Coloque a CALÇA certa na fila. | aguardando |
+| quarto-f1-p4 | bloco Tênis | click | O TÊNIS vem sempre por ÚLTIMO. | dica |
+| quarto-f1-p5 | botão Verificar sequência | click | Aperte VERIFICAR para conferir. | apontando |
 
-### Tutorial 4: Cozinha, fase 1 (verdadeiro ou falso)
+Erros explicados pelo bloco em que a criança tocou (ex.: no p3, "Esse é o REPETIDO, o vermelho. Toque na outra CALÇA." ou "O TÊNIS vem por último. Primeiro, a CALÇA."). A explicação some sozinha depois de 3,5 a 4 s e volta ao convite; **o passo só avança com o toque certo**. No p5, tocar em Verificar marca a fila de treino com ✓ verde, sem contar erro nem ponto (`acoes.verificar` em `Quarto.html`; `verificar()` chama `Tutorial.tentar('verificar')` com o tutorial aberto).
+
+### Tutorial 4: Cozinha, fase 1 (verdadeiro ou falso) — **implementado em 03/11/2026**
 Frase de treino: "O gelo NUNCA é quente." (resposta: Verdadeiro).
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| cozinha-f1-p1 | cartão da frase | ok | Leia a FRASE com calma. | apontando |
-| cozinha-f1-p2 | a palavra NUNCA dentro da frase | ok | Cuidado com a palavra NUNCA! | dica |
-| cozinha-f1-p3 | os botões V e F | ok | Verde é VERDADEIRO. Vermelho é FALSO. | apontando |
-| cozinha-f1-p4 | botão Verdadeiro | click (tecla V também) | O gelo é quente? Responda! | aguardando |
+| cozinha-f1-p1 | a palavra NUNCA dentro da frase | ok | Oi, {tratamento}! Atenção na palavra NUNCA. | falando |
+| cozinha-f1-p2 | **os dois botões, Verdadeiro e Falso, num destaque só (sem mãozinha)** | click (teclas V e F também) | É VERDADEIRO ou FALSO? Toque em um botão. | aguardando |
+| cozinha-f1-p3 | botão escolhido | ok | Isso! Você leu com ATENÇÃO! | comemorando |
 
-No p4, se a criança tocar em Falso: erro silencioso, a palavra NUNCA brilha de novo e o Logi fica em `encorajando`. A explicação "O gelo nunca é quente. É VERDADEIRO!" aparece só depois do 2º toque errado.
+**Se errar no p2:** o Logi **explica o porquê** (ex.: "Quase! O gelo é FRIO. Ele NUNCA é quente. É VERDADEIRO!", com a palavra da frase acesa), a criança toca em **OK** e a frase vira **outro exemplo** ("O sol NÃO é quente." → Falso; "O fogo NUNCA é frio." → Verdadeiro; depois volta ao 1º), com o convite "Outra FRASE! Tente de novo." Isso substitui a regra antiga de "erro silencioso e explicação só no 2º toque errado" (o usuário pediu a explicação já no 1º erro).
 
-### Tutorial 5: Despensa, fase 1 (frutas vermelhas)
+### Tutorial 5: Despensa, fase 1 (frutas vermelhas) — **implementado em 03/11/2026**
+Como o nível Fácil (`criterio: "selecao-cor"`) **não tem prateleira nem arrastar** e só aceita toque, a regra da fase **não foi mudada**: o tutorial usa a alternativa "Toque na MAÇÃ / no MORANGO". Frutas de treino fixas: maçã, banana, uva, morango, mirtilo. Só o nível Fácil tem tutorial (Médio e Difícil, com prateleira e arrastar, ainda não têm).
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| despensa-f1-p1 | rótulo da prateleira / instrução | ok | Só guardamos frutas VERMELHAS. | apontando |
-| despensa-f1-p2 | Maçã → prateleira | drag (ou tocar e tocar / Enter) | Arraste a MAÇÃ até a prateleira. | apontando |
-| despensa-f1-p3 | Banana | ok | A banana é AMARELA. Fica fora! | dica |
-| despensa-f1-p4 | Morango → prateleira | drag | Sua vez! Guarde o MORANGO. | aguardando |
+| despensa-f1-p1 | Maçã | click | Oi, {tratamento}! Só frutas VERMELHAS. Toque na MAÇÃ. | apontando |
+| despensa-f1-p2 | Banana (balança) | ok | A banana é AMARELA. Fica de FORA! | dica |
+| despensa-f1-p3 | Morango | click | Sua vez! Outra fruta VERMELHA: o MORANGO. | aguardando |
+| despensa-f1-p4 | frutas escolhidas | ok | Isso! O morango também é VERMELHO! | comemorando |
 
-⚠️ Hoje o nível Fácil da Despensa (`criterio: "selecao-cor"`) **esconde a prateleira** e só aceita clique. **Pergunte ao usuário** antes de mudar a regra da fase. A alternativa é trocar os textos p2 e p4 para "Toque na MAÇÃ" e "Toque no MORANGO".
+Erros explicados pela fruta tocada, com a cor dela (ex.: "A banana é AMARELA. Procure a MAÇÃ.", "O mirtilo é AZUL. Procure o MORANGO.", "A maçã já está escolhida. Toque no MORANGO."). Mesma regra do Quarto: some sozinha e o passo só avança com o toque certo. O `tentar` agora passa o que a criança tocou para `erro.fala(api, valor)`.
 
 ## 7. Intro do jogo (prioridade mais baixa)
 

@@ -53,6 +53,11 @@
         <p class="sala-panel__title">Comandos disponíveis</p>
         <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
         <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
+
+        <button type="button" class="btn-dica sala-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+          <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Dica</span>
+        </button>
       </aside>
 
       <!-- Jogo -->
@@ -68,11 +73,6 @@
           <section class="sala-grade-area">
             <section class="sala-grade-box">
               <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
-            </section>
-
-            <section class="dica dica--ambar sala-mini-dica" id="dica-comodo" aria-label="Dica da Sala">
-              <img src="../img/icone-sala.png" alt="" class="dica__icone-comodo">
-              <p class="dica__texto dica__texto--ambar" id="dica-texto"><strong>Dica:</strong> pense na ordem dos comandos antes de executar.</p>
             </section>
           </section>
         </section>
@@ -733,6 +733,7 @@ async function executar() {
   let salvoTutorial = null;
 
   const salaTutorial = {
+    comodo: 'sala',
     /* Fases 1 e 2 usam o tutorial de direção; a 3 usa o de repetição */
     tutorialDaFase() {
       const id = gameData?.fases[faseAtual]?.id;
@@ -911,8 +912,124 @@ async function executar() {
   });
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
-  function ativarAtencaoDica() { document.getElementById('dica-comodo').classList.add('dica--pulsar'); }
-  function pararAtencaoDica() { document.getElementById('dica-comodo').classList.remove('dica--pulsar'); }
+  function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }
+  function pararAtencaoDica() { document.getElementById('btn-dica').classList.remove('btn-dica--pulsar'); }
+
+  /* ---- Dica do Logi: aponta o bloco com problema ou o próximo passo (não conta erro nem ponto) ---- */
+  const NOME_SETA = { cima: 'CIMA', baixo: 'BAIXO', esq: 'ESQUERDA', dir: 'DIREITA' };
+
+  /* Anda a sequência na grade como o executar() faz: devolve onde parou, se chegou na estrela
+     ou o primeiro bloco com problema */
+  function simularSequencia(grade, seq) {
+    const { linhas, colunas, posicaoInicial, posicaoAlvo, obstaculos = [] } = grade;
+    let pos = { ...posicaoInicial };
+    for (let i = 0; i < seq.length; i++) {
+      const cmd = seq[i];
+      let movs = [cmd];
+      if (cmd === 'repetir2' || cmd === 'repetir3') {
+        if (!MOVES[seq[i - 1]]) return { pos, problema: { idx: i, tipo: 'repetir' } };
+        movs = Array(cmd === 'repetir2' ? 2 : 3).fill(seq[i - 1]);
+      }
+      for (const m of movs) {
+        const d = MOVES[m];
+        if (!d) continue;
+        const nr = pos.linha + d[0], nc = pos.coluna + d[1];
+        if (nr < 0 || nr >= linhas || nc < 0 || nc >= colunas) return { pos, problema: { idx: i, tipo: 'borda' } };
+        if (obstaculos.some(o => o.linha === nr && o.coluna === nc)) return { pos, problema: { idx: i, tipo: 'obstaculo' } };
+        pos = { linha: nr, coluna: nc };
+        if (pos.linha === posicaoAlvo.linha && pos.coluna === posicaoAlvo.coluna) return { pos, chegou: true };
+      }
+    }
+    return { pos };
+  }
+
+  /* Primeiros movimentos de um caminho mais curto até a estrela; prefere seguir reto (combina com o Repetir) */
+  function caminhoCurto(grade, de, preferido, max = 3) {
+    const { linhas, colunas, posicaoAlvo, obstaculos = [] } = grade;
+    const livre = (r, c) => r >= 0 && r < linhas && c >= 0 && c < colunas && !obstaculos.some(o => o.linha === r && o.coluna === c);
+    const dist = Array.from({ length: linhas }, () => Array(colunas).fill(Infinity));
+    dist[posicaoAlvo.linha][posicaoAlvo.coluna] = 0;
+    const fila = [[posicaoAlvo.linha, posicaoAlvo.coluna]];
+    while (fila.length) {
+      const [r, c] = fila.shift();
+      Object.values(MOVES).forEach(([dr, dc]) => {
+        if (livre(r + dr, c + dc) && dist[r + dr][c + dc] === Infinity) {
+          dist[r + dr][c + dc] = dist[r][c] + 1;
+          fila.push([r + dr, c + dc]);
+        }
+      });
+    }
+    const caminho = [];
+    let pos = { ...de }, ult = preferido;
+    while (caminho.length < max && dist[pos.linha][pos.coluna] > 0 && dist[pos.linha][pos.coluna] < Infinity) {
+      const falta = dist[pos.linha][pos.coluna];
+      const m = Object.keys(MOVES)
+        .sort((a, b) => (b === ult) - (a === ult))
+        .find(k => {
+          const nr = pos.linha + MOVES[k][0], nc = pos.coluna + MOVES[k][1];
+          return livre(nr, nc) && dist[nr][nc] === falta - 1;
+        });
+      if (!m) break;
+      caminho.push(m);
+      pos = { linha: pos.linha + MOVES[m][0], coluna: pos.coluna + MOVES[m][1] };
+      ult = m;
+    }
+    return caminho;
+  }
+
+  function passosDaDica() {
+    const fase = gameData.fases[faseAtual];
+    const bloco = id => document.querySelector(`#blocos-disponiveis [data-bloco-id="${id}"]`);
+    const naFila = idx => document.querySelector(`#sequencia-player .bloco[data-idx="${idx}"]`);
+    const sim = simularSequencia(fase.grade, sequencia);
+
+    if (sim.problema) {
+      const { idx, tipo } = sim.problema;
+      const chave = { repetir: 'REPETIR', obstaculo: 'OBSTÁCULO', borda: 'GRADE' }[tipo];
+      const fala = {
+        repetir: 'O REPETIR vem depois de uma seta.',
+        obstaculo: 'Este bloco bate no OBSTÁCULO.',
+        borda: 'Este bloco sai da GRADE.'
+      }[tipo];
+      return [{ destaque: naFila(idx), evitar: '#game-grid', fala, palavraChave: [chave] }];
+    }
+    if (sim.chegou) {
+      return [{ destaque: '#btn-executar', evitar: '#game-grid', fala: 'Está certo! Aperte EXECUTAR.', palavraChave: ['EXECUTAR'] }];
+    }
+    if (sequencia.length >= (fase.maxBlocos || 8)) {
+      return [{ destaque: '#btn-limpar', evitar: '#game-grid', fala: 'A fila está cheia. Toque em LIMPAR.', palavraChave: ['LIMPAR'] }];
+    }
+
+    const ultima = [...sequencia].reverse().find(b => MOVES[b]);
+    const caminho = caminhoCurto(fase.grade, sim.pos, ultima);
+    const passos = [];
+    if (!sequencia.length) {
+      passos.push({ destaque: '#celula-alvo', fala: 'Leve o robô até a ESTRELA.', palavraChave: ['ESTRELA'] });
+    }
+    if (!caminho.length) return passos;
+
+    const ultimoBloco = sequencia[sequencia.length - 1];
+    if (bloco('repetir2') && MOVES[ultimoBloco] && caminho[0] === ultimoBloco && caminho[1] === ultimoBloco) {
+      passos.push({ destaque: bloco('repetir2'), evitar: '#sequencia-player',
+        fala: 'O REPETIR faz a seta de novo.', palavraChave: ['REPETIR'] });
+    } else {
+      const nome = NOME_SETA[caminho[0]];
+      passos.push({ destaque: bloco(caminho[0]), evitar: '#sequencia-player',
+        fala: sequencia.length ? `Agora, a seta para ${nome}.` : `Comece pela seta para ${nome}.`, palavraChave: [nome] });
+    }
+    return passos;
+  }
+
+  document.getElementById('btn-dica').addEventListener('click', () => {
+    /* No tutorial, tocar na Dica só conta como o passo "achei o botão" */
+    if (window.Tutorial?.ativo) { Tutorial.tentar('dica', null); return; }
+    if (!gameData || animando) return;
+    const passos = passosDaDica();
+    if (!passos.length) return;
+    audio.clique();
+    pararAtencaoDica();
+    Tutorial.dica({ comodo: 'sala', passos });
+  });
 
   /* ---- Botões ---- */
   document.getElementById('btn-executar').addEventListener('click', () => { if (gameData) executar(); });
