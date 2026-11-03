@@ -3,7 +3,7 @@
    Falas provisórias do storyboard "Tutoriais do Logi".
    ============================================================= */
 (() => {
-  const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
+  const NAV = 'Tab chega em Ver de novo e Pular';
 
   Tutorial.registrar({
     id: 'cozinha-f1',

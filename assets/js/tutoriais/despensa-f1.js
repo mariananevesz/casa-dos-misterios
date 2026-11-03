@@ -5,7 +5,7 @@
    (não existe prateleira nem arrastar).
    ============================================================= */
 (() => {
-  const NAV = 'Tab chega em Pausar, Ver de novo e Pular';
+  const NAV = 'Tab chega em Ver de novo e Pular';
   const FRUTA = id => `#itens-grid [data-item-id="${id}"]`;
 
   Tutorial.registrar({
