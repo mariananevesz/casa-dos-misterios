@@ -19,7 +19,8 @@
     /* Blocos de treino: "calcarep" é a calça REPETIDA (vermelha), que fica fora da fila */
     treino: {
       blocos: ['camiseta', { id: 'calcarep', base: 'calca', erro: true }, 'calca', 'tenis'],
-      passos: [['camiseta', 'calca'], ['tenis']],
+      passos: [['camiseta', 'calca', 'tenis']],
+      ordem: [['calca', 'tenis']],
       total: 3
     },
     passos: [
@@ -45,18 +46,18 @@
         teclado: 'Foco já na calça certa: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 4000, destaque: FONTE('calcarep'),
           fala: (a, id) => id === 'calcarep' ? 'Esse é o REPETIDO, o vermelho. Toque na outra CALÇA.'
-            : id === 'tenis' ? 'O TÊNIS vem por último. Primeiro, a CALÇA.'
+            : id === 'tenis' ? 'O TÊNIS vem DEPOIS da calça. Primeiro, a CALÇA.'
             : `${jaNaFila(id)} Toque na CALÇA.`,
           audiodescricao: 'Quase! Procure a calça que não é vermelha.', teclado: 'Tab até a calça sem “repetido” e Enter' } },
 
       { id: 'quarto-f1-p4', acao: 'click', estadoLogi: 'dica',
         alvo: FONTE('tenis'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'tenis' },
-        fala: 'O TÊNIS vem sempre por ÚLTIMO.', palavraChave: ['TÊNIS', 'ÚLTIMO'],
-        audiodescricao: 'Calçar o tênis é sempre o último passo. Toque em calçar o tênis.',
+        fala: 'O TÊNIS vem DEPOIS da calça e da meia.', palavraChave: ['TÊNIS', 'DEPOIS'],
+        audiodescricao: 'Calçar o tênis vem depois de vestir a calça e calçar a meia. Toque em calçar o tênis.',
         teclado: 'Foco já em “Calçar o tênis”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'calcarep' ? 'Esse bloco é REPETIDO. Toque no TÊNIS.' : `${jaNaFila(id)} Toque no TÊNIS.`,
-          audiodescricao: 'Quase! Falta o tênis, que vai por último.', teclado: 'Tab até “Calçar o tênis” e Enter' } },
+          audiodescricao: 'Quase! Falta o tênis, que vem depois da calça.', teclado: 'Tab até “Calçar o tênis” e Enter' } },
 
       { id: 'quarto-f1-p5', acao: 'click', estadoLogi: 'apontando',
         alvo: '#btn-verificar', evitar: '#sequencia-corrigida', vez: { tipo: 'verificar' },

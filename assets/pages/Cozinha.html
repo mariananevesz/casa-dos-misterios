@@ -69,6 +69,7 @@
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
+            <button type="button" class="btn btn--verde cozinha-proxima" id="btn-proxima">Próxima →</button>
           </section>
         </section>
 
@@ -351,6 +352,7 @@
     document.getElementById('pergunta-numero').textContent = `${faseAtual} · Pergunta ${idxNaFase + 1} de ${gameData.tamFase}`;
     document.getElementById('pergunta-frase').innerHTML    = destacarFrase(p.frase, p.palavraChave);
     document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('btn-proxima').style.display = 'none';
     buildNivelTabs(faseAtual);
     renderProgresso();
     habilitarBotoes(true);
@@ -402,31 +404,40 @@
     const p  = gameData.perguntas[perguntaIdx];
     const ok = escolha === p.resposta;
 
+    /* Só "Correto!" ou "Errado!" + a explicação. A abertura do texto do JSON ("Sim!", "Errado!",
+       "Verdade!"…) sai, senão fica "Correto! Errado! O ovo…" e confunde a criança. */
+    const explicacao = (p.explicacao || '').replace(/^(Sim|Não|Certo|Correto|Verdade|Errado)\s*[!.,:]\s*/i, '').trim();
+
     if (ok) {
       acertos++;
       audio.acerto();
-      mostrarFeedback(p.explicacao ? `Correto! ${p.explicacao}` : 'Correto! Muito bem!', 'verde');
+      mostrarFeedback(explicacao ? `Correto! ${explicacao}` : 'Correto! Muito bem!', 'verde');
     } else {
       audio.erro();
-      ativarAtencaoDica();
       const correta = p.resposta ? 'Verdadeiro' : 'Falso';
-      mostrarFeedback(
-        p.explicacao ? `A resposta é ${correta}. ${p.explicacao}` : `Ops! A resposta correta é ${correta}.`,
-        'erro'
-      );
+      mostrarFeedback(explicacao ? `Errado! ${explicacao}` : `Errado! A resposta correta é ${correta}.`, 'erro');
     }
 
     atualizarBadge();
 
-    setTimeout(() => {
-      perguntaIdx++;
-      respondendo = false;
-      if (perguntaIdx >= gameData.perguntas.length) {
-        conclusao();
-      } else {
-        renderPergunta();
-      }
-    }, 1200);
+    /* Não passa sozinha: a criança lê o feedback com calma e toca em "Próxima" quando quiser */
+    const ultima = perguntaIdx >= gameData.perguntas.length - 1;
+    const btn = document.getElementById('btn-proxima');
+    btn.textContent = ultima ? 'Ver resultado →' : 'Próxima →';
+    btn.style.display = '';
+    btn.focus({ preventScroll: true });
+  }
+
+  function proximaPergunta() {
+    if (!respondendo || window.Tutorial?.ativo) return;
+    document.getElementById('btn-proxima').style.display = 'none';
+    perguntaIdx++;
+    respondendo = false;
+    if (perguntaIdx >= gameData.perguntas.length) {
+      conclusao();
+    } else {
+      renderPergunta();
+    }
   }
 
   function mostrarFeedback(msg, tipo) {
@@ -441,6 +452,8 @@
   function habilitarBotoes(on) {
     document.getElementById('btn-verdadeiro').disabled = !on;
     document.getElementById('btn-falso').disabled      = !on;
+    /* A Dica é da pergunta atual: depois de responder, fica apagada até a criança tocar em "Próxima" */
+    document.getElementById('btn-dica').disabled       = !on;
   }
 
   /* ---- Conclusão ---- */
@@ -542,6 +555,7 @@
     Tutorial.dica({ comodo: 'cozinha', passos: passosDaDica() });
   });
 
+  document.getElementById('btn-proxima').addEventListener('click', proximaPergunta);
   document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
 

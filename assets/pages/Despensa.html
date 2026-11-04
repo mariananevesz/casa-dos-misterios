@@ -154,6 +154,8 @@
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
   <script src="../js/tutoriais/despensa-f1.js"></script>
+  <script src="../js/tutoriais/despensa-f2.js"></script>
+  <script src="../js/tutoriais/despensa-f3.js"></script>
   <script>
   /* ===== DESPENSA — lógica do jogo ===== */
 
@@ -258,6 +260,10 @@
   let touchItem        = null;
   let touchGhost       = null;
   let boasVindasExibido = false;  // mostra instrucaoInstrutor apenas uma vez
+  let nivelTreino      = null;    // frutas de treino do tutorial do Logi (null fora do tutorial)
+
+  /* Nível em uso: o de treino enquanto o tutorial está aberto, senão o da fase */
+  const nivelAtual = () => nivelTreino || gameData.niveis[nivelIdx];
 
   const ERROS_KEY = 'despensa_erros';
 
@@ -333,7 +339,7 @@
     /* Rótulo do painel de itens */
     document.getElementById('painel-itens-label').textContent =
       nivel.criterio === 'selecao-cor'
-        ? 'Toque nas frutas para selecionar'
+        ? 'Escolha as frutas vermelhas'
         : nivel.criterio === 'selecao-sementes'
           ? 'Clique ou arraste as frutas com sementes'
           : 'Itens para organizar — clique ou arraste para a prateleira';
@@ -367,7 +373,7 @@
       if (!parte) return;
       if (i % 2 === 1) {
         const m = document.createElement('mark');
-        m.className = 'destaque-palavra';
+        m.className = 'destaque-palavra' + (/^VERMELH[AO]S?$/.test(parte) ? ' destaque-palavra--vermelha' : '');
         m.textContent = parte;
         el.appendChild(m);
       } else {
@@ -572,7 +578,7 @@
 
   function atualizarItensDisponiveis() {
     if (!gameData) return;
-    const nivel = gameData.niveis[nivelIdx];
+    const nivel = nivelAtual();
     const grid = document.getElementById('itens-grid');
 
     grid.querySelectorAll('.item-card').forEach(card => {
@@ -600,7 +606,7 @@
      PRATELEIRA (médio / difícil)
   ================================================================ */
   function renderPrateleira(nivel) {
-    if (!nivel) nivel = gameData.niveis[nivelIdx];
+    if (!nivel) nivel = nivelAtual();
     const total = nivel.criterio === 'selecao-sementes'
       ? nivel.corretos.length
       : nivel.itens.length;
@@ -675,8 +681,13 @@
 
   /* `alternar`: vem de clique/Enter na fruta (tira se já estiver na prateleira).
      Arrastar ou soltar uma fruta que já está lá não faz nada. */
-  function adicionarItem(id, alternar = false) {
-    const nivel = gameData.niveis[nivelIdx];
+  function adicionarItem(id, alternar = false, origem) {
+    /* Com o tutorial aberto, a escolha da criança passa pelo Logi (acerta ou encoraja) */
+    if (window.Tutorial?.ativo && origem !== 'tutorial') {
+      Tutorial.tentar('adicionar', id, () => adicionarItem(id, false, 'tutorial'));
+      return;
+    }
+    const nivel = nivelAtual();
     const limite = nivel.criterio === 'selecao-sementes'
       ? nivel.corretos.length
       : nivel.itens.length;
@@ -695,9 +706,10 @@
   }
 
   function removerItem(idx) {
+    if (window.Tutorial?.ativo) return;   /* no treino, a criança não tira frutas da prateleira */
     prateleira.splice(idx, 1);
     prateleiraStatus = [];
-    renderPrateleira(gameData.niveis[nivelIdx]);
+    renderPrateleira(nivelAtual());
     document.getElementById('feedback-area').style.display = 'none';
   }
 
@@ -1045,26 +1057,53 @@
 
   const despensaTutorial = {
     comodo: 'despensa',
-    /* Só o nível Fácil (selecionar por cor) tem tutorial */
-    tutorialDaFase: () => gameData?.niveis[nivelIdx]?.criterio === 'selecao-cor' ? 'despensa-f1' : null,
+    /* Um tutorial por nível: Fácil (cor), Médio (tamanho) e Difícil (sementes) */
+    tutorialDaFase: () => ({
+      'selecao-cor': 'despensa-f1',
+      'tamanho': 'despensa-f2',
+      'selecao-sementes': 'despensa-f3'
+    })[gameData?.niveis[nivelIdx]?.criterio] || null,
     primeiroFoco: () => document.querySelector('#itens-grid .item-card'),
 
+    /* A tela já está no layout do nível; só trocamos as frutas pelas de treino */
     preparar(def) {
-      salvoTutorial = { selecionados: [...selecionados] };
+      const t = def.treino;
+      salvoTutorial = { selecionados: [...selecionados], prateleira: [...prateleira] };
       selecionados = [];
+      prateleira = [];
+      prateleiraStatus = [];
+      nivelTreino = { criterio: t.criterio || 'selecao-cor', itens: t.itens, corretos: t.corretos, ordemCorreta: t.ordemCorreta };
       document.getElementById('feedback-area').style.display = 'none';
-      buildItens({ criterio: 'selecao-cor', itens: def.treino.itens, corretos: def.treino.corretos });
+      buildItens(nivelTreino);
+      if (nivelTreino.criterio !== 'selecao-cor') {
+        if (nivelTreino.criterio === 'selecao-sementes') {
+          document.getElementById('leg-dir').textContent = `${nivelTreino.corretos.length} frutas`;
+        }
+        renderPrateleira(nivelTreino);
+      }
     },
 
     restaurar() {
-      const salvos = salvoTutorial ? salvoTutorial.selecionados : [];
+      const salvo = salvoTutorial;
       salvoTutorial = null;
+      nivelTreino = null;
       renderNivel();
-      salvos.forEach(id => toggleSelecao(id, 'tutorial'));
+      if (!salvo) return;
+      salvo.selecionados.forEach(id => toggleSelecao(id, 'tutorial'));
+      if (salvo.prateleira.length) {
+        prateleira = [...salvo.prateleira];
+        renderPrateleira();
+      }
     },
 
     acoes: {
       selecionar: id => toggleSelecao(id, 'tutorial'),
+      adicionar: id => adicionarItem(id, false, 'tutorial'),
+      /* Fim do treino: as frutas da prateleira ficam com ✓ verde (sem contar erro nem ponto) */
+      marcarCertas() {
+        prateleiraStatus = prateleira.map(() => 'ok');
+        renderPrateleira();
+      },
       balancar(id) {
         const el = document.querySelector(`#itens-grid [data-item-id="${id}"]`);
         if (!el) return;

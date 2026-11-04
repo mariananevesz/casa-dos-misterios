@@ -40,12 +40,11 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
     },
     {
       "id": 2,
@@ -61,12 +60,11 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
     },
     {
       "id": 3,
@@ -82,15 +80,15 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ],
         [
           "@final"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
+      
     }
   ],
   "finais": [

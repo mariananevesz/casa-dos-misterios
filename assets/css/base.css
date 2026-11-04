@@ -206,6 +206,8 @@ body {
   padding: 0 0.25em;
   box-shadow: 0 0 0 2px #FFE3A3;
 }
+/* A palavra VERMELHAS fica vermelha (contraste ~5:1 sobre o fundo creme) */
+.destaque-palavra--vermelha { color: #B3261E; }
 body.alto-contraste .destaque-palavra { background: #ffd700; color: #000; box-shadow: 0 0 0 2px #ffd700; text-decoration: underline; }
 
 /* Imagem do mascote Logi dentro do balão */

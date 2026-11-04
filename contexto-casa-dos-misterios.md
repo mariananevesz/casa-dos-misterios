@@ -16,7 +16,7 @@
 | 3. Motor do tutorial (Tutorial 2, Sala fase 3) | **Feita, ainda não commitada** (ver "Etapa 3" abaixo). Conferir `git status` | **#111** |
 | 4. Escolha do tutorial no Mapa | **Próxima. Não iniciada** | sem task ainda |
 | 5. Tutorial 1 (Sala fase 1) | **Feita em 03/11/2026, sem commit** (ver "Fase 3" abaixo) | sem task ainda |
-| 6. Tutoriais 3, 4 e 5 (Quarto, Cozinha, Despensa) | **Feita em 03/11/2026, sem commit** (Cozinha na Fase 3; Quarto e Despensa depois). Testada no navegador, passo a passo, com toques certos e errados. **Não testado:** leitor de tela, movimento reduzido, celular deitado | sem task ainda |
+| 6. Tutoriais 3, 4 e 5 (Quarto, Cozinha, Despensa); em 04/11 entraram os Tutoriais 6 e 7 (Despensa, fases 2 e 3) | **Feita em 03/11/2026, sem commit** (Cozinha na Fase 3; Quarto e Despensa depois). Testada no navegador, passo a passo, com toques certos e errados. **Não testado:** leitor de tela, movimento reduzido, celular deitado | sem task ainda |
 | 7. Intro animada | Pendente (menor prioridade) | sem task ainda |
 
 O usuário pausou o desenvolvimento e retoma depois. Ao retomar, rode `git status` e `git log --oneline -5` para ver o que já foi commitado antes de mexer em qualquer coisa.
@@ -301,31 +301,38 @@ Grade de treino: robô em (3,0), estrela em (0,0), 4 espaços.
 | sala-f3-p5 | fila de comandos | ok | Dois blocos fizeram TRÊS passos! | comemorando |
 
 ### Tutorial 3: Quarto, fase 1 (achar o erro) — **implementado em 03/11/2026**
-Blocos de treino: camiseta, calça repetida (vermelha, `calcarep`), calça, tênis; fila de 3 espaços (camiseta e calça em qualquer ordem, tênis por último). Sem demonstração: o primeiro passo já é a vez da criança.
+Blocos de treino: camiseta, calça repetida (vermelha, `calcarep`), calça, tênis; fila de 3 espaços (camiseta pode vir em qualquer lugar; o tênis só depois da calça). Sem demonstração: o primeiro passo já é a vez da criança.
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
 | quarto-f1-p1 | bloco Camiseta | click | Oi, {tratamento}! Toque na CAMISETA para pôr na fila. | apontando |
 | quarto-f1-p2 | bloco vermelho (calça repetida) | ok | Este bloco está REPETIDO. Ele fica FORA! | dica |
 | quarto-f1-p3 | bloco Calça (a certa, não vermelha) | click | Sua vez! Coloque a CALÇA certa na fila. | aguardando |
-| quarto-f1-p4 | bloco Tênis | click | O TÊNIS vem sempre por ÚLTIMO. | dica |
+| quarto-f1-p4 | bloco Tênis | click | O TÊNIS vem DEPOIS da calça e da meia. | dica |
 | quarto-f1-p5 | botão Verificar sequência | click | Aperte VERIFICAR para conferir. | apontando |
 
-Erros explicados pelo bloco em que a criança tocou (ex.: no p3, "Esse é o REPETIDO, o vermelho. Toque na outra CALÇA." ou "O TÊNIS vem por último. Primeiro, a CALÇA."). A explicação some sozinha depois de 3,5 a 4 s e volta ao convite; **o passo só avança com o toque certo**. No p5, tocar em Verificar marca a fila de treino com ✓ verde, sem contar erro nem ponto (`acoes.verificar` em `Quarto.html`; `verificar()` chama `Tutorial.tentar('verificar')` com o tutorial aberto).
+Erros explicados pelo bloco em que a criança tocou (ex.: no p3, "Esse é o REPETIDO, o vermelho. Toque na outra CALÇA." ou "O TÊNIS vem DEPOIS da calça. Primeiro, a CALÇA."). A explicação some sozinha depois de 3,5 a 4 s e volta ao convite; **o passo só avança com o toque certo**. No p5, tocar em Verificar marca a fila de treino com ✓ verde, sem contar erro nem ponto (`acoes.verificar` em `Quarto.html`; `verificar()` chama `Tutorial.tentar('verificar')` com o tutorial aberto).
+
+**Regra de ordem do Quarto (04/11/2026):** em `quarto.json` (e `QUARTO_INLINE`), `passos` são faixas por posição (Fase 2 e 3: `[banho]` primeiro; Fase 3: `[@final]` por último; no meio um grupo livre `camiseta, calca, meia, tenis`) e `ordem` lista pares `[antes, depois]`: `[calca, tenis]` e `[meia, tenis]`. Certo: calça, meia, tênis, camiseta, ou camiseta no começo, ou no meio. Errado: tênis antes da calça ou da meia. `validarPosicoes(passos, escolhidos, ordem)` marca só o bloco que quebra a regra (o tênis). A Dica só sugere o tênis depois que calça e meia entraram. Corrigido também: a Fase 3 tinha a camiseta duplicada nos passos.
 
 ### Tutorial 4: Cozinha, fase 1 (verdadeiro ou falso) — **implementado em 03/11/2026**
 Frase de treino: "O gelo NUNCA é quente." (resposta: Verdadeiro).
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
-| cozinha-f1-p1 | a palavra NUNCA dentro da frase | ok | Oi, {tratamento}! Atenção na palavra NUNCA. | falando |
-| cozinha-f1-p2 | **os dois botões, Verdadeiro e Falso, num destaque só (sem mãozinha)** | click (teclas V e F também) | É VERDADEIRO ou FALSO? Toque em um botão. | aguardando |
-| cozinha-f1-p3 | botão escolhido | ok | Isso! Você leu com ATENÇÃO! | comemorando |
+| cozinha-f1-p1 | **a caixa da frase inteira**; cada palavra acende, uma por vez, como se o Logi lesse | ok | Oi, {tratamento}! Vamos LER a frase juntos. | falando |
+| cozinha-f1-p2 | a caixa da frase, com a palavra NUNCA brilhando | ok | Olhe a palavra NUNCA. Ela muda o sentido da frase! | dica |
+| cozinha-f1-p3 | **frase + os dois botões, Verdadeiro e Falso, num destaque só (sem mãozinha)** | click (teclas V e F também) | Sua vez! Tente acertar: a frase é VERDADEIRA ou FALSA? | aguardando |
+| cozinha-f1-p4 | botão escolhido | ok | Isso! Você leu com ATENÇÃO! | comemorando |
 
-**Se errar no p2:** o Logi **explica o porquê** (ex.: "Quase! O gelo é FRIO. Ele NUNCA é quente. É VERDADEIRO!", com a palavra da frase acesa), a criança toca em **OK** e a frase vira **outro exemplo** ("O sol NÃO é quente." → Falso; "O fogo NUNCA é frio." → Verdadeiro; depois volta ao 1º), com o convite "Outra FRASE! Tente de novo." Isso substitui a regra antiga de "erro silencioso e explicação só no 2º toque errado" (o usuário pediu a explicação já no 1º erro).
+**Balão fora da frase (04/11/2026):** o balão nunca cobre a frase. O motor (`posicionarBalao` em `tutorial.js`) agora também testa posições logo acima/abaixo de cada região de `evitar`, e a Cozinha usa `evitar: '#pergunta-box, .cozinha-vf'`. Testado em 1366×768. Quarto conferido; Sala e Despensa **não** foram reconferidas depois dessa mudança do motor.
+
+**Cozinha, feedback do jogo (04/11/2026):** depois de responder, o feedback fica na tela e **não passa sozinho**. O botão **"Próxima →"** (`#btn-proxima`, "Ver resultado →" na última pergunta) fica à direita, na mesma linha do texto do feedback, tanto no acerto quanto no erro. A pergunta só muda quando a criança toca nele (`proximaPergunta()` em `Cozinha.html`). Antes eram 1,2 s e passava sozinho. Os botões V/F e a Dica ficam bloqueados enquanto espera.
+
+**Se errar no p3:** o Logi **explica o porquê** (ex.: "Quase! O gelo é FRIO. Ele NUNCA é quente. É VERDADEIRO!", com a palavra da frase acesa), a criança toca em **OK** e a frase vira **outro exemplo** ("O sol NÃO é quente." → Falso; "O fogo NUNCA é frio." → Verdadeiro; depois volta ao 1º), com o convite "Outra FRASE! Tente de novo." Isso substitui a regra antiga de "erro silencioso e explicação só no 2º toque errado" (o usuário pediu a explicação já no 1º erro).
 
 ### Tutorial 5: Despensa, fase 1 (frutas vermelhas) — **implementado em 03/11/2026**
-Como o nível Fácil (`criterio: "selecao-cor"`) **não tem prateleira nem arrastar** e só aceita toque, a regra da fase **não foi mudada**: o tutorial usa a alternativa "Toque na MAÇÃ / no MORANGO". Frutas de treino fixas: maçã, banana, uva, morango, mirtilo. Só o nível Fácil tem tutorial (Médio e Difícil, com prateleira e arrastar, ainda não têm).
+Como o nível Fácil (`criterio: "selecao-cor"`) **não tem prateleira nem arrastar** e só aceita toque, a regra da fase **não foi mudada**: o tutorial usa a alternativa "Toque na MAÇÃ / no MORANGO". Frutas de treino fixas: maçã, banana, uva, morango, mirtilo. Médio e Difícil têm tutorial próprio (Tutoriais 6 e 7, abaixo).
 
 | id | alvo | ação | texto | estado |
 |---|---|---|---|---|
@@ -335,6 +342,32 @@ Como o nível Fácil (`criterio: "selecao-cor"`) **não tem prateleira nem arras
 | despensa-f1-p4 | frutas escolhidas | ok | Isso! O morango também é VERMELHO! | comemorando |
 
 Erros explicados pela fruta tocada, com a cor dela (ex.: "A banana é AMARELA. Procure a MAÇÃ.", "O mirtilo é AZUL. Procure o MORANGO.", "A maçã já está escolhida. Toque no MORANGO."). Mesma regra do Quarto: some sozinha e o passo só avança com o toque certo. O `tentar` agora passa o que a criança tocou para `erro.fala(api, valor)`.
+
+### Tutoriais 6 e 7: Despensa, fase 2 (tamanho) e fase 3 (sementes) — **implementados em 04/11/2026**
+Mesmo padrão do Tutorial 5: o 1º passo já é a vez da criança, erros explicados pela fruta tocada, o passo só avança com o toque certo, a tela real volta intacta ao fechar. Abrem sozinhos na 1ª vez que a criança chega ao nível (`tutorialDaFase` devolve `despensa-f1/f2/f3` conforme o `criterio`). A criança **toca** nas frutas (arrastar também vale no jogo, mas o tutorial só pede toque). Fim do treino: as frutas na prateleira ficam com ✓ verde, sem contar erro nem ponto (`acoes.marcarCertas`). Não pede "Confirmar", como o f1.
+
+**Tutorial 6, Médio** (`despensa-f2.js`). Frutas de treino: mirtilo (1), maçã (3), melancia (5); prateleira de 3 casas.
+
+| id | alvo | ação | texto | estado |
+|---|---|---|---|---|
+| despensa-f2-p1 | Mirtilo | click | Oi, {tratamento}! Comece pela MENOR: o MIRTILO. | apontando |
+| despensa-f2-p2 | prateleira | ok | A prateleira vai do MENOR ao MAIOR. | dica |
+| despensa-f2-p3 | Maçã | click | Sua vez! A MENOR que sobrou: a MAÇÃ. | aguardando |
+| despensa-f2-p4 | Melancia | click | Por último, a MAIOR: a MELANCIA. | dica |
+| despensa-f2-p5 | prateleira (✓) | ok | Isso! Do MENOR para o MAIOR! | comemorando |
+
+**Tutorial 7, Difícil** (`despensa-f3.js`). Frutas de treino: maçã e melancia (têm sementes), abacaxi e banana (não têm); prateleira de 2 casas (a legenda vira "2 frutas" durante o treino). O **morango (aquênios) fica fora do treino** para não confundir; ele só aparece no jogo.
+
+| id | alvo | ação | texto | estado |
+|---|---|---|---|---|
+| despensa-f3-p1 | Maçã | click | Oi, {tratamento}! Só frutas com SEMENTES. Toque na MAÇÃ. | apontando |
+| despensa-f3-p2 | Abacaxi (balança) | ok | O abacaxi NÃO tem SEMENTES. Fica de FORA! | dica |
+| despensa-f3-p3 | Melancia | click | Sua vez! Outra com SEMENTES: a MELANCIA. | aguardando |
+| despensa-f3-p4 | prateleira (✓) | ok | Isso! Só frutas com SEMENTES! | comemorando |
+
+Erros (exemplos): Médio, "A maçã é MÉDIA. Comece pela MENOR.", "A melancia é MAIOR que a maçã. Primeiro, a MAÇÃ.", "O mirtilo já está na prateleira. Toque na MAÇÃ."; Difícil, "O abacaxi NÃO tem SEMENTES por dentro. Procure a MAÇÃ.", "A melancia também tem SEMENTES! Primeiro, a MAÇÃ.".
+
+**Mudanças em `Despensa.html` para isso:** `nivelTreino` + `nivelAtual()` (o jogo usa as frutas de treino enquanto o tutorial está aberto); `adicionarItem(id, alternar, origem)` passa por `Tutorial.tentar('adicionar', …)` com o tutorial aberto; `removerItem` fica bloqueado no treino; `preparar`/`restaurar` guardam e devolvem a seleção e a prateleira. **Testado no navegador** (800×666): os dois tutoriais passo a passo com toques certos e errados, Pular no meio (tela real volta com frutas e prateleira certas), tecla R reabre, botão "Ver o tutorial do Logi" aparece, e o jogo real (Confirmar, tocar de novo para tirar) continua igual. **Não testado:** arrastar durante o tutorial, leitor de tela, movimento reduzido, celular.
 
 ## 7. Intro do jogo (prioridade mais baixa)
 

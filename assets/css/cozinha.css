@@ -360,11 +360,32 @@
 .cozinha-feedback .dica__texto {
   font-size: calc(15px * var(--escala-fonte));
   font-weight: 700;
+  flex: 1;
+}
+
+/* Botão Próxima: à direita, na mesma linha do feedback (a pergunta só muda quando a criança toca) */
+.cozinha-proxima {
+  flex: 0 0 auto;
+  width: auto;
+  margin-left: auto;
+  min-height: 44px;
+  padding: 0.45rem 1.1rem;
+  font-size: calc(17px * var(--escala-fonte));
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 /* ---------- Botão Dica ---------- */
 .cozinha-btn-dica {
   align-self: center;
+}
+
+/* Depois de responder, a Dica fica apagada, igual aos botões Verdadeiro / Falso */
+.cozinha-btn-dica:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
 }
 
 /* ---------- Responsividade ---------- */

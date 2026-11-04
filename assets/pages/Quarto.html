@@ -190,12 +190,11 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
     },
     {
       "id": 2,
@@ -211,12 +210,11 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
     },
     {
       "id": 3,
@@ -232,15 +230,14 @@
         [
           "camiseta",
           "calca",
-          "meia"
-        ],
-        [
+          "meia",
           "tenis"
         ],
         [
           "@final"
         ]
-      ]
+      ],
+      "ordem": [["calca", "tenis"], ["meia", "tenis"]]
     }
   ],
   "finais": [
@@ -320,18 +317,28 @@
       tentativas++;
     } while (tentativas < 10 && ordem.slice(0, corretos.length).every((b, i) => b.id === corretos[i]));
 
-    return { blocos: ordem, passos, total: corretos.length, intrusos, temErro: blocos.some(b => b.erro), intrusosRevelados: false };
+    return { blocos: ordem, passos, ordem: fase.ordem || [], total: corretos.length, intrusos, temErro: blocos.some(b => b.erro), intrusosRevelados: false };
   }
 
-  /* Cada posição pertence a um grupo; dentro do grupo a ordem é livre, sem repetir item */
-  function validarPosicoes(passos, escolhidos) {
+  /* Cada posição pertence a um grupo (ex.: banho primeiro, @final por último); dentro do grupo
+     a ordem é livre, sem repetir item, EXCETO pelas regras "ordem": [antes, depois]
+     (ex.: calça e meia antes do tênis; a camiseta pode vir em qualquer lugar do grupo). */
+  function validarPosicoes(passos, escolhidos, ordem = []) {
     const resultado = [];
     let pos = 0;
     passos.forEach(grupo => {
       const usados = [];
       grupo.forEach(() => {
         const id = escolhidos[pos];
-        const ok = grupo.includes(id) && !usados.includes(id);
+        let ok = grupo.includes(id) && !usados.includes(id);
+        if (ok) {
+          /* todo bloco que precisa vir ANTES deste já tem que estar na fila, em posição anterior */
+          ok = ordem.every(([antes, depois]) => {
+            if (depois !== id) return true;
+            const i = escolhidos.indexOf(antes);
+            return i >= 0 && i < pos;
+          });
+        }
         if (ok) usados.push(id);
         resultado.push(ok);
         pos++;
@@ -577,7 +584,7 @@
     }
     verificado = true;
 
-    const posicoes = validarPosicoes(faseMontada.passos, corrigida);
+    const posicoes = validarPosicoes(faseMontada.passos, corrigida, faseMontada.ordem);
     const total = faseMontada.total;
     let acertos = 0;
 
@@ -739,7 +746,7 @@
       return [passo([...document.querySelectorAll(`${fonte} .bloco--erro`)], fase.dica.suspeito, fila)];
     }
 
-    const posicoes = validarPosicoes(faseMontada.passos, corrigida);
+    const posicoes = validarPosicoes(faseMontada.passos, corrigida, faseMontada.ordem);
     const errado = corrigida.findIndex((_, i) => !posicoes[i]);
     if (errado >= 0) {
       return [passo(document.querySelector(`${fila} .bloco[data-idx="${errado}"]`), geral.lugar, fonte)];

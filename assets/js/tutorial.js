@@ -346,6 +346,12 @@ const Tutorial = (() => {
         { l: lim(rect.r + gap, m, vw - w - m), t: lim(cy - h / 2, m, vh - h - m) },        // à direita
         { l: lim(rect.l - gap - w, m, vw - w - m), t: lim(cy - h / 2, m, vh - h - m) },    // à esquerda
       ];
+      /* Também tenta ficar logo acima / abaixo de cada região a evitar (ex.: a frase), para não cobri-la */
+      evitar.forEach(r => {
+        const ex = (r.l + r.r) / 2;
+        candidatos.push({ l: lim(ex - w / 2, m, vw - w - m), t: lim(r.t - gap - h, m, vh - h - m) });
+        candidatos.push({ l: lim(ex - w / 2, m, vw - w - m), t: lim(r.b + gap, m, vh - h - m) });
+      });
       /* Menos sobreposição vence: o alvo pesa muito mais que as regiões a evitar */
       let melhor = candidatos[0], pior = Infinity;
       candidatos.forEach(c => {

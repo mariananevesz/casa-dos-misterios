@@ -33,7 +33,7 @@
     passos: [
       { id: 'despensa-f1-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: FRUTA('maca'), vez: { tipo: 'selecionar', valor: 'maca' },
-        fala: 'Oi, {tratamento}! Só frutas VERMELHAS. Toque na MAÇÃ.', palavraChave: ['VERMELHAS', 'MAÇÃ'],
+        fala: 'Oi, {tratamento}! Escolha somente frutas VERMELHAS. Toque na MAÇÃ.', palavraChave: ['VERMELHAS', 'MAÇÃ'],
         audiodescricao: 'Logi chega pulando na Despensa. Hoje só escolhemos frutas vermelhas. Toque na maçã vermelha: ela fica escolhida.',
         teclado: 'Foco já na “Maçã”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
