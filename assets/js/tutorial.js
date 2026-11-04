@@ -960,6 +960,8 @@ const Tutorial = (() => {
     tratamento: TRATAMENTO,
     tratar,
     tem: id => Boolean(registro[id]),
+    /* Dados de um tutorial registrado (usado pelo "Como jogar", que mostra os mesmos passos) */
+    obter: id => registro[id] || null,
   };
 })();
 

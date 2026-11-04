@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/cozinha.css">
   <link rel="stylesheet" href="../css/tutorial.css">
+  <link rel="stylesheet" href="../css/como-jogar.css">
 </head>
 <body class="pagina-cozinha">
 
@@ -86,42 +87,10 @@
 
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
-    <section class="modal modal-ajuda">
+    <section class="modal modal-ajuda cj-modal">
       <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
-      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">📋 Como jogar</p>
-        <ol class="modal-ajuda-lista">
-          <li>
-            Leia a frase com atenção.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="modal-ajuda-mini-painel">"O sal é doce."</span>
-            </span>
-          </li>
-          <li>
-            Observe palavras como <strong>não</strong>, <strong>nunca</strong>, <strong>sempre</strong> e <strong>jamais</strong>.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="modal-ajuda-mini-painel"><u style="font-weight:700;">não</u> é doce</span>
-            </span>
-          </li>
-          <li>
-            Escolha se a frase é verdadeira ou falsa.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <img src="../img/verdadeiro.png" alt="">
-              <img src="../img/falso.png" alt="">
-            </span>
-          </li>
-        </ol>
-      </section>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
-        <section class="modal-ajuda-objetivo">
-          <img src="../img/estrela.png" alt="">
-          <p>Responda às frases para praticar lógica com verdadeiro e falso.</p>
-        </section>
-      </section>
+      <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+      <div id="cj-raiz"></div>
     </section>
   </div>
 
@@ -144,6 +113,8 @@
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
   <script src="../js/tutoriais/cozinha-f1.js"></script>
+  <script src="../js/como-jogar.js"></script>
+  <script>ComoJogar.montarComodo(document.getElementById('cj-raiz'), 'cozinha');</script>
   <script>
   /* ===== COZINHA — lógica do jogo ===== */
 
@@ -500,6 +471,7 @@
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
+    try { ComoJogar.irParaFase('cozinha', Math.floor(perguntaIdx / gameData.tamFase)); } catch (e) {}
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
   }
   function fecharModalAjuda() {

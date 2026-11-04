@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/quarto.css">
   <link rel="stylesheet" href="../css/tutorial.css">
+  <link rel="stylesheet" href="../css/como-jogar.css">
 </head>
 <body class="pagina-quarto">
 
@@ -81,47 +82,10 @@
 
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
-    <section class="modal modal-ajuda">
+    <section class="modal modal-ajuda cj-modal">
       <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
-      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">📋 Como jogar</p>
-        <ol class="modal-ajuda-lista">
-          <li>
-            Observe os passos para <span class="destaque-escola">IR À ESCOLA</span>.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="bloco bloco--erro">📺 Assistir TV <span class="bloco__tag-erro">!</span></span>
-            </span>
-          </li>
-          <li>
-            Escolha só os blocos que combinam. A dica mostra o que está errado.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="bloco bloco--roxo">👕 Vestir a camiseta</span>
-            </span>
-          </li>
-          <li>
-            Monte a ordem certa no painel.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="modal-ajuda-mini-painel">+ bloco</span>
-            </span>
-          </li>
-          <li>
-            Use verificar para testar.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <button class="btn btn--roxo" type="button" tabindex="-1">✓ Verificar sequência</button>
-            </span>
-          </li>
-        </ol>
-      </section>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
-        <section class="modal-ajuda-objetivo">
-          <img src="../img/estrela.png" alt="">
-          <p>Montar a rotina para <span class="destaque-escola">IR À ESCOLA</span>, deixando de fora o que não combina e organizando os passos na ordem certa.</p>
-        </section>
-      </section>
+      <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+      <div id="cj-raiz"></div>
     </section>
   </div>
 
@@ -144,6 +108,8 @@
   <script src="../js/audio.js"></script>
   <script src="../js/tutorial.js"></script>
   <script src="../js/tutoriais/quarto-f1.js"></script>
+  <script src="../js/como-jogar.js"></script>
+  <script>ComoJogar.montarComodo(document.getElementById('cj-raiz'), 'quarto');</script>
   <script>
   /* ===== QUARTO — lógica do jogo ===== */
 
@@ -710,6 +676,7 @@
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
+    try { ComoJogar.irParaFase('quarto', faseAtual); } catch (e) {}
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
   }
   function fecharModalAjuda() {

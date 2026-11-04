@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/despensa.css">
   <link rel="stylesheet" href="../css/tutorial.css">
+  <link rel="stylesheet" href="../css/como-jogar.css">
 </head>
 <body class="pagina-despensa">
 
@@ -95,42 +96,10 @@
 
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
-    <section class="modal modal-ajuda">
+    <section class="modal modal-ajuda cj-modal">
       <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
-      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">📋 Como jogar</p>
-        <ol class="modal-ajuda-lista">
-          <li>
-            Leia a regra mostrada pelo Logi.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <img src="../img/logi_feliz.png" alt="">
-            </span>
-          </li>
-          <li>
-            Clique ou arraste os itens corretos.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <img src="../img/maça.png" alt="">
-              <img src="../img/uva.png" alt="">
-            </span>
-          </li>
-          <li>
-            Use <strong>Confirmar</strong> para conferir.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <button class="btn btn--marrom" type="button" tabindex="-1">✓ Confirmar!</button>
-            </span>
-          </li>
-        </ol>
-      </section>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
-        <section class="modal-ajuda-objetivo">
-          <img src="../img/estrela.png" alt="">
-          <p>Organize os itens por cor, tamanho ou características das frutas para deixar a despensa em ordem.</p>
-        </section>
-      </section>
+      <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+      <div id="cj-raiz"></div>
     </section>
   </div>
 
@@ -156,6 +125,8 @@
   <script src="../js/tutoriais/despensa-f1.js"></script>
   <script src="../js/tutoriais/despensa-f2.js"></script>
   <script src="../js/tutoriais/despensa-f3.js"></script>
+  <script src="../js/como-jogar.js"></script>
+  <script>ComoJogar.montarComodo(document.getElementById('cj-raiz'), 'despensa');</script>
   <script>
   /* ===== DESPENSA — lógica do jogo ===== */
 
@@ -973,6 +944,7 @@
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
+    try { ComoJogar.irParaFase('despensa', nivelIdx); } catch (e) {}
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
   }
   function fecharModalAjuda() {

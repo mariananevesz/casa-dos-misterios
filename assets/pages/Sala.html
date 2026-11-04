@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/sala.css">
   <link rel="stylesheet" href="../css/tutorial.css">
+  <link rel="stylesheet" href="../css/como-jogar.css">
 </head>
 <body>
 
@@ -102,42 +103,10 @@
 
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
-    <section class="modal modal-ajuda">
+    <section class="modal modal-ajuda cj-modal">
       <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
-      <h2 class="modal-titulo" id="modal-ajuda-titulo">Como jogar</h2>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">📋 Como jogar</p>
-        <ol class="modal-ajuda-lista">
-          <li>
-            Escolha os comandos: cima, baixo, esquerda<span class="so-repetir">, direita ou repetir</span><span class="sem-repetir" hidden> ou direita</span>.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="bloco bloco--laranja">↑ Cima</span>
-              <span class="bloco bloco--ambar so-repetir">↻ Repetir</span>
-            </span>
-          </li>
-          <li>
-            Monte a sequência no painel.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <span class="modal-ajuda-mini-painel">+ bloco</span>
-            </span>
-          </li>
-          <li>
-            Clique em <strong>Executar</strong> para testar seu algoritmo.
-            <span class="modal-ajuda-visual" aria-hidden="true">
-              <button class="btn btn--laranja" type="button" tabindex="-1">▶ Executar</button>
-            </span>
-          </li>
-        </ol>
-      </section>
-
-      <section class="modal-ajuda-secao">
-        <p class="modal-ajuda-titulo">🎯 Objetivo</p>
-        <section class="modal-ajuda-objetivo">
-          <img src="../img/estrela.png" alt="">
-          <p>Leve o personagem até a estrela sem bater nos obstáculos.</p>
-        </section>
-      </section>
+      <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
+      <div id="cj-raiz"></div>
     </section>
   </div>
 
@@ -162,6 +131,8 @@
   <script src="../js/tutorial.js"></script>
   <script src="../js/tutoriais/sala-f1.js"></script>
   <script src="../js/tutoriais/sala-f3.js"></script>
+  <script src="../js/como-jogar.js"></script>
+  <script>ComoJogar.montarComodo(document.getElementById('cj-raiz'), 'sala');</script>
   <script>
   /* ===== SALA — lógica do jogo ===== */
 
@@ -891,6 +862,7 @@ async function executar() {
   /* ---- Ajuda (Como jogar / Objetivo) ---- */
   function abrirModalAjuda() {
     const modal = document.getElementById('modal-ajuda');
+    try { ComoJogar.irParaFase('sala', faseAtual); } catch (e) {}
     abrirTutorialAcessivel(modal, document.getElementById('btn-ajuda'));
   }
   function fecharModalAjuda() {
