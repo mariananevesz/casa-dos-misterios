@@ -17,7 +17,15 @@ const DEFAULT_STATE = {
     altoContraste: false,
     tamanhoFonte:  100,
     somAtivado:    true,
-    musicaAtivada: true
+    musicaAtivada: true,
+    volumeSom:     7,        // 0 a 10 (7 = volume original dos efeitos)
+    volumeMusica:  5,        // 0 a 10 (5 = volume original da música)
+    reduzMovimento: false,   // além do pedido do aparelho (prefers-reduced-motion)
+    fonte:         'padrao', // 'padrao' | 'simples' | 'ampla' | 'divertida'
+    espacoTexto:   false,    // mais espaço entre letras, palavras e linhas
+    atalhos:       true,     // teclas V, F e R
+    treinoAuto:    true,     // treino do Logi abre sozinho na 1ª vez de cada fase
+    nome:          ''        // como o Logi chama a criança (vazio = "explorador")
   },
   tutoriaisVistos: {},
   cozinhaBloco: 0,
@@ -132,6 +140,15 @@ const gameState = {
      tutorial simplesmente aparece sempre (nunca quebra o jogo). */
   tutorialVisto(id) {
     try { return Boolean(this._load().tutoriaisVistos[id]); } catch { return false; }
+  },
+
+  /* Preferências > Logi > "Rever todos os treinos" */
+  limparTutoriaisVistos() {
+    try {
+      const state = this._load();
+      state.tutoriaisVistos = {};
+      this._save(state);
+    } catch {}
   },
 
   marcarTutorialVisto(id) {
@@ -292,6 +309,12 @@ function aplicarConfiguracoes() {
     : 100;
   document.documentElement.style.setProperty('--escala-fonte', tamanhoFonte / 100);
   document.documentElement.dataset.tamanhoFonte = String(tamanhoFonte);
+
+  /* Preferências de leitura e movimento (regras em base.css) */
+  const fontes = ['padrao', 'simples', 'ampla', 'divertida'];
+  document.documentElement.dataset.fonte = fontes.includes(cfg.fonte) ? cfg.fonte : 'padrao';
+  document.documentElement.dataset.espaco = cfg.espacoTexto ? '1' : '0';
+  document.body.classList.toggle('reduz-movimento', Boolean(cfg.reduzMovimento));
 }
 
 document.addEventListener('DOMContentLoaded', aplicarConfiguracoes);

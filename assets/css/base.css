@@ -1105,3 +1105,35 @@ body.alto-contraste .pontuacao-total__de { color: #000 !important; }
 
 body.alto-contraste kbd { background: #000 !important; border-color: #fff !important; color: #fff !important; }
 body.alto-contraste :focus-visible { outline: 4px solid #00e5ff !important; outline-offset: 3px; }
+
+
+/* =============================================================
+   Preferências de leitura e movimento (ver preferencias.js)
+   ============================================================= */
+html[data-fonte="simples"] *:not(.pref-amostra)    { font-family: Arial, Helvetica, sans-serif !important; }
+html[data-fonte="ampla"] *:not(.pref-amostra)      { font-family: Verdana, Geneva, sans-serif !important; }
+html[data-fonte="divertida"] *:not(.pref-amostra)  { font-family: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', 'Marker Felt', cursive, sans-serif !important; }
+html[data-fonte] kbd            { font-family: inherit !important; }
+
+html[data-espaco="1"] body * { letter-spacing: 0.035em; word-spacing: 0.1em; }
+html[data-espaco="1"] :is(p, li, .balao__texto, .cj-texto, .cj-explica, .dica__texto) { line-height: 1.75 !important; }
+
+body.reduz-movimento *,
+body.reduz-movimento *::before,
+body.reduz-movimento *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Ícones em emoji não mudam com o "Tipo de letra" (senão viram quadradinhos ou saem do lugar) */
+html[data-fonte] :is(.btn-musica span, .btn-musica, .btn-preferencias, .dica__emoji, .pref-aba__ico, .pref-secao__titulo > span, .mapa-preferencias span) {
+  font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif !important;
+}
+
+/* Celulares estreitos: som, preferências e "?" no HUD ficam menores para sobrar espaço ao título do cômodo */
+@media (max-width: 430px) {
+  .hud .btn-ajuda { width: 36px !important; height: 36px !important; min-width: 36px !important; margin-left: 4px !important; font-size: calc(17px * var(--escala-fonte)); }
+}

@@ -152,9 +152,15 @@ document.addEventListener('keydown', event => {
 
   if (somenteAlt && tecla === 'a') {
     const abrirAcessibilidade = document.querySelector('[aria-controls="modal-config"]');
-    if (!abrirAcessibilidade || abrirAcessibilidade.getAttribute('aria-expanded') === 'true') return;
-    event.preventDefault();
-    abrirAcessibilidade.click();
+    if (abrirAcessibilidade) {
+      if (abrirAcessibilidade.getAttribute('aria-expanded') === 'true') return;
+      event.preventDefault();
+      abrirAcessibilidade.click();
+    } else if (window.Preferencias && !window.Preferencias.aberto) {
+      /* Páginas sem o botão ⚙ (os cômodos) também abrem as preferências */
+      event.preventDefault();
+      window.Preferencias.abrir();
+    }
     return;
   }
 

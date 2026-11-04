@@ -41,7 +41,15 @@ const Tutorial = (() => {
   /* Como o Logi chama a criança. Termo neutro e provisório (decisão de 03/11/2026):
      troque aqui para mudar em todas as falas, que usam {tratamento} */
   const TRATAMENTO = 'explorador';
-  const tratar = s => (typeof s === 'string' ? s.replace(/\{tratamento\}/g, TRATAMENTO) : s);
+  /* Se a criança escreveu o nome nas Preferências, o Logi usa o nome dela */
+  const nomeDoJogador = () => {
+    try {
+      const n = String(gameState.getSettings().nome || '').trim();
+      return n || TRATAMENTO;
+    } catch { return TRATAMENTO; }
+  };
+  const tratar = s => (typeof s === 'string' ? s.replace(/\{tratamento\}/g, () => nomeDoJogador()) : s);
+  const prefLigada = chave => { try { return gameState.getSettings()[chave] !== false; } catch { return true; } };
 
   const CANC = Symbol('cancelado');
   const registro = {};
@@ -80,7 +88,8 @@ const Tutorial = (() => {
 
   const $  = (sel, raiz = document) => raiz.querySelector(sel);
   const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
-  const reduz = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+  const reduz = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
+    || document.body?.classList.contains('reduz-movimento') === true;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   /* ---------- Espera cancelável ---------- */
@@ -771,7 +780,7 @@ const Tutorial = (() => {
   /* R com o tutorial fechado: abre de novo o tutorial da fase (se a página não estiver ocupada) */
   function aoTeclaFora(e) {
     if (T.ativo || !pagina || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (String(e.key).toLowerCase() !== 'r') return;
+    if (String(e.key).toLowerCase() !== 'r' || !prefLigada('atalhos')) return;
     const t = e.target;
     if (t instanceof Element && t.matches('input, textarea, select, [contenteditable="true"]')) return;
     if ($$('.modal-overlay').some(m => getComputedStyle(m).display !== 'none')) return;
@@ -948,7 +957,7 @@ const Tutorial = (() => {
   }
 
   function auto(id) {
-    if (!id || !registro[id] || T.ativo || Date.now() < bloqueioAuto) return;
+    if (!id || !registro[id] || T.ativo || Date.now() < bloqueioAuto || !prefLigada('treinoAuto')) return;
     let visto = false;
     try { visto = gameState.tutorialVisto(id); } catch {}
     if (!visto) window.setTimeout(() => abrir(id), 350);
@@ -957,7 +966,7 @@ const Tutorial = (() => {
   return {
     registrar, configurar, auto, abrir, fechar, tentar, dica,
     get ativo() { return T.ativo; },
-    tratamento: TRATAMENTO,
+    get tratamento() { return nomeDoJogador(); },
     tratar,
     tem: id => Boolean(registro[id]),
     /* Dados de um tutorial registrado (usado pelo "Como jogar", que mostra os mesmos passos) */

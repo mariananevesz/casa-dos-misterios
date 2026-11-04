@@ -29,8 +29,18 @@ const audio = (() => {
     try { return gameState.getSettings().musicaAtivada; } catch { return true; }
   }
 
+  /* Volumes das preferências: 7 (efeitos) e 5 (música) = volume original */
+  function fator(chave, padrao) {
+    try {
+      const v = gameState.getSettings()[chave];
+      return Math.max(0, Math.min(10, v === undefined || v === null ? padrao : Number(v))) / padrao;
+    } catch { return 1; }
+  }
+
   function beep(freq, dur, type = 'sine', vol = 0.28) {
     if (!isSomAtivado()) return;
+    vol = Math.min(0.6, vol * fator('volumeSom', 7));
+    if (vol <= 0.0005) return;
     try {
       const c   = getCtx();
       const osc = c.createOscillator();
@@ -62,7 +72,9 @@ const audio = (() => {
       gain.connect(c.destination);
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, c.currentTime);
-      gain.gain.setValueAtTime(0.025, c.currentTime);
+      const volMusica = 0.025 * fator('volumeMusica', 5);
+      if (volMusica <= 0.0002) return;
+      gain.gain.setValueAtTime(volMusica, c.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.38);
       osciladoresMusica.add(osc);
       osc.addEventListener('ended', () => osciladoresMusica.delete(osc), { once: true });
@@ -127,15 +139,17 @@ const audio = (() => {
     const ajuda = document.getElementById('btn-ajuda');
     const config = document.getElementById('btn-config');
     const topoMapa = document.querySelector('.mapa-topo');
+    const preferencias = document.getElementById('btn-preferencias');   /* ⚙ do HUD (mapa e cômodos) */
     if (ajuda) {
       btn.className = 'btn-ajuda btn-musica';
-      ajuda.insertAdjacentElement('beforebegin', btn);
+      (preferencias || ajuda).insertAdjacentElement('beforebegin', btn);
     } else if (config) {
       btn.className = 'btn-musica btn-musica--canto';
       config.insertAdjacentElement('beforebegin', btn);
     } else if (topoMapa) {
       btn.className = 'btn-musica';
-      topoMapa.appendChild(btn);
+      if (preferencias) preferencias.insertAdjacentElement('beforebegin', btn);
+      else topoMapa.appendChild(btn);
     } else {
       btn.className = 'btn-musica btn-musica--flutuante';
       document.body.appendChild(btn);

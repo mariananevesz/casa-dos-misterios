@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../css/sala.css">
   <link rel="stylesheet" href="../css/tutorial.css">
   <link rel="stylesheet" href="../css/como-jogar.css">
+  <link rel="stylesheet" href="../css/preferencias.css">
 </head>
 <body>
 
@@ -32,6 +33,7 @@
 
       <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
 
+      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
@@ -128,6 +130,8 @@
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
+  <script src="../js/preferencias.js"></script>
+  <script>Preferencias.ligar(document.getElementById('btn-preferencias'));</script>
   <script src="../js/tutorial.js"></script>
   <script src="../js/tutoriais/sala-f1.js"></script>
   <script src="../js/tutoriais/sala-f3.js"></script>
