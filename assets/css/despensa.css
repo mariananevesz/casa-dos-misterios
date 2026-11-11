@@ -787,3 +787,13 @@ button.prateleira__slot {
   .btn--confirmar, .despensa-btn { min-height: 36px; font-size: calc(14px * var(--escala-fonte)); border-radius: 12px; }
   .despensa-btn--limpar { flex: 0 0 100px; }
 }
+
+/* As cartas de fruta são <button> nativos: mantêm o visual das antigas <article> */
+button.item-card {
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.item-card__nome { display: block; }

@@ -33,7 +33,7 @@
     </section>
 
     <!-- Mascote Logi -->
-    <section class="balao balao--verde cozinha-logi" aria-label="Instruções do Logi">
+    <section class="balao balao--verde cozinha-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
       <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
     </section>
@@ -45,30 +45,30 @@
 
         <section class="cozinha-status" aria-label="Progresso da cozinha">
           <section class="niveis cozinha-niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
-          <section class="progresso progresso--centro cozinha-progresso" id="progresso-dots" aria-label="Progresso das perguntas"></section>
+          <section class="progresso progresso--centro cozinha-progresso" id="progresso-dots" role="img" aria-label="Progresso das perguntas"></section>
         </section>
 
         <!-- Caixa de pergunta -->
-        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-live="polite" aria-atomic="true">
+        <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-label="Pergunta">
           <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
           <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
           <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
         </section>
 
         <!-- Botões V/F -->
-        <section class="vf-grid cozinha-vf" aria-label="Escolha verdadeiro ou falso">
-          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro">
+        <section class="vf-grid cozinha-vf">
+          <button class="btn-vf btn-vf--verde cozinha-vf__btn" id="btn-verdadeiro" aria-keyshortcuts="Alt+1">
             <img src="../img/verdadeiro.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Verdadeiro</span>
           </button>
-          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso">
+          <button class="btn-vf btn-vf--vermelho cozinha-vf__btn" id="btn-falso" aria-keyshortcuts="Alt+2">
             <img src="../img/falso.png" alt="" class="btn-vf__emoji-img cozinha-vf__img">
             <span>Falso</span>
           </button>
         </section>
 
         <!-- Feedback imediato -->
-        <section id="feedback-area" class="cozinha-feedback" aria-live="assertive" aria-atomic="true" style="display:none;">
+        <section id="feedback-area" class="cozinha-feedback" aria-label="Resposta" style="display:none;">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -77,7 +77,7 @@
         </section>
 
         <!-- Dica do Logi -->
-        <button type="button" class="btn-dica cozinha-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+        <button type="button" class="btn-dica cozinha-btn-dica" id="btn-dica" aria-label="Dica">
           <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Dica</span>
         </button>
@@ -127,6 +127,7 @@
   const COZINHA_INLINE = {
     miniJogo:"Cozinha — Verdadeiro ou Falso", habilidadeBNCC:"EF03CO01",
     instrucaoInstrutor:"Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
+    acessibilidade:{"entrada": "Você entrou na Cozinha.", "completa": "{entrada} Aqui você lê frases e decide se cada uma é verdadeira ou falsa. São {total} perguntas, {porNivel} em cada nível. Pergunta {n} de {porNivel}. {frase} Aperte o botão Verdadeiro ou Falso, ou use Alt 1 e Alt 2. Depois da resposta, aperte Próxima. Alt R repete esta instrução e Alt J abre a ajuda.", "pergunta": "Pergunta {n} de {porNivel}. {frase}", "perguntaNivel": "Nível {nivel}. Pergunta {n} de {porNivel}. {frase}", "feedback": "{msg} Aperte {proximo}.", "proximaPergunta": "Próxima", "verResultado": "Ver resultado", "botaoVerdadeiro": "Botão verdadeiro. A frase é: {frase}", "botaoFalso": "Botão falso. A frase é: {frase}"},
     blocos:[
       {id:1,  dificuldade:"Fácil", perguntas:[
         {id:1,  frase:"O fogão serve para aquecer a comida.",       resposta:true,  explicacao:"Sim! O fogão esquenta e cozinha os alimentos."},
@@ -288,6 +289,7 @@
 
     gameData = {
       instrucaoInstrutor: fonte.instrucaoInstrutor,
+      acessibilidade: fonte.acessibilidade || COZINHA_INLINE.acessibilidade,
       perguntas,
       tamFase: 3   /* perguntas por fase */
     };
@@ -295,8 +297,33 @@
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
     renderPergunta();
     atualizarBadge();
+    descreverCozinha(true);
     /* Tutorial do Logi: abre sozinho só na 1ª vez */
     Tutorial.auto('cozinha-f1');
+  }
+
+  /* Textos de leitor de tela: vêm de "acessibilidade" no cozinha.json */
+  const A11Y = () => gameData?.acessibilidade || {};
+  const tr = (chave, vars) => preencherTexto(A11Y()[chave], vars);
+
+  /* Pergunta falada: só o número e a frase (o nível entra só na 1ª pergunta de cada nível) */
+  function textoDaPergunta() {
+    const p = gameData.perguntas[perguntaIdx];
+    const n = perguntaIdx % gameData.tamFase + 1;
+    const novoNivel = n === 1 && perguntaIdx > 0;
+    return tr(novoNivel ? 'perguntaNivel' : 'pergunta', { nivel: p._fase, n, porNivel: gameData.tamFase, frase: p.frase });
+  }
+
+  /* Instrução completa (Alt+R); já traz a pergunta de agora. Só é lida ao entrar */
+  function descreverCozinha(entrando) {
+    const p = gameData.perguntas[perguntaIdx];
+    descreverComodo(
+      tr('completa', {
+        entrada: entrando ? tr('entrada') : '', total: gameData.perguntas.length, porNivel: gameData.tamFase,
+        n: perguntaIdx % gameData.tamFase + 1, frase: p.frase
+      }),
+      { anunciar: entrando }
+    );
   }
 
   /* ---- Abas de nível — mesmo padrão da Despensa ---- */
@@ -306,12 +333,15 @@
     const cont = document.getElementById('niveis-tabs');
     cont.innerHTML = '';
     const idxAtual = NIVEIS.indexOf(faseAtual);
+    cont.setAttribute('role', 'list');
     NIVEIS.forEach((nome, i) => {
       const span = document.createElement('span');
       if (i < idxAtual)        span.className = 'nivel nivel--ok';
       else if (i === idxAtual) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
-      span.textContent = nome + (i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : '');
+      const situacao = i < idxAtual ? 'concluído' : i === idxAtual ? 'atual' : 'bloqueado';
+      span.innerHTML = `${nome}<span aria-hidden="true">${i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.setAttribute('role', 'listitem');
       if (i === idxAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
@@ -332,6 +362,13 @@
     renderProgresso();
     habilitarBotoes(true);
     pararAtencaoDica();
+    rotularBotoes(p.frase);
+  }
+
+  /* Os botões repetem a frase no nome: depois de ler a frase, o leitor de tela não volta a ela com facilidade */
+  function rotularBotoes(frase) {
+    document.getElementById('btn-verdadeiro').setAttribute('aria-label', tr('botaoVerdadeiro', { frase }));
+    document.getElementById('btn-falso').setAttribute('aria-label', tr('botaoFalso', { frase }));
   }
 
   function destacarFrase(frase, palavraChave) {
@@ -356,11 +393,10 @@
         i === idxNaFase ? 'progresso__bolinha--meio' :
                           'progresso__bolinha--vazio'
       );
-      span.setAttribute('aria-label', `Pergunta ${i+1}: ${
-        i < idxNaFase ? 'respondida' : i === idxNaFase ? 'atual' : 'pendente'}`);
-      if (i === idxNaFase) span.setAttribute('aria-current', 'step');
+      span.setAttribute('aria-hidden', 'true');   /* quem lê por voz ouve o resumo do grupo */
       cont.appendChild(span);
     }
+    cont.setAttribute('aria-label', `Progresso das perguntas: pergunta ${idxNaFase + 1} de ${gameData.tamFase}, ${idxNaFase} ${idxNaFase === 1 ? 'respondida' : 'respondidas'}`);
   }
 
   /* ---- Resposta ---- */
@@ -412,6 +448,8 @@
       conclusao();
     } else {
       renderPergunta();
+      descreverCozinha(false);
+      anunciarAcessivel(textoDaPergunta());
     }
   }
 
@@ -422,6 +460,8 @@
     txt.className  = `dica__texto dica__texto--${tipo === 'verde' ? 'verde' : 'erro'}`;
     document.getElementById('feedback-area').style.display = 'block';
     txt.textContent = msg;
+    const ultima = perguntaIdx >= gameData.perguntas.length - 1;
+    anunciarAcessivel(tr('feedback', { msg, proximo: tr(ultima ? 'verResultado' : 'proximaPergunta') }), 'assertive');
   }
 
   function habilitarBotoes(on) {
@@ -535,11 +575,12 @@
   document.getElementById('btn-verdadeiro').addEventListener('click', () => { if (gameData) responder(true);  });
   document.getElementById('btn-falso').addEventListener('click',      () => { if (gameData) responder(false); });
 
+  /* Alt+1 = Verdadeiro, Alt+2 = Falso (com Alt, para não brigar com as teclas do leitor de tela) */
   document.addEventListener('keydown', e => {
-    if (!gameData || respondendo || e.repeat || e.altKey || e.ctrlKey || e.metaKey || existeModalVisivel()) return;
+    if (!gameData || respondendo || e.repeat || !e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || existeModalVisivel()) return;
     if (gameState.getSettings().atalhos === false) return;   /* Preferências > Atalhos */
-    if (e.key.toLowerCase() === 'v') responder(true);
-    if (e.key.toLowerCase() === 'f') responder(false);
+    if (e.code === 'Digit1' || e.code === 'Numpad1') { e.preventDefault(); responder(true); }
+    if (e.code === 'Digit2' || e.code === 'Numpad2') { e.preventDefault(); responder(false); }
   });
 
   /* ---- Tutorial do Logi: treino com a frase e os botões reais ---- */
@@ -569,6 +610,7 @@
           const neg = /^(não|nunca|sempre|jamais)$/i.test(w.replace(/[.,!?]/g, ''));
           return `<span class="tut-palavra${neg ? ' tut-neg' : ''}">${w}</span>`;
         }).join(' ');
+        rotularBotoes(txt.replace(/\s+/g, ' ').trim());   /* no treino, os botões repetem a frase de treino */
         this.limparMarcas();
       },
       marcar(letra) {

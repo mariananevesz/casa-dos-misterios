@@ -35,7 +35,7 @@
     </section>
 
     <!-- Mascote Logi -->
-    <section class="balao balao--marrom despensa-logi" aria-label="Instruções do Logi">
+    <section class="balao balao--marrom despensa-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote despensa-logi__img">
       <div class="balao__corpo despensa-logi__corpo">
         <p class="balao__texto balao__texto--marrom despensa-logi__texto" id="logi-boas-vindas"></p>
@@ -55,9 +55,9 @@
           <!-- Painel: itens para selecionar ou arrastar -->
           <section class="painel despensa-card despensa-card--itens" id="painel-itens">
             <p class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</p>
-            <section class="itens-grid despensa-itens-grid" id="itens-grid" role="listbox" aria-label="Itens disponíveis"></section>
+            <section class="itens-grid despensa-itens-grid" id="itens-grid" role="group" aria-label="Frutas disponíveis"></section>
 
-            <button type="button" class="btn-dica despensa-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+            <button type="button" class="btn-dica despensa-btn-dica" id="btn-dica" aria-label="Dica">
               <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span>Dica</span>
             </button>
@@ -66,8 +66,8 @@
           <!-- Painel: prateleira (oculto no nível Fácil) -->
           <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira">
             <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
-            <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira" aria-live="polite"></section>
-            <section class="prateleira__legenda despensa-prateleira__legenda">
+            <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira"></section>
+            <section class="prateleira__legenda despensa-prateleira__legenda" aria-hidden="true">
               <span class="prateleira__leg-txt" id="leg-esq">menor</span>
               <span style="flex:1;"></span>
               <span class="prateleira__leg-txt" id="leg-dir">maior</span>
@@ -76,7 +76,7 @@
         </section>
 
         <!-- Feedback granular -->
-        <section id="feedback-area" class="despensa-feedback" style="display:none;" aria-live="polite">
+        <section id="feedback-area" class="despensa-feedback" aria-label="Resposta" style="display:none;">
           <section class="dica" id="feedback-dica">
             <span class="dica__emoji" id="feedback-emoji" aria-hidden="true">💡</span>
             <p class="dica__texto" id="feedback-texto"></p>
@@ -143,6 +143,46 @@
     "miniJogo": "Despensa — Estoque Inteligente",
     "habilidadeBNCC": "EF02CO01",
     "instrucaoInstrutor": "Oi! Minha despensa está uma bagunça!",
+  "acessibilidade": {
+    "entrada": "Você entrou na Despensa.",
+    "completa": "{entrada} Nível {n} de {total}, {nivel}. Desafio: {instrucao} Frutas disponíveis: {frutas}. {como} {legenda} Aperte Confirmar quando terminar. Se precisar, aperte Dica. Alt S lê o que você escolheu, Alt R repete esta instrução e Alt J abre a ajuda.",
+    "curta": "Nível {n} de {total}, {nivel}. Desafio: {instrucao} Frutas: {frutas}. {legenda}",
+    "comoCor": "Ative cada fruta certa para escolher. Ative de novo para tirar.",
+    "comoTamanho": "Ative as frutas uma a uma para pôr na prateleira, na ordem pedida. Ative uma fruta que já está lá para tirar.",
+    "comoSementes": "Ative as {n} frutas certas para pôr na prateleira. Ative de novo para tirar.",
+    "legendaCor": "",
+    "legendaTamanho": "A prateleira tem {n} lugares: o primeiro, à esquerda, é para a fruta menor e o último, à direita, para a maior.",
+    "legendaSementes": "A prateleira tem {n} lugares para as frutas escolhidas.",
+    "cartaCor": "{nome}, cor: {cor}",
+    "cartaTamanho": "{nome}, {tamanho}. Pressione Enter para pôr na prateleira",
+    "cartaSementes": "{nome}. Pressione Enter para escolher",
+    "cartaPadrao": "{nome}. Pressione Enter para pôr na prateleira",
+    "cartaNaPrateleira": "{nome}. Já está na prateleira, posição {pos}. Pressione Enter para tirar",
+    "cartaErrada": "{base}. Com erro. Pressione Enter para tirar",
+    "tamanho": "tamanho {nome}",
+    "slot": "{nome}, posição {pos} de {total}{status}. Pressione Enter para tirar",
+    "statusCerto": ", certa",
+    "statusErrado": ", com erro",
+    "prateleira": "Prateleira, {n} de {total}. {lista}. {legenda}",
+    "prateleiraVazia": "Prateleira vazia, {total} lugares. {legenda}",
+    "colocada": "{nome} na prateleira, posição {pos}. {falta}",
+    "faltam": "Faltam {n}.",
+    "cheia": "A prateleira está cheia. Aperte Confirmar.",
+    "tirada": "{nome} saiu da prateleira. {resto}",
+    "ficaram": "Ficaram {n}.",
+    "vazia": "A prateleira está vazia.",
+    "escolhida": "{nome} escolhida. {resumo}",
+    "tiradaCor": "{nome} tirada. {resumo}",
+    "resumoCor": "Escolhidas: {lista}.",
+    "resumoCorVazio": "Nenhuma fruta escolhida.",
+    "grupoCor": "Frutas disponíveis",
+    "resumoPrateleira": "Prateleira: {lista}.",
+    "resumoPrateleiraVazio": "A prateleira está vazia. Há {total} lugares.",
+    "limpaCor": "Escolha limpa.",
+    "limpaPrateleira": "Prateleira limpa.",
+    "dicaFruta": "Fruta apontada: {nome}.",
+    "dicaFrutaPos": "Fruta apontada: {nome}, na posição {pos} da prateleira."
+  },
     "niveis": [
       {
         "nivel": "Fácil",
@@ -242,6 +282,22 @@
 
   const ERROS_KEY = 'despensa_erros';
 
+  /* Textos de leitor de tela: vêm de "acessibilidade" no despensa.json */
+  const A11Y = () => gameData?.acessibilidade || {};
+  const txt = (chave, vars) => preencherTexto(A11Y()[chave], vars);
+  const plural = (n, um, varios) => (n === 1 ? um : varios);
+  function nomeDoItem(id) { return nivelAtual().itens.find(it => it.id === id)?.nome || id; }
+  function legendaDaPrateleira(nivel) {
+    const n = nivel.criterio === 'selecao-sementes' ? nivel.corretos.length : nivel.itens.length;
+    return nivel.criterio === 'tamanho' ? txt('legendaTamanho', { n })
+      : nivel.criterio === 'selecao-sementes' ? txt('legendaSementes', { n }) : '';
+  }
+  const textoTamanhoFalado = valor => txt('tamanho', { nome: labelTamanho(valor) });
+  function falar(texto) {
+    if (window.Tutorial?.ativo) return;   /* no treino, quem fala é o Logi */
+    anunciarAcessivel(texto);
+  }
+
   /* Cores para exibição visual do nível Fácil (círculo fallback sem imagem) */
   const COR_CARD = {
     vermelho: '#E53935',
@@ -314,7 +370,7 @@
     /* Rótulo do painel de itens */
     document.getElementById('painel-itens-label').textContent =
       nivel.criterio === 'selecao-cor'
-        ? 'Escolha as frutas vermelhas'
+        ? `Escolha as frutas ${({ vermelho: 'vermelhas', amarelo: 'amarelas', verde: 'verdes', roxo: 'roxas', azul: 'azuis' })[nivel.itens.find(it => it.id === nivel.corretos[0])?.cor] || 'certas'}`
         : nivel.criterio === 'selecao-sementes'
           ? 'Clique ou arraste as frutas com sementes'
           : 'Itens para organizar — clique ou arraste para a prateleira';
@@ -336,8 +392,28 @@
     document.getElementById('feedback-area').style.display = 'none';
     pararAtencaoDica();
     atualizarBadge();
+    descreverDespensa(nivel);
     /* Tutorial do Logi: só no nível Fácil, e só na 1ª vez */
     Tutorial.auto(despensaTutorial.tutorialDaFase());
+  }
+
+  /* Descrição do cômodo para leitor de tela: lida ao entrar e a cada nível; a tecla D repete */
+  let jaEntrou = false;
+  let restaurando = false;   /* ao fechar o treino a tela é refeita; não ler a descrição de novo */
+  function descreverDespensa(nivel) {
+    if (restaurando) return;
+    const frutas = nivel.itens.map(it =>
+      nivel.criterio === 'selecao-cor' ? txt('cartaCor', { nome: it.nome, cor: it.cor })
+      : nivel.criterio === 'tamanho' ? `${it.nome}, ${textoTamanhoFalado(it.tamanho)}`
+      : it.nome).join('; ');
+    const vars = {
+      entrada: jaEntrou ? '' : txt('entrada'), n: nivelIdx + 1, total: gameData.niveis.length, nivel: nivel.nivel,
+      instrucao: nivel.instrucao, frutas, legenda: legendaDaPrateleira(nivel),
+      como: nivel.criterio === 'selecao-cor' ? txt('comoCor')
+        : nivel.criterio === 'tamanho' ? txt('comoTamanho') : txt('comoSementes', { n: nivel.corretos.length })
+    };
+    descreverComodo(preencherTexto(A11Y().completa, vars), { curta: jaEntrou ? preencherTexto(A11Y().curta, vars) : undefined });
+    jaEntrou = true;
   }
 
   /* Escreve o texto no elemento e põe <mark> nas palavras em MAIÚSCULAS (3+ letras).
@@ -380,12 +456,16 @@
   function buildNivelTabs() {
     const cont = document.getElementById('niveis-tabs');
     cont.innerHTML = '';
+    cont.setAttribute('role', 'list');
     gameData.niveis.forEach((n, i) => {
       const span = document.createElement('span');
       if (i < nivelIdx)        span.className = 'nivel nivel--ok';
       else if (i === nivelIdx) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
-      span.textContent = n.nivel + (i < nivelIdx ? ' ✓' : i === nivelIdx ? ' ←' : '');
+      const situacao = i < nivelIdx ? 'concluído' : i === nivelIdx ? 'atual' : 'bloqueado';
+      span.innerHTML = `${n.nivel}<span aria-hidden="true">${i < nivelIdx ? ' ✓' : i === nivelIdx ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.setAttribute('role', 'listitem');
+      if (i === nivelIdx) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
   }
@@ -408,7 +488,7 @@
   }
 
   function textoTamanho(valor) {
-    return `tam. ${valor}: ${labelTamanho(valor)}`;
+    return `tamanho ${labelTamanho(valor)}`;
   }
 
   function tamanhoImagemPx(valor, compacto = false) {
@@ -425,19 +505,18 @@
     cont.classList.toggle('despensa-itens-grid--tamanho', nivel.criterio === 'tamanho');
 
     nivel.itens.forEach(item => {
-      const card = document.createElement('article');
+      const card = document.createElement('button');
+      card.type = 'button';
       card.className = 'item-card';
       card.dataset.itemId = item.id;
-      card.setAttribute('role', 'option');
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('aria-selected', 'false');
+      card.setAttribute('aria-pressed', 'false');
 
       /* --- HTML da imagem — usa item.img vindo do JSON --- */
       let imgHtml;
 
       if (nivel.criterio === 'selecao-cor') {
         /* Glow vermelho subliminar em frutas vermelhas */
-        if (item.cor === 'vermelho') card.classList.add('item-card--vermelho-hint');
+        if (item.cor === 'vermelho' && nivel.corretos.includes(item.id)) card.classList.add('item-card--vermelho-hint');
 
         if (item.img) {
           imgHtml = `<img src="${item.img}" alt=""
@@ -448,7 +527,7 @@
             style="background:${COR_CARD[item.cor] || '#ccc'};"
             aria-hidden="true"></span>`;
         }
-        card.setAttribute('aria-label', `${item.nome}, cor ${item.cor} — clique para selecionar`);
+        card.setAttribute('aria-label', txt('cartaCor', { nome: item.nome, cor: item.cor }));
 
       } else if (nivel.criterio === 'tamanho') {
         const px = tamanhoImagemPx(item.tamanho);
@@ -457,7 +536,7 @@
         card.style.setProperty('--item-card-height', `${78 + Number(item.tamanho || 3) * 14}px`);
         imgHtml = `<img src="${item.img || ''}" alt=""
           class="item-card__emoji item-card__emoji--tamanho">`;
-        card.setAttribute('aria-label', `${item.nome}, ${textoTamanho(item.tamanho)} — clique ou arraste para a prateleira`);
+        card.setAttribute('aria-label', txt('cartaTamanho', { nome: item.nome, tamanho: textoTamanhoFalado(item.tamanho) }));
 
       } else {
         imgHtml = `<img src="${item.img || ''}" alt=""
@@ -465,15 +544,15 @@
         card.setAttribute(
           'aria-label',
           nivel.criterio === 'selecao-sementes'
-            ? `${item.nome} — clique ou arraste para escolher`
-            : `${item.nome} — arraste para a prateleira`
+            ? txt('cartaSementes', { nome: item.nome })
+            : txt('cartaPadrao', { nome: item.nome })
         );
       }
 
       card.dataset.defaultAriaLabel = card.getAttribute('aria-label');
 
       card.innerHTML = `
-        <p class="item-card__nome">${item.nome}</p>
+        <span class="item-card__nome">${item.nome}</span>
         ${imgHtml}
       `;
 
@@ -481,9 +560,6 @@
       if (nivel.criterio === 'selecao-cor') {
         /* Item 6 — seleção por clique/tap */
         card.addEventListener('click', () => toggleSelecao(item.id));
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSelecao(item.id); }
-        });
       } else {
         /* Médio e Difícil: drag + touch */
         card.draggable = true;
@@ -495,20 +571,42 @@
         card.addEventListener('touchend',   touchEnd,   { passive: true });
         /* Clique/Enter alterna: tocar de novo numa fruta que já está na prateleira a tira de lá */
         card.addEventListener('click', () => adicionarItem(item.id, true));
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarItem(item.id, true); }
-        });
       }
 
       cont.appendChild(card);
     });
 
+    manterOrdemDoTab(cont, '.item-card');
     atualizarItensDisponiveis();
+    atualizarGrupoCor();
   }
 
   /* ================================================================
      SELEÇÃO (nível Fácil — item 6, 8)
   ================================================================ */
+  /* "Escolhidas: Maçã, Morango." (Alt+S, nome do grupo e aviso ao escolher) */
+  function resumoDaEscolha() {
+    return selecionados.length
+      ? txt('resumoCor', { lista: selecionados.map(nomeDoItem).join(', ') })
+      : txt('resumoCorVazio');
+  }
+  /* Nome do grupo fixo e curto: o que foi escolhido já está em cada fruta (aria-pressed) e no Alt+S.
+     (Antes o nome listava as escolhidas e ficava velho ao mudar de nível: lia "Escolhidas: Maçã, Uva" na Uva.) */
+  function atualizarGrupoCor() {
+    document.getElementById('itens-grid').setAttribute('aria-label', txt('grupoCor'));
+  }
+  function resumoDaPrateleira() {
+    const nivel = nivelAtual();
+    const total = nivel.criterio === 'selecao-sementes' ? nivel.corretos.length : nivel.itens.length;
+    return prateleira.length
+      ? txt('resumoPrateleira', { lista: prateleira.map((id, i) => `${i + 1}º ${nomeDoItem(id)}`).join(', ') })
+      : txt('resumoPrateleiraVazio', { total });
+  }
+  window.resumoDaPagina = () => {
+    if (window.Tutorial?.ativo || !gameData) return '';
+    return nivelAtual().criterio === 'selecao-cor' ? resumoDaEscolha() : resumoDaPrateleira();
+  };
+
   function toggleSelecao(id, origem) {
     /* Com o tutorial aberto, a escolha da criança passa pelo Logi (acerta ou encoraja) */
     if (window.Tutorial?.ativo && origem !== 'tutorial') {
@@ -523,6 +621,8 @@
       selecionados.push(id);
     }
     audio.clique();
+    atualizarGrupoCor();
+    if (origem !== 'tutorial') falar(txt(idx >= 0 ? 'tiradaCor' : 'escolhida', { nome: nomeDoItem(id), resumo: resumoDaEscolha() }));
 
     const grid = document.getElementById('itens-grid');
     /* Item 8 — esmaecer não-selecionados quando há seleção ativa */
@@ -532,7 +632,8 @@
       const cid = card.dataset.itemId;
       const selecionado = selecionados.includes(cid);
       card.classList.toggle('item-card--selecionado', selecionado);
-      card.setAttribute('aria-selected', selecionado ? 'true' : 'false');
+      card.setAttribute('aria-pressed', selecionado ? 'true' : 'false');
+      if (card.classList.contains('item-card--incorreto')) card.setAttribute('aria-label', card.dataset.defaultAriaLabel);
       card.classList.remove('item-card--incorreto'); // limpa erro ao tocar
     });
 
@@ -546,7 +647,8 @@
       if (selecionados.includes(cid) && !nivel.corretos.includes(cid)) {
         card.classList.add('item-card--incorreto');
         card.classList.remove('item-card--selecionado');
-        card.setAttribute('aria-selected', 'true');
+        card.setAttribute('aria-label', txt('cartaErrada', { base: card.dataset.defaultAriaLabel }));
+        card.setAttribute('aria-pressed', 'true');
       }
     });
   }
@@ -561,17 +663,17 @@
 
       if (nivel.criterio === 'selecao-cor') {
         const selecionado = selecionados.includes(id);
-        card.setAttribute('aria-selected', selecionado ? 'true' : 'false');
+        card.setAttribute('aria-pressed', selecionado ? 'true' : 'false');
         return;
       }
 
       const naPrateleira = prateleira.includes(id);
       card.classList.toggle('item-card--na-prateleira', naPrateleira);
-      card.setAttribute('aria-selected', naPrateleira ? 'true' : 'false');
+      card.setAttribute('aria-pressed', naPrateleira ? 'true' : 'false');
       card.setAttribute(
         'aria-label',
         naPrateleira
-          ? `${card.querySelector('.item-card__nome')?.textContent || id} já está na prateleira. Clique de novo para tirar.`
+          ? txt('cartaNaPrateleira', { nome: card.querySelector('.item-card__nome')?.textContent || id, pos: prateleira.indexOf(id) + 1 })
           : card.dataset.defaultAriaLabel
       );
     });
@@ -611,7 +713,7 @@
         const textoStatus = status === 'erro' ? 'incorreto' : status === 'ok' ? 'correto' : '';
         slot.setAttribute(
           'aria-label',
-          `${item?.nome || id}, posição ${i+1}${textoStatus ? `, ${textoStatus}` : ''}. Clique para remover.`
+          txt('slot', { nome: item?.nome || id, pos: i + 1, total, status: textoStatus ? txt(textoStatus === 'incorreto' ? 'statusErrado' : 'statusCerto') : '' })
         );
         slot.setAttribute('type', 'button');
 
@@ -628,13 +730,19 @@
       } else {
         slot.className = 'prateleira__slot';
         slot.textContent = `${i+1}º`;
-        slot.setAttribute('aria-label', `Slot ${i+1} — vazio`);
+        slot.setAttribute('aria-hidden', 'true');   /* as vagas vão no nome do grupo */
       }
 
       cont.appendChild(slot);
     }
 
     atualizarItensDisponiveis();
+
+    const nomeDe = id => nivel.itens.find(it => it.id === id)?.nome || id;
+    const legenda = legendaDaPrateleira(nivel);
+    cont.setAttribute('aria-label', prateleira.length
+      ? txt('prateleira', { n: prateleira.length, total, lista: prateleira.map((id, i) => `${i + 1}º ${nomeDe(id)}`).join('; '), legenda })
+      : txt('prateleiraVazia', { total, legenda }));
 
     cont.ondragover = e => {
       e.preventDefault();
@@ -677,15 +785,20 @@
     prateleiraStatus = []; // limpa status ao adicionar novo item
     audio.clique();
     renderPrateleira(nivel);
+    falar(txt('colocada', { nome: nomeDoItem(id), pos: prateleira.length, falta: limite - prateleira.length ? txt('faltam', { n: limite - prateleira.length }) : txt('cheia') }));
     document.getElementById('feedback-area').style.display = 'none';
   }
 
   function removerItem(idx) {
     if (window.Tutorial?.ativo) return;   /* no treino, a criança não tira frutas da prateleira */
-    prateleira.splice(idx, 1);
+    const [tirado] = prateleira.splice(idx, 1);
     prateleiraStatus = [];
     renderPrateleira(nivelAtual());
     document.getElementById('feedback-area').style.display = 'none';
+    falar(txt('tirada', { nome: nomeDoItem(tirado), resto: prateleira.length ? txt('ficaram', { n: prateleira.length }) : txt('vazia') }));
+    /* O botão em foco sumiu: o foco vai para o vizinho (ou para a fruta que saiu) */
+    (document.querySelector(`#prateleira button.prateleira__slot:nth-child(${Math.min(idx, prateleira.length - 1) + 1})`)
+      || document.querySelector(`#itens-grid [data-item-id="${tirado}"]`))?.focus();
   }
 
   /* ================================================================
@@ -765,7 +878,7 @@
       if (erradoId) {
         const erradoItem = nivel.itens.find(it => it.id === erradoId);
         mostrarFeedback(
-          `${erradoItem?.nome || erradoId} não é vermelha. Tente remover!`,
+          `${erradoItem?.nome || erradoId} não é vermelha. Toque nela de novo para tirar!`,
           'erro'
         );
         marcarSelecaoErrada(nivel);
@@ -812,14 +925,14 @@
 
     if (erradoId === 'morango') {
       mostrarFeedback(
-        'No morango, os pontinhos de fora são aquênios. Neste desafio, ele não conta como fruta com sementes por dentro. Remova o morango e tente de novo!',
+        'No morango, os pontinhos de fora são aquênios. Neste desafio, ele não conta como fruta com sementes por dentro. Remova o morango (marcado com ✕) e tente de novo!',
         'erro'
       );
       return;
     }
 
     mostrarFeedback(
-      `${erradoItem?.nome || erradoId} não é uma das frutas com sementes por dentro neste desafio. Remova o item destacado e tente de novo!`,
+      `${erradoItem?.nome || erradoId} não é uma das frutas com sementes por dentro neste desafio. Remova ${erradoItem?.nome || erradoId} (o item marcado com ✕) e tente de novo!`,
       'erro'
     );
   }
@@ -864,6 +977,7 @@
         }
       }
       if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens marcados com ✕!`;
+      msg += ` Posições erradas: ${prateleira.map((id, i) => prateleira[i] !== correta[i] ? `${i + 1}º ${nomeDoItem(id)}` : null).filter(Boolean).join('; ')}.`;
 
       mostrarFeedback(msg, 'erro');
     }
@@ -930,6 +1044,7 @@
     txt.className   = `dica__texto dica__texto--${tipo}`;
     txt.textContent = msg;
     document.getElementById('feedback-area').style.display = 'block';
+    anunciarAcessivel(msg, tipo === 'erro' ? 'assertive' : 'polite');
   }
 
   function atualizarBadge(score) {
@@ -979,7 +1094,7 @@
       document.getElementById('itens-grid').classList.remove('tem-selecao');
       document.getElementById('itens-grid').querySelectorAll('.item-card').forEach(c => {
         c.classList.remove('item-card--selecionado', 'item-card--incorreto');
-        c.setAttribute('aria-selected', 'false');
+        c.setAttribute('aria-pressed', 'false');
       });
     } else {
       prateleira       = [];
@@ -987,6 +1102,8 @@
       renderPrateleira(nivel);
     }
     document.getElementById('feedback-area').style.display = 'none';
+    atualizarGrupoCor();
+    anunciarAcessivel(txt(nivel.criterio === 'selecao-cor' ? 'limpaCor' : 'limpaPrateleira'));
   });
 
   /* ---- Dica do Logi: aponta a fruta errada ou a próxima a escolher (não conta erro nem ponto) ---- */
@@ -997,28 +1114,29 @@
     const nivel = gameData.niveis[nivelIdx];
     const d = nivel.dica || {};
     const marcas = txt => txt.match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [];
-    const passo = (destaque, fala) => ({ destaque, fala, palavraChave: marcas(fala) });
+    const nomeCarta = id => nivel.itens.find(it => it.id === id)?.nome || id;
+    const passo = (destaque, fala, audiodescricao) => ({ destaque, fala, palavraChave: marcas(fala), audiodescricao });
     const carta = id => document.querySelector(`#itens-grid [data-item-id="${id}"]`);
     const casa = i => document.querySelector(`#prateleira .prateleira__slot:nth-child(${i + 1})`);
     const confirmar = () => [passo('#btn-confirmar', 'Tudo certo! Toque em CONFIRMAR.')];
 
     if (nivel.criterio === 'selecao-cor') {
       const errada = selecionados.find(id => !nivel.corretos.includes(id));
-      if (errada) return [passo(carta(errada), d.errado)];
+      if (errada) return [passo(carta(errada), d.errado, txt('dicaFruta', { nome: nomeCarta(errada) }))];
       const falta = nivel.corretos.find(id => !selecionados.includes(id));
-      return falta ? [passo(carta(falta), d.certo)] : confirmar();
+      return falta ? [passo(carta(falta), d.certo, txt('dicaFruta', { nome: nomeCarta(falta) }))] : confirmar();
     }
     if (nivel.criterio === 'tamanho') {
       const i = prateleira.findIndex((id, k) => id !== nivel.ordemCorreta[k]);
-      if (i >= 0) return [passo(casa(i), d.errado)];
-      if (prateleira.length < nivel.ordemCorreta.length) return [passo(carta(nivel.ordemCorreta[prateleira.length]), d.certo)];
+      if (i >= 0) return [passo(casa(i), d.errado, txt('dicaFrutaPos', { nome: nomeCarta(prateleira[i]), pos: i + 1 }))];
+      if (prateleira.length < nivel.ordemCorreta.length) return [passo(carta(nivel.ordemCorreta[prateleira.length]), d.certo, txt('dicaFruta', { nome: nomeCarta(nivel.ordemCorreta[prateleira.length]) }))];
       return confirmar();
     }
     /* selecao-sementes */
     const i = prateleira.findIndex(id => !nivel.corretos.includes(id));
-    if (i >= 0) return [passo(casa(i), d.errado)];
+    if (i >= 0) return [passo(casa(i), d.errado, txt('dicaFrutaPos', { nome: nomeCarta(prateleira[i]), pos: i + 1 }))];
     const falta = nivel.corretos.find(id => !prateleira.includes(id));
-    return falta ? [passo(carta(falta), d.certo)] : confirmar();
+    return falta ? [passo(carta(falta), d.certo, txt('dicaFruta', { nome: nomeCarta(falta) }))] : confirmar();
   }
 
   document.getElementById('btn-dica').addEventListener('click', () => {
@@ -1063,7 +1181,9 @@
       const salvo = salvoTutorial;
       salvoTutorial = null;
       nivelTreino = null;
+      restaurando = true;
       renderNivel();
+      restaurando = false;
       if (!salvo) return;
       salvo.selecionados.forEach(id => toggleSelecao(id, 'tutorial'));
       if (salvo.prateleira.length) {
