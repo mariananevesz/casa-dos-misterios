@@ -35,7 +35,7 @@
     </section>
 
     <!-- Mascote Logi -->
-    <section class="balao balao--roxo quarto-logi" aria-label="Instruções do Logi">
+    <section class="balao balao--roxo quarto-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
       <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
     </section>
@@ -46,13 +46,13 @@
     <section class="quarto-layout" aria-label="Área do desafio do quarto">
 
       <!-- Sequência com erros -->
-      <aside class="quarto-card quarto-card--fonte" aria-label="Sequência com erros">
+      <aside class="quarto-card quarto-card--fonte" aria-label="Passos disponíveis">
         <p class="quarto-card__titulo">Passos para <span class="destaque-escola">IR À ESCOLA</span></p>
         <p class="quarto-card__subtitulo">Escolha só os passos que fazem sentido para <span class="destaque-escola">IR À ESCOLA</span>.</p>
 
-        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="listbox" aria-label="Blocos disponíveis, alguns com erro"></section>
+        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="group" aria-label="Blocos disponíveis. Alguns não combinam com a escola e ficam marcados como erro quando você pede a Dica"></section>
 
-        <button type="button" class="btn-dica quarto-btn-dica" id="btn-dica" aria-label="Dica do Logi">
+        <button type="button" class="btn-dica quarto-btn-dica" id="btn-dica" aria-label="Dica">
           <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Dica</span>
         </button>
@@ -64,10 +64,10 @@
           <p class="quarto-card__titulo quarto-card__titulo--centro">Monte a rotina para <span class="destaque-escola">IR À ESCOLA</span></p>
           <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
 
-          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida" aria-live="polite"></section>
+          <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida: vazia"></section>
         </section>
 
-        <section class="dica dica--erro quarto-feedback" id="feedback-area" style="display:none;" aria-live="polite" aria-atomic="true">
+        <section class="dica dica--erro quarto-feedback" id="feedback-area" style="display:none;">
           <span class="dica__emoji" aria-hidden="true">💡</span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
@@ -122,6 +122,37 @@
   "miniJogo": "Quarto — Depuração",
   "habilidadeBNCC": "EF02CO02",
   "instrucaoInstrutor": "Oi! Hoje é dia de IR À ESCOLA! Monte a sequência certa para me arrumar. Cuidado: tem passos que não combinam com a manhã de escola!",
+  "acessibilidade": {
+    "entrada": "Você entrou no Quarto.",
+    "completa": "{entrada} Fase {fase} de {total}, nível {nivel}. Objetivo: montar, na ordem certa, a rotina para ir à escola. Na lista de passos há {qtd} blocos: {blocos}. {aviso} A fila tem {espacos} espaços. Ative um bloco para pôr na fila e depois aperte Verificar sequência. Blocos com erro são anunciados como com erro. Alt S lê a fila montada, Alt R repete esta instrução e Alt J abre a ajuda.",
+    "curta": "Fase {fase} de {total}, nível {nivel}. Há {qtd} blocos: {blocos}. {aviso} A fila tem {espacos} espaços.",
+    "avisoRepetido": "Um dos blocos aparece repetido e não entra na fila. Peça a Dica para saber qual.",
+    "avisoIntruso": "Um dos blocos não combina com a escola e não entra na fila. Peça a Dica para saber qual.",
+    "blocoNormal": "Pôr na fila: {nome}",
+    "blocoUsado": "{texto}. Já está na fila",
+    "erroRepetido": "{nome}, passo com erro: repetido, não entra na fila",
+    "erroIntruso": "{nome}, passo com erro: não combina com a escola, não entra na fila",
+    "posicao": "{nome}, posição {pos} de {total}. Ative para remover.",
+    "posicaoCerta": "{nome}, posição {pos} de {total} — correto",
+    "posicaoErrada": "{nome}, posição {pos} de {total} — com erro. Ative para remover",
+    "adicionado": "{nome} na posição {pos}. {falta}",
+    "faltam": "Faltam {n} {passos}.",
+    "completa2": "A fila está completa. Aperte Verificar sequência.",
+    "filaCheia": "A fila está cheia. Remova um bloco ou aperte Verificar sequência.",
+    "removido": "{nome} removido. {sobra}",
+    "sobra": "Sobraram {n} {blocos}.",
+    "filaVazia": "A fila está vazia.",
+    "resultado": "{acertos} de {total} certos. Blocos com erro: {lista}. Troque esses blocos ou peça a Dica.",
+    "resultadoItem": "posição {pos}, {nome}",
+    "resumo": "Fila: {lista}. {n} de {total} blocos.",
+    "resumoVazio": "A fila está vazia. Há {total} espaços.",
+    "dicaComErro": "Agora, na lista de passos, {quais}.",
+    "dicaUmErro": "há um bloco com erro: {lista}",
+    "dicaVariosErros": "há blocos com erro: {lista}",
+    "dicaLugar": "Posição {pos} da fila: {nome} está no lugar errado.",
+    "dicaPronto": "A fila está completa. Aperte Verificar sequência.",
+    "dicaProximo": "Um destes vem agora: {lista}."
+  },
   "dicaGeral": { "lugar": "Este bloco está no lugar ERRADO.", "proximo": "Um destes vem AGORA." },
   "blocos": {
     "banho": "🛁 Tomar banho",
@@ -275,10 +306,10 @@
 
     for (let i = 0; i < (fase.repetidos || 0); i++) {
       const id = corretos[Math.floor(Math.random() * corretos.length)];
-      blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false }); /* repetição: só fica vermelha na dica */
+      blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false, motivo: 'repetido' }); /* repetição: só fica vermelha na dica */
     }
     const intrusos = sortearIntrusos(fase.intrusos || 0);
-    intrusos.forEach(id => blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false })); /* só fica vermelho na dica */
+    intrusos.forEach(id => blocos.push({ id, rotulo: rotulo(id), erro: true, visivel: false, motivo: 'intruso' })); /* só fica vermelho na dica */
 
     let ordem;
     let tentativas = 0;
@@ -328,17 +359,47 @@
     renderFase();
   }
 
+  /* Texto falado: tira o emoji do rótulo ("🛁 Tomar banho" vira "Tomar banho") */
+  function nomeFalado(rotulo) {
+    return String(rotulo || '').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, '').replace(/\s+/g, ' ').trim();
+  }
+  function nomeDoBloco(id) { return nomeFalado(gameData.blocos[id] || id); }
+  /* Textos de leitor de tela: vêm de "acessibilidade" no quarto.json */
+  const A11Y = () => gameData?.acessibilidade || {};
+  const txt = (chave, vars) => preencherTexto(A11Y()[chave], vars);
+  const plural = (n, um, varios) => (n === 1 ? um : varios);
+  function falar(texto, nivel) {
+    if (window.Tutorial?.ativo) return;   /* no treino, quem fala é o Logi */
+    anunciarAcessivel(texto, nivel);
+  }
+
   function buildNivelTabs() {
     const cont = document.getElementById('niveis-tabs');
     cont.innerHTML = '';
+    cont.setAttribute('role', 'list');
     gameData.fases.forEach((f, i) => {
       const span = document.createElement('span');
       if (i < faseAtual)        span.className = 'nivel nivel--ok';
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                       span.className = 'nivel nivel--bloq';
-      span.textContent = f.dificuldade + (i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : '');
+      const situacao = i < faseAtual ? 'concluído' : i === faseAtual ? 'atual' : 'bloqueado';
+      span.innerHTML = `${f.dificuldade}<span aria-hidden="true">${i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.setAttribute('role', 'listitem');
+      if (i === faseAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
     });
+  }
+
+  /* Instrução para leitor de tela: completa ao entrar (e no Alt+R), curta nas fases seguintes */
+  let jaEntrou = false;
+  function descreverQuarto(fase) {
+    const vars = {
+      entrada: jaEntrou ? '' : txt('entrada'), fase: fase.id, total: gameData.fases.length, nivel: fase.dificuldade,
+      qtd: faseMontada.blocos.length, blocos: faseMontada.blocos.map(b => nomeFalado(b.rotulo)).join(', '),
+      aviso: txt(fase.repetidos ? 'avisoRepetido' : 'avisoIntruso'), espacos: faseMontada.total
+    };
+    descreverComodo(preencherTexto(A11Y().completa, vars), { curta: jaEntrou ? preencherTexto(A11Y().curta, vars) : undefined });
+    jaEntrou = true;
   }
 
   function renderFase() {
@@ -365,6 +426,7 @@
   document.getElementById('btn-verificar').disabled = false;
 
   atualizarBadge();
+  descreverQuarto(fase);
   /* Tutorial do Logi: abre sozinho só na 1ª vez */
   Tutorial.auto('quarto-f1');
 }
@@ -380,18 +442,21 @@
   const id = bloco.id;
   const temErro = bloco.visivel || (bloco.erro && faseMontada.intrusosRevelados);
 
-      const el = document.createElement('span');
+      const el = document.createElement('button');
+      el.type = 'button';
       el.className = `bloco ${temErro ? 'bloco--erro' : 'bloco--roxo'}`;
       el.draggable = true;
       el.dataset.index = index;
       el.dataset.blocoId = id;
-      el.setAttribute('role', 'option');
-      el.setAttribute('tabindex', '0');
-      el.setAttribute('aria-label', `${bloco.rotulo}${temErro ? ' — suspeito' : ''}`);
+      /* O vermelho sozinho não é lido: o nome já diz que o bloco está errado e por quê */
+      el.dataset.rotuloFalado = temErro
+        ? txt(bloco.motivo === 'repetido' ? 'erroRepetido' : 'erroIntruso', { nome: nomeFalado(bloco.rotulo) })
+        : txt('blocoNormal', { nome: nomeFalado(bloco.rotulo) });
+      el.setAttribute('aria-label', el.dataset.rotuloFalado);
 
       const img = imgTag(id);
       
-      el.innerHTML = `${img} ${bloco.rotulo}${temErro ? ' <span class="bloco__tag-erro">!</span>' : ''}`;
+      el.innerHTML = `${img} ${bloco.rotulo}${temErro ? ' <span class="bloco__tag-erro" aria-hidden="true">!</span>' : ''}`;
 
       el.addEventListener('dragstart', e => {
         e.dataTransfer.setData('blocoId', id);
@@ -400,12 +465,10 @@
       el.addEventListener('touchmove',  touchMove,  { passive: false });
       el.addEventListener('touchend',   touchEnd,   { passive: true });
       el.addEventListener('click', () => { adicionarBloco(id);});
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adicionarBloco(id); }
-      });
 
       cont.appendChild(el);
     });
+    manterOrdemDoTab(cont, '.bloco');
   }
 
   function imgTag(id) {
@@ -426,18 +489,17 @@
 
     corrigida.forEach((bid, idx) => {
       const bloco = { id: bid, rotulo: gameData.blocos[bid] || bid };
-      const el = document.createElement('span');
+      const el = document.createElement('button');
+      el.type = 'button';
       el.className = 'bloco bloco--roxo';
       el.dataset.idx = idx;
       el.dataset.blocoId = bid;
-      el.setAttribute('role', 'button');
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${idx+1}. Ative para remover.`);
-      el.setAttribute('tabindex', '0');
+      el.setAttribute('aria-label', txt('posicao', { nome: nomeFalado(bloco.rotulo), pos: idx + 1, total }));
       el.title = 'Clique para remover';
       el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}<span class="bloco-remover" aria-hidden="true">×</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Delete' || e.key === 'Backspace') {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
           e.preventDefault();
           removerBloco(idx);
         }
@@ -449,9 +511,11 @@
       const empty = document.createElement('span');
       empty.className = 'bloco bloco--vazio';
       empty.textContent = i === corrigida.length ? '+ bloco' : '';
-      empty.setAttribute('aria-label', 'Espaço vazio');
+      empty.setAttribute('aria-hidden', 'true');   /* as vagas vão no nome do grupo */
       cont.appendChild(empty);
     }
+    cont.setAttribute('aria-label', resumoDaFila());
+    manterOrdemDoTab(cont, 'button.bloco');
 
     marcarUsados();
 
@@ -464,6 +528,14 @@
     };
   }
 
+  /* "Fila: Vestir a camiseta, Vestir a calça. 2 de 4 blocos." (Alt+S e nome do grupo) */
+  function resumoDaFila() {
+    return corrigida.length
+      ? txt('resumo', { lista: corrigida.map(nomeDoBloco).join(', '), n: corrigida.length, total: faseMontada.total })
+      : txt('resumoVazio', { total: faseMontada.total });
+  }
+  window.resumoDaPagina = () => (window.Tutorial?.ativo || !gameData ? '' : resumoDaFila());
+
   function adicionarBloco(bid, origem) {
     /* Com o tutorial aberto, a ação da criança passa pelo Logi (acerta ou encoraja) */
     if (window.Tutorial?.ativo && origem !== 'tutorial') {
@@ -474,8 +546,10 @@
     /* Cada bloco da origem só pode ser usado uma vez (na fase 1, o bloco repetido tem 2 cópias selecionáveis) */
     const copias = faseMontada.blocos.filter(b => b.id === bid).length;
     if (corrigida.filter(x => x === bid).length >= copias) { balancarBloco(bid); return; }
-    if (corrigida.length >= faseMontada.total) return;
+    if (corrigida.length >= faseMontada.total) { falar(txt('filaCheia')); return; }
     corrigida.push(bid);
+    const faltam = faseMontada.total - corrigida.length;
+    falar(txt('adicionado', { nome: nomeDoBloco(bid), pos: corrigida.length, falta: faltam ? txt('faltam', { n: faltam, passos: plural(faltam, 'passo', 'passos') }) : txt('completa2') }));
     audio.clique();
     pararAtencaoDica();
     renderCorrigida();
@@ -497,15 +571,23 @@
       const id = el.dataset.blocoId;
       const usados = corrigida.filter(x => x === id).length;
       vistos[id] = (vistos[id] || 0) + 1;
-      el.classList.toggle('bloco--usado', vistos[id] <= usados);
+        const usado = vistos[id] <= usados;
+      el.classList.toggle('bloco--usado', usado);
+      if (el.dataset.rotuloFalado) {
+        el.setAttribute('aria-label', usado && !el.classList.contains('bloco--erro') ? txt('blocoUsado', { texto: el.dataset.rotuloFalado }) : el.dataset.rotuloFalado);
+      }
     });
   }
 
   function removerBloco(idx) {
     if (verificado || window.Tutorial?.ativo) return;
-    corrigida.splice(idx, 1);
+    const [removido] = corrigida.splice(idx, 1);
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
+    falar(txt('removido', { nome: nomeDoBloco(removido), sobra: corrigida.length ? txt('sobra', { n: corrigida.length, blocos: plural(corrigida.length, 'bloco', 'blocos') }) : txt('filaVazia') }));
+    /* O bloco em foco sumiu: o foco vai para o vizinho (ou para a lista de passos) */
+    (document.querySelector(`#sequencia-corrigida .bloco[data-idx="${Math.min(idx, corrigida.length - 1)}"]`)
+      || document.querySelector('#blocos-fonte .bloco'))?.focus();
   }
 
   /* ---- Touch drag ---- */
@@ -569,7 +651,7 @@
       el.classList.add(ok ? 'bloco--verde' : 'bloco--erro');
       el.querySelector('.bloco-remover')?.remove();
       el.insertAdjacentHTML('beforeend', `<strong class="bloco-resultado" aria-hidden="true">${ok ? '✓' : '✕'}</strong>`);
-      el.setAttribute('aria-label', `${bloco.rotulo}, posição ${i + 1} — ${ok ? 'correto' : 'incorreto'}`);
+      el.setAttribute('aria-label', txt(ok ? 'posicaoCerta' : 'posicaoErrada', { nome: nomeFalado(bloco.rotulo), pos: i + 1, total }));
     });
 
     if (acertos === total) {
@@ -581,7 +663,9 @@
       ativarAtencaoDica();
       audio.erro();
       verificado = false;
-      mostrarFeedbackTexto(`${acertos} de ${total} certos. Troque os blocos vermelhos e clique na dica se precisar de ajuda!`);
+      const lista = corrigida.map((bid, i) => posicoes[i] ? null : txt('resultadoItem', { pos: i + 1, nome: nomeDoBloco(bid) })).filter(Boolean).join('; ');
+      /* Mesmo texto na tela e por voz: diz quais blocos estão com erro, sem depender da cor */
+      mostrarFeedbackTexto(txt('resultado', { acertos, total, lista }));
     }
   }
 
@@ -592,6 +676,7 @@
     txt.className  = `dica__texto dica__texto--${tipo === 'ok' ? 'verde' : 'erro'}`;
     txt.textContent = msg;
     area.style.display = 'flex';
+    anunciarAcessivel(msg, tipo === 'ok' ? 'polite' : 'assertive');
   }
 
  function conclusao() {
@@ -709,22 +794,26 @@
     const fase = gameData.fases[faseAtual];
     const geral = gameData.dicaGeral || {};
     const marcas = txt => txt.match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [];
-    const passo = (destaque, fala, evitar) => ({ destaque, fala, palavraChave: marcas(fala), evitar });
+    const passo = (destaque, fala, evitar, audiodescricao) => ({ destaque, fala, palavraChave: marcas(fala), evitar, audiodescricao });
     const fonte = '#blocos-fonte', fila = '#sequencia-corrigida';
 
     if (faseMontada.temErro && !faseMontada.intrusosRevelados && fase.dica?.suspeito) {
       revelarIntrusos();
-      return [passo([...document.querySelectorAll(`${fonte} .bloco--erro`)], fase.dica.suspeito, fila)];
+      const vermelhos = [...document.querySelectorAll(`${fonte} .bloco--erro`)];
+      const lista = vermelhos.map(el => el.dataset.rotuloFalado).join('; ');
+      return [passo(vermelhos, fase.dica.suspeito, fila,
+        txt('dicaComErro', { quais: txt(vermelhos.length === 1 ? 'dicaUmErro' : 'dicaVariosErros', { lista }) }))];
     }
 
     const posicoes = validarPosicoes(faseMontada.passos, corrigida, faseMontada.ordem);
     const errado = corrigida.findIndex((_, i) => !posicoes[i]);
     if (errado >= 0) {
-      return [passo(document.querySelector(`${fila} .bloco[data-idx="${errado}"]`), geral.lugar, fonte)];
+      return [passo(document.querySelector(`${fila} .bloco[data-idx="${errado}"]`), geral.lugar, fonte,
+        txt('dicaLugar', { pos: errado + 1, nome: nomeDoBloco(corrigida[errado]) }))];
     }
 
     if (corrigida.length >= faseMontada.total) {
-      return [passo('#btn-verificar', 'Tudo certo! Toque em VERIFICAR.', fonte)];
+      return [passo('#btn-verificar', 'Tudo certo! Toque em VERIFICAR.', fonte, txt('dicaPronto'))];
     }
 
     /* Grupo em que a próxima posição cai; os blocos que ainda faltam nele */
@@ -735,7 +824,8 @@
     }
     const candidatos = [...document.querySelectorAll(`${fonte} .bloco:not(.bloco--usado):not(.bloco--erro)`)]
       .filter(el => grupo.includes(el.dataset.blocoId));
-    return [passo(candidatos, geral.proximo, fila)];
+    return [passo(candidatos, geral.proximo, fila,
+      txt('dicaProximo', { lista: candidatos.map(el => nomeFalado(el.textContent)).join('; ') }))];
   }
 
   document.getElementById('btn-dica').addEventListener('click', () => {
@@ -782,7 +872,7 @@
       const blocos = t.blocos.map(b => {
         const o = typeof b === 'string' ? { id: b } : b;
         const base = o.base || o.id;
-        return { id: o.id, rotulo: gameData.blocos[base] || base, erro: Boolean(o.erro), visivel: Boolean(o.erro) };
+        return { id: o.id, rotulo: gameData.blocos[base] || base, erro: Boolean(o.erro), visivel: Boolean(o.erro), motivo: o.base ? 'repetido' : 'intruso' };
       });
       faseMontada = { blocos, passos: t.passos, total: t.total, intrusos: [], temErro: true, intrusosRevelados: true };
       corrigida = [];
