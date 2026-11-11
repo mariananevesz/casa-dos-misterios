@@ -50,6 +50,8 @@ function renderScoreScreen() {
   const fullyCompleted = gameState.isFullyCompleted();
 
   document.getElementById('pontuacao-final').textContent = total;
+  /* barra dos 100 pontos: só visual (o número já diz a pontuação) */
+  requestAnimationFrame(() => requestAnimationFrame(() => { document.getElementById('pontuacao-barra').style.width = Math.min(100, Math.max(0, total)) + '%'; }));
   document.getElementById('tela-pontuacao').classList.toggle('tela--celebracao', fullyCompleted);
   document.getElementById('resultado-logi').hidden = !fullyCompleted;
   document.getElementById('resultado-icone').hidden = fullyCompleted;
@@ -58,7 +60,7 @@ function renderScoreScreen() {
   const subtitle = document.getElementById('resultado-sub');
   if (fullyCompleted) {
     title.textContent = 'Parabéns!';
-    subtitle.innerHTML = '<strong>Você concluiu a Casa dos Mistérios!</strong><br>Você concluiu os 4 cômodos e finalizou 100% do jogo!';
+    subtitle.innerHTML = '<strong>Você concluiu a Casa dos Mistérios!</strong>Você concluiu os 4 cômodos e finalizou 100% do jogo!';
   } else {
     title.textContent = completedRooms >= 2 ? 'Bom progresso!' : 'Continue explorando!';
     subtitle.textContent = `Você concluiu ${completedRooms} de 4 cômodos.`;

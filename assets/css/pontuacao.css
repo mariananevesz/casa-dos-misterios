@@ -3,10 +3,13 @@
    Depende de: base.css
    ============================================================= */
 
-/* ---------- Cabeçalho com troféu ---------- */
+/* ---------- Cartão da tela ---------- */
 .tela--pontuacao {
   position: relative;
-  padding: clamp(0.75rem, 2vh, 1.1rem);
+  max-width: 720px;
+  padding: clamp(1rem, 3vh, 1.7rem) clamp(0.9rem, 3vw, 1.8rem);
+  background: linear-gradient(180deg, #FFF8F2 0%, var(--branco) 38%);
+  box-shadow: 0 6px 28px rgba(216, 90, 48, 0.16);
 }
 
 .resultado-kicker {
@@ -19,118 +22,195 @@
   margin-bottom: clamp(0.35rem, 1.2vh, 0.7rem);
 }
 
+/* ---------- Cabeçalho com o Logi / troféu ---------- */
 .resultado-header {
   text-align: center;
-  margin-bottom: clamp(0.55rem, 1.5vh, 1rem);
+  margin-bottom: clamp(0.8rem, 2vh, 1.3rem);
 }
 
 .resultado-header__logi {
   display: block;
-  width: clamp(68px, 12vh, 104px);
+  width: clamp(84px, 15vh, 128px);
   height: auto;
-  margin: 0 auto 0.2rem;
-  filter: drop-shadow(0 8px 8px rgba(111, 46, 15, 0.14));
+  margin: 0 auto 0.3rem;
+  filter: drop-shadow(0 10px 10px rgba(111, 46, 15, 0.18));
   animation: logiCelebracao 2.3s ease-in-out infinite;
 }
 
-.resultado-header__sub { line-height: 1.55; }
-.resultado-header__sub strong { color: var(--marrom-medio); font-size: calc(15px * var(--escala-fonte)); }
-
-.resultado-header__icone  {
+.resultado-header__icone {
   display: block;
   font-size: calc(82px * var(--escala-fonte));
   line-height: 1;
   margin-bottom: 0.5rem;
   filter: drop-shadow(0 8px 8px rgba(111, 46, 15, 0.16));
 }
-.resultado-header__titulo { font-size: calc(22px * var(--escala-fonte)); font-weight: 700; color: var(--marrom-medio); margin-bottom: 0.25rem; }
-.resultado-header__sub    { font-size: calc(13px * var(--escala-fonte)); color: var(--ambar); }
 
-.pontuacao-logi-img {
-  width: 38px;
-  height: 34px;
-  object-fit: contain;
-  flex-shrink: 0;
+.resultado-header__titulo {
+  font-size: calc(32px * var(--escala-fonte));
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--marrom-medio);
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.2px;
+}
+
+.resultado-header__sub {
+  font-size: calc(16px * var(--escala-fonte));
+  line-height: 1.5;
+  color: var(--texto-medio);   /* antes âmbar sobre branco: pouco contraste */
+  max-width: 34em;
+  margin-inline: auto;
+}
+.resultado-header__sub strong {
+  display: block;
+  color: var(--marrom-medio);
+  font-size: calc(19px * var(--escala-fonte));
+  margin-bottom: 2px;
 }
 
 /* ---------- Caixa de pontuação total ---------- */
 .pontuacao-total {
-  background: var(--laranja);
-  border-radius: var(--raio-lg);
-  padding: clamp(0.55rem, 1.5vh, 0.85rem);
-  margin-bottom: clamp(0.5rem, 1.4vh, 0.85rem);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #E8683C 0%, var(--laranja) 55%, #C44A22 100%);
+  border-radius: calc(var(--raio-lg) + 4px);
+  padding: clamp(0.9rem, 2.4vh, 1.4rem) 1rem clamp(0.9rem, 2.2vh, 1.2rem);
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
   text-align: center;
+  box-shadow: 0 6px 16px rgba(216, 90, 48, 0.28);
+}
+/* brilho decorativo */
+.pontuacao-total::before {
+  content: '';
+  position: absolute;
+  right: -40px; top: -50px;
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
 }
 
-.pontuacao-total__label  { font-size: calc(13px * var(--escala-fonte)); color: var(--laranja-borda); margin-bottom: 4px; }
-.pontuacao-total__numero { font-size: clamp(calc(34px * var(--escala-fonte)), 6vh, calc(44px * var(--escala-fonte))); font-weight: 700; color: var(--branco); line-height: 1; }
-.pontuacao-total__de     { font-size: calc(13px * var(--escala-fonte)); color: var(--laranja-borda); margin-top: 4px; }
+.pontuacao-total__label  { font-size: calc(15px * var(--escala-fonte)); font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: #FFE7DB; margin-bottom: 2px; }
+.pontuacao-total__numero { font-size: clamp(calc(52px * var(--escala-fonte)), 9vh, calc(68px * var(--escala-fonte))); font-weight: 800; color: var(--branco); line-height: 1.05; text-shadow: 0 2px 6px rgba(80, 25, 5, 0.25); }
+.pontuacao-total__de     { font-size: calc(15px * var(--escala-fonte)); color: #FFE7DB; margin-top: 2px; }
+
+/* barra de progresso dos 100 pontos */
+.pontuacao-barra {
+  height: 12px;
+  max-width: 440px;
+  margin: 0.7rem auto 0;
+  border-radius: var(--raio-pill);
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+.pontuacao-barra > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #FFF3B0, var(--ambar-claro));
+  transition: width 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
 
 /* ---------- Grade de pontos por cômodo ---------- */
 .pontuacao-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(4px, 1vw, 8px);
-  margin-bottom: clamp(0.5rem, 1.4vh, 0.85rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1.6vw, 14px);
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
 }
 
 .pontuacao-card {
   background: var(--branco);
-  border-radius: var(--raio);
-  padding: clamp(5px, 1vh, 8px) 4px;
+  border-radius: var(--raio-lg);
+  padding: clamp(10px, 1.8vh, 16px) 8px clamp(10px, 1.6vh, 14px);
   text-align: center;
   min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  gap: 2px;
+  box-shadow: 0 3px 10px rgba(113, 43, 19, 0.08);
 }
 
-.pontuacao-card__icone-img { width: clamp(36px, 6.5vh, 48px); height: clamp(36px, 6.5vh, 48px); margin-bottom: 1px; }
+.pontuacao-card__icone-img { width: clamp(48px, 8vh, 68px); height: clamp(48px, 8vh, 68px); object-fit: contain; margin-bottom: 4px; }
 
-.pontuacao-card--laranja { border: 1.5px solid var(--ambar-claro); }
-.pontuacao-card--roxo    { border: 1.5px solid var(--roxo-borda); }
-.pontuacao-card--verde   { border: 1.5px solid var(--verde-claro); }
-.pontuacao-card--marrom  { border: 1.5px solid var(--laranja-borda); }
+.pontuacao-card--laranja { background: var(--ambar-fundo);   border: 2px solid var(--ambar-claro); }
+.pontuacao-card--roxo    { background: var(--roxo-fundo);    border: 2px solid var(--roxo-borda); }
+.pontuacao-card--verde   { background: var(--verde-fundo);   border: 2px solid var(--verde-borda); }
+.pontuacao-card--marrom  { background: var(--marrom-fundo);  border: 2px solid var(--laranja-borda); }
 
 .pontuacao-card__icone { font-size: calc(18px * var(--escala-fonte)); }
-.pontuacao-card__nome  { font-size: calc(11px * var(--escala-fonte)); font-weight: 600; margin-top: 4px; }
-.pontuacao-card__pts   { font-size: calc(13px * var(--escala-fonte)); font-weight: 600; }
+.pontuacao-card__nome  { font-size: calc(16px * var(--escala-fonte)); font-weight: 700; margin-top: 2px; }
+.pontuacao-card__pts   { font-size: calc(22px * var(--escala-fonte)); font-weight: 800; line-height: 1.1; }
 
 .pontuacao-card__nome--laranja { color: var(--marrom-medio); }
 .pontuacao-card__nome--roxo    { color: #3C3489; }
 .pontuacao-card__nome--verde   { color: #085041; }
 .pontuacao-card__nome--marrom  { color: #71231E; }
 
-.pontuacao-card__pts--laranja  { color: var(--laranja); }
+.pontuacao-card__pts--laranja  { color: #B8440F; }
 .pontuacao-card__pts--roxo     { color: var(--roxo); }
-.pontuacao-card__pts--verde    { color: var(--verde); }
-.pontuacao-card__pts--marrom   { color: var(--laranja); }
+.pontuacao-card__pts--verde    { color: #0F6E56; }
+.pontuacao-card__pts--marrom   { color: #B8440F; }
 
 .pontuacao-card__status {
-  margin-top: 2px;
-  font-size: calc(10px * var(--escala-fonte));
+  margin-top: 6px;
+  padding: 3px 10px;
+  font-size: calc(12px * var(--escala-fonte));
   line-height: 1.2;
   font-weight: 700;
   color: #0F6E56;
+  background: var(--branco);
+  border: 1.5px solid var(--verde-borda);
+  border-radius: var(--raio-pill);
 }
 
+/* ---------- Mensagem do Logi ---------- */
 .pontuacao-feedback {
-  min-height: 44px;
-  padding-block: 5px;
-  margin-bottom: clamp(0.5rem, 1.4vh, 0.8rem);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 16px;
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
+  border-radius: var(--raio-lg);
 }
-.pontuacao-feedback .dica__texto { font-size: calc(12px * var(--escala-fonte)); }
+.pontuacao-feedback .dica__texto { font-size: calc(16px * var(--escala-fonte)); line-height: 1.45; text-align: left; }
+
+.pontuacao-logi-img {
+  width: 52px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* ---------- Botões ---------- */
+.tela--pontuacao .btn-grupo { gap: 12px; }
+.tela--pontuacao .btn {
+  min-height: 54px;
+  padding: 12px 18px;
+  font-size: calc(18px * var(--escala-fonte));
+  font-weight: 700;
+  border-radius: var(--raio-lg);
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.15s;
+}
+.tela--pontuacao .btn--laranja { box-shadow: 0 4px 0 #A9401F; }
+.tela--pontuacao .btn:hover  { transform: translateY(-1px); opacity: 1; filter: brightness(1.05); }
+.tela--pontuacao .btn:active { transform: translateY(2px); box-shadow: none; }
+.tela--pontuacao .btn:focus-visible { outline: 3px solid var(--marrom-medio); outline-offset: 3px; }
 
 .btn--menu-resultado {
   background: var(--branco);
   color: var(--marrom-medio);
   border: 2px solid var(--laranja-borda);
+  box-shadow: 0 4px 0 var(--laranja-borda);
 }
 
 .btn-grupo--final { justify-content: center; }
-.btn-grupo--final .btn--laranja { flex: 0 1 280px; padding-inline: 1.5rem; }
+.btn-grupo--final .btn--laranja { flex: 0 1 340px; padding-inline: 1.5rem; }
 
+/* ---------- Confete ---------- */
 .confetti-layer {
   position: fixed;
   inset: 0;
@@ -163,35 +243,47 @@
   100% { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--rotation)); opacity: 0.9; }
 }
 
-@media (max-width: 520px) {
+/* ---------- Telas pequenas ---------- */
+@media (max-width: 560px) {
   body { padding: 0.4rem; }
-  .tela--pontuacao { padding: 0.7rem; }
-  .pontuacao-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .pontuacao-card__nome { font-size: calc(10px * var(--escala-fonte)); margin-top: 2px; }
-  .pontuacao-card__pts { font-size: calc(12px * var(--escala-fonte)); }
-  .pontuacao-card__status { font-size: calc(9px * var(--escala-fonte)); }
-  .pontuacao-feedback .dica__texto { font-size: calc(11px * var(--escala-fonte)); }
+  .tela--pontuacao { padding: 0.9rem 0.8rem; }
+  .pontuacao-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .resultado-header__titulo { font-size: calc(26px * var(--escala-fonte)); }
+  .resultado-header__sub { font-size: calc(15px * var(--escala-fonte)); }
+  .pontuacao-feedback .dica__texto { font-size: calc(14px * var(--escala-fonte)); }
+  .tela--pontuacao .btn-grupo { flex-direction: column; }
+  .btn-grupo--final .btn--laranja { flex: 1 1 auto; }
 }
 
-@media (max-height: 720px) {
+/* ---------- Telas baixas (notebook, celular deitado) ---------- */
+@media (max-height: 840px) {
   body { padding-block: 0.35rem; }
-  .tela--pontuacao { padding-block: 0.65rem; }
-  .resultado-kicker { margin-bottom: 0.25rem; }
-  .resultado-header { margin-bottom: 0.45rem; }
-  .resultado-header__logi { width: clamp(62px, 10vh, 76px); }
-  .resultado-header__icone { font-size: calc(54px * var(--escala-fonte)); margin-bottom: 0.25rem; }
-  .resultado-header__titulo { font-size: calc(19px * var(--escala-fonte)); }
-  .resultado-header__sub { font-size: calc(12px * var(--escala-fonte)); line-height: 1.35; }
-  .resultado-header__sub strong { font-size: calc(13px * var(--escala-fonte)); }
-  .pontuacao-total { padding: 0.45rem; margin-bottom: 0.45rem; }
-  .pontuacao-total__numero { font-size: calc(32px * var(--escala-fonte)); }
-  .pontuacao-grid { margin-bottom: 0.45rem; }
-  .pontuacao-card__icone-img { width: 34px; height: 34px; }
-  .pontuacao-feedback { min-height: 40px; margin-bottom: 0.45rem; }
-  .pontuacao-logi-img { width: 32px; height: 28px; }
-  .tela--pontuacao .btn { padding-block: 9px; }
+  .tela--pontuacao { padding-block: 0.8rem; }
+  .resultado-header { margin-bottom: 0.6rem; }
+  .resultado-header__logi { width: clamp(64px, 11vh, 84px); }
+  .resultado-header__icone { font-size: calc(56px * var(--escala-fonte)); margin-bottom: 0.25rem; }
+  .resultado-header__titulo { font-size: calc(24px * var(--escala-fonte)); margin-bottom: 0.2rem; }
+  .resultado-header__sub { font-size: calc(14px * var(--escala-fonte)); line-height: 1.35; }
+  .resultado-header__sub strong { font-size: calc(16px * var(--escala-fonte)); }
+  .pontuacao-total { padding: 0.6rem 0.8rem; margin-bottom: 0.6rem; }
+  .pontuacao-total__numero { font-size: calc(40px * var(--escala-fonte)); }
+  .pontuacao-barra { margin-top: 0.4rem; height: 10px; }
+  .pontuacao-grid { margin-bottom: 0.6rem; gap: 8px; }
+  .pontuacao-card { padding-block: 7px; }
+  .pontuacao-card__icone-img { width: 40px; height: 40px; }
+  .pontuacao-card__pts { font-size: calc(19px * var(--escala-fonte)); }
+  .pontuacao-feedback { min-height: 46px; margin-bottom: 0.6rem; padding-block: 6px; }
+  .pontuacao-logi-img { width: 38px; height: 34px; }
+  .tela--pontuacao .btn { min-height: 46px; padding-block: 9px; font-size: calc(16px * var(--escala-fonte)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .resultado-header__logi { animation: none; }
+  .pontuacao-barra > span { transition: none; }
+  .tela--pontuacao .btn { transition: none; }
 }
+
+/* "Menos movimento" das preferências */
+body.reduz-movimento .resultado-header__logi { animation: none; }
+body.reduz-movimento .pontuacao-barra > span,
+body.reduz-movimento .tela--pontuacao .btn { transition: none; }
