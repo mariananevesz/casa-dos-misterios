@@ -133,8 +133,8 @@ const Tutorial = (() => {
         <button type="button" class="tut-btn" id="tut-reiniciar">${SVG_REINICIAR}<span>Ver de novo</span></button>
         <button type="button" class="tut-btn tut-btn--pular" id="tut-pular">${SVG_PULAR}<span>Pular</span></button>
       </div>
-      <div class="tut-tip" id="tut-tip" role="dialog" aria-modal="false" aria-labelledby="tut-text" tabindex="-1">
-        <div class="tut-logi" data-estado="falando" role="img" aria-label="Logi, o mascote">
+      <div class="tut-tip" id="tut-tip" role="group" aria-label="Treino" tabindex="-1">
+        <div class="tut-logi" data-estado="falando" aria-hidden="true">
           <img class="tut-feliz" src="${IMG_FELIZ}" alt="">
           <img class="tut-excl" src="${IMG_EXCL}" alt="">
           <span class="tut-lampada"></span>
@@ -143,12 +143,12 @@ const Tutorial = (() => {
           <span class="tut-confete"></span>
         </div>
         <div class="tut-tip-corpo">
-          <p class="tut-etiqueta" id="tut-etiqueta" hidden>${SVG_LAMPADA}<span>Dica</span></p>
-          <p class="tut-fala" id="tut-text"></p>
-          <p class="tut-tecla" id="tut-tecla"></p>
+          <p class="tut-etiqueta" id="tut-etiqueta" aria-hidden="true" hidden>${SVG_LAMPADA}<span>Dica</span></p>
+          <p class="tut-fala" id="tut-text" aria-hidden="true"></p>
+          <p class="tut-tecla" id="tut-tecla" aria-hidden="true"></p>
           <div class="tut-tip-rodape">
             <span class="tut-passo" id="tut-passo"></span>
-            <button type="button" class="tut-ok" id="tut-ok" hidden>→ OK</button>
+            <button type="button" class="tut-ok" id="tut-ok" aria-label="OK, continuar" hidden>→ OK</button>
           </div>
         </div>
       </div>
@@ -410,7 +410,6 @@ const Tutorial = (() => {
   function descrever(els) {
     descreve.forEach(el => el.removeAttribute('aria-describedby'));
     descreve = els;
-    els.forEach(el => el.setAttribute('aria-describedby', 'tut-text'));
   }
 
   function focar(el) {
@@ -476,7 +475,6 @@ const Tutorial = (() => {
     const n = passos.length;
     /* Cena de dica com um passo só não precisa de bolinhas */
     ui.passo.innerHTML = modoDica && n === 1 ? '' :
-      `<span class="tut-sr">Passo ${i + 1} de ${n}. </span>` +
       `<span class="tut-bolinhas" aria-hidden="true">${passos.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</span>`;
     ui.fala.innerHTML = marca(p.fala, p.palavraChave);
     ui.tecla.innerHTML = p.teclado && !/^—/.test(p.teclado) ? `${SVG_TECLADO}<span>${esc(p.teclado)}</span>` : '';
@@ -499,13 +497,21 @@ const Tutorial = (() => {
     isolar([...els, ...alvoEls, foco]);
     descrever(p.acao === 'click' ? (alvoEls.length ? alvoEls : els) : []);
 
-    anunciar(`${p.fala}. ${p.audiodescricao || ''}`.trim());
+    /* UMA voz por passo: a audiodescrição (que já traz a instrução completa) ou, se não houver, a fala.
+       A fala na tela, a dica de teclado e o Logi ficam fora da leitura (aria-hidden) e nada é
+       ligado por aria-describedby: antes o leitor lia o botão, a fala, a audiodescrição e o botão de novo. */
+    const extra = p.vozExtra ? ` ${p.vozExtra()}` : '';   /* o que o passo mostra e não está no texto (ex.: a frase de treino) */
+    const voz = `${modoDica ? 'Dica. ' : (n > 1 ? `Passo ${i + 1} de ${n}. ` : '')}${p.audiodescricao || p.fala}${extra}`.trim();
+    vozOk = voz;
+    /* Passo de OK: o texto vai no nome do botão OK, lido quando ele recebe o foco (uma leitura só).
+       Falar por aria-live e depois pôr o foco no OK fazia o leitor cortar a fala no meio. */
+    if (p.acao === 'click') anunciar(voz);
     ui.fala.classList.remove('tut-pop');
     void ui.fala.offsetWidth;
     ui.fala.classList.add('tut-pop');
 
+    /* Passo de toque: o foco vai para o alvo. Passo de OK: o foco vai direto para o botão OK (mostrarOk) */
     if (p.acao === 'click') focar(foco || alvoEls[0] || els[0]);
-    else try { ui.tip.focus({ preventScroll: true }); } catch {}
   }
 
   /* Recalcula buraco, anel, mão e balão (rolagem, giro de tela, efeitos que mudam a página) */
@@ -544,8 +550,10 @@ const Tutorial = (() => {
     return Object.assign({ esperar: ms => esperar(ms, gen) }, pagina.acoes || {});
   }
 
+  let vozOk = '';
   function mostrarOk() {
     ui.ok.hidden = false;
+    ui.ok.setAttribute('aria-label', `${vozOk}${/[.!?]$/.test(vozOk) ? '' : '.'} OK, continuar`.trim());
     focar(ui.ok);
     armarInatividade();
   }
@@ -679,7 +687,9 @@ const Tutorial = (() => {
     ui.fala.innerHTML = marca(fala, er.palavraChave);
     ui.tecla.innerHTML = er.teclado && !/^—/.test(er.teclado) ? `${SVG_TECLADO}<span>${esc(er.teclado)}</span>` : '';
     setEstado(er.estadoLogi || 'encorajando');
-    anunciar(`${fala}. ${er.audiodescricao || ''}`.trim());
+    /* No erro vale a fala (ela explica o motivo certo, ex.: "A banana é AMARELA"); a audiodescrição é genérica */
+    const vozErro = (fala || er.audiodescricao || '').trim();
+    if (er.ok) vozOk = vozErro; else anunciar(vozErro);
     if (er.destaque !== undefined) { destaqueTemp = er.destaque; reposicionar(); }
     try {
       if (er.efeito) await er.efeito(api);
@@ -702,6 +712,7 @@ const Tutorial = (() => {
     setEstado(p.estadoLogi);
     reposicionar();
     if (er.ok) focar(elementosDe(p.alvo)[0]);
+    if (er.falaDepois) anunciar(`${p.fala} ${er.vozDepois ? er.vozDepois() : ''}`.trim());   /* o novo convite e, se houver, o que mudou na tela (ex.: a nova frase) */
     armarInatividade();
   }
 
@@ -756,7 +767,12 @@ const Tutorial = (() => {
 
   /* ---------- Teclado ---------- */
   function aoTecla(e) {
-    if (!T.ativo || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (!T.ativo || e.ctrlKey || e.metaKey) return;
+    /* Alt+R reinicia o treino (tecla com modificador: não briga com a navegação do leitor de tela) */
+    if (e.altKey) {
+      if (e.code === 'KeyR' && !e.repeat && !e.shiftKey && !confirmando) { e.preventDefault(); reiniciar(); }
+      return;
+    }
     if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();           /* impede o "ESC sai do mini-game" da página */
@@ -774,21 +790,6 @@ const Tutorial = (() => {
     if (e.repeat) return;
     const t = e.target;
     if (t instanceof Element && t.matches('input, textarea, select, [contenteditable="true"]')) return;
-    if (String(e.key).toLowerCase() === 'r') { e.preventDefault(); reiniciar(); }
-  }
-
-  /* R com o tutorial fechado: abre de novo o tutorial da fase (se a página não estiver ocupada) */
-  function aoTeclaFora(e) {
-    if (T.ativo || !pagina || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
-    if (String(e.key).toLowerCase() !== 'r' || !prefLigada('atalhos')) return;
-    const t = e.target;
-    if (t instanceof Element && t.matches('input, textarea, select, [contenteditable="true"]')) return;
-    if ($$('.modal-overlay').some(m => getComputedStyle(m).display !== 'none')) return;
-    if (pagina.ocupado && pagina.ocupado()) return;
-    const id = pagina.tutorialDaFase ? pagina.tutorialDaFase() : null;
-    if (!id || !registro[id]) return;
-    e.preventDefault();
-    abrir(id);
   }
 
   /* ---------- Abrir / reiniciar / fechar ---------- */
@@ -798,6 +799,8 @@ const Tutorial = (() => {
     if (!d) return false;
     def = d;
     passos = copiarPassos(def);
+    /* Conta como visto já ao abrir: sair ou recarregar no meio não obriga a repetir o treino */
+    try { gameState.marcarTutorialVisto(def.id); } catch {}
     comecar(false);
     return true;
   }
@@ -936,6 +939,7 @@ const Tutorial = (() => {
       btn.id = 'btn-ver-tutorial';
       btn.className = 'btn btn--outline tut-btn-ajuda';
       btn.textContent = 'Ver o tutorial do Logi';
+      btn.setAttribute('aria-label', 'Ver o treino');   /* o leitor de tela não precisa falar "Logi" */
       caixa.appendChild(btn);
       btn.addEventListener('click', () => {
         const alvo = pagina.tutorialDaFase();
@@ -951,7 +955,6 @@ const Tutorial = (() => {
 
   function configurar(p) {
     pagina = p;
-    document.addEventListener('keydown', aoTeclaFora);
     const ajuda = document.getElementById('btn-ajuda');
     if (ajuda) ajuda.addEventListener('click', atualizarBotaoAjuda, true);
   }
@@ -960,7 +963,11 @@ const Tutorial = (() => {
     if (!id || !registro[id] || T.ativo || Date.now() < bloqueioAuto || !prefLigada('treinoAuto')) return;
     let visto = false;
     try { visto = gameState.tutorialVisto(id); } catch {}
-    if (!visto) window.setTimeout(() => abrir(id), 350);
+    if (!visto) {
+      /* O treino fala sozinho: a descrição do cômodo (Alt+R) não deve atropelar a fala dele */
+      if (typeof cancelarDescricao === 'function') cancelarDescricao();
+      window.setTimeout(() => abrir(id), 350);
+    }
   }
 
   return {

@@ -525,3 +525,20 @@
 @media (max-width: 560px) {
   .tela--mapa .btn-musica { width: 40px; height: 40px; min-width: 40px; }
 }
+
+/* ---------- Atalhos do teclado (1ª visita ao Mapa) ---------- */
+.atalhos-modal { width: min(92vw, 480px); max-width: 480px; text-align: left; }
+.atalhos-modal:focus { outline: none; }
+.atalhos-lista { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 8px; }
+.atalhos-lista li {
+  display: grid; grid-template-columns: 11.5em 1fr; align-items: center; gap: 10px;
+  font-size: calc(15px * var(--escala-fonte)); color: var(--texto-escuro, #3b2a1a); font-weight: 600;
+}
+.atalhos-teclas { white-space: nowrap; }
+.atalhos-lista kbd {
+  background: var(--cinza-fundo, #f4efe9); border: 1px solid var(--cinza-claro, #d8cfc5); border-bottom-width: 3px;
+  border-radius: 6px; padding: 1px 8px; font: inherit; font-weight: 800; min-width: 28px; text-align: center; display: inline-block;
+}
+.atalhos-modal .btn { width: 100%; }
+.atalhos-modal #atalhos-titulo:focus { outline: none; }
+.atalhos-modal #atalhos-titulo:focus-visible { outline: 3px solid var(--laranja, #D85A30); outline-offset: 4px; border-radius: 6px; }

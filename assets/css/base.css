@@ -1137,3 +1137,25 @@ html[data-fonte] :is(.btn-musica span, .btn-musica, .btn-preferencias, .dica__em
 @media (max-width: 430px) {
   .hud .btn-ajuda { width: 36px !important; height: 36px !important; min-width: 36px !important; margin-left: 4px !important; font-size: calc(17px * var(--escala-fonte)); }
 }
+
+/* Texto só para leitor de tela (descrição do cômodo, avisos) */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Blocos que são <button> nativos ficam iguais aos antigos <span role="button"> */
+button.bloco {
+  font-family: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  border: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}

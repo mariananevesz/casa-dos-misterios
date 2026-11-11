@@ -35,7 +35,7 @@
       { id: 'despensa-f3-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: FRUTA('maca'), evitar: '#prateleira', vez: { tipo: 'adicionar', valor: 'maca' },
         fala: 'Oi, {tratamento}! Só frutas com SEMENTES. Toque na MAÇÃ.', palavraChave: ['SEMENTES', 'MAÇÃ'],
-        audiodescricao: 'Logi chega pulando na Despensa. Hoje escolhemos só as frutas que têm sementes por dentro. A maçã tem. Toque nela: ela vai para a prateleira.',
+        audiodescricao: 'Hoje escolhemos só as frutas que têm sementes por dentro. A maçã tem. Toque nela ou aperte Enter: ela vai para a prateleira.',
         teclado: 'Foco já na “Maçã”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'melancia' ? 'A melancia também tem SEMENTES! Primeiro, a MAÇÃ.'
@@ -52,7 +52,7 @@
       { id: 'despensa-f3-p3', acao: 'click', estadoLogi: 'aguardando',
         alvo: FRUTA('melancia'), evitar: '#prateleira', vez: { tipo: 'adicionar', valor: 'melancia' },
         fala: 'Sua vez! Outra com SEMENTES: a MELANCIA.', palavraChave: ['SEMENTES', 'MELANCIA'],
-        audiodescricao: 'Sua vez! A melancia também tem sementes por dentro. Toque nela.',
+        audiodescricao: 'Sua vez! A melancia também tem sementes por dentro. Toque nela ou aperte Enter.',
         teclado: 'Foco já na “Melancia”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'maca' ? `${JA.maca} Toque na MELANCIA.` : `${SEM[id] || 'Essa não.'} Procure a MELANCIA.`,
@@ -62,7 +62,7 @@
         antes: a => a.marcarCertas(),
         destaque: '#prateleira',
         fala: 'Isso! Só frutas com SEMENTES!', palavraChave: ['SEMENTES'],
-        audiodescricao: 'Isso! A maçã e a melancia estão na prateleira. Logi pula de alegria.',
+        audiodescricao: 'Isso! A maçã e a melancia estão na prateleira.',
         teclado: 'Enter no botão “OK”' }
     ]
   });

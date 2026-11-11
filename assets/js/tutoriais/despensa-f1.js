@@ -34,7 +34,7 @@
       { id: 'despensa-f1-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: FRUTA('maca'), vez: { tipo: 'selecionar', valor: 'maca' },
         fala: 'Oi, {tratamento}! Escolha somente frutas VERMELHAS. Toque na MAÇÃ.', palavraChave: ['VERMELHAS', 'MAÇÃ'],
-        audiodescricao: 'Logi chega pulando na Despensa. Hoje só escolhemos frutas vermelhas. Toque na maçã vermelha: ela fica escolhida.',
+        audiodescricao: 'Hoje só escolhemos frutas vermelhas. Toque na maçã vermelha ou aperte Enter: ela fica escolhida.',
         teclado: 'Foco já na “Maçã”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'morango' ? 'O morango também é vermelho! Primeiro, a MAÇÃ.' : `${COR[id] || 'Essa não.'} Procure a MAÇÃ.`,
@@ -50,7 +50,7 @@
       { id: 'despensa-f1-p3', acao: 'click', estadoLogi: 'aguardando',
         alvo: FRUTA('morango'), vez: { tipo: 'selecionar', valor: 'morango' },
         fala: 'Sua vez! Outra fruta VERMELHA: o MORANGO.', palavraChave: ['VERMELHA', 'MORANGO'],
-        audiodescricao: 'Sua vez! Toque no morango, que também é vermelho.',
+        audiodescricao: 'Sua vez! Toque no morango, que também é vermelho, ou aperte Enter.',
         teclado: 'Foco já no “Morango”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'maca' ? 'A maçã já está escolhida. Toque no MORANGO.' : `${COR[id] || 'Essa não.'} Procure o MORANGO.`,
@@ -59,7 +59,7 @@
       { id: 'despensa-f1-p4', acao: 'ok', estadoLogi: 'comemorando',
         destaque: '.item-card--selecionado',
         fala: 'Isso! O morango também é VERMELHO!', palavraChave: ['VERMELHO'],
-        audiodescricao: 'Isso! A maçã e o morango estão escolhidos. Logi pula de alegria.',
+        audiodescricao: 'Isso! A maçã e o morango estão escolhidos.',
         teclado: 'Enter no botão “OK”' }
     ]
   });

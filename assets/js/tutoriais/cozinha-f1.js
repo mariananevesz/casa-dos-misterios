@@ -36,7 +36,7 @@
         destaque: '#pergunta-box', evitar: '.cozinha-vf',
         efeito: a => a.lerPalavras(),
         fala: 'Oi, {tratamento}! Vamos LER a frase juntos.', palavraChave: ['LER'],
-        audiodescricao: 'Logi chega pulando na Cozinha. A frase de treino é: O gelo nunca é quente. Cada palavra acende enquanto o Logi lê.',
+        audiodescricao: 'A frase de treino é: O gelo nunca é quente. Cada palavra acende, uma por vez.',
         teclado: 'Enter no botão “OK”' },
 
       /* 2 — a palavra que muda o sentido */
@@ -53,8 +53,9 @@
         foco: '#pergunta-box', evitar: '#pergunta-box, .cozinha-vf',
         vez: () => ({ tipo: 'responder', valor: EXEMPLOS[atual].resposta }),
         fala: 'Sua vez! Tente acertar: a frase é VERDADEIRA ou FALSA?', palavraChave: ['VERDADEIRA', 'FALSA'],
-        audiodescricao: 'Sua vez! Leia a frase e tente acertar: o botão verde é Verdadeiro, tecla V. O botão vermelho é Falso, tecla F.',
-        teclado: 'V = Verdadeiro · F = Falso',
+        audiodescricao: 'Sua vez! Leia a frase e tente acertar. Toque em Verdadeiro ou Falso, ou aperte Enter no botão. Atalhos: Alt mais 1 é Verdadeiro, Alt mais 2 é Falso.',
+        vozExtra: () => `A frase é: ${EXEMPLOS[atual].frase}`,
+        teclado: 'Alt + 1 = Verdadeiro · Alt + 2 = Falso',
         erro: {
           estadoLogi: 'encorajando', ok: true, destaque: '#pergunta-box',
           efeito: brilhaNegacao,
@@ -62,14 +63,15 @@
           audiodescricao: 'Quase! Leia o motivo e toque em OK para tentar de novo com outra frase.',
           teclado: 'Enter no botão “OK”',
           depois: a => { atual = (atual + 1) % EXEMPLOS.length; a.frase(EXEMPLOS[atual].frase); },
-          falaDepois: 'Outra FRASE! Tente de novo.', palavraChaveDepois: ['FRASE']
+          falaDepois: 'Outra FRASE! Tente de novo.', palavraChaveDepois: ['FRASE'],
+          vozDepois: () => `A frase é: ${EXEMPLOS[atual].frase} Verdadeiro ou falso?`
         } },
 
       /* 4 — acertou */
       { id: 'cozinha-f1-p4', acao: 'ok', estadoLogi: 'comemorando',
         destaque: '.tut-certo', evitar: '#pergunta-box, .cozinha-vf',
         fala: 'Isso! Você leu com ATENÇÃO!', palavraChave: ['ATENÇÃO'],
-        audiodescricao: 'Isso! Você acertou. Logi pula de alegria.',
+        audiodescricao: 'Isso! Você acertou.',
         teclado: 'Enter no botão “OK”' }
     ]
   });

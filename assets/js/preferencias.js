@@ -65,7 +65,7 @@ const Preferencias = (() => {
       ] },
     { id: 'atalhos', ico: '⌨️', nome: 'Atalhos', fala: 'Teclas rápidas para quem joga com o teclado.',
       itens: [
-        { t: 'toggle', k: 'atalhos', titulo: 'Teclas de atalho do jogo', desc: 'Liga as teclas V, F (Cozinha) e R (rever o treino). Desligue se apertar sem querer.' },
+        { t: 'toggle', k: 'atalhos', titulo: 'Teclas de atalho do jogo', desc: 'Liga as teclas com Alt: Alt+J (ajuda), Alt+R (ouvir a instrução), Alt+S (resumo) e Alt+1 / Alt+2 (Cozinha). Desligue se apertar sem querer.' },
         { t: 'atalhos' }
       ] },
     { id: 'logi', ico: '🤖', nome: 'Logi', fala: 'Eu sou o Logi! Quer me dizer o seu nome?',
@@ -88,11 +88,14 @@ const Preferencias = (() => {
 
   const ATALHOS = [
     { grupo: 'Em todo o jogo', itens: [
-      [['Tab'], 'Ir para o próximo botão'], [['Shift', 'Tab'], 'Voltar para o botão anterior'],
+      [['Tab'], 'Ir para o próximo botão (no fim da página volta para o botão Mapa)'], [['Shift', 'Tab'], 'Voltar para o botão anterior'],
       [['Enter'], 'Escolher ou confirmar (também a tecla Espaço)'], [['Esc'], 'Fechar a janela ou sair do cômodo'],
       [['Alt', 'A'], 'Abrir estas preferências'] ] },
-    { grupo: 'Dentro dos cômodos', itens: [
-      [['R'], 'Rever o treino do Logi'], [['V'], 'Verdadeiro (Cozinha)'], [['F'], 'Falso (Cozinha)'],
+    { grupo: 'Dentro dos cômodos (todas com Alt, para não brigar com o leitor de tela)', itens: [
+      [['Alt', 'J'], 'Abrir a ajuda do cômodo (Alt + J de novo fecha)'],
+      [['Alt', 'R'], 'Ouvir de novo a instrução completa do cômodo (com o treino do Logi aberto, reinicia o treino)'],
+      [['Alt', 'S'], 'Ouvir o resumo do que você montou (Sala, Quarto e Despensa)'],
+      [['Alt', '1'], 'Verdadeiro (Cozinha)'], [['Alt', '2'], 'Falso (Cozinha)'],
       [['Delete'], 'Tirar o bloco em foco (Sala e Quarto; também Backspace)'] ] },
     { grupo: 'No "Como jogar"', itens: [
       [['←'], 'Aba anterior'], [['→'], 'Próxima aba'] ] }
@@ -154,7 +157,7 @@ const Preferencias = (() => {
   function linhaPreview() {
     return `<div class="pref-preview" aria-label="Prévia do texto"><p class="pref-preview__rotulo">Prévia</p>
       <div class="pref-fala"><img src="${img('logi_feliz.png')}" alt=""><p id="pp-texto"></p></div>
-      <div class="pref-preview__blocos"><span class="pp-bloco">↑ Cima</span><span class="pp-bloco pp-bloco--ambar">↻ Repetir 2x</span><span class="pp-bloco pp-bloco--verde">✓ Verificar</span></div></div>`;
+      <div class="pref-preview__blocos"><span class="pp-bloco">↑ Cima</span><span class="pp-bloco pp-bloco--ambar">↻ Repetir 2 vezes</span><span class="pp-bloco pp-bloco--verde">✓ Verificar</span></div></div>`;
   }
 
   function linhaAtalhos() {

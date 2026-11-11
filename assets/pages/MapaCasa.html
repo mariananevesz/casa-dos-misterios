@@ -38,7 +38,7 @@
       </div>
     </section>
 
-    <section class="mapa-logi" aria-label="Mensagem do Logi">
+    <section class="mapa-logi" aria-label="Mensagem">
       <img src="../img/logi_exclamacao.png" alt="" class="mapa-logi__img">
       <div class="mapa-logi__balao">
         <p class="mapa-logi__texto" id="logi-texto">Cada cômodo guarda mistérios diferentes! Escolha onde você quer investigar agora.</p>
@@ -58,6 +58,23 @@
     </section>
 
   </section>
+
+  <!-- Atalhos do teclado: aparece na 1ª vez que a criança chega ao Mapa (Alt + J abre de novo) -->
+  <div class="modal-overlay" id="modal-atalhos" role="dialog" aria-modal="true" aria-labelledby="atalhos-titulo" style="display:none;">
+    <section class="modal atalhos-modal">
+      <h2 class="modal-titulo" id="atalhos-titulo" tabindex="0">Atalhos do teclado</h2>
+      <p class="modal-sub" id="atalhos-intro">Dentro de cada cômodo, use a tecla Alt:</p>
+      <ul class="atalhos-lista" id="atalhos-lista">
+        <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>J</kbd></span><span aria-hidden="true">Ajuda</span><span class="sr-only">Alt mais J: abrir a ajuda.</span></li>
+        <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>R</kbd></span><span aria-hidden="true">Ouvir a instrução de novo</span><span class="sr-only">Alt mais R: ouvir a instrução de novo.</span></li>
+        <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>S</kbd></span><span aria-hidden="true">Ouvir o que você montou</span><span class="sr-only">Alt mais S: ouvir o que você montou.</span></li>
+        <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>1</kbd> / <kbd>2</kbd></span><span aria-hidden="true">Verdadeiro / Falso (Cozinha)</span><span class="sr-only">Alt mais 1: Verdadeiro. Alt mais 2: Falso. Só na Cozinha.</span></li>
+        <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>A</kbd></span><span aria-hidden="true">Preferências</span><span class="sr-only">Alt mais A: abrir as preferências.</span></li>
+      </ul>
+      <button class="modal-fechar" id="atalhos-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="btn btn--laranja" id="atalhos-ok" type="button">Entendi!</button>
+    </section>
+  </div>
 
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
@@ -203,6 +220,44 @@
   }
 
   renderMapa();
+
+  /* ---- Atalhos do teclado: 1ª visita ao Mapa (para todos, não só para quem usa leitor de tela) ---- */
+  const modalAtalhos = document.getElementById('modal-atalhos');
+  /* O título é um item do Tab cujo NOME é o bloco inteiro: ao receber o foco o leitor lê tudo.
+     Para ouvir de novo: Shift+Tab até ele (ou Tab), ou Alt + R com a janela aberta. */
+  const tituloAtalhos = document.getElementById('atalhos-titulo');
+  tituloAtalhos.setAttribute('aria-label', 'Atalhos do teclado. ' + document.getElementById('atalhos-intro').textContent + ' ' +
+    [...document.querySelectorAll('#atalhos-lista .sr-only')].map(e => e.textContent).join(' ') + ' Aperte Entendi para fechar.');
+  function lerAtalhos() { tituloAtalhos.blur(); window.setTimeout(() => tituloAtalhos.focus(), 60); }
+  function abrirAtalhos() {
+    if (modalAtalhos.style.display === 'flex') return;
+    abrirModalFluxoAcessivel(modalAtalhos);   /* o fundo fica inert: só a janela é lida */
+    window.setTimeout(() => tituloAtalhos.focus(), 150);
+  }
+  function fecharAtalhos() {
+    fecharModalFluxoAcessivel(modalAtalhos);
+    document.querySelector('.comodo-card[tabindex="0"]')?.focus();
+  }
+  document.getElementById('atalhos-ok').addEventListener('click', fecharAtalhos);
+  document.getElementById('atalhos-fechar').addEventListener('click', fecharAtalhos);
+  modalAtalhos.addEventListener('click', e => { if (e.target === modalAtalhos) fecharAtalhos(); });
+  /* Alt + R com a janela aberta: lê tudo de novo */
+  document.addEventListener('keydown', e => {
+    if (e.code === 'KeyR' && e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey && !e.repeat && modalAtalhos.style.display === 'flex') { e.preventDefault(); lerAtalhos(); }
+  });
+  /* Alt + J no Mapa mostra os atalhos de novo (nos cômodos, abre a ajuda) */
+  document.addEventListener('keydown', e => {
+    if (e.code !== 'KeyJ' || !e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.repeat) return;
+    if (!atalhosLigados()) return;
+    e.preventDefault();
+    if (modalAtalhos.style.display === 'flex') fecharAtalhos(); else if (!existeModalVisivel()) abrirAtalhos();
+  });
+  try {
+    if (!gameState.tutorialVisto('atalhos-mapa') && atalhosLigados()) {
+      gameState.marcarTutorialVisto('atalhos-mapa');   /* conta como visto ao abrir: não obriga a repetir */
+      window.setTimeout(abrirAtalhos, 400);
+    }
+  } catch (e) {}
   </script>
 
 </body>

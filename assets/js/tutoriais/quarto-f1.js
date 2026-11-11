@@ -27,7 +27,7 @@
       { id: 'quarto-f1-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: FONTE('camiseta'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'camiseta' },
         fala: 'Oi, {tratamento}! Toque na CAMISETA para pôr na fila.', palavraChave: ['CAMISETA'],
-        audiodescricao: 'Logi chega pulando no Quarto. Vamos montar a rotina para ir à escola. Toque em vestir a camiseta: ela entra no primeiro lugar da fila.',
+        audiodescricao: 'Vamos montar a rotina para ir à escola. Toque em vestir a camiseta ou aperte Enter: ela entra no primeiro lugar da fila.',
         teclado: 'Foco já em “Vestir a camiseta”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'calcarep' ? 'Esse bloco está REPETIDO. Comece pela CAMISETA.' : 'Quase! Comece pela CAMISETA.',
@@ -42,7 +42,7 @@
       { id: 'quarto-f1-p3', acao: 'click', estadoLogi: 'aguardando',
         alvo: FONTE('calca'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'calca' },
         fala: 'Sua vez! Coloque a CALÇA certa na fila.', palavraChave: ['CALÇA'],
-        audiodescricao: 'Sua vez! Toque na calça que não é vermelha.',
+        audiodescricao: 'Sua vez! Toque na calça que não é vermelha ou aperte Enter.',
         teclado: 'Foco já na calça certa: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 4000, destaque: FONTE('calcarep'),
           fala: (a, id) => id === 'calcarep' ? 'Esse é o REPETIDO, o vermelho. Toque na outra CALÇA.'
@@ -53,7 +53,7 @@
       { id: 'quarto-f1-p4', acao: 'click', estadoLogi: 'dica',
         alvo: FONTE('tenis'), evitar: '#sequencia-corrigida', vez: { tipo: 'adicionar', valor: 'tenis' },
         fala: 'O TÊNIS vem DEPOIS da calça e da meia.', palavraChave: ['TÊNIS', 'DEPOIS'],
-        audiodescricao: 'Calçar o tênis vem depois de vestir a calça e calçar a meia. Toque em calçar o tênis.',
+        audiodescricao: 'Calçar o tênis vem depois de vestir a calça e calçar a meia. Toque em calçar o tênis ou aperte Enter.',
         teclado: 'Foco já em “Calçar o tênis”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'calcarep' ? 'Esse bloco é REPETIDO. Toque no TÊNIS.' : `${jaNaFila(id)} Toque no TÊNIS.`,
@@ -62,7 +62,7 @@
       { id: 'quarto-f1-p5', acao: 'click', estadoLogi: 'apontando',
         alvo: '#btn-verificar', evitar: '#sequencia-corrigida', vez: { tipo: 'verificar' },
         fala: 'Aperte VERIFICAR para conferir.', palavraChave: ['VERIFICAR'],
-        audiodescricao: 'A fila está pronta. Aperte Verificar sequência para conferir.',
+        audiodescricao: 'A fila está pronta. Toque em Verificar sequência ou aperte Enter para conferir.',
         teclado: 'Foco já em “Verificar sequência”: Enter ou Espaço' }
     ]
   });

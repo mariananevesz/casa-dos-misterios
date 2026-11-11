@@ -102,3 +102,22 @@ Nenhuma biblioteca externa é utilizada no estado atual do protótipo. O projeto
 | EF02CO01   | Criar e comparar modelos, identificando padrões e atributos           | Despensa     |
 | EF02CO02   | Criar e simular algoritmos com sequências e repetições simples        | Sala / Quarto|
 | EF03CO01   | Associar verdadeiro/falso a sentenças lógicas do cotidiano            | Cozinha      |
+
+---
+
+## Decisões de acessibilidade (leitor de tela e teclado)
+
+Tarefas 105 a 109 (PBI 100).
+
+- **`<button>` nativo no lugar de `<area>` (Task 107).** O elemento `<area>` é próprio de mapas de imagem (`<map>`): serve para links em regiões de uma figura, não para botões de comando, e não tem o comportamento de botão (Enter/Espaço, estado, foco). Por isso os blocos da Sala, do Quarto e as frutas da Despensa são `<button type="button">`. O texto do botão é lido pelo leitor de tela e Enter/Espaço funcionam sem código extra. Decisão registrada aqui e na Task 107.
+- **Tab e setas (Task 107).** Todos os botões ficam no Tab, na ordem da tela (ex.: Cima, Baixo, Esquerda, Direita, Dica), e no fim da página o Tab volta para o botão Mapa (`elementosDoTab` em `plataforma.js`; F6 ou Ctrl+L saem da página). As setas **não** são interceptadas pelo jogo: com o Narrador em modo de leitura elas já andam entre os botões e os textos, e um tratamento próprio de ←/→ duplicava o movimento e atrapalhava a leitura.
+- **Atalhos sempre com Alt** (não brigam com as teclas de navegação do Narrador/NVDA/JAWS nem com o Chrome): `Alt+J` abre a ajuda do cômodo, `Alt+R` lê de novo a instrução completa (com o treino do Logi aberto, reinicia o treino), `Alt+S` lê o resumo do que foi montado, `Alt+1` e `Alt+2` respondem Verdadeiro e Falso na Cozinha. Listados em "Minhas preferências > Atalhos" e na ajuda de cada cômodo. Podem ser desligados em "Teclas de atalho do jogo".
+- **Instrução completa só ao entrar.** A descrição completa do cômodo é lida ao entrar; nas fases seguintes, só uma mensagem curta da fase. Quem quiser ouvir tudo de novo aperta `Alt+R`.
+- **Textos de leitor de tela nos JSON.** Cada `assets/data/<comodo>.json` tem o bloco `acessibilidade` (descrições, avisos e rótulos), com `{chaves}` preenchidas por `preencherTexto()`. A cópia embutida (`*_INLINE`) de cada página deve ser mantida igual.
+- **Cor nunca é a única informação.** Blocos errados dizem "com erro" no nome, e as mensagens listam as posições erradas pelo nome.
+- **Avisos:** `anunciarAcessivel()` (região `aria-live`, um aviso por vez) e `anunciarFila()` (região `role="log"`, avisos em fila, usada no passo a passo da Sala).
+- **Uma voz por passo nos treinos do Logi.** Cada passo é falado uma vez só, pela região `aria-live` do `tutorial.js`: vale a `audiodescricao` do passo (que já traz a instrução completa) ou, se não houver, a `fala`. A fala escrita no balão, a dica de teclado e a figura do Logi ficam com `aria-hidden`, e não há `aria-describedby` no botão alvo. Nos passos de OK, o foco vai direto para o botão OK.
+- **Atalhos mostrados no Mapa.** Na primeira visita ao Mapa da Casa, uma janela curta lista os atalhos com Alt (J, R, S, 1/2, A). Vale para todos os jogadores e conta como vista ao abrir. No Mapa, `Alt+J` abre de novo; "Rever todos os treinos" nas preferências também a faz voltar.
+- **Botão Dica.** O nome acessível é só "Dica" (antes "Dica do Logi").
+- **Janela aberta isola o fundo.** `abrirModalFluxoAcessivel` e `abrirTutorialAcessivel` (`plataforma.js`) põem `inert` no resto da página enquanto a janela está aberta, porque o Narrador ignorava `aria-modal` e lia o fundo. Avisos do leitor (`a11y-*`) e o treino (`tut*`) ficam de fora. Na janela de atalhos do Mapa, cada atalho é uma frase só para o leitor, o foco vai para o título e uma leitura única diz a lista inteira.
+- **Ouvir os atalhos de novo.** Na janela de atalhos do Mapa o título "Atalhos do teclado" é um item do Tab e o nome dele é o bloco inteiro: ao receber o foco o leitor lê tudo. Para ouvir de novo, volte a ele com Tab ou Shift+Tab, ou aperte Alt+R com a janela aberta. Não há mais aviso por `aria-live` nessa janela.

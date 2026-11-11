@@ -29,7 +29,7 @@
       { id: 'despensa-f2-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: FRUTA('mirtilo'), evitar: '#prateleira', vez: { tipo: 'adicionar', valor: 'mirtilo' },
         fala: 'Oi, {tratamento}! Comece pela MENOR: o MIRTILO.', palavraChave: ['MENOR', 'MIRTILO'],
-        audiodescricao: 'Logi chega pulando na Despensa. Hoje as frutas vão para a prateleira do menor para o maior. A menor é o mirtilo. Toque nele: ele vai para o primeiro lugar.',
+        audiodescricao: 'Hoje as frutas vão para a prateleira do menor para o maior. A menor é o mirtilo. Toque nele ou aperte Enter: ele vai para o primeiro lugar.',
         teclado: 'Foco já no “Mirtilo”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'melancia' ? 'A melancia é a MAIOR! Comece pela MENOR.'
@@ -45,7 +45,7 @@
       { id: 'despensa-f2-p3', acao: 'click', estadoLogi: 'aguardando',
         alvo: FRUTA('maca'), evitar: '#prateleira', vez: { tipo: 'adicionar', valor: 'maca' },
         fala: 'Sua vez! A MENOR que sobrou: a MAÇÃ.', palavraChave: ['MENOR', 'MAÇÃ'],
-        audiodescricao: 'Sua vez! Das frutas que sobraram, a menor é a maçã. Toque nela.',
+        audiodescricao: 'Sua vez! Das frutas que sobraram, a menor é a maçã. Toque nela ou aperte Enter.',
         teclado: 'Foco já na “Maçã”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => id === 'melancia' ? 'A melancia é MAIOR que a maçã. Primeiro, a MAÇÃ.'
@@ -55,7 +55,7 @@
       { id: 'despensa-f2-p4', acao: 'click', estadoLogi: 'dica',
         alvo: FRUTA('melancia'), evitar: '#prateleira', vez: { tipo: 'adicionar', valor: 'melancia' },
         fala: 'Por último, a MAIOR: a MELANCIA.', palavraChave: ['MAIOR', 'MELANCIA'],
-        audiodescricao: 'Falta só a maior de todas, a melancia. Toque nela.',
+        audiodescricao: 'Falta só a maior de todas, a melancia. Toque nela ou aperte Enter.',
         teclado: 'Foco já na “Melancia”: Enter ou Espaço',
         erro: { estadoLogi: 'encorajando', duracaoPadrao: 3500,
           fala: (a, id) => `${jaNaPrateleira(id)} Toque na MELANCIA.`,
@@ -65,7 +65,7 @@
         antes: a => a.marcarCertas(),
         destaque: '#prateleira',
         fala: 'Isso! Do MENOR para o MAIOR!', palavraChave: ['MENOR', 'MAIOR'],
-        audiodescricao: 'Isso! As frutas estão do menor para o maior. Logi pula de alegria.',
+        audiodescricao: 'Isso! As frutas estão do menor para o maior.',
         teclado: 'Enter no botão “OK”' }
     ]
   });

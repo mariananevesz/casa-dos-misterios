@@ -65,7 +65,7 @@ const ComoJogar = (() => {
     `<div class="cj-topo"><img src="${img('icone-' + comodo + '.png')}" alt=""><span>${esc(titulo)}</span><span class="cj-pts">0 pts</span></div>`;
 
   /* ---- Sala ---- */
-  const SETA = { cima: '↑ Cima', baixo: '↓ Baixo', esq: '← Esq', dir: '→ Dir', repetir2: '↻ Repetir 2x' };
+  const SETA = { cima: '↑ Cima', baixo: '↓ Baixo', esq: '← Esquerda', dir: '→ Direita', repetir2: '↻ Repetir 2 vezes' };
   function telaSala(c) {
     const g = c.grade, n = g.n || 4;
     const trilha = (g.trilha || []).map(String);
@@ -218,7 +218,7 @@ const ComoJogar = (() => {
       { cena: sala({ grade: G_SALA, seq: [], foco: 'bloco-cima' }),
         texto: 'Os **comandos** ficam na esquerda. Toque em **↑ Cima**: o bloco entra no primeiro espaço do **painel de comandos**. O robô precisa chegar na ⭐.' },
       { cena: sala({ grade: Object.assign({ trilha: [[2, 0], [2, 1]] }, G_SALA), seq: ['cima'], foco: 'bloco-dir' }),
-        texto: 'Agora toque em **→ Dir**. Os blocos formam uma **fila**: o robô vai seguir na ordem, do primeiro ao último. A parte amarela da grade mostra o caminho.' },
+        texto: 'Agora toque em **→ Direita**. Os blocos formam uma **fila**: o robô vai seguir na ordem, do primeiro ao último. A parte amarela da grade mostra o caminho.' },
       { cena: sala({ grade: Object.assign({ trilha: [[2, 0], [2, 1]] }, G_SALA), seq: ['cima', 'dir'], foco: 'executar' }),
         texto: 'Com a fila pronta, aperte **▶ Executar**. O robô começa a andar, **um passo para cada bloco**.' },
       { cena: sala({ grade: { n: 4, robo: [2, 1], estrela: [2, 1] }, seq: ['cima', 'dir'], foco: 'alvo' }),
@@ -228,11 +228,11 @@ const ComoJogar = (() => {
     ],
     'sala-f3': [
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: G_SALA3, seq: [], foco: 'bloco-repetir2' }),
-        texto: 'Na Fase 3 aparece um bloco novo: **↻ Repetir 2x**. Ele repete a seta anterior **mais 2 vezes**.' },
+        texto: 'Na Fase 3 aparece um bloco novo: **↻ Repetir 2 vezes**. Ele repete a seta anterior **mais 2 vezes**.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: G_SALA3, seq: [], foco: 'bloco-cima' }),
         texto: 'Primeiro, a seta **↑ Cima**. O Repetir sempre vem **depois** de uma seta.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: Object.assign({ trilha: [[2, 0], [1, 0], [0, 0]] }, G_SALA3), seq: ['cima'], foco: 'bloco-repetir2' }),
-        texto: 'Agora toque em **↻ Repetir 2x**. A seta para cima passa a valer **3 vezes**: o caminho sobe 3 casas.' },
+        texto: 'Agora toque em **↻ Repetir 2 vezes**. A seta para cima passa a valer **3 vezes**: o caminho sobe 3 casas.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: Object.assign({ trilha: [[2, 0], [1, 0], [0, 0]] }, G_SALA3), seq: ['cima', 'repetir2'], foco: 'executar' }),
         texto: 'Aperte **▶ Executar** e veja o robô subir.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: { n: 4, robo: [0, 0], estrela: [0, 0] }, seq: ['cima', 'repetir2'], foco: 'seq' }),
@@ -256,7 +256,7 @@ const ComoJogar = (() => {
       { cena: coz({ foco: ['frase', 'neg'] }),
         texto: 'A palavra **NUNCA** (e também **não, sempre, jamais**) muda o sentido da frase. Ela fica **sublinhada em vermelho**. Preste atenção nela!' },
       { cena: coz({ foco: ['frase', 'botoes'] }),
-        texto: 'Sua vez! Toque em **Verdadeiro** (verde, tecla **V**) ou **Falso** (vermelho, tecla **F**). Pense: o gelo nunca é quente? O gelo é frio, então é **Verdadeiro**.' },
+        texto: 'Sua vez! Toque em **Verdadeiro** (verde, **Alt + 1**) ou **Falso** (vermelho, **Alt + 2**). Pense: o gelo nunca é quente? O gelo é frio, então é **Verdadeiro**.' },
       { cena: coz({ escolha: 'v', foco: 'v' }),
         texto: 'Acertou! Se você errar, o Logi explica o motivo e mostra **outra frase** para tentar de novo.' },
       { extra: 'Depois de responder', selo: '✅ No jogo de verdade',
@@ -324,7 +324,7 @@ const ComoJogar = (() => {
       objetivo: 'Leve o robô até a estrela montando uma fila de blocos. Cada bloco é um passo!',
       comandos: [
         { v: '<span class="cj-vb cj-vb--laranja">↑ Cima</span>', t: 'Setas', d: 'Cima, baixo, esquerda e direita. Cada seta vale **1 passo**.' },
-        { v: '<span class="cj-vb cj-vb--ambar">↻ Repetir 2x</span>', t: 'Repetir 2x', d: 'Só na **Fase 3**. Repete a seta anterior mais 2 vezes.' },
+        { v: '<span class="cj-vb cj-vb--ambar">↻ Repetir 2 vezes</span>', t: 'Repetir 2 vezes', d: 'Só na **Fase 3**. Repete a seta anterior mais 2 vezes.' },
         { v: '<span class="cj-vb cj-vb--outline" style="border-style:dashed">1</span>', t: 'Painel de comandos', d: 'Onde os blocos entram, em fila. Toque num bloco montado para **tirar**.' },
         { v: vb('executar'), t: 'Executar', d: 'O robô anda seguindo a sua fila, passo a passo.' },
         { v: vb('limpar'), t: 'Limpar', d: 'Tira todos os blocos para você montar de novo.' },
@@ -339,7 +339,7 @@ const ComoJogar = (() => {
           resumo: 'Agora tem **sofás** no caminho! Você pode usar até **8 blocos**.',
           itens: ['Planeje o caminho **antes** de apertar Executar.', 'Bateu no sofá? O painel volta vazio e você tenta de novo (conta como 1 erro).'] },
         { rotulo: 'Fase 3', nivel: 'Difícil', titulo: 'Use poucos blocos', tutorial: 'sala-f3',
-          resumo: 'Só **4 espaços**! Use o novo bloco **Repetir 2x** para andar mais com menos blocos.',
+          resumo: 'Só **4 espaços**! Use o novo bloco **Repetir 2 vezes** para andar mais com menos blocos.',
           itens: ['O Repetir vem **depois** de uma seta.', 'Pense: qual seta se repete?'] }
       ]
     },
@@ -371,8 +371,8 @@ const ComoJogar = (() => {
       nome: 'Cozinha', titulo: 'Cozinha — Verdadeiro ou Falso', sub: 'Mini-jogo 3 · Leia com atenção',
       objetivo: 'Leia cada frase sobre a cozinha e decida se ela é verdadeira ou falsa. São 9 perguntas.',
       comandos: [
-        { v: vb('verdadeiro'), t: 'Verdadeiro', d: 'A frase está **certa**. Atalho: tecla **V**.' },
-        { v: vb('falso'), t: 'Falso', d: 'A frase está **errada**. Atalho: tecla **F**.' },
+        { v: vb('verdadeiro'), t: 'Verdadeiro', d: 'A frase está **certa**. Atalho: **Alt + 1**.' },
+        { v: vb('falso'), t: 'Falso', d: 'A frase está **errada**. Atalho: **Alt + 2**.' },
         { v: '<span class="cj-vb cj-vb--outline"><u style="color:#E24B4A;text-decoration-thickness:2px">não</u></span>', t: 'Palavra sublinhada', d: '**Não, nunca, sempre, jamais** mudam o sentido da frase. Preste atenção!' },
         { v: vb('proxima'), t: 'Próxima', d: 'Depois de responder, **você** decide quando ir para a próxima pergunta.' },
         { v: vb('dica'), t: 'Dica', d: 'O Logi aponta a palavra que muda o sentido da frase.' }
@@ -461,8 +461,21 @@ const ComoJogar = (() => {
     }).join('');
   }
 
+  /* Teclas de cada cômodo (as comuns vêm primeiro) */
+  const TECLAS_COMUNS = [
+    ['Alt + J', 'abrir esta ajuda'], ['Alt + R', 'ouvir de novo a instrução completa'], ['Alt + A', 'abrir as preferências'], ['Tab', 'andar entre os botões (no fim volta para o botão Mapa)'], ['Esc', 'fechar a janela ou sair do cômodo']
+  ];
+  const TECLAS_DO_COMODO = {
+    sala: [['Enter ou Espaço', 'pôr o bloco na fila (ou tirar da fila)'], ['Delete', 'tirar o bloco em foco'], ['Alt + S', 'ouvir a sequência montada']],
+    quarto: [['Enter ou Espaço', 'pôr o bloco na fila (ou tirar da fila)'], ['Delete', 'tirar o bloco em foco'], ['Alt + S', 'ouvir a fila montada']],
+    cozinha: [['Alt + 1', 'Verdadeiro'], ['Alt + 2', 'Falso'], ['Enter', 'depois de responder, ir para a próxima pergunta']],
+    despensa: [['Enter ou Espaço', 'escolher a fruta (ou tirar de novo)'], ['Alt + S', 'ouvir o que você escolheu e a ordem da prateleira']]
+  };
+
   function painelComodo(id) {
     const d = COMODOS[id];
+    const teclas = [...(TECLAS_DO_COMODO[id] || []), ...TECLAS_COMUNS]
+      .map(([k, t]) => `<li><kbd>${esc(k)}</kbd> ${esc(t)}</li>`).join('');
     const comandos = d.comandos.map(c =>
       `<div class="cj-comando"><span class="cj-comando__vis">${c.v}</span><span class="cj-comando__txt"><strong class="cj-comando__nome">${esc(c.t)}</strong>${md(c.d)}</span></div>`).join('');
     const abas = d.fases.map((f, i) =>
@@ -491,8 +504,10 @@ const ComoJogar = (() => {
         <div class="cj-objetivo"><img src="${img('estrela.png')}" alt=""><p>${md(d.objetivo)}</p></div></section>
       <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">2</span> Os comandos desta tela</h4>
         <div class="cj-comandos">${comandos}</div></section>
+      <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">3</span> Teclas deste cômodo</h4>
+        <ul class="cj-teclas">${teclas}</ul></section>
       ${regras}
-      <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">3</span> Fase por fase</h4>
+      <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">4</span> Fase por fase</h4>
         <div class="cj-fases-tabs" role="tablist" aria-label="Fases de ${esc(d.nome)}">${abas}</div>${fases}</section>
     </div>`;
   }
@@ -561,15 +576,17 @@ const ComoJogar = (() => {
         <p class="cj-texto" style="margin-top:.5rem">Pedir <strong>Dica</strong> nunca tira pontos.</p></section>
       <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">4</span> O treino do Logi</h4>
         <p class="cj-texto">Na <strong>primeira vez</strong> que você chega numa fase, o Logi faz um treino: a tela escurece, só o que importa fica aceso e uma mãozinha mostra onde tocar. Em cada cômodo, o <strong>passo a passo completo</strong> está nas outras abas.</p>
-        <p class="cj-texto">Quer ver de novo? Aperte <strong>?</strong> e depois <strong>Ver o tutorial do Logi</strong>, ou use a tecla <kbd>R</kbd>.</p></section>
+        <p class="cj-texto">Quer ver de novo? Aperte <strong>?</strong> e depois <strong>Ver o tutorial do Logi</strong>, ou aperte <kbd>Alt</kbd> + <kbd>R</kbd> com o treino aberto para recomeçar.</p></section>
       <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">5</span> Teclado</h4>
         <ul class="cj-teclas">
           <li><kbd>Tab</kbd> andar entre os botões</li>
           <li><kbd>Enter</kbd> / <kbd>Espaço</kbd> escolher ou confirmar</li>
           <li><kbd>Esc</kbd> fechar a janela ou sair</li>
-          <li><kbd>V</kbd> / <kbd>F</kbd> Verdadeiro ou Falso (Cozinha)</li>
+          <li><kbd>Alt</kbd> + <kbd>J</kbd> abrir a ajuda do cômodo</li>
+          <li><kbd>Alt</kbd> + <kbd>R</kbd> ouvir de novo a instrução completa</li>
+          <li><kbd>Alt</kbd> + <kbd>S</kbd> ouvir o resumo do que você montou</li>
+          <li><kbd>Alt</kbd> + <kbd>1</kbd> / <kbd>Alt</kbd> + <kbd>2</kbd> Verdadeiro ou Falso (Cozinha)</li>
           <li><kbd>Delete</kbd> tirar o bloco selecionado</li>
-          <li><kbd>R</kbd> rever o treino do Logi</li>
           <li><kbd>Alt</kbd> + <kbd>A</kbd> acessibilidade (letra maior, alto contraste)</li>
         </ul></section>
       <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">6</span> Veja cada cômodo</h4>${irComodos}</section>

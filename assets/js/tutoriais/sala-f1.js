@@ -18,32 +18,32 @@
       { id: 'sala-f1-p1', acao: 'click', estadoLogi: 'apontando', entra: true,
         alvo: BLOCO('cima'), evitar: '#sequencia-player', vez: { tipo: 'adicionar', valor: 'cima' },
         fala: 'Oi, {tratamento}! Leve o robô à ESTRELA. Toque em CIMA.', palavraChave: ['ESTRELA', 'CIMA'],
-        audiodescricao: 'Logi, o robozinho laranja de lâmpada na cabeça, chega pulando. Leve o robô até a estrela. Toque na seta para cima: ela entra no primeiro espaço da fila.',
+        audiodescricao: 'Leve o robô até a estrela. Toque na seta para cima ou aperte Enter: ela entra no primeiro espaço da fila.',
         teclado: 'Foco já em “Cima”: Enter ou Espaço' },
 
       { id: 'sala-f1-p2', acao: 'click', estadoLogi: 'apontando',
         alvo: BLOCO('dir'), evitar: '#sequencia-player', vez: { tipo: 'adicionar', valor: 'dir' },
         depois: a => a.trilha(),
         fala: 'Agora, a seta para a DIREITA.', palavraChave: ['DIREITA'],
-        audiodescricao: 'Agora toque na seta para a direita. Ela entra depois da seta para cima.',
+        audiodescricao: 'Agora toque na seta para a direita ou aperte Enter. Ela entra depois da seta para cima.',
         teclado: 'Foco já em “Dir”: Enter ou Espaço' },
 
       { id: 'sala-f1-p3', acao: 'click', estadoLogi: 'dica',
         alvo: '#btn-executar', evitar: '#game-grid', vez: { tipo: 'executar' },
         fala: 'Aperte EXECUTAR e veja o robô andar.', palavraChave: ['EXECUTAR'],
-        audiodescricao: 'Aperte Executar. O robô sobe, vai para a direita e pega a estrela!',
+        audiodescricao: 'Toque em Executar ou aperte Enter. O robô sobe, vai para a direita e pega a estrela!',
         teclado: 'Foco já em “Executar”: Enter ou Espaço' },
 
       { id: 'sala-f1-p4', acao: 'ok', estadoLogi: 'comemorando',
         destaque: '#celula-alvo', evitar: '#blocos-disponiveis',
         fala: 'Isso! O robô pegou a ESTRELA!', palavraChave: ['ESTRELA'],
-        audiodescricao: 'Isso! O robô pegou a estrela. Logi pula de alegria.',
+        audiodescricao: 'Isso! O robô pegou a estrela.',
         teclado: 'Enter no botão “OK”' },
 
       { id: 'sala-f1-p5', acao: 'click', estadoLogi: 'dica',
         alvo: '#btn-dica', evitar: '#game-grid', vez: { tipo: 'dica' },
         fala: 'Travou? Toque na DICA que eu ajudo!', palavraChave: ['DICA'],
-        audiodescricao: 'Se ficar com dificuldade ou presa na fase, toque no botão Dica, embaixo dos comandos. O Logi mostra onde está o problema.',
+        audiodescricao: 'Se ficar com dificuldade ou presa na fase, toque no botão Dica, embaixo dos comandos, ou aperte Enter nele. A dica mostra onde está o problema.',
         teclado: 'Foco já em “Dica”: Enter ou Espaço' }
     ]
   });
