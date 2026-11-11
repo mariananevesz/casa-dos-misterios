@@ -1,5 +1,5 @@
 {
-  "_comentario": "4 variações por nível. Cada variação substitui 'itens' + 'corretos'/'ordemCorreta' do nível correspondente em despensa.json (mesmo criterio/instrucao).",
+  "_comentario": "4 variações por nível. Cada variação substitui 'itens' + 'corretos'/'ordemCorreta' do nível correspondente em despensa.json (mesmo criterio). No nivel Facil, a variacao que muda a cor pedida traz tambem 'instrucao' e 'dica' proprias..",
   "variacoes": [
     {
       "niveis": [
@@ -46,7 +46,9 @@
             { "id": "uva",     "nome": "Uva",     "cor": "roxo",     "img": "../img/uva.png" },
             { "id": "mirtilo", "nome": "Mirtilo", "cor": "azul",     "img": "../img/mirtilo.png" }
           ],
-          "corretos": ["banana", "abacaxi"]
+          "corretos": ["banana", "abacaxi"],
+          "instrucao": "Clique nas frutas AMARELAS!",
+          "dica": { "errado": "Esta fruta NÃO é amarela. Toque de novo para tirar.", "certo": "Esta fruta é AMARELA. Toque nela!" }
         },
         {
           "itens": [
@@ -81,7 +83,9 @@
             { "id": "banana",   "nome": "Banana",   "cor": "amarelo",  "img": "../img/banana.png" },
             { "id": "uva",      "nome": "Uva",      "cor": "roxo",     "img": "../img/uva.png" }
           ],
-          "corretos": ["melancia", "kiwi"]
+          "corretos": ["melancia", "kiwi"],
+          "instrucao": "Clique nas frutas VERDES!",
+          "dica": { "errado": "Esta fruta NÃO é verde. Toque de novo para tirar.", "certo": "Esta fruta é VERDE. Toque nela!" }
         },
         {
           "itens": [

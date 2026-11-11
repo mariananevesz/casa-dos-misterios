@@ -2,6 +2,17 @@
   "miniJogo": "Cozinha — Verdadeiro ou Falso",
   "habilidadeBNCC": "EF03CO01",
   "instrucaoInstrutor": "Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
+  "acessibilidade": {
+    "entrada": "Você entrou na Cozinha.",
+    "completa": "{entrada} Aqui você lê frases e decide se cada uma é verdadeira ou falsa. São {total} perguntas, {porNivel} em cada nível. Pergunta {n} de {porNivel}. {frase} Aperte o botão Verdadeiro ou Falso, ou use Alt 1 e Alt 2. Depois da resposta, aperte Próxima. Alt R repete esta instrução e Alt J abre a ajuda.",
+    "pergunta": "Pergunta {n} de {porNivel}. {frase}",
+    "perguntaNivel": "Nível {nivel}. Pergunta {n} de {porNivel}. {frase}",
+    "feedback": "{msg} Aperte {proximo}.",
+    "proximaPergunta": "Próxima",
+    "verResultado": "Ver resultado",
+    "botaoVerdadeiro": "Botão verdadeiro. A frase é: {frase}",
+    "botaoFalso": "Botão falso. A frase é: {frase}"
+  },
   "blocos": [
     {
       "id": 1,
