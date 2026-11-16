@@ -483,7 +483,7 @@
 
   .quarto-page #blocos-fonte .bloco,
   .quarto-page #sequencia-corrigida .bloco {
-    min-height: 36px;
+    min-height: 42px;
     padding: 0.3rem 0.45rem;
     font-size: calc(12px * var(--escala-fonte));
     border-radius: 11px;
@@ -511,8 +511,12 @@
   .quarto-logi__img { width: 44px; height: 40px; }
   .quarto-logi__texto { font-size: calc(12.5px * var(--escala-fonte)); line-height: 1.3; }
   .quarto-page #blocos-fonte .bloco,
-  .quarto-page #sequencia-corrigida .bloco { min-height: 32px; }
-  .quarto-sequencia { grid-auto-rows: minmax(36px, auto); }
+  .quarto-page #sequencia-corrigida .bloco { min-height: 38px; }
+  .quarto-sequencia { grid-auto-rows: minmax(40px, auto); }
+  /* Fases com 6 ou 7 blocos: um pouco mais baixos para tudo caber sem rolagem */
+  .quarto-page #blocos-fonte[data-muitos="true"] .bloco,
+  .quarto-page:has(#blocos-fonte[data-muitos="true"]) #sequencia-corrigida .bloco { min-height: 32px; }
+  .quarto-page:has(#blocos-fonte[data-muitos="true"]) .quarto-sequencia { grid-auto-rows: minmax(34px, auto); }
   .quarto-card--destino { padding-block: 0.4rem; }
   .quarto-card__titulo { margin-bottom: 0.25rem; }
 }
@@ -525,17 +529,19 @@
   .quarto-logi__texto { font-size: calc(12px * var(--escala-fonte)); }
   .quarto-page #blocos-fonte .bloco,
   .quarto-page #sequencia-corrigida .bloco {
-    min-height: 30px;
+    min-height: 34px;
     padding-block: 0.2rem;
     font-size: calc(11.5px * var(--escala-fonte));
   }
-  .quarto-sequencia { grid-auto-rows: minmax(32px, auto); }
+  .quarto-sequencia { grid-auto-rows: minmax(34px, auto); }
   .quarto-btn { min-height: 40px; }
 }
 
 @media (max-width: 360px) {
-  .quarto-voltar { font-size: 0; gap: 0; }
-  .quarto-voltar::before { content: '←'; font-size: calc(16px * var(--escala-fonte)); }
+  /* Tela bem estreita: o botão Mapa fica só com a seta (o nome "Voltar ao mapa" continua no aria-label) */
+  .quarto-voltar { gap: 0; }
+  .quarto-voltar .voltar-txt { display: none; }
+  .quarto-voltar .ico { width: calc(18px * var(--escala-fonte)); height: calc(18px * var(--escala-fonte)); }
   .quarto-page #blocos-fonte .bloco,
   .quarto-page #sequencia-corrigida .bloco { font-size: calc(11px * var(--escala-fonte)); }
 }
@@ -617,4 +623,28 @@
   border-radius: 0.4em;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+
+/* Notebook pequeno / janela baixa (ex.: 1024×600): tudo cabe sem rolagem */
+@media (max-height: 660px) and (min-width: 1021px) {
+  .quarto-card__subtitulo { display: none; }
+  .quarto-logi { padding-block: 0.2rem; }
+  .quarto-logi__img { width: 52px; height: 46px; }
+  .quarto-logi__texto { font-size: calc(15px * var(--escala-fonte)); line-height: 1.3; }
+  .quarto-page #blocos-fonte .bloco { min-height: 40px; }
+  .quarto-page #blocos-fonte[data-muitos="true"] .bloco { min-height: 28px; padding-block: 0.15rem; }
+  .quarto-blocos-fonte { gap: 4px; }
+  .quarto-page .btn-dica { height: 40px; min-height: 40px; }
+  .quarto-btn { min-height: 42px; }
+}
+
+/* Fases com 6 ou 7 blocos em notebook de 720 px de altura */
+@media (max-height: 730px) and (min-width: 1021px) {
+  .quarto-card__subtitulo { display: none; }
+  .quarto-page #blocos-fonte[data-muitos="true"] .bloco { min-height: 34px; }
+  .quarto-page #blocos-fonte[data-muitos="true"] { gap: 6px; }
+}
+@media (max-height: 660px) and (min-width: 1021px) {
+  .quarto-page #blocos-fonte[data-muitos="true"] .bloco { min-height: 28px; }
+  .quarto-page #blocos-fonte[data-muitos="true"] { gap: 4px; }
 }

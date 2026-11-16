@@ -18,26 +18,26 @@
     <section class="hud quarto-hud">
       <button class="btn-voltar-mapa quarto-voltar"
               onclick="gameState.sairMiniGame('quarto','MapaCasa.html')"
-              aria-label="Voltar ao mapa">← Mapa</button>
+              aria-label="Voltar ao mapa"><span data-ico="seta-esq"></span><span class="voltar-txt">Mapa</span></button>
 
       <section class="hud__info quarto-hud__info">
         <img src="../img/icone-quarto.png" alt="" class="hud__icone-img quarto-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto<span class="quarto-hud__skill"> — Depuração</span></p>
+          <h1 class="hud__titulo hud__titulo--roxo quarto-hud__titulo">Quarto<span class="quarto-hud__skill"> — Depuração</span></h1>
           <p class="hud__subtitulo hud__subtitulo--roxo quarto-hud__subtitulo">Mini-jogo 2</p>
         </section>
       </section>
 
-      <span class="badge badge--roxo quarto-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--roxo quarto-badge" id="badge-pts">0 pts</span>
 
-      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
+      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span data-ico="engrenagem"></span></button>
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--roxo quarto-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote quarto-logi__img">
-      <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando…</p>
+      <p class="balao__texto balao__texto--roxo quarto-logi__texto" id="logi-texto">Carregando...</p>
     </section>
 
     <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
@@ -47,10 +47,11 @@
 
       <!-- Sequência com erros -->
       <aside class="quarto-card quarto-card--fonte" aria-label="Passos disponíveis">
-        <p class="quarto-card__titulo">Passos para <span class="destaque-escola">IR À ESCOLA</span></p>
-        <p class="quarto-card__subtitulo">Escolha só os passos que fazem sentido para <span class="destaque-escola">IR À ESCOLA</span>.</p>
+        <h2 class="quarto-card__titulo">Passos para <span class="destaque-escola">IR À ESCOLA</span></h2>
+        <!-- Subtítulo só visual: a instrução falada ao entrar já diz isso -->
+        <p class="quarto-card__subtitulo" aria-hidden="true">Escolha só os passos que fazem sentido para <span class="destaque-escola">IR À ESCOLA</span>.</p>
 
-        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="group" aria-label="Blocos disponíveis. Alguns não combinam com a escola e ficam marcados como erro quando você pede a Dica"></section>
+        <section class="blocos quarto-blocos-fonte" id="blocos-fonte" role="group" aria-label="Blocos disponíveis"></section>
 
         <button type="button" class="btn-dica quarto-btn-dica" id="btn-dica" aria-label="Dica">
           <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -61,20 +62,20 @@
       <!-- Área central -->
       <main class="quarto-centro" aria-label="Montagem da sequência corrigida">
         <section class="quarto-card quarto-card--destino painel--tracejado" id="painel-destino">
-          <p class="quarto-card__titulo quarto-card__titulo--centro">Monte a rotina para <span class="destaque-escola">IR À ESCOLA</span></p>
-          <p class="quarto-card__subtitulo quarto-card__subtitulo--centro">Monte a ordem correta aqui embaixo.</p>
+          <h2 class="quarto-card__titulo quarto-card__titulo--centro">Monte a rotina para <span class="destaque-escola">IR À ESCOLA</span></h2>
+          <p class="quarto-card__subtitulo quarto-card__subtitulo--centro" aria-hidden="true">Monte a ordem correta aqui embaixo.</p>
 
           <section class="blocos quarto-sequencia" id="sequencia-corrigida" role="group" aria-label="Sequência corrigida: vazia"></section>
         </section>
 
         <section class="dica dica--erro quarto-feedback" id="feedback-area" style="display:none;">
-          <span class="dica__emoji" aria-hidden="true">💡</span>
+          <span class="dica__emoji" data-ico="lampada"></span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
 
         <section class="btn-grupo quarto-actions" aria-label="Ações do desafio">
-          <button class="btn btn--roxo quarto-btn quarto-btn--verificar" id="btn-verificar" aria-label="Verificar sequência">✓ Verificar sequência</button>
-          <button class="btn btn--outline-roxo quarto-btn quarto-btn--limpar" id="btn-limpar" aria-label="Limpar sequência corrigida">↻ Limpar</button>
+          <button class="btn btn--roxo quarto-btn quarto-btn--verificar" id="btn-verificar" aria-label="Verificar sequência"><span data-ico="check"></span> Verificar sequência</button>
+          <button class="btn btn--outline-roxo quarto-btn quarto-btn--limpar" id="btn-limpar" aria-label="Limpar sequência"><span data-ico="repetir"></span> Limpar</button>
         </section>
       </main>
 
@@ -85,7 +86,7 @@
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
     <section class="modal modal-ajuda cj-modal">
-      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar ajuda"><span data-ico="x"></span></button>
       <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
       <div id="cj-raiz"></div>
     </section>
@@ -100,11 +101,12 @@
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
       <p class="modal-pts" id="modal-pts"></p>
       <section class="btn-grupo" style="margin-top:1rem;">
-        <button class="btn btn--roxo" onclick="window.location.href='MapaCasa.html'">Voltar ao mapa</button>
+        <button class="btn btn--roxo" onclick="gameState.sairMiniGame('quarto','MapaCasa.html')">Voltar ao mapa</button>
       </section>
     </section>
   </div>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
@@ -133,15 +135,16 @@
     "erroRepetido": "{nome}, passo com erro: repetido, não entra na fila",
     "erroIntruso": "{nome}, passo com erro: não combina com a escola, não entra na fila",
     "posicao": "{nome}, posição {pos} de {total}. Ative para remover.",
-    "posicaoCerta": "{nome}, posição {pos} de {total} — correto",
-    "posicaoErrada": "{nome}, posição {pos} de {total} — com erro. Ative para remover",
-    "adicionado": "{nome} na posição {pos}. {falta}",
+    "posicaoCerta": "{nome}, posição {pos} de {total}, correto",
+    "posicaoErrada": "{nome}, posição {pos} de {total}, com erro. Ative para remover",
+    "adicionado": "{nome} adicionado. {falta}",
     "faltam": "Faltam {n} {passos}.",
     "completa2": "A fila está completa. Aperte Verificar sequência.",
     "filaCheia": "A fila está cheia. Remova um bloco ou aperte Verificar sequência.",
     "removido": "{nome} removido. {sobra}",
     "sobra": "Sobraram {n} {blocos}.",
     "filaVazia": "A fila está vazia.",
+    "limpa": "Fila limpa.",
     "resultado": "{acertos} de {total} certos. Blocos com erro: {lista}. Troque esses blocos ou peça a Dica.",
     "resultadoItem": "posição {pos}, {nome}",
     "resumo": "Fila: {lista}. {n} de {total} blocos.",
@@ -155,21 +158,21 @@
   },
   "dicaGeral": { "lugar": "Este bloco está no lugar ERRADO.", "proximo": "Um destes vem AGORA." },
   "blocos": {
-    "banho": "🛁 Tomar banho",
-    "camiseta": "👕 Vestir a camiseta",
-    "calca": "👖 Vestir a calça",
-    "meia": "🧦 Calçar a meia",
-    "tenis": "👟 Calçar o tênis",
-    "van": "🚐 Pegar a van",
-    "onibus": "🚌 Pegar o ônibus",
-    "bicicleta": "🚲 Ir de bicicleta",
-    "carro": "🚗 Entrar no carro",
-    "dormir": "😴 Dormir de novo",
-    "tv": "📺 Assistir TV",
-    "videogame": "🎮 Jogar videogame",
-    "parque": "🏞️ Ir ao parque",
-    "piscina": "🏊 Nadar na piscina",
-    "filme": "🎬 Ver um filme"
+    "banho": "Tomar banho",
+    "camiseta": "Vestir a camiseta",
+    "calca": "Vestir a calça",
+    "meia": "Calçar a meia",
+    "tenis": "Calçar o tênis",
+    "van": "Pegar a van",
+    "onibus": "Pegar o ônibus",
+    "bicicleta": "Ir de bicicleta",
+    "carro": "Entrar no carro",
+    "dormir": "Dormir de novo",
+    "tv": "Assistir TV",
+    "videogame": "Jogar videogame",
+    "parque": "Ir ao parque",
+    "piscina": "Nadar na piscina",
+    "filme": "Ver um filme"
   },
   "intrusos": [
     "dormir",
@@ -359,9 +362,9 @@
     renderFase();
   }
 
-  /* Texto falado: tira o emoji do rótulo ("🛁 Tomar banho" vira "Tomar banho") */
+  /* Texto falado: o rótulo do JSON já vem sem ícone (o desenho de cada passo é um SVG, ver imgTag) */
   function nomeFalado(rotulo) {
-    return String(rotulo || '').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, '').replace(/\s+/g, ' ').trim();
+    return String(rotulo || '').replace(/\s+/g, ' ').trim();
   }
   function nomeDoBloco(id) { return nomeFalado(gameData.blocos[id] || id); }
   /* Textos de leitor de tela: vêm de "acessibilidade" no quarto.json */
@@ -383,7 +386,7 @@
       else if (i === faseAtual) span.className = 'nivel nivel--ativo';
       else                       span.className = 'nivel nivel--bloq';
       const situacao = i < faseAtual ? 'concluído' : i === faseAtual ? 'atual' : 'bloqueado';
-      span.innerHTML = `${f.dificuldade}<span aria-hidden="true">${i < faseAtual ? ' ✓' : i === faseAtual ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.innerHTML = `${f.dificuldade}${i < faseAtual ? Icones.svg('check', 'nivel__ico') : ''}<span class="sr-only">, ${situacao}</span>`;
       span.setAttribute('role', 'listitem');
       if (i === faseAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
@@ -427,8 +430,8 @@
 
   atualizarBadge();
   descreverQuarto(fase);
-  /* Tutorial do Logi: abre sozinho só na 1ª vez */
-  Tutorial.auto('quarto-f1');
+  /* Tutorial do Logi: abre sozinho só na 1ª vez. Sem treino, o foco vai direto para o primeiro bloco. */
+  if (!Tutorial.auto('quarto-f1')) focoInicial(quartoTutorial.primeiroFoco);
 }
 
   /* ---- Blocos fonte (com erros marcados) ---- */
@@ -471,13 +474,17 @@
     manterOrdemDoTab(cont, '.bloco');
   }
 
+  /* Desenho do passo: imagem (alt vazio) ou ícone SVG com aria-hidden. Nunca entra na leitura.
+     No treino, "calcarep" é a calça repetida: usa o desenho da calça. */
   function imgTag(id) {
     const mapa = {
       mochila: '../img/item-mochila.png',
       brincar: '../img/item-brinquedo.png'
     };
     const src = mapa[id];
-    return src ? `<img src="${src}" alt="" class="bloco-img">` : '';
+    if (src) return `<img src="${src}" alt="" class="bloco-img">`;
+    const nome = Icones.tem('passo-' + id) ? 'passo-' + id : 'passo-' + String(id).replace(/rep$/, '');
+    return Icones.tem(nome) ? `<span class="bloco-ico" aria-hidden="true">${Icones.svg(nome)}</span>` : '';
   }
 
   /* ---- Sequência corrigida (destino) ---- */
@@ -495,8 +502,7 @@
       el.dataset.idx = idx;
       el.dataset.blocoId = bid;
       el.setAttribute('aria-label', txt('posicao', { nome: nomeFalado(bloco.rotulo), pos: idx + 1, total }));
-      el.title = 'Clique para remover';
-      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}<span class="bloco-remover" aria-hidden="true">×</span>`;
+      el.innerHTML = `${imgTag(bid)} ${bloco.rotulo}<span class="bloco-remover" aria-hidden="true">${Icones.svg('x')}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Delete' || e.key === 'Backspace') {
@@ -510,7 +516,7 @@
     for (let i = corrigida.length; i < total; i++) {
       const empty = document.createElement('span');
       empty.className = 'bloco bloco--vazio';
-      empty.textContent = i === corrigida.length ? '+ bloco' : '';
+      empty.textContent = i === corrigida.length ? 'bloco' : '';
       empty.setAttribute('aria-hidden', 'true');   /* as vagas vão no nome do grupo */
       cont.appendChild(empty);
     }
@@ -549,7 +555,8 @@
     if (corrigida.length >= faseMontada.total) { falar(txt('filaCheia')); return; }
     corrigida.push(bid);
     const faltam = faseMontada.total - corrigida.length;
-    falar(txt('adicionado', { nome: nomeDoBloco(bid), pos: corrigida.length, falta: faltam ? txt('faltam', { n: faltam, passos: plural(faltam, 'passo', 'passos') }) : txt('completa2') }));
+    /* Por voz, só o bloco que entrou (e o aviso de fila completa). O resto fica no Alt+S. */
+    falar(txt('adicionado', { nome: nomeDoBloco(bid), pos: corrigida.length, falta: faltam ? '' : txt('completa2') }).trim());
     audio.clique();
     pararAtencaoDica();
     renderCorrigida();
@@ -584,7 +591,8 @@
     const [removido] = corrigida.splice(idx, 1);
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
-    falar(txt('removido', { nome: nomeDoBloco(removido), sobra: corrigida.length ? txt('sobra', { n: corrigida.length, blocos: plural(corrigida.length, 'bloco', 'blocos') }) : txt('filaVazia') }));
+    /* Por voz, só o bloco que saiu (e o aviso de fila vazia) */
+    falar(txt('removido', { nome: nomeDoBloco(removido), sobra: corrigida.length ? '' : txt('filaVazia') }).trim());
     /* O bloco em foco sumiu: o foco vai para o vizinho (ou para a lista de passos) */
     (document.querySelector(`#sequencia-corrigida .bloco[data-idx="${Math.min(idx, corrigida.length - 1)}"]`)
       || document.querySelector('#blocos-fonte .bloco'))?.focus();
@@ -650,7 +658,7 @@
       el.classList.remove('bloco--roxo');
       el.classList.add(ok ? 'bloco--verde' : 'bloco--erro');
       el.querySelector('.bloco-remover')?.remove();
-      el.insertAdjacentHTML('beforeend', `<strong class="bloco-resultado" aria-hidden="true">${ok ? '✓' : '✕'}</strong>`);
+      el.insertAdjacentHTML('beforeend', `<strong class="bloco-resultado" aria-hidden="true">${Icones.svg(ok ? 'check' : 'x')}</strong>`);
       el.setAttribute('aria-label', txt(ok ? 'posicaoCerta' : 'posicaoErrada', { nome: nomeFalado(bloco.rotulo), pos: i + 1, total }));
     });
 
@@ -778,13 +786,8 @@
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
-  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape') return;
-    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
-    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
-    gameState.sairMiniGame('quarto', 'MapaCasa.html');
-  });
+  /* ---- Esc: fecha a janela aberta; sem janela, pergunta antes de sair do cômodo (plataforma.js) ---- */
+  ativarSaidaComEsc('quarto');
 
   /* ---- Dica do Logi (não conta erro nem ponto) ----
      1) mostra em vermelho o bloco que não combina (repetido ou intruso) e aponta para ele;
@@ -856,6 +859,7 @@
     verificado = false;
     renderCorrigida();
     document.getElementById('feedback-area').style.display = 'none';
+    anunciarAcessivel(txt('limpa') || 'Fila limpa.');
   });
 
   /* ---- Tutorial do Logi: treino com blocos reais ---- */
@@ -895,13 +899,13 @@
 
     acoes: {
       adicionar: id => adicionarBloco(id, 'tutorial'),
-      /* Treino: mostra a fila montada como certa (✓ verde), sem contar erro nem ponto */
+      /* Treino: mostra a fila montada como certa (marca verde), sem contar erro nem ponto */
       verificar() {
         document.querySelectorAll('#sequencia-corrigida .bloco[data-idx]').forEach(el => {
           el.classList.remove('bloco--roxo');
           el.classList.add('bloco--verde');
           el.querySelector('.bloco-remover')?.remove();
-          el.insertAdjacentHTML('beforeend', '<strong class="bloco-resultado" aria-hidden="true">✓</strong>');
+          el.insertAdjacentHTML('beforeend', `<strong class="bloco-resultado" aria-hidden="true">${Icones.svg('check')}</strong>`);
         });
       }
     }

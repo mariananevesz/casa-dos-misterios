@@ -9,7 +9,7 @@
     "grade": "Grade de {linhas} linhas por {colunas} colunas. Personagem na linha {linha}, coluna {coluna}. Estrela na linha {alvoLinha}, coluna {alvoColuna}.",
     "gradeChegou": "Grade de {linhas} linhas por {colunas} colunas. Personagem na linha {linha}, coluna {coluna}. O personagem chegou à estrela.",
     "obstaculos": "Obstáculos em {lista}.",
-    "adicionado": "{bloco} na posição {pos}. {vagas}",
+    "adicionado": "{bloco} adicionado. {vagas}",
     "vagas": "Restam {n} {espacos}.",
     "semVagas": "A fila está cheia.",
     "removido": "{bloco} removido. {sobra}",
@@ -28,7 +28,7 @@
     "resumoVazio": "A sequência está vazia. Cabem {limite} blocos.",
     "grupoFila": "Blocos já colocados: {lista}. {n} de {limite} blocos.",
     "grupoFilaVazio": "Blocos já colocados: nenhum. Cabem {limite} blocos.",
-    "blocoColocado": "Bloco já colocado: {bloco}, posição {pos} de {total}. Ative para remover.",
+    "blocoColocado": "{bloco}, posição {pos} de {total}. Ative para remover.",
     "movimentos": { "cima": "para cima", "baixo": "para baixo", "esq": "para a esquerda", "dir": "para a direita" }
   },
   "fases": [

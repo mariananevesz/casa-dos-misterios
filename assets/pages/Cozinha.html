@@ -18,24 +18,24 @@
     <section class="hud cozinha-hud">
       <button class="btn-voltar-mapa cozinha-voltar"
               onclick="gameState.sairMiniGame('cozinha','MapaCasa.html')"
-              aria-label="Voltar ao mapa">← Mapa</button>
+              aria-label="Voltar ao mapa"><span data-ico="seta-esq"></span><span class="voltar-txt">Mapa</span></button>
       <section class="hud__info cozinha-hud__info">
         <img src="../img/icone-cozinha.png" alt="" class="hud__icone-img cozinha-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha<span class="cozinha-hud__skill"> — Verdadeiro ou Falso</span></p>
+          <h1 class="hud__titulo hud__titulo--verde cozinha-hud__titulo">Cozinha<span class="cozinha-hud__skill"> — Verdadeiro ou Falso</span></h1>
           <p class="hud__subtitulo hud__subtitulo--verde cozinha-hud__subtitulo" id="hud-subtitulo">Mini-jogo 3</p>
         </section>
       </section>
-      <span class="badge badge--verde cozinha-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--verde cozinha-badge" id="badge-pts">0 pts</span>
 
-      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
+      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span data-ico="engrenagem"></span></button>
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao balao--verde cozinha-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote cozinha-logi__img">
-      <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando…</p>
+      <p class="balao__texto balao__texto--verde cozinha-logi__texto" id="logi-texto">Carregando...</p>
     </section>
 
     <section class="cozinha-layout" aria-label="Área do jogo da cozinha">
@@ -45,14 +45,15 @@
 
         <section class="cozinha-status" aria-label="Progresso da cozinha">
           <section class="niveis cozinha-niveis" id="niveis-tabs" aria-label="Níveis de dificuldade"></section>
-          <section class="progresso progresso--centro cozinha-progresso" id="progresso-dots" role="img" aria-label="Progresso das perguntas"></section>
+          <!-- Bolinhas: só visuais (o título "Pergunta N de 3" já diz o progresso) -->
+          <section class="progresso progresso--centro cozinha-progresso" id="progresso-dots" aria-hidden="true"></section>
         </section>
 
         <!-- Caixa de pergunta -->
         <section class="pergunta-box cozinha-pergunta" id="pergunta-box" aria-label="Pergunta">
-          <p class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 5</p>
+          <h2 class="pergunta-box__numero cozinha-pergunta__numero" id="pergunta-numero">Pergunta 1 de 3</h2>
           <p class="pergunta-box__frase cozinha-pergunta__frase" id="pergunta-frase"></p>
-          <p class="pergunta-box__aviso cozinha-pergunta__aviso">Leia com atenção antes de responder!</p>
+          <p class="pergunta-box__aviso cozinha-pergunta__aviso" aria-hidden="true">Leia com atenção antes de responder!</p>
         </section>
 
         <!-- Botões V/F -->
@@ -70,9 +71,9 @@
         <!-- Feedback imediato -->
         <section id="feedback-area" class="cozinha-feedback" aria-label="Resposta" style="display:none;">
           <section class="dica" id="feedback-dica">
-            <span class="dica__emoji" aria-hidden="true">💡</span>
+            <span class="dica__emoji" data-ico="lampada"></span>
             <p class="dica__texto" id="feedback-texto"></p>
-            <button type="button" class="btn btn--verde cozinha-proxima" id="btn-proxima">Próxima →</button>
+            <button type="button" class="btn btn--verde cozinha-proxima" id="btn-proxima">Próxima</button>
           </section>
         </section>
 
@@ -90,7 +91,7 @@
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
     <section class="modal modal-ajuda cj-modal">
-      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar ajuda"><span data-ico="x"></span></button>
       <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
       <div id="cj-raiz"></div>
     </section>
@@ -110,6 +111,7 @@
     </section>
   </div>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
@@ -127,7 +129,7 @@
   const COZINHA_INLINE = {
     miniJogo:"Cozinha — Verdadeiro ou Falso", habilidadeBNCC:"EF03CO01",
     instrucaoInstrutor:"Vou te dizer uma frase sobre a cozinha. Você decide: é Verdadeiro ou Falso? Leia cada palavra com atenção!",
-    acessibilidade:{"entrada": "Você entrou na Cozinha.", "completa": "{entrada} Aqui você lê frases e decide se cada uma é verdadeira ou falsa. São {total} perguntas, {porNivel} em cada nível. Pergunta {n} de {porNivel}. {frase} Aperte o botão Verdadeiro ou Falso, ou use Alt 1 e Alt 2. Depois da resposta, aperte Próxima. Alt R repete esta instrução e Alt J abre a ajuda.", "pergunta": "Pergunta {n} de {porNivel}. {frase}", "perguntaNivel": "Nível {nivel}. Pergunta {n} de {porNivel}. {frase}", "feedback": "{msg} Aperte {proximo}.", "proximaPergunta": "Próxima", "verResultado": "Ver resultado", "botaoVerdadeiro": "Botão verdadeiro. A frase é: {frase}", "botaoFalso": "Botão falso. A frase é: {frase}"},
+    acessibilidade:{"entrada": "Você entrou na Cozinha.", "completa": "{entrada} Aqui você lê frases e decide se cada uma é verdadeira ou falsa. São {total} perguntas, {porNivel} em cada nível. Pergunta {n} de {porNivel}. {frase} Aperte o botão Verdadeiro ou Falso, ou use Alt 1 e Alt 2. Depois da resposta, aperte Próxima. Alt R repete esta instrução e Alt J abre a ajuda.", "pergunta": "Pergunta {n} de {porNivel}. {frase}", "perguntaCurta": "Pergunta {n} de {porNivel}.", "perguntaNivelCurta": "Nível {nivel}. Pergunta {n} de {porNivel}.", "perguntaNivel": "Nível {nivel}. Pergunta {n} de {porNivel}. {frase}", "feedback": "{msg} Aperte {proximo}.", "proximaPergunta": "Próxima", "verResultado": "Ver resultado", "botaoVerdadeiro": "Botão verdadeiro. A frase é: {frase}", "botaoFalso": "Botão falso. A frase é: {frase}"},
     blocos:[
       {id:1,  dificuldade:"Fácil", perguntas:[
         {id:1,  frase:"O fogão serve para aquecer a comida.",       resposta:true,  explicacao:"Sim! O fogão esquenta e cozinha os alimentos."},
@@ -298,8 +300,8 @@
     renderPergunta();
     atualizarBadge();
     descreverCozinha(true);
-    /* Tutorial do Logi: abre sozinho só na 1ª vez */
-    Tutorial.auto('cozinha-f1');
+    /* Tutorial do Logi: abre sozinho só na 1ª vez. Sem treino, o foco vai direto para o botão Verdadeiro. */
+    if (!Tutorial.auto('cozinha-f1')) focoInicial(cozinhaTutorial.primeiroFoco);
   }
 
   /* Textos de leitor de tela: vêm de "acessibilidade" no cozinha.json */
@@ -314,16 +316,19 @@
     return tr(novoNivel ? 'perguntaNivel' : 'pergunta', { nivel: p._fase, n, porNivel: gameData.tamFase, frase: p.frase });
   }
 
-  /* Instrução completa (Alt+R); já traz a pergunta de agora. Só é lida ao entrar */
+  /* Instrução completa (Alt+R); já traz a pergunta de agora. Só é lida ao entrar.
+     Ao entrar, o foco está no botão Verdadeiro, que já diz a frase: a fala de entrada vai sem a frase,
+     para ela não ser lida duas vezes. */
   function descreverCozinha(entrando) {
     const p = gameData.perguntas[perguntaIdx];
-    descreverComodo(
-      tr('completa', {
-        entrada: entrando ? tr('entrada') : '', total: gameData.perguntas.length, porNivel: gameData.tamFase,
-        n: perguntaIdx % gameData.tamFase + 1, frase: p.frase
-      }),
-      { anunciar: entrando }
-    );
+    const vars = {
+      entrada: entrando ? tr('entrada') : '', total: gameData.perguntas.length, porNivel: gameData.tamFase,
+      n: perguntaIdx % gameData.tamFase + 1, frase: p.frase
+    };
+    descreverComodo(tr('completa', vars), {
+      anunciar: entrando,
+      curta: entrando ? tr('completa', Object.assign({}, vars, { frase: '' })) : undefined
+    });
   }
 
   /* ---- Abas de nível — mesmo padrão da Despensa ---- */
@@ -340,7 +345,7 @@
       else if (i === idxAtual) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
       const situacao = i < idxAtual ? 'concluído' : i === idxAtual ? 'atual' : 'bloqueado';
-      span.innerHTML = `${nome}<span aria-hidden="true">${i < idxAtual ? ' ✓' : i === idxAtual ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.innerHTML = `${nome}${i < idxAtual ? Icones.svg('check', 'nivel__ico') : ''}<span class="sr-only">, ${situacao}</span>`;
       span.setAttribute('role', 'listitem');
       if (i === idxAtual) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
@@ -353,8 +358,8 @@
     const faseAtual  = p._fase;
     const idxNaFase  = perguntaIdx % gameData.tamFase;
 
-    document.getElementById('hud-subtitulo').textContent   = `Mini-jogo 3 · ${faseAtual}`;
-    document.getElementById('pergunta-numero').textContent = `${faseAtual} · Pergunta ${idxNaFase + 1} de ${gameData.tamFase}`;
+    document.getElementById('hud-subtitulo').textContent   = `Nível ${faseAtual}`;
+    document.getElementById('pergunta-numero').textContent = `${faseAtual}: pergunta ${idxNaFase + 1} de ${gameData.tamFase}`;
     document.getElementById('pergunta-frase').innerHTML    = destacarFrase(p.frase, p.palavraChave);
     document.getElementById('feedback-area').style.display = 'none';
     document.getElementById('btn-proxima').style.display = 'none';
@@ -393,10 +398,8 @@
         i === idxNaFase ? 'progresso__bolinha--meio' :
                           'progresso__bolinha--vazio'
       );
-      span.setAttribute('aria-hidden', 'true');   /* quem lê por voz ouve o resumo do grupo */
       cont.appendChild(span);
     }
-    cont.setAttribute('aria-label', `Progresso das perguntas: pergunta ${idxNaFase + 1} de ${gameData.tamFase}, ${idxNaFase} ${idxNaFase === 1 ? 'respondida' : 'respondidas'}`);
   }
 
   /* ---- Resposta ---- */
@@ -416,7 +419,7 @@
     const ok = escolha === p.resposta;
 
     /* Só "Correto!" ou "Errado!" + a explicação. A abertura do texto do JSON ("Sim!", "Errado!",
-       "Verdade!"…) sai, senão fica "Correto! Errado! O ovo…" e confunde a criança. */
+       "Verdade!") sai, senão fica "Correto! Errado! O ovo..." e confunde a criança. */
     const explicacao = (p.explicacao || '').replace(/^(Sim|Não|Certo|Correto|Verdade|Errado)\s*[!.,:]\s*/i, '').trim();
 
     if (ok) {
@@ -434,7 +437,7 @@
     /* Não passa sozinha: a criança lê o feedback com calma e toca em "Próxima" quando quiser */
     const ultima = perguntaIdx >= gameData.perguntas.length - 1;
     const btn = document.getElementById('btn-proxima');
-    btn.textContent = ultima ? 'Ver resultado →' : 'Próxima →';
+    btn.innerHTML = `${ultima ? 'Ver resultado' : 'Próxima'} ${Icones.svg('seta-dir')}`;
     btn.style.display = '';
     btn.focus({ preventScroll: true });
   }
@@ -449,8 +452,19 @@
     } else {
       renderPergunta();
       descreverCozinha(false);
-      anunciarAcessivel(textoDaPergunta());
+      /* O botão "Próxima" some: sem isto o foco se perdia. O foco vai para Verdadeiro, cujo nome já traz
+         a frase; por voz entra só o número da pergunta (a frase não é lida duas vezes). */
+      document.getElementById('btn-verdadeiro').focus({ preventScroll: true });
+      anunciarAcessivel(numeroDaPergunta());
     }
+  }
+
+  /* "Pergunta 2 de 3." (o nível entra só na 1ª pergunta de cada nível) */
+  function numeroDaPergunta() {
+    const p = gameData.perguntas[perguntaIdx];
+    const n = perguntaIdx % gameData.tamFase + 1;
+    const chave = n === 1 && perguntaIdx > 0 ? 'perguntaNivelCurta' : 'perguntaCurta';
+    return A11Y()[chave] ? tr(chave, { nivel: p._fase, n, porNivel: gameData.tamFase }) : textoDaPergunta();
   }
 
   function mostrarFeedback(msg, tipo) {
@@ -528,13 +542,8 @@
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
-  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape') return;
-    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
-    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
-    gameState.sairMiniGame('cozinha', 'MapaCasa.html');
-  });
+  /* ---- Esc: fecha a janela aberta; sem janela, pergunta antes de sair do cômodo (plataforma.js) ---- */
+  ativarSaidaComEsc('cozinha');
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }

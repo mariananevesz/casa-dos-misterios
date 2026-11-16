@@ -116,8 +116,10 @@ const audio = (() => {
   function atualizarBotaoMusica() {
     if (!botaoMusica) return;
     const ligada = isMusicaAtivada() !== false;
-    botaoMusica.querySelector('span').textContent = ligada ? '🔊' : '🔇';
+    /* Ícone em SVG (icones.js), com aria-hidden: o nome do botão é o aria-label abaixo */
+    botaoMusica.querySelector('span').innerHTML = window.Icones ? Icones.svg(ligada ? 'som' : 'som-off') : '';
     botaoMusica.setAttribute('aria-label', ligada ? 'Pausar a música' : 'Ligar a música');
+    botaoMusica.setAttribute('aria-pressed', ligada ? 'false' : 'true');
     botaoMusica.title = ligada ? 'Pausar a música' : 'Ligar a música';
   }
 
@@ -139,7 +141,7 @@ const audio = (() => {
     const ajuda = document.getElementById('btn-ajuda');
     const config = document.getElementById('btn-config');
     const topoMapa = document.querySelector('.mapa-topo');
-    const preferencias = document.getElementById('btn-preferencias');   /* ⚙ do HUD (mapa e cômodos) */
+    const preferencias = document.getElementById('btn-preferencias');   /* botão de preferências do HUD (mapa e cômodos) */
     if (ajuda) {
       btn.className = 'btn-ajuda btn-musica';
       (preferencias || ajuda).insertAdjacentElement('beforebegin', btn);

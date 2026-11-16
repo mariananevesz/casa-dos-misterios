@@ -73,12 +73,11 @@ function renderScoreScreen() {
     const completed = state.completed[room.id] === true;
     const card = document.createElement('article');
     card.className = `pontuacao-card pontuacao-card--${room.cor}`;
-    card.setAttribute('aria-label', `${room.nome}: ${completed ? `${points || 0} pontos, concluído` : 'não concluído'}`);
     card.innerHTML = `
       <img src="${room.img}" alt="" class="pontuacao-card__icone-img">
       <p class="pontuacao-card__nome pontuacao-card__nome--${room.cor}">${room.nome}</p>
-      <p class="pontuacao-card__pts pontuacao-card__pts--${room.cor}">${points !== null ? `${points || 0} pts` : '—'}</p>
-      ${completed ? '<p class="pontuacao-card__status"><span aria-hidden="true">✓</span> Concluído!</p>' : ''}
+      <p class="pontuacao-card__pts pontuacao-card__pts--${room.cor}">${points !== null ? `${points || 0} <span aria-hidden="true">pts</span><span class="sr-only">pontos</span>` : '<span aria-hidden="true">-</span><span class="sr-only">ainda não jogado</span>'}</p>
+      ${completed ? `<p class="pontuacao-card__status">${Icones.svg('check')} Concluído!</p>` : ''}
     `;
     grid.appendChild(card);
   });
@@ -105,3 +104,10 @@ function renderScoreScreen() {
 }
 
 renderScoreScreen();
+
+/* Foco inicial no título (o leitor de tela começa pelo resultado) e resumo curto por voz */
+window.requestAnimationFrame(() => {
+  const titulo = document.getElementById('resultado-titulo');
+  try { titulo.focus({ preventScroll: true }); } catch (e) {}
+  anunciarAcessivel(`${document.getElementById('resultado-sub').textContent.trim()} Pontuação total: ${gameState.getTotalScore()} de 100 pontos.`);
+});

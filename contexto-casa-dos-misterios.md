@@ -411,3 +411,12 @@ Os critérios de aceite estão nas próprias tasks (lidos no DevOps em 11/11). A
 - Não tem narração; a música de fundo pode começar aqui depois do primeiro clique (o navegador bloqueia som antes de interação).
 - Precisa respeitar `prefers-reduced-motion`: nesse caso, mostrar uma imagem estática com fade.
 - Usar só CSS e JS, com as artes que já existem.
+
+## 6.4 Tasks 101, 103 e 104 (PBI 100) — **feito em 16/11/2026, sem commit**
+Critérios lidos no DevOps em 16/11. Decisões no README, seção "Ajustes do teste com leitor de tela".
+- **101:** emojis e símbolos trocados por SVG (`assets/js/icones.js`, novo; `data-ico` no HTML, `Icones.svg()` no JS). Só o personagem da Sala continua emoji. `quarto.json` e `QUARTO_INLINE` sem emoji nos rótulos.
+- **103:** `focoInicial()` em todas as telas; avisos curtos ao pôr/tirar; `h1`/`h2`; enfeites com `aria-hidden`; placares sem `aria-live`; `isolarFundo()` em pilha, também nas preferências e no "Como jogar" do início. Cozinha: foco em Verdadeiro depois de "Próxima".
+- **104:** Esc abre "Sair do cômodo?" (`ativarSaidaComEsc`, `pedirSaida` em `plataforma.js`; os handlers de Esc de cada página saíram); cartões do Mapa são `<button>`; lista de atalhos atualizada em `preferencias.js` e `como-jogar.js`. Setas continuam sem tratamento próprio (decisão da 107).
+- **Telas pequenas:** regras novas no fim de `base.css` (HUD até 430 px), `sala.css`, `quarto.css` e `despensa.css` (notebook baixo). Bug antigo corrigido: o nome do cômodo passava por baixo do placar no Quarto, Cozinha e Despensa.
+- **Testado** no navegador por script e captura (as 4 salas, Mapa, início, pontuação, treino do Logi, Esc, tamanhos de tela). **Não testado com Narrador/NVDA reais.** O foco das janelas usa `requestAnimationFrame`, que não roda com a aba em segundo plano: testar com a aba visível.
+- Ao testar em iframe ou recarregar, o CSS pode vir do cache: recarregar com Ctrl+F5.

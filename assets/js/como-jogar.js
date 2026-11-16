@@ -23,26 +23,29 @@ const ComoJogar = (() => {
   const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/__(.+?)__/g, '<em>$1</em>');
   const $ = (el, sel) => el.querySelector(sel);
 
+  /* Ícones em SVG (icones.js), sempre com aria-hidden: nunca são lidos pelo leitor de tela */
+  const I = (nome, classe) => (window.Icones ? Icones.svg(nome, classe) : '');
+
   const LAMPADA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ============================================================
      Botões e blocos como aparecem no jogo (legenda de comandos)
      ============================================================ */
   const VB = {
-    mapa:     '<span class="cj-vb cj-vb--outline">← Mapa</span>',
+    mapa:     `<span class="cj-vb cj-vb--outline">${I('seta-esq')} Mapa</span>`,
     ajuda:    '<span class="cj-vb cj-vb--redondo">?</span>',
-    som:      '<span class="cj-vb cj-vb--redondo">🔊</span>',
+    som:      `<span class="cj-vb cj-vb--redondo">${I('som')}</span>`,
     pts:      () => `<span class="cj-vb cj-vb--pts"><img src="${img('estrela.png')}" alt=""> 25 pts</span>`,
     dica:     `<span class="cj-vb cj-vb--dica">${LAMPADA} Dica</span>`,
-    limpar:   '<span class="cj-vb cj-vb--outline">↻ Limpar</span>',
-    executar: '<span class="cj-vb cj-vb--laranja">▶ Executar</span>',
-    verificar:'<span class="cj-vb cj-vb--roxo">✓ Verificar</span>',
-    confirmar:'<span class="cj-vb cj-vb--marrom">✓ Confirmar!</span>',
-    proxima:  '<span class="cj-vb cj-vb--verde">Próxima →</span>',
+    limpar:   `<span class="cj-vb cj-vb--outline">${I('repetir')} Limpar</span>`,
+    executar: `<span class="cj-vb cj-vb--laranja">${I('play')} Executar</span>`,
+    verificar:`<span class="cj-vb cj-vb--roxo">${I('check')} Verificar</span>`,
+    confirmar:`<span class="cj-vb cj-vb--marrom">${I('check')} Confirmar!</span>`,
+    proxima:  `<span class="cj-vb cj-vb--verde">Próxima ${I('seta-dir')}</span>`,
     verdadeiro: () => `<span class="cj-vb cj-vb--verde"><img src="${img('verdadeiro.png')}" alt=""> Verdadeiro</span>`,
     falso:      () => `<span class="cj-vb cj-vb--vermelho"><img src="${img('falso.png')}" alt=""> Falso</span>`,
-    ver:      '<span class="cj-vb cj-vb--outline">↻ Ver de novo</span>',
-    pular:    '<span class="cj-vb cj-vb--outline">⏭ Pular</span>'
+    ver:      `<span class="cj-vb cj-vb--outline">${I('repetir')} Ver de novo</span>`,
+    pular:    `<span class="cj-vb cj-vb--outline">${I('pular')} Pular</span>`
   };
   const vb = k => (typeof VB[k] === 'function' ? VB[k]() : VB[k]);
   const cartaVis = (nome, arq) => `<span class="cj-vb cj-vb--card"><img src="${img(arq)}" alt="" style="width:26px;height:26px">${nome}</span>`;
@@ -65,7 +68,10 @@ const ComoJogar = (() => {
     `<div class="cj-topo"><img src="${img('icone-' + comodo + '.png')}" alt=""><span>${esc(titulo)}</span><span class="cj-pts">0 pts</span></div>`;
 
   /* ---- Sala ---- */
-  const SETA = { cima: '↑ Cima', baixo: '↓ Baixo', esq: '← Esquerda', dir: '→ Direita', repetir2: '↻ Repetir 2 vezes' };
+  const SETA = {
+    cima: `${I('seta-cima')} Cima`, baixo: `${I('seta-baixo')} Baixo`, esq: `${I('seta-esq')} Esquerda`,
+    dir: `${I('seta-dir')} Direita`, repetir2: `${I('repetir')} Repetir 2 vezes`
+  };
   function telaSala(c) {
     const g = c.grade, n = g.n || 4;
     const trilha = (g.trilha || []).map(String);
@@ -94,17 +100,19 @@ const ComoJogar = (() => {
           <div style="margin-top:6px"><span ${A(c, 'dica', 'cj-tb cj-tb--dica')}>${LAMPADA} Dica</span></div></div></div>
         <div><p class="cj-rotulo">Painel de comandos</p><div ${A(c, 'seq', 'cj-caixa cj-caixa--tracejada')}><div class="cj-linha">${slots}</div></div>
           <p class="cj-rotulo" style="margin-top:6px">Grade</p><div class="cj-grade" style="grid-template-columns:repeat(${n},1fr)">${cel}</div>
-          <div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">↻ Limpar</span><span ${A(c, 'executar', 'cj-tb cj-tb--cor')}>▶ Executar</span></div></div>
+          <div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">${I('repetir')} Limpar</span><span ${A(c, 'executar', 'cj-tb cj-tb--cor')}>${I('play')} Executar</span></div></div>
       </div></div>`;
   }
 
   /* ---- Quarto ---- */
-  const QL = {
-    banho: '🛁 Tomar banho', camiseta: '👕 Vestir a camiseta', calca: '👖 Vestir a calça', meia: '🧦 Calçar a meia',
-    tenis: '👟 Calçar o tênis', van: '🚐 Pegar a van', onibus: '🚌 Pegar o ônibus', bicicleta: '🚲 Ir de bicicleta',
-    carro: '🚗 Entrar no carro', dormir: '😴 Dormir de novo', tv: '📺 Assistir TV', videogame: '🎮 Jogar videogame',
-    parque: '🏞️ Ir ao parque', piscina: '🏊 Nadar na piscina', filme: '🎬 Ver um filme'
+  const QNOME = {
+    banho: 'Tomar banho', camiseta: 'Vestir a camiseta', calca: 'Vestir a calça', meia: 'Calçar a meia',
+    tenis: 'Calçar o tênis', van: 'Pegar a van', onibus: 'Pegar o ônibus', bicicleta: 'Ir de bicicleta',
+    carro: 'Entrar no carro', dormir: 'Dormir de novo', tv: 'Assistir TV', videogame: 'Jogar videogame',
+    parque: 'Ir ao parque', piscina: 'Nadar na piscina', filme: 'Ver um filme'
   };
+  /* Passo da rotina com o mesmo desenho (SVG) usado no Quarto */
+  const QL = new Proxy({}, { get: (_, id) => `${I('passo-' + String(id))} ${QNOME[id] || ''}` });
   function telaQuarto(c) {
     const usados = [...c.seq];
     const fonte = c.fonte.map(b => {
@@ -117,8 +125,8 @@ const ComoJogar = (() => {
     let rotina = '';
     for (let i = 0; i < c.total; i++) {
       rotina += c.seq[i]
-        ? `<span class="cj-bl cj-bl--lista${c.status === 'ok' ? ' cj-bl--ok' : ''}">${QL[c.seq[i]]}${c.status === 'ok' ? ' ✓' : ''}</span>`
-        : `<span class="cj-bl cj-bl--lista cj-bl--vazio">${i === c.seq.length ? '+ bloco' : ''}</span>`;
+        ? `<span class="cj-bl cj-bl--lista${c.status === 'ok' ? ' cj-bl--ok' : ''}">${QL[c.seq[i]]}${c.status === 'ok' ? ' ' + I('check') : ''}</span>`
+        : `<span class="cj-bl cj-bl--lista cj-bl--vazio">${i === c.seq.length ? 'bloco' : ''}</span>`;
     }
     return telaAbre(c, 'quarto') + topo('quarto', 'Quarto · ' + c.fase) +
       `<p class="cj-regra">Monte a rotina para IR À ESCOLA</p>
@@ -126,7 +134,7 @@ const ComoJogar = (() => {
         <div><p class="cj-rotulo">Passos</p><div class="cj-caixa"><div class="cj-lista-blocos">${fonte}</div>
           <div style="margin-top:6px"><span ${A(c, 'dica', 'cj-tb cj-tb--dica')}>${LAMPADA} Dica</span></div></div></div>
         <div><p class="cj-rotulo">Sua rotina</p><div ${A(c, 'seq', 'cj-caixa cj-caixa--tracejada')}><div class="cj-lista-blocos">${rotina}</div></div>
-          <div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">↻ Limpar</span><span ${A(c, 'verificar', 'cj-tb cj-tb--cor')}>✓ Verificar</span></div></div>
+          <div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">${I('repetir')} Limpar</span><span ${A(c, 'verificar', 'cj-tb cj-tb--cor')}>${I('check')} Verificar</span></div></div>
       </div></div>`;
   }
 
@@ -147,7 +155,7 @@ const ComoJogar = (() => {
         <span ${A(c, 'v', 'cj-tb cj-tb--v' + (v ? ' cj-tb--escolhido' : ''))}><img src="${img('verdadeiro.png')}" alt=""> Verdadeiro</span>
         <span ${A(c, 'f', 'cj-tb cj-tb--f' + (f ? ' cj-tb--escolhido' : ''))}><img src="${img('falso.png')}" alt=""> Falso</span>
       </div>` +
-      (c.feedback ? `<div class="cj-feedback cj-feedback--ok"><span>💡 ${esc(c.feedback)}</span><span ${A(c, 'proxima', 'cj-tb cj-tb--cor')}>Próxima →</span></div>` : '') +
+      (c.feedback ? `<div class="cj-feedback cj-feedback--ok"><span>${I('lampada')} ${esc(c.feedback)}</span><span ${A(c, 'proxima', 'cj-tb cj-tb--cor')}>Próxima ${I('seta-dir')}</span></div>` : '') +
       '</div>';
   }
 
@@ -181,7 +189,7 @@ const ComoJogar = (() => {
     return telaAbre(c, 'despensa') + topo('despensa', 'Despensa · ' + c.fase) +
       `<p class="cj-regra">${esc(REGRA_DESP[c.criterio])}</p>` +
       (c.criterio === 'selecao-cor' ? itens : prateleira + itens) +
-      `<div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">Limpar</span><span ${A(c, 'confirmar', 'cj-tb cj-tb--cor')}>✓ Confirmar!</span></div></div>`;
+      `<div class="cj-acoes-tela"><span class="cj-tb cj-tb--outline">Limpar</span><span ${A(c, 'confirmar', 'cj-tb cj-tb--cor')}>${I('check')} Confirmar!</span></div></div>`;
   }
 
   const TELAS = { sala: telaSala, quarto: telaQuarto, cozinha: telaCozinha, despensa: telaDespensa };
@@ -216,25 +224,25 @@ const ComoJogar = (() => {
   const FRAMES = {
     'sala-f1': [
       { cena: sala({ grade: G_SALA, seq: [], foco: 'bloco-cima' }),
-        texto: 'Os **comandos** ficam na esquerda. Toque em **↑ Cima**: o bloco entra no primeiro espaço do **painel de comandos**. O robô precisa chegar na ⭐.' },
+        texto: 'Os **comandos** ficam na esquerda. Toque em **Cima**: o bloco entra no primeiro espaço do **painel de comandos**. O robô precisa chegar na estrela.' },
       { cena: sala({ grade: Object.assign({ trilha: [[2, 0], [2, 1]] }, G_SALA), seq: ['cima'], foco: 'bloco-dir' }),
-        texto: 'Agora toque em **→ Direita**. Os blocos formam uma **fila**: o robô vai seguir na ordem, do primeiro ao último. A parte amarela da grade mostra o caminho.' },
+        texto: 'Agora toque em **Direita**. Os blocos formam uma **fila**: o robô vai seguir na ordem, do primeiro ao último. A parte amarela da grade mostra o caminho.' },
       { cena: sala({ grade: Object.assign({ trilha: [[2, 0], [2, 1]] }, G_SALA), seq: ['cima', 'dir'], foco: 'executar' }),
-        texto: 'Com a fila pronta, aperte **▶ Executar**. O robô começa a andar, **um passo para cada bloco**.' },
+        texto: 'Com a fila pronta, aperte **Executar**. O robô começa a andar, **um passo para cada bloco**.' },
       { cena: sala({ grade: { n: 4, robo: [2, 1], estrela: [2, 1] }, seq: ['cima', 'dir'], foco: 'alvo' }),
-        texto: 'O robô chegou na ⭐! **Chegar na estrela completa a fase.**' },
+        texto: 'O robô chegou na estrela! **Chegar na estrela completa a fase.**' },
       { cena: sala({ grade: G_SALA, seq: ['cima', 'dir'], foco: 'dica' }),
         texto: 'Travou? Toque em **Dica**. O Logi mostra onde está o problema. Pedir dica **não tira pontos**.' }
     ],
     'sala-f3': [
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: G_SALA3, seq: [], foco: 'bloco-repetir2' }),
-        texto: 'Na Fase 3 aparece um bloco novo: **↻ Repetir 2 vezes**. Ele repete a seta anterior **mais 2 vezes**.' },
+        texto: 'Na Fase 3 aparece um bloco novo: **Repetir 2 vezes**. Ele repete a seta anterior **mais 2 vezes**.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: G_SALA3, seq: [], foco: 'bloco-cima' }),
-        texto: 'Primeiro, a seta **↑ Cima**. O Repetir sempre vem **depois** de uma seta.' },
+        texto: 'Primeiro, a seta **Cima**. O Repetir sempre vem **depois** de uma seta.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: Object.assign({ trilha: [[2, 0], [1, 0], [0, 0]] }, G_SALA3), seq: ['cima'], foco: 'bloco-repetir2' }),
-        texto: 'Agora toque em **↻ Repetir 2 vezes**. A seta para cima passa a valer **3 vezes**: o caminho sobe 3 casas.' },
+        texto: 'Agora toque em **Repetir 2 vezes**. A seta para cima passa a valer **3 vezes**: o caminho sobe 3 casas.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: Object.assign({ trilha: [[2, 0], [1, 0], [0, 0]] }, G_SALA3), seq: ['cima', 'repetir2'], foco: 'executar' }),
-        texto: 'Aperte **▶ Executar** e veja o robô subir.' },
+        texto: 'Aperte **Executar** e veja o robô subir.' },
       { cena: sala({ fase: 'Fase 3', max: 4, repetir: true, grade: { n: 4, robo: [0, 0], estrela: [0, 0] }, seq: ['cima', 'repetir2'], foco: 'seq' }),
         texto: 'Com só **2 blocos**, o robô andou **3 passos**! Na Fase 3 você tem poucos espaços, então o Repetir ajuda muito.' }
     ],
@@ -248,7 +256,7 @@ const ComoJogar = (() => {
       { cena: quartoF1({ seq: ['camiseta', 'calca'], foco: 'fonte-tenis' }),
         texto: 'Agora o **tênis**. Ele só vem **depois da calça e da meia**. Já a camiseta pode entrar em qualquer ponto.' },
       { cena: quartoF1({ seq: ['camiseta', 'calca', 'tenis'], foco: 'verificar' }),
-        texto: 'Rotina pronta! Aperte **✓ Verificar**. Se algo estiver errado, o bloco fica **vermelho** e você troca de lugar. Se estiver certo, fica **verde** ✓.' }
+        texto: 'Rotina pronta! Aperte **Verificar**. Se algo estiver errado, o bloco fica **vermelho** e você troca de lugar. Se estiver certo, fica **verde**, com a marca de certo.' }
     ],
     'cozinha-f1': [
       { cena: coz({ leitura: true, foco: 'frase' }),
@@ -259,9 +267,9 @@ const ComoJogar = (() => {
         texto: 'Sua vez! Toque em **Verdadeiro** (verde, **Alt + 1**) ou **Falso** (vermelho, **Alt + 2**). Pense: o gelo nunca é quente? O gelo é frio, então é **Verdadeiro**.' },
       { cena: coz({ escolha: 'v', foco: 'v' }),
         texto: 'Acertou! Se você errar, o Logi explica o motivo e mostra **outra frase** para tentar de novo.' },
-      { extra: 'Depois de responder', selo: '✅ No jogo de verdade',
+      { extra: 'Depois de responder', selo: 'No jogo de verdade',
         cena: coz({ fase: 'Fácil', numero: 'Fácil · Pergunta 1 de 3', frase: 'O sal NÃO é doce.', escolha: 'v', feedback: 'Correto! O sal tem sabor salgado, não doce.', foco: 'proxima' }),
-        texto: 'Depois de responder, aparece o resultado com a explicação. A pergunta só muda quando **você** tocar em **Próxima →**. Leia com calma!' }
+        texto: 'Depois de responder, aparece o resultado com a explicação. A pergunta só muda quando **você** tocar em **Próxima**. Leia com calma!' }
     ],
     'despensa-f1': [
       { cena: desp('selecao-cor', FRUTAS_F1, { sel: [], foco: 'item-maca' }),
@@ -271,7 +279,7 @@ const ComoJogar = (() => {
       { cena: desp('selecao-cor', FRUTAS_F1, { sel: ['maca'], foco: 'item-morango' }),
         texto: 'Agora o **Morango**, que também é vermelho.' },
       { cena: desp('selecao-cor', FRUTAS_F1, { sel: ['maca', 'morango'], foco: 'sel' }),
-        texto: 'As frutas escolhidas ficam destacadas. No jogo, depois é só apertar **✓ Confirmar!** para conferir.' }
+        texto: 'As frutas escolhidas ficam destacadas. No jogo, depois é só apertar **Confirmar!** para conferir.' }
     ],
     'despensa-f2': [
       { cena: desp('tamanho', FRUTAS_F2, { slots: 3, prat: [], foco: 'item-mirtilo' }),
@@ -283,7 +291,7 @@ const ComoJogar = (() => {
       { cena: desp('tamanho', FRUTAS_F2, { slots: 3, prat: ['mirtilo', 'maca'], foco: 'item-melancia' }),
         texto: 'Falta a **Melancia**, a maior de todas.' },
       { cena: desp('tamanho', FRUTAS_F2, { slots: 3, prat: ['mirtilo', 'maca', 'melancia'], status: 'ok', foco: 'prateleira' }),
-        texto: 'Tudo certo: do menor ao maior! No jogo, aperte **✓ Confirmar!**. Tocar de novo numa fruta da prateleira **tira** ela de lá.' }
+        texto: 'Tudo certo: do menor ao maior! No jogo, aperte **Confirmar!**. Tocar de novo numa fruta da prateleira **tira** ela de lá.' }
     ],
     'despensa-f3': [
       { cena: desp('selecao-sementes', FRUTAS_F3, { slots: 2, prat: [], foco: 'item-maca' }),
@@ -293,14 +301,14 @@ const ComoJogar = (() => {
       { cena: desp('selecao-sementes', FRUTAS_F3, { slots: 2, prat: ['maca'], foco: 'item-melancia' }),
         texto: 'A **Melancia** também tem sementes por dentro.' },
       { cena: desp('selecao-sementes', FRUTAS_F3, { slots: 2, prat: ['maca', 'melancia'], status: 'ok', foco: 'prateleira' }),
-        texto: 'Só as frutas com sementes estão na prateleira. No jogo, são **3 frutas** e você aperta **✓ Confirmar!**. Cuidado: o **morango** não conta, porque os pontinhos de fora não são sementes por dentro.' }
+        texto: 'Só as frutas com sementes estão na prateleira. No jogo, são **3 frutas** e você aperta **Confirmar!**. Cuidado: o **morango** não conta, porque os pontinhos de fora não são sementes por dentro.' }
     ]
   };
 
   /* Exemplos resolvidos das fases que não têm tutorial próprio */
   const EXEMPLOS = {
     'sala-f2': { cena: sala({ fase: 'Fase 2', max: 8, grade: { n: 4, robo: [3, 0], estrela: [0, 3], obst: [[2, 1], [1, 1]], trilha: [[2, 0], [1, 0], [0, 0], [0, 1], [0, 2], [0, 3]] }, seq: ['cima', 'cima', 'cima', 'dir', 'dir', 'dir'] }),
-      texto: 'Um jeito de resolver: subir **3 casas** pela borda, onde não tem sofá, e depois ir **3 para a direita** até a ⭐. Os sofás ficam no meio do caminho: **bater neles é erro**.' },
+      texto: 'Um jeito de resolver: subir **3 casas** pela borda, onde não tem sofá, e depois ir **3 para a direita** até a estrela. Os sofás ficam no meio do caminho: **bater neles é erro**.' },
     'quarto-f2': { cena: { comodo: 'quarto', fase: 'Fase 2', total: 5, status: 'ok', mostrarErro: true,
       fonte: ['banho', 'camiseta', 'calca', 'meia', 'tenis', { id: 'tv', erro: true }], seq: ['banho', 'calca', 'meia', 'tenis', 'camiseta'] },
       texto: 'Um jeito de resolver: **banho** primeiro, depois vestir (a **camiseta** pode vir em qualquer ponto, o **tênis** só depois da calça e da meia). A **TV** não combina com ir à escola e fica de fora.' },
@@ -323,8 +331,8 @@ const ComoJogar = (() => {
       nome: 'Sala', titulo: 'Sala — Algoritmos', sub: 'Mini-jogo 1 · Monte o caminho do robô',
       objetivo: 'Leve o robô até a estrela montando uma fila de blocos. Cada bloco é um passo!',
       comandos: [
-        { v: '<span class="cj-vb cj-vb--laranja">↑ Cima</span>', t: 'Setas', d: 'Cima, baixo, esquerda e direita. Cada seta vale **1 passo**.' },
-        { v: '<span class="cj-vb cj-vb--ambar">↻ Repetir 2 vezes</span>', t: 'Repetir 2 vezes', d: 'Só na **Fase 3**. Repete a seta anterior mais 2 vezes.' },
+        { v: `<span class="cj-vb cj-vb--laranja">${I('seta-cima')} Cima</span>`, t: 'Setas', d: 'Cima, baixo, esquerda e direita. Cada seta vale **1 passo**.' },
+        { v: `<span class="cj-vb cj-vb--ambar">${I('repetir')} Repetir 2 vezes</span>`, t: 'Repetir 2 vezes', d: 'Só na **Fase 3**. Repete a seta anterior mais 2 vezes.' },
         { v: '<span class="cj-vb cj-vb--outline" style="border-style:dashed">1</span>', t: 'Painel de comandos', d: 'Onde os blocos entram, em fila. Toque num bloco montado para **tirar**.' },
         { v: vb('executar'), t: 'Executar', d: 'O robô anda seguindo a sua fila, passo a passo.' },
         { v: vb('limpar'), t: 'Limpar', d: 'Tira todos os blocos para você montar de novo.' },
@@ -347,10 +355,10 @@ const ComoJogar = (() => {
       nome: 'Quarto', titulo: 'Quarto — Depuração', sub: 'Mini-jogo 2 · Arrume a rotina para ir à escola',
       objetivo: 'Monte a rotina para ir à escola: deixe de fora o que não combina e coloque os passos na ordem certa.',
       comandos: [
-        { v: '<span class="cj-vb cj-vb--roxo">👕 Camiseta</span>', t: 'Bloco de passo', d: 'Toque para colocar na rotina. Também dá para **arrastar**.' },
+        { v: `<span class="cj-vb cj-vb--roxo">${I('passo-camiseta')} Camiseta</span>`, t: 'Bloco de passo', d: 'Toque para colocar na rotina. Também dá para **arrastar**.' },
         { v: '<span class="cj-vb cj-vb--outline" style="border-style:dashed">+ bloco</span>', t: 'Sua rotina', d: 'A fila de passos. Toque num bloco montado para **tirar**.' },
-        { v: '<span class="cj-vb cj-vb--erro">📺 TV <b>!</b></span>', t: 'Bloco vermelho', d: 'É um passo que **não combina** ou está **repetido**. Fica de fora.' },
-        { v: vb('verificar'), t: 'Verificar', d: 'Confere a rotina. Certo fica **verde ✓**, errado fica **vermelho**.' },
+        { v: `<span class="cj-vb cj-vb--erro">${I('passo-tv')} TV <b>!</b></span>`, t: 'Bloco vermelho', d: 'É um passo que **não combina** ou está **repetido**. Fica de fora.' },
+        { v: vb('verificar'), t: 'Verificar', d: 'Confere a rotina. Certo fica **verde**, errado fica **vermelho** e o jogo diz qual está com erro.' },
         { v: vb('limpar'), t: 'Limpar', d: 'Tira tudo da rotina para recomeçar.' },
         { v: vb('dica'), t: 'Dica', d: 'Mostra o bloco que não combina, depois o que está no lugar errado.' }
       ],
@@ -361,7 +369,7 @@ const ComoJogar = (() => {
           itens: ['Camiseta, calça, meia e tênis.', 'O tênis vem depois da calça e da meia.'] },
         { rotulo: 'Fase 2', nivel: 'Médio', titulo: 'Manhã de escola', exemplo: 'quarto-f2',
           resumo: 'Agora a rotina começa pelo **banho**. Tem **1 passo que não combina** com a escola.',
-          itens: ['Banho → vestir (camiseta, calça, meia, tênis).', 'Quem não combina? Pergunte à **Dica**!'] },
+          itens: ['Primeiro o banho, depois vestir (camiseta, calça, meia, tênis).', 'Quem não combina? Pergunte à **Dica**!'] },
         { rotulo: 'Fase 3', nivel: 'Difícil', titulo: 'A caminho da escola', exemplo: 'quarto-f3',
           resumo: 'Banho, vestir e, **no fim, como você chega à escola**. Também tem **1 passo que não combina**.',
           itens: ['O último passo muda: van, ônibus, bicicleta ou carro.', 'Cuidado: nem tudo combina com a manhã de escola!'] }
@@ -421,8 +429,8 @@ const ComoJogar = (() => {
     const selo = q.selo
       ? `<span class="cj-selo cj-selo--bis">${esc(q.selo)}</span>`
       : q.acao === 'click'
-        ? `<span class="cj-selo cj-selo--toque">👆 Sua vez: ${q.semMao ? 'escolha' : 'toque'}</span>`
-        : q.fala ? '<span class="cj-selo cj-selo--ler">📖 O Logi explica</span>' : '';
+        ? `<span class="cj-selo cj-selo--toque">${I('mao')} Sua vez: ${q.semMao ? 'escolha' : 'toque'}</span>`
+        : q.fala ? `<span class="cj-selo cj-selo--ler">${I('livro')} O Logi explica</span>` : '';
     const fala = q.fala
       ? `<div class="cj-fala"><img src="${img(/dica|encorajando/.test(q.estado || '') ? 'logi_exclamacao.png' : 'logi_feliz.png')}" alt="">
            <p>${marcar(q.fala, q.chaves)}</p></div>` : '';
@@ -463,7 +471,7 @@ const ComoJogar = (() => {
 
   /* Teclas de cada cômodo (as comuns vêm primeiro) */
   const TECLAS_COMUNS = [
-    ['Alt + J', 'abrir esta ajuda'], ['Alt + R', 'ouvir de novo a instrução completa'], ['Alt + A', 'abrir as preferências'], ['Tab', 'andar entre os botões (no fim volta para o botão Mapa)'], ['Esc', 'fechar a janela ou sair do cômodo']
+    ['Alt + J', 'abrir esta ajuda'], ['Alt + R', 'ouvir de novo a instrução completa'], ['Alt + A', 'abrir as preferências'], ['Tab', 'andar entre os botões (no fim volta para o botão Mapa)'], ['Esc', 'fechar a janela aberta; sem janela, pergunta antes de sair do cômodo']
   ];
   const TECLAS_DO_COMODO = {
     sala: [['Enter ou Espaço', 'pôr o bloco na fila (ou tirar da fila)'], ['Delete', 'tirar o bloco em foco'], ['Alt + S', 'ouvir a sequência montada']],
@@ -483,12 +491,12 @@ const ComoJogar = (() => {
     const fases = d.fases.map((f, i) => {
       let corpo = '';
       if (f.tutorial) {
-        corpo = `<p class="cj-subtitulo">📘 Passo a passo com o Logi (o treino do jogo)</p><ol class="cj-quadros">${quadrosDe(f.tutorial)}</ol>`;
+        corpo = `<p class="cj-subtitulo">${I('livro')} Passo a passo com o Logi (o treino do jogo)</p><ol class="cj-quadros">${quadrosDe(f.tutorial)}</ol>`;
       } else if (f.exemplo) {
         const e = EXEMPLOS[f.exemplo];
-        corpo = `<p class="cj-subtitulo">✅ Um exemplo resolvido</p><ol class="cj-quadros">${quadro(1, { cena: e.cena, texto: e.texto, titulo: 'Como pode ficar' })}</ol>`;
+        corpo = `<p class="cj-subtitulo">${I('check')} Um exemplo resolvido</p><ol class="cj-quadros">${quadro(1, { cena: e.cena, texto: e.texto, titulo: 'Como pode ficar' })}</ol>`;
         if (f.usaTutorial !== undefined) {
-          corpo += `<button type="button" class="cj-ir" data-ir-fase="${f.usaTutorial}">Ver o passo a passo da ${esc(d.fases[f.usaTutorial].rotulo)} (os comandos são os mesmos) →</button>`;
+          corpo += `<button type="button" class="cj-ir" data-ir-fase="${f.usaTutorial}">Ver o passo a passo da ${esc(d.fases[f.usaTutorial].rotulo)} (os comandos são os mesmos) ${I('seta-dir')}</button>`;
         }
       }
       return `<div class="cj-fase" role="tabpanel" id="cj-fp-${id}-${i}" aria-labelledby="cj-ft-${id}-${i}" hidden>
@@ -497,7 +505,7 @@ const ComoJogar = (() => {
         <ul class="cj-lista">${f.itens.map(t => `<li>${md(t)}</li>`).join('')}</ul>
         ${corpo}</div>`;
     }).join('');
-    const regras = d.regras ? `<div class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">★</span> Regras de ordem</h4><ul class="cj-lista">${d.regras.map(t => `<li>${md(t)}</li>`).join('')}</ul></div>` : '';
+    const regras = d.regras ? `<div class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num" aria-hidden="true">${I('estrela')}</span> Regras de ordem</h4><ul class="cj-lista">${d.regras.map(t => `<li>${md(t)}</li>`).join('')}</ul></div>` : '';
     return `<div class="cj-cor-${id}">
       <div class="cj-cab"><img src="${img('icone-' + id + '.png')}" alt=""><div><h3>${esc(d.titulo)}</h3><p>${esc(d.sub)}</p></div></div>
       <section class="cj-secao"><h4 class="cj-secao__titulo"><span class="cj-secao__num">1</span> O que fazer</h4>
@@ -542,10 +550,10 @@ const ComoJogar = (() => {
     const trilha = [
       ['<img src="' + img('icone-sala.png') + '" alt="">', 'Escolha um cômodo', 'No mapa da casa, toque no cômodo que está aberto.'],
       ['<img src="' + img('logi_feliz.png') + '" alt="">', 'Leia o Logi', 'Ele conta o desafio. Na primeira vez, faz um treino com você.'],
-      ['<span style="font-size:38px;line-height:44px;display:block">🧩</span>', 'Resolva o desafio', 'Monte, escolha ou responda. Pode usar a Dica quando precisar.'],
+      [`<span style="font-size:38px;line-height:44px;display:block" aria-hidden="true">${I('peca')}</span>`, 'Resolva o desafio', 'Monte, escolha ou responda. Pode usar a Dica quando precisar.'],
       ['<img src="' + img('estrela.png') + '" alt="">', 'Ganhe estrelas', 'Quanto menos erros, mais estrelas. Aí abre o próximo cômodo!']
     ].map(t => `<li class="cj-trilha__item">${t[0]}<strong>${t[1]}</strong><span>${t[2]}</span></li>`).join('');
-    const mapa = ORDEM.map(id => `<img src="${img('icone-' + id + '.png')}" alt="${COMODOS[id].nome}" title="${COMODOS[id].nome}">`).join('<span aria-hidden="true">→</span>');
+    const mapa = ORDEM.map(id => `<img src="${img('icone-' + id + '.png')}" alt="${COMODOS[id].nome}" title="${COMODOS[id].nome}">`).join(`<span aria-hidden="true">${I('seta-dir')}</span>`);
     const botoes = [
       [vb('mapa'), 'Voltar ao mapa', 'Sai do cômodo e volta ao mapa da casa.'],
       [vb('ajuda'), 'Como jogar', 'Abre esta ajuda, com o passo a passo da tela em que você está.'],
@@ -596,15 +604,15 @@ const ComoJogar = (() => {
   /* ---- Guia da tela inicial: abas Início + 4 cômodos ---- */
   let ctx = null;
   function montarIndice(raiz) {
-    const abas = [{ id: 'inicio', nome: 'Início', ico: '<span aria-hidden="true">🎮</span>' }]
+    const abas = [{ id: 'inicio', nome: 'Início', ico: `<span aria-hidden="true">${I('casa')}</span>` }]
       .concat(ORDEM.map(id => ({ id, nome: COMODOS[id].nome, ico: `<img src="${img('icone-' + id + '.png')}" alt="">` })));
     raiz.innerHTML = `
       <nav class="cj-tabs cj-cor-inicio" role="tablist" aria-label="Escolha a tela">${abas.map((a, i) =>
         `<button type="button" class="cj-tab" role="tab" id="cj-tab-${a.id}" aria-controls="cj-painel-${a.id}" data-i="${i}">${a.ico} ${a.nome}</button>`).join('')}</nav>
       ${abas.map(a => `<section class="cj-painel" role="tabpanel" id="cj-painel-${a.id}" aria-labelledby="cj-tab-${a.id}" hidden>${a.id === 'inicio' ? painelInicio() : painelComodo(a.id)}</section>`).join('')}
-      <div class="cj-rodape"><button type="button" class="btn btn--outline cj-nav" id="cj-anterior">← Voltar</button>
+      <div class="cj-rodape"><button type="button" class="btn btn--outline cj-nav" id="cj-anterior">${I('seta-esq')} Voltar</button>
         <span class="cj-pontos" id="cj-pontos" aria-hidden="true"></span>
-        <button type="button" class="btn btn--laranja cj-nav" id="cj-proximo">Próximo →</button></div>`;
+        <button type="button" class="btn btn--laranja cj-nav" id="cj-proximo">Próximo ${I('seta-dir')}</button></div>`;
     const botoes = [...raiz.querySelectorAll('.cj-tab')];
     const paineis = [...raiz.querySelectorAll('.cj-painel')];
     const pontos = $(raiz, '#cj-pontos');

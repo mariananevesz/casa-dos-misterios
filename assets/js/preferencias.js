@@ -39,8 +39,11 @@ const Preferencias = (() => {
      tipos: toggle, slider, opcoes, nome, testes, preview, atalhos,
             acao, resumo, texto
      ============================================================ */
+  /* Ícones em SVG (icones.js), sempre com aria-hidden: o nome da aba é o texto */
+  const ICO = (nome, classe) => (window.Icones ? Icones.svg(nome, classe) : '');
+
   const SECOES = [
-    { id: 'audio', ico: '🔊', nome: 'Áudio', fala: 'Ajuste os sons do jeito que fica bom para você!',
+    { id: 'audio', ico: 'som', nome: 'Áudio', fala: 'Ajuste os sons do jeito que fica bom para você!',
       itens: [
         { t: 'toggle', k: 'somAtivado', titulo: 'Efeitos sonoros', desc: 'Os sons de clique, acerto e erro.' },
         { t: 'slider', k: 'volumeSom', titulo: 'Volume dos efeitos', min: 0, max: 10, dep: 'somAtivado', fmt: v => (v === 0 ? 'Mudo' : String(v)) },
@@ -49,12 +52,12 @@ const Preferencias = (() => {
         { t: 'toggle', k: 'musicaAtivada', titulo: 'Música de fundo', desc: 'A musiquinha que toca enquanto você joga.' },
         { t: 'slider', k: 'volumeMusica', titulo: 'Volume da música', min: 0, max: 10, dep: 'musicaAtivada', fmt: v => (v === 0 ? 'Mudo' : String(v)) }
       ] },
-    { id: 'tela', ico: '🖥️', nome: 'Tela', fala: 'Deixe a tela mais confortável para os seus olhos.',
+    { id: 'tela', ico: 'tela', nome: 'Tela', fala: 'Deixe a tela mais confortável para os seus olhos.',
       itens: [
         { t: 'toggle', k: 'altoContraste', titulo: 'Alto contraste', desc: 'Cores fortes (preto, branco e amarelo) para enxergar melhor textos, botões e blocos.' },
         { t: 'toggle', k: 'reduzMovimento', titulo: 'Menos movimento', desc: 'Para as animações: balanços, pulinhos e brilhos. O jogo também respeita o pedido do seu aparelho.' }
       ] },
-    { id: 'letras', ico: '🔤', nome: 'Letras', fala: 'Escolha o tamanho e o tipo de letra mais fáceis de ler.',
+    { id: 'letras', ico: 'letras', nome: 'Letras', fala: 'Escolha o tamanho e o tipo de letra mais fáceis de ler.',
       itens: [
         { t: 'slider', k: 'tamanhoFonte', titulo: 'Tamanho das letras', desc: 'Aumenta todos os textos do jogo.', valores: TAMANHOS.valores, rotulos: TAMANHOS.rotulos },
         { t: 'linha' },
@@ -63,24 +66,24 @@ const Preferencias = (() => {
         { t: 'toggle', k: 'espacoTexto', titulo: 'Mais espaço no texto', desc: 'Afasta um pouco as letras, as palavras e as linhas. Ajuda a ler com calma.' },
         { t: 'preview' }
       ] },
-    { id: 'atalhos', ico: '⌨️', nome: 'Atalhos', fala: 'Teclas rápidas para quem joga com o teclado.',
+    { id: 'atalhos', ico: 'teclado', nome: 'Atalhos', fala: 'Teclas rápidas para quem joga com o teclado.',
       itens: [
         { t: 'toggle', k: 'atalhos', titulo: 'Teclas de atalho do jogo', desc: 'Liga as teclas com Alt: Alt+J (ajuda), Alt+R (ouvir a instrução), Alt+S (resumo) e Alt+1 / Alt+2 (Cozinha). Desligue se apertar sem querer.' },
         { t: 'atalhos' }
       ] },
-    { id: 'logi', ico: '🤖', nome: 'Logi', fala: 'Eu sou o Logi! Quer me dizer o seu nome?',
+    { id: 'logi', ico: 'peca', nome: 'Logi', fala: 'Eu sou o Logi! Quer me dizer o seu nome?',
       itens: [
         { t: 'nome', k: 'nome', titulo: 'Como o Logi chama você', desc: 'Escreva o seu nome ou um apelido. O Logi vai usar nas conversas e nos treinos.' },
         { t: 'linha' },
         { t: 'toggle', k: 'treinoAuto', titulo: 'Treino do Logi nas fases novas', desc: 'Na primeira vez em cada fase, o Logi faz um treino com você. Desligue se já sabe jogar.' },
-        { t: 'acao', id: 'rever', titulo: 'Rever todos os treinos', desc: 'Faz o Logi explicar de novo cada fase, como se fosse a primeira vez.', rotulo: '↻ Rever os treinos', confirma: 'Tem certeza? Toque de novo' }
+        { t: 'acao', id: 'rever', titulo: 'Rever todos os treinos', desc: 'Faz o Logi explicar de novo cada fase, como se fosse a primeira vez.', rotulo: 'Rever os treinos', confirma: 'Tem certeza? Toque de novo' }
       ] },
-    { id: 'progresso', ico: '💾', nome: 'Progresso', fala: 'Aqui você vê as suas estrelas e pode recomeçar.',
+    { id: 'progresso', ico: 'medalha', nome: 'Progresso', fala: 'Aqui você vê as suas estrelas e pode recomeçar.',
       itens: [
         { t: 'resumo' },
         { t: 'linha' },
-        { t: 'acao', id: 'reiniciar', titulo: 'Reiniciar progresso', desc: 'Apaga os pontos e as estrelas e fecha os cômodos de novo. Suas preferências ficam.', rotulo: '↻ Recomeçar o jogo', confirma: 'Apagar tudo? Toque de novo', perigo: true },
-        { t: 'acao', id: 'padrao', titulo: 'Restaurar preferências', desc: 'Volta o som, as letras e a tela para como eram no começo.', rotulo: '↺ Voltar ao padrão', confirma: 'Voltar ao padrão? Toque de novo' },
+        { t: 'acao', id: 'reiniciar', titulo: 'Reiniciar progresso', desc: 'Apaga os pontos e as estrelas e fecha os cômodos de novo. Suas preferências ficam.', rotulo: 'Recomeçar o jogo', confirma: 'Apagar tudo? Toque de novo', perigo: true },
+        { t: 'acao', id: 'padrao', titulo: 'Restaurar preferências', desc: 'Volta o som, as letras e a tela para como eram no começo.', rotulo: 'Voltar ao padrão', confirma: 'Voltar ao padrão? Toque de novo' },
         { t: 'linha' },
         { t: 'sobre' }
       ] }
@@ -89,16 +92,20 @@ const Preferencias = (() => {
   const ATALHOS = [
     { grupo: 'Em todo o jogo', itens: [
       [['Tab'], 'Ir para o próximo botão (no fim da página volta para o botão Mapa)'], [['Shift', 'Tab'], 'Voltar para o botão anterior'],
-      [['Enter'], 'Escolher ou confirmar (também a tecla Espaço)'], [['Esc'], 'Fechar a janela ou sair do cômodo'],
+      [['Enter'], 'Escolher ou confirmar (também a tecla Espaço)'],
+      [['Esc'], 'Fechar a janela aberta. Dentro de um cômodo, pergunta antes de sair (Esc de novo continua o jogo)'],
       [['Alt', 'A'], 'Abrir estas preferências'] ] },
     { grupo: 'Dentro dos cômodos (todas com Alt, para não brigar com o leitor de tela)', itens: [
       [['Alt', 'J'], 'Abrir a ajuda do cômodo (Alt + J de novo fecha)'],
       [['Alt', 'R'], 'Ouvir de novo a instrução completa do cômodo (com o treino do Logi aberto, reinicia o treino)'],
       [['Alt', 'S'], 'Ouvir o resumo do que você montou (Sala, Quarto e Despensa)'],
       [['Alt', '1'], 'Verdadeiro (Cozinha)'], [['Alt', '2'], 'Falso (Cozinha)'],
-      [['Delete'], 'Tirar o bloco em foco (Sala e Quarto; também Backspace)'] ] },
-    { grupo: 'No "Como jogar"', itens: [
-      [['←'], 'Aba anterior'], [['→'], 'Próxima aba'] ] }
+      [['Enter'], 'No bloco ou na fruta em foco: põe na fila ou na prateleira. Em um que já está lá: tira (não é preciso arrastar)'],
+      [['Delete'], 'Tirar o bloco em foco (Sala e Quarto; também Backspace). Só vale com o foco no bloco'] ] },
+    { grupo: 'No "Como jogar" e nestas preferências', itens: [
+      [['Seta esquerda'], 'Aba anterior'], [['Seta direita'], 'Próxima aba'] ] },
+    { grupo: 'Com o leitor de tela', itens: [
+      [['Setas'], 'O jogo não usa as setas nos cômodos: elas ficam livres para o leitor de tela andar pelos botões e textos'] ] }
   ];
 
   /* ============================================================
@@ -149,15 +156,15 @@ const Preferencias = (() => {
   function linhaTestes() {
     return `<div class="pref-linha pref-linha--coluna"><div class="pref-testes">
       <span class="pref-desc" style="margin:0">Ouça como ficou:</span>
-      <button type="button" class="pref-btn" data-teste="acerto">▶ Acerto</button>
-      <button type="button" class="pref-btn" data-teste="erro">▶ Erro</button>
-      <button type="button" class="pref-btn" data-teste="clique">▶ Clique</button></div></div>`;
+      <button type="button" class="pref-btn" data-teste="acerto" aria-label="Ouvir o som de acerto">${ICO('play')} Acerto</button>
+      <button type="button" class="pref-btn" data-teste="erro" aria-label="Ouvir o som de erro">${ICO('play')} Erro</button>
+      <button type="button" class="pref-btn" data-teste="clique" aria-label="Ouvir o som de clique">${ICO('play')} Clique</button></div></div>`;
   }
 
   function linhaPreview() {
-    return `<div class="pref-preview" aria-label="Prévia do texto"><p class="pref-preview__rotulo">Prévia</p>
+    return `<div class="pref-preview"><p class="pref-preview__rotulo">Prévia</p>
       <div class="pref-fala"><img src="${img('logi_feliz.png')}" alt=""><p id="pp-texto"></p></div>
-      <div class="pref-preview__blocos"><span class="pp-bloco">↑ Cima</span><span class="pp-bloco pp-bloco--ambar">↻ Repetir 2 vezes</span><span class="pp-bloco pp-bloco--verde">✓ Verificar</span></div></div>`;
+      <div class="pref-preview__blocos"><span class="pp-bloco">${ICO('seta-cima')} Cima</span><span class="pp-bloco pp-bloco--ambar">${ICO('repetir')} Repetir 2 vezes</span><span class="pp-bloco pp-bloco--verde">${ICO('check')} Verificar</span></div></div>`;
   }
 
   function linhaAtalhos() {
@@ -198,17 +205,17 @@ const Preferencias = (() => {
       <div class="pref">
         <header class="pref-topo">
           <h2 id="pref-titulo">Minhas preferências</h2>
-          <button type="button" class="modal-fechar pref-fechar" id="pref-fechar" aria-label="Fechar preferências">✕</button>
+          <button type="button" class="modal-fechar pref-fechar" id="pref-fechar" aria-label="Fechar preferências">${ICO('x')}</button>
         </header>
         <div class="pref-corpo">
           <aside class="pref-lateral">
             <nav class="pref-menu" role="tablist" aria-orientation="vertical" aria-label="Seções das preferências">${SECOES.map(s =>
-              `<button type="button" class="pref-aba" role="tab" id="pa-${s.id}" aria-controls="pp-${s.id}" data-secao="${s.id}"><span class="pref-aba__ico" aria-hidden="true">${s.ico}</span><span>${s.nome}</span></button>`).join('')}</nav>
-            <div class="pref-logi" aria-live="polite"><div class="pref-logi__balao"><p id="pref-logi-fala"></p></div><img src="${img('logi_feliz.png')}" alt=""></div>
+              `<button type="button" class="pref-aba" role="tab" id="pa-${s.id}" aria-controls="pp-${s.id}" data-secao="${s.id}"><span class="pref-aba__ico" aria-hidden="true">${ICO(s.ico)}</span><span>${s.nome}</span></button>`).join('')}</nav>
+            <div class="pref-logi"><div class="pref-logi__balao"><p id="pref-logi-fala"></p></div><img src="${img('logi_feliz.png')}" alt=""></div>
           </aside>
           <main class="pref-painel">${SECOES.map(s =>
             `<section class="pref-secao" role="tabpanel" id="pp-${s.id}" aria-labelledby="pa-${s.id}" hidden>
-              <h3 class="pref-secao__titulo"><span aria-hidden="true">${s.ico}</span> ${s.nome}</h3>${s.itens.map(i => MONTA[i.t](i)).join('')}</section>`).join('')}
+              <h3 class="pref-secao__titulo"><span aria-hidden="true">${ICO(s.ico)}</span> ${s.nome}</h3>${s.itens.map(i => MONTA[i.t](i)).join('')}</section>`).join('')}
           </main>
         </div>
         <footer class="pref-rodape"><span class="pref-status" id="pref-status" role="status" aria-live="polite">As mudanças são salvas sozinhas.</span>
@@ -220,14 +227,14 @@ const Preferencias = (() => {
   }
 
   /* ============================================================
-     Estado ↔ controles
+     Estado e controles
      ============================================================ */
   function salvar(patch) {
     gameState.updateSettings(patch);
     aplicarConfiguracoes();
     if ('musicaAtivada' in patch || 'volumeMusica' in patch) { try { audio.sincronizarConfiguracoes(); } catch {} }
     sincronizar();
-    mostrarStatus('Salvo ✓');
+    mostrarStatus('Salvo!');
     document.dispatchEvent(new CustomEvent('preferencias:mudou', { detail: cfg() }));
   }
 
@@ -365,15 +372,15 @@ const Preferencias = (() => {
       if (alvo.dataset.opcao) return salvar({ [alvo.dataset.opcao]: alvo.dataset.v });
       if (alvo.dataset.teste) { try { audio[alvo.dataset.teste](); } catch {} return; }
       if (alvo.id === 'pref-fechar' || alvo.id === 'pref-pronto') return fechar();
-      if (alvo.dataset.acao === 'rever') return duploToque(alvo, () => { gameState.limparTutoriaisVistos(); mostrarStatus('Os treinos voltam na próxima fase ✓'); });
+      if (alvo.dataset.acao === 'rever') return duploToque(alvo, () => { gameState.limparTutoriaisVistos(); mostrarStatus('Os treinos voltam na próxima fase.'); });
       if (alvo.dataset.acao === 'reiniciar') return duploToque(alvo, () => {
-        gameState.reset(); resumo(); mostrarStatus('Jogo reiniciado ✓');
+        gameState.reset(); resumo(); mostrarStatus('Jogo reiniciado.');
         document.dispatchEvent(new CustomEvent('progresso:mudou'));
       });
       if (alvo.dataset.acao === 'padrao') return duploToque(alvo, () => {
         gameState.updateSettings(JSON.parse(JSON.stringify(DEFAULT_STATE.settings)));
         aplicarConfiguracoes(); try { audio.sincronizarConfiguracoes(); } catch {}
-        sincronizar(); mostrarStatus('Preferências restauradas ✓');
+        sincronizar(); mostrarStatus('Preferências restauradas.');
         document.dispatchEvent(new CustomEvent('preferencias:mudou', { detail: cfg() }));
       });
     });
@@ -422,6 +429,8 @@ const Preferencias = (() => {
     acionador = quem instanceof Element ? quem : document.activeElement;
     acionador?.setAttribute?.('aria-expanded', 'true');
     raiz.style.display = 'flex';
+    /* O resto da página fica inert: o leitor de tela lê só esta janela */
+    if (typeof isolarFundo === 'function') isolarFundo(raiz);
     sincronizar();
     ir(secao || secaoAtual);
     document.body.classList.add('pref-aberto');
@@ -432,6 +441,7 @@ const Preferencias = (() => {
     if (!aberto) return;
     aberto = false;
     raiz.style.display = 'none';
+    if (typeof restaurarFundo === 'function') restaurarFundo(raiz);
     document.body.classList.remove('pref-aberto');
     acionador?.setAttribute?.('aria-expanded', 'false');
     acionador?.focus?.();

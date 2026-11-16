@@ -19,10 +19,10 @@
         Tutorial.ativo for verdadeiro.
 
    Passos (campo "acao"):
-     'ok'    — só informa; termina no botão "→ OK".
+     'ok'    — só informa; termina no botão "OK".
      'click' — a criança faz a ação real no alvo (a página avisa por
                Tutorial.tentar; "vez" diz qual ação vale).
-     'demo'  — a mãozinha faz a ação sozinha (efeito) e espera o "→ OK".
+     'demo'  — a mãozinha faz a ação sozinha (efeito) e espera o "OK".
    Tutoriais antigos, sem "acao", são lidos assim: tipo 'vez' = click,
    tipo 'toque' = demo e os demais = ok.
 
@@ -68,7 +68,7 @@ const Tutorial = (() => {
   let passos = [];
   let gen = 0;               // muda a cada abertura/reinício/fechamento: cancela esperas antigas
   let espera = null;         // passo 'click' aguardando a criança: { p, resolve, reject }
-  let esperaOk = null;       // passo aguardando o botão "→ OK": { resolve, reject }
+  let esperaOk = null;       // passo aguardando o botão "OK": { resolve, reject }
   let atual = null;          // { p, i } passo exibido agora
   let ui = null;
   let liberadoEm = 0;
@@ -118,6 +118,9 @@ const Tutorial = (() => {
   const SVG_PULAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5l9 7-9 7zM18 5v14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const SVG_FECHAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>';
   const SVG_LAMPADA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_SETA = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 12.5l5 5L19.5 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const SVG_VOLTAR = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const SVG_TECLADO ='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="6" width="20" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 15h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
   function montarUI() {
@@ -148,7 +151,7 @@ const Tutorial = (() => {
           <p class="tut-tecla" id="tut-tecla" aria-hidden="true"></p>
           <div class="tut-tip-rodape">
             <span class="tut-passo" id="tut-passo"></span>
-            <button type="button" class="tut-ok" id="tut-ok" aria-label="OK, continuar" hidden>→ OK</button>
+            <button type="button" class="tut-ok" id="tut-ok" aria-label="OK, continuar" hidden>${SVG_SETA}<span>OK</span></button>
           </div>
         </div>
       </div>
@@ -156,8 +159,8 @@ const Tutorial = (() => {
         <div class="tut-confirma-card" role="alertdialog" aria-modal="true" aria-labelledby="tut-confirma-t">
           <p id="tut-confirma-t">Quer pular o tutorial?</p>
           <div class="tut-confirma-botoes">
-            <button type="button" class="tut-grande tut-grande--sim" id="tut-pular-sim"><span aria-hidden="true">✓</span> Pular</button>
-            <button type="button" class="tut-grande tut-grande--nao" id="tut-pular-nao"><span aria-hidden="true">↩</span> Continuar</button>
+            <button type="button" class="tut-grande tut-grande--sim" id="tut-pular-sim">${SVG_CHECK}<span>Pular</span></button>
+            <button type="button" class="tut-grande tut-grande--nao" id="tut-pular-nao">${SVG_VOLTAR}<span>Continuar</span></button>
           </div>
         </div>
       </div>
@@ -317,7 +320,7 @@ const Tutorial = (() => {
     requestAnimationFrame(quadro);
   }
 
-  /* Zoom de chegada: 1 → 1,1 → 1 em 600 ms (não existe com movimento reduzido) */
+  /* Zoom de chegada: de 1 a 1,1 e de volta a 1, em 600 ms (não existe com movimento reduzido) */
   function chegada() {
     if (reduz() || !ui?.alvo.animate) return;
     ui.alvo.animate(
@@ -607,7 +610,7 @@ const Tutorial = (() => {
     if (p.acao === 'click') {
       await esperarAcao(p, tk);
     } else if (p.acao === 'demo') {
-      /* A mãozinha faz o toque; quem decide quando seguir é a criança (→ OK) */
+      /* A mãozinha faz o toque; quem decide quando seguir é a criança (botão OK) */
       await esperar(500, tk);
       const alvo = elementosDe(p.alvo)[0];
       if (alvo) maoToca(alvo, 1);
@@ -672,7 +675,7 @@ const Tutorial = (() => {
   /* Erro com mensagem própria: o Logi explica e depois volta ao convite.
      Campos de "erro": fala (texto ou função), palavraChave, estadoLogi, audiodescricao, teclado,
        destaque (o que acender enquanto explica), efeito (roda ao mostrar),
-       ok: true (espera o botão "→ OK" em vez de um tempo), duracaoPadrao (ms, sem "ok"),
+       ok: true (espera o botão "OK" em vez de um tempo), duracaoPadrao (ms, sem "ok"),
        depois (roda depois do OK, ex.: trocar a frase de exemplo),
        falaDepois (texto novo do convite, para tentar de novo). */
   async function erroComTexto(e, el, valor) {
@@ -959,15 +962,18 @@ const Tutorial = (() => {
     if (ajuda) ajuda.addEventListener('click', atualizarBotaoAjuda, true);
   }
 
+  /* Devolve true quando o treino vai abrir (a página então não mexe no foco: o treino cuida dele) */
   function auto(id) {
-    if (!id || !registro[id] || T.ativo || Date.now() < bloqueioAuto || !prefLigada('treinoAuto')) return;
+    if (!id || !registro[id] || T.ativo || Date.now() < bloqueioAuto || !prefLigada('treinoAuto')) return T.ativo;
     let visto = false;
     try { visto = gameState.tutorialVisto(id); } catch {}
     if (!visto) {
       /* O treino fala sozinho: a descrição do cômodo (Alt+R) não deve atropelar a fala dele */
       if (typeof cancelarDescricao === 'function') cancelarDescricao();
       window.setTimeout(() => abrir(id), 350);
+      return true;
     }
+    return false;
   }
 
   return {

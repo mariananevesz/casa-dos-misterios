@@ -19,28 +19,28 @@
       <button class="btn-voltar-mapa sala-voltar"
               onclick="gameState.sairMiniGame('sala','MapaCasa.html')"
               aria-label="Voltar ao mapa">
-        <span aria-hidden="true">←</span>
+        <span data-ico="seta-esq"></span>
         <strong>Mapa</strong>
       </button>
 
       <section class="hud__info sala-hud__info">
         <img src="../img/icone-sala.png" alt="" class="hud__icone-img sala-hud__icone">
         <section>
-          <p class="hud__titulo sala-hud__titulo">Sala</p>
+          <h1 class="hud__titulo sala-hud__titulo">Sala</h1>
           <p class="hud__subtitulo sala-hud__subtitulo" id="fase-label">Mini-jogo 1</p>
         </section>
       </section>
 
-      <span class="badge badge--laranja sala-score" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--laranja sala-score" id="badge-pts">0 pts</span>
 
-      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
+      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span data-ico="engrenagem"></span></button>
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
     <!-- Mascote Logi -->
     <section class="balao sala-logi" aria-label="Instruções">
       <img src="../img/logi_feliz.png" alt="" class="logi-mascote sala-logi__img">
-      <p class="balao__texto sala-logi__texto" id="logi-texto">Carregando…</p>
+      <p class="balao__texto sala-logi__texto" id="logi-texto">Carregando...</p>
     </section>
 
     <!-- Indicador de dificuldade (Fácil / Médio / Difícil) -->
@@ -53,9 +53,10 @@
 
       <!-- Comandos disponíveis -->
       <aside class="sala-panel sala-comandos-panel" aria-label="Comandos disponíveis">
-        <p class="sala-panel__title">Comandos disponíveis</p>
-        <p class="sala-panel__hint">Clique ou arraste os blocos para montar a sequência.</p>
-        <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis para adicionar ou arrastar"></section>
+        <h2 class="sala-panel__title">Comandos disponíveis</h2>
+        <!-- Dica visual de mouse/toque: fora da leitura (quem usa o leitor de tela ouve a instrução ao entrar) -->
+        <p class="sala-panel__hint" aria-hidden="true">Clique ou arraste os blocos para montar a sequência.</p>
+        <section class="blocos sala-comandos" id="blocos-disponiveis" role="group" aria-label="Blocos disponíveis"></section>
 
         <button type="button" class="btn-dica sala-btn-dica" id="btn-dica" aria-label="Dica">
           <svg class="btn-dica__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 21h6M10 17.5h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2v.6h5v-.6c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="#FFF3B0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -67,12 +68,12 @@
       <main class="sala-game-area">
         <section class="painel painel--tracejado sala-sequencia-panel"
                  id="painel-sequencia">
-          <p class="sala-panel__title">Painel de comandos</p>
+          <h2 class="sala-panel__title">Painel de comandos</h2>
           <section class="blocos sala-sequencia" id="sequencia-player" role="group" aria-label="Blocos já colocados: nenhum"></section>
         </section>
 
         <section class="painel sala-grade-panel">
-          <p class="sala-panel__title">Grade do jogo</p>
+          <h2 class="sala-panel__title">Grade do jogo</h2>
           <section class="sala-grade-area">
             <section class="sala-grade-box">
               <section class="grade sala-grade" id="game-grid" role="img" aria-label="Grade do jogo"></section>
@@ -82,18 +83,18 @@
 
         <!-- Feedback -->
         <section id="feedback-area" style="display:none;" class="dica dica--erro sala-feedback">
-          <span class="dica__emoji" aria-hidden="true">💡</span>
+          <span class="dica__emoji" data-ico="lampada"></span>
           <p class="dica__texto dica__texto--erro" id="feedback-texto"></p>
         </section>
 
         <!-- Botões -->
         <section class="btn-grupo sala-actions">
           <button class="btn btn--outline sala-btn sala-btn--limpar" id="btn-limpar" aria-label="Limpar sequência">
-            <span aria-hidden="true">↻</span>
+            <span data-ico="repetir"></span>
             Limpar
           </button>
           <button class="btn btn--laranja sala-btn sala-btn--executar" id="btn-executar" aria-label="Executar sequência">
-            <span aria-hidden="true">▶</span>
+            <span data-ico="play"></span>
             Executar
           </button>
         </section>
@@ -106,7 +107,7 @@
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
     <section class="modal modal-ajuda cj-modal">
-      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar ajuda"><span data-ico="x"></span></button>
       <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
       <div id="cj-raiz"></div>
     </section>
@@ -115,7 +116,7 @@
   <!-- Modal de conclusão -->
   <div class="modal-overlay" id="modal-conclusao" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" aria-describedby="modal-sub modal-pts" style="display:none;">
     <section class="modal">
-      <span class="modal-trofeu-emoji" role="img" aria-label="Troféu">🏆</span>
+      <img src="../img/estrela.png" alt="" class="modal-trofeu">
       <h2 class="modal-titulo" id="modal-titulo">Muito bem!</h2>
       <p class="modal-sub" id="modal-sub">Você criou um algoritmo com passos!</p>
       <section class="modal-estrelas" id="modal-estrelas" aria-label="Estrelas conquistadas"></section>
@@ -127,6 +128,7 @@
     </section>
   </div>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
@@ -152,7 +154,7 @@
     "grade": "Grade de {linhas} linhas por {colunas} colunas. Personagem na linha {linha}, coluna {coluna}. Estrela na linha {alvoLinha}, coluna {alvoColuna}.",
     "gradeChegou": "Grade de {linhas} linhas por {colunas} colunas. Personagem na linha {linha}, coluna {coluna}. O personagem chegou à estrela.",
     "obstaculos": "Obstáculos em {lista}.",
-    "adicionado": "{bloco} na posição {pos}. {vagas}",
+    "adicionado": "{bloco} adicionado. {vagas}",
     "vagas": "Restam {n} {espacos}.",
     "semVagas": "A fila está cheia.",
     "removido": "{bloco} removido. {sobra}",
@@ -171,7 +173,7 @@
     "resumoVazio": "A sequência está vazia. Cabem {limite} blocos.",
     "grupoFila": "Blocos já colocados: {lista}. {n} de {limite} blocos.",
     "grupoFilaVazio": "Blocos já colocados: nenhum. Cabem {limite} blocos.",
-    "blocoColocado": "Bloco já colocado: {bloco}, posição {pos} de {total}. Ative para remover.",
+    "blocoColocado": "{bloco}, posição {pos} de {total}. Ative para remover.",
     "movimentos": { "cima": "para cima", "baixo": "para baixo", "esq": "para a esquerda", "dir": "para a direita" }
   },
   "fases": [
@@ -272,13 +274,14 @@ const MOVES = {
   dir: [0, 1]
 };
 
+/* Ícones em SVG (icones.js): desenho com aria-hidden, nunca lido pelo leitor de tela */
 const BLOCO_ICONS = {
-  cima: '↑',
-  baixo: '↓',
-  esq: '←',
-  dir: '→',
-  repetir2: '↻',
-  repetir3: '↻'
+  cima: 'seta-cima',
+  baixo: 'seta-baixo',
+  esq: 'seta-esq',
+  dir: 'seta-dir',
+  repetir2: 'repetir',
+  repetir3: 'repetir'
 };
 
 const BLOCO_VEZES = { repetir2: '2x', repetir3: '3x' };
@@ -300,7 +303,7 @@ function falar(texto) {
 
 function blocoIconeHtml(bloco) {
   const vezes = BLOCO_VEZES[bloco.id] ? `<span class="bloco-vezes" aria-hidden="true">${BLOCO_VEZES[bloco.id]}</span>` : '';
-  return `<span class="bloco-emoji" aria-hidden="true">${BLOCO_ICONS[bloco.id] || '•'}</span>${vezes}`;
+  return `<span class="bloco-emoji" aria-hidden="true">${Icones.svg(BLOCO_ICONS[bloco.id])}</span>${vezes}`;
 }
 
   /* ---- Inicialização ---- */
@@ -344,8 +347,9 @@ function blocoIconeHtml(bloco) {
     document.getElementById('feedback-area').style.display = 'none';
     atualizarBadge();
     descreverSala(fase);
-    /* Tutorial do Logi: abre sozinho só na 1ª vez de cada mecânica */
-    Tutorial.auto(salaTutorial.tutorialDaFase());
+    /* Tutorial do Logi: abre sozinho só na 1ª vez de cada mecânica.
+       Sem treino, o foco vai direto para o primeiro comando (não obriga a ler a tela toda). */
+    if (!Tutorial.auto(salaTutorial.tutorialDaFase())) focoInicial(salaTutorial.primeiroFoco);
   }
 
   /* Instrução para leitor de tela: completa ao entrar (e no Alt+R), curta nas fases seguintes */
@@ -488,8 +492,7 @@ function blocoIconeHtml(bloco) {
       el.dataset.idx = idx;
       el.dataset.blocoId = bid;
       el.setAttribute('aria-label', txt('blocoColocado', { bloco: bloco.rotulo, pos: idx + 1, total: sequencia.length }));
-      el.title = 'Clique para remover';
-      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span><span class="bloco-remover" aria-hidden="true">×</span>`;
+      el.innerHTML = `${blocoIconeHtml(bloco)} <span class="bloco-label">${bloco.rotulo}</span><span class="bloco-remover" aria-hidden="true">${Icones.svg('x')}</span>`;
       el.addEventListener('click', () => removerBloco(idx));
       el.addEventListener('keydown', e => {
         if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); removerBloco(idx); }
@@ -540,7 +543,9 @@ function blocoIconeHtml(bloco) {
       return;
     }
     sequencia.push(bid);
-    falar(txt('adicionado', { bloco: nomeFalado(bid), pos: sequencia.length, vagas: textoVagas((fase.maxBlocos || 8) - sequencia.length) }));
+    /* Por voz, só o bloco que entrou (e o aviso de fila cheia). O resto fica no Alt+S. */
+    const restam = (fase.maxBlocos || 8) - sequencia.length;
+    falar(txt('adicionado', { bloco: nomeFalado(bid), pos: sequencia.length, vagas: restam === 0 ? txt('semVagas') : '' }).trim());
     audio.clique();
     pararAtencaoDica();
     document.getElementById('feedback-area').style.display = 'none';
@@ -551,7 +556,8 @@ function blocoIconeHtml(bloco) {
     if (window.Tutorial?.ativo) return;
     const [removido] = sequencia.splice(idx, 1);
     renderSequencia();
-    falar(txt('removido', { bloco: nomeFalado(removido), sobra: sequencia.length ? txt('sobra', { n: sequencia.length, blocos: plural(sequencia.length, 'bloco', 'blocos') }) : txt('filaVazia') }));
+    /* Por voz, só o bloco que saiu (e o aviso de fila vazia) */
+    falar(txt('removido', { bloco: nomeFalado(removido), sobra: sequencia.length ? '' : txt('filaVazia') }).trim());
     /* O bloco em foco sumiu: o foco vai para o vizinho (ou para os comandos, se a fila ficou vazia) */
     const vizinho = document.querySelector(`#sequencia-player .bloco[data-idx="${Math.min(idx, sequencia.length - 1)}"]`)
       || document.querySelector('#blocos-disponiveis .bloco');
@@ -751,7 +757,7 @@ async function executar() {
     return passos;
   }
 
-  const SETAS_TRILHA = { cima: '↑', baixo: '↓', esq: '←', dir: '→' };
+  const SETAS_TRILHA = { cima: 'seta-cima', baixo: 'seta-baixo', esq: 'seta-esq', dir: 'seta-dir' };
 
   function mostrarTrilhaTreino() {
     const fase = faseTreino;
@@ -762,7 +768,7 @@ async function executar() {
     expandirSequencia(sequencia).forEach(({ mov }) => {
       pos = { linha: pos.linha + MOVES[mov][0], coluna: pos.coluna + MOVES[mov][1] };
       const cell = cells[celulaIdx(pos.linha, pos.coluna, colunas)];
-      if (cell) cell.insertAdjacentHTML('beforeend', `<span class="tut-trilha" aria-hidden="true">${SETAS_TRILHA[mov]}</span>`);
+      if (cell) cell.insertAdjacentHTML('beforeend', `<span class="tut-trilha" aria-hidden="true">${Icones.svg(SETAS_TRILHA[mov])}</span>`);
     });
   }
 
@@ -967,13 +973,8 @@ async function executar() {
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
-  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape') return;
-    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
-    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
-    gameState.sairMiniGame('sala', 'MapaCasa.html');
-  });
+  /* ---- Esc: fecha a janela aberta; sem janela, pergunta antes de sair do cômodo (plataforma.js) ---- */
+  ativarSaidaComEsc('sala');
 
   /* ---- Item 8 — chama atenção para a Dica após o primeiro erro ---- */
   function ativarAtencaoDica() { document.getElementById('btn-dica').classList.add('btn-dica--pulsar'); }

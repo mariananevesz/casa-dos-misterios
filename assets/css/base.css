@@ -617,7 +617,7 @@ body.alto-contraste .btn-dica {
   box-shadow: 0 4px 0 #fff;
 }
 
-/* ---------- Botão de configurações (⚙) ---------- */
+/* ---------- Botão de configurações (engrenagem) ---------- */
 .btn-config {
   position: absolute;
   top: 20px;
@@ -1158,4 +1158,80 @@ button.bloco {
   margin: 0;
   -webkit-appearance: none;
   appearance: none;
+}
+
+/* =============================================================
+   Ícones em SVG (assets/js/icones.js)
+   Substituem emojis e símbolos de texto. O desenho herda a cor do
+   texto (currentColor) e acompanha o tamanho da letra (em).
+   ============================================================= */
+.ico {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  vertical-align: -0.2em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+  pointer-events: none;
+}
+[data-ico] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex: none;
+}
+/* Marca de nível concluído (ao lado de "Fácil", "Fase 1"…) */
+.nivel__ico { margin-left: 4px; width: 1em; height: 1em; stroke-width: 3; }
+/* Desenho do passo nos blocos do Quarto */
+.bloco-ico { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.bloco-ico .ico { width: 1.35em; height: 1.35em; stroke-width: 2; }
+/* Botões só de ícone (fechar, música, preferências): o desenho ocupa o lugar do antigo símbolo */
+.modal-fechar .ico { width: 1.1em; height: 1.1em; stroke-width: 2.8; }
+.btn-musica .ico, .btn-preferencias .ico, .mapa-preferencias .ico { width: 1.35em; height: 1.35em; }
+.bloco-remover .ico, .bloco-resultado .ico, .prateleira__slot-status .ico { width: 0.95em; height: 0.95em; stroke-width: 3.2; vertical-align: -0.12em; }
+
+/* Janela "Sair do cômodo?" (Esc nos cômodos) */
+.modal-sair { text-align: center; }
+.modal-sair__botoes { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.modal-sair__botoes .btn { flex: 1 1 160px; min-height: 52px; }
+
+/* O desenho dentro de <span data-ico> fica alinhado com o texto ao lado */
+[data-ico] { vertical-align: -0.2em; }
+[data-ico] > .ico { display: block; vertical-align: baseline; }
+
+/* =============================================================
+   HUD dos cômodos em celular
+   O nome do cômodo passava por baixo do placar e do botão Mapa
+   (Quarto, Cozinha e Despensa em telas de 360 a 430 px). Agora o
+   bloco do título encolhe, o texto corta com reticências e, nas
+   telas mais estreitas, a figura do cômodo sai para dar lugar ao nome.
+   ============================================================= */
+@media (max-width: 430px) {
+  .hud .hud__info { min-width: 0; justify-content: flex-start; gap: 5px; overflow: hidden; }
+  .hud .hud__info > section { min-width: 0; flex: 1 1 auto; }
+  .hud .hud__titulo,
+  .hud .hud__subtitulo { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hud .hud__titulo { font-size: calc(18px * var(--escala-fonte)); letter-spacing: -0.3px; }
+  .hud .hud__titulo > span { display: none; }   /* " — Depuração": some o complemento, fica o nome */
+  .hud .badge { flex-shrink: 0; }
+  .hud .hud__icone-img { display: none; }
+  .hud .btn-ajuda { margin-left: 0 !important; }
+  /* Botão Mapa só com a seta, em tamanho bom para o dedo (o nome fica no aria-label) */
+  .hud .btn-voltar-mapa .voltar-txt,
+  .hud .btn-voltar-mapa strong { display: none; }
+  .hud .btn-voltar-mapa { gap: 0; min-width: 42px; min-height: 42px; padding: 0 !important; justify-content: center; }
+  .hud .btn-voltar-mapa .ico { width: calc(20px * var(--escala-fonte)); height: calc(20px * var(--escala-fonte)); }
+}
+/* Telas muito estreitas (320 px): o placar sai do topo para caber o nome do cômodo (os pontos aparecem no fim da fase) */
+@media (max-width: 380px) {
+  .hud .hud__titulo { font-size: calc(16px * var(--escala-fonte)); }
+}
+@media (max-width: 340px) {
+  .hud .badge { display: none; }
 }

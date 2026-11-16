@@ -461,3 +461,8 @@ body.alto-contraste .tut-btn-ajuda { background: #000 !important; color: #fff !i
 @media (prefers-reduced-motion: reduce) {
   body.alto-contraste .tut-brilha { outline-color: #ffd700; }
 }
+
+/* Ícones em SVG dos botões (no lugar dos símbolos de texto): tamanho acompanha a letra do botão */
+.tut-ok svg { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.2em; margin-right: 6px; }
+.tut-grande svg { width: 1.3em; height: 1.3em; flex: none; vertical-align: -0.25em; margin-right: 6px; }
+.tut-trilha .ico { width: 1em; height: 1em; stroke-width: 3; }

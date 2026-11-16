@@ -473,8 +473,10 @@
 }
 
 @media (max-width: 360px) {
-  .cozinha-voltar { font-size: 0; gap: 0; }
-  .cozinha-voltar::before { content: '←'; font-size: calc(16px * var(--escala-fonte)); }
+  /* Tela bem estreita: o botão Mapa fica só com a seta (o nome "Voltar ao mapa" continua no aria-label) */
+  .cozinha-voltar { gap: 0; }
+  .cozinha-voltar .voltar-txt { display: none; }
+  .cozinha-voltar .ico { width: calc(18px * var(--escala-fonte)); height: calc(18px * var(--escala-fonte)); }
 }
 
 /* Notebook com pouca altura */

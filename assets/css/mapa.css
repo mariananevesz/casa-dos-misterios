@@ -542,3 +542,14 @@
 .atalhos-modal .btn { width: 100%; }
 .atalhos-modal #atalhos-titulo:focus { outline: none; }
 .atalhos-modal #atalhos-titulo:focus-visible { outline: 3px solid var(--laranja, #D85A30); outline-offset: 4px; border-radius: 6px; }
+
+/* Cartão de cômodo como <button> nativo: mesma aparência do cartão antigo */
+button.comodo-card {
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.comodo-card__bloq-aviso .ico { width: 1.1em; height: 1.1em; }

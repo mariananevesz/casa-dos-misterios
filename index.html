@@ -26,7 +26,7 @@
     <!-- Cabeçalho -->
     <section class="inicio-header">
       <h1 class="inicio-header__titulo">Casa dos Mistérios</h1>
-      <p class="inicio-header__subtitulo">🔍 Aventura de lógica</p>
+      <p class="inicio-header__subtitulo"><span data-ico="lupa"></span> Aventura de lógica</p>
     </section>
 
     <!-- Mascote Logi de boas-vindas -->
@@ -40,29 +40,29 @@
 
     <!-- Menu -->
     <div class="menu-botoes">
-      <button class="btn--menu-principal btn--menu-laranja"
+      <button class="btn--menu-principal btn--menu-laranja" id="btn-jogar"
               onclick="window.location.href='assets/pages/MapaCasa.html'">
-        <span>▶</span>
+        <span data-ico="play"></span>
         <strong>Jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-ambar" id="btn-como-jogar">
-        <span>📖</span>
+        <span data-ico="livro"></span>
         <strong>Como jogar</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline"
               onclick="window.location.href='assets/pages/TelaPontuacao.html'">
-        <span>🏆</span>
+        <span data-ico="trofeu"></span>
         <strong>Pontuações</strong>
       </button>
       <button class="btn--menu-principal btn--menu-outline" id="btn-resetar">
-        <span>↻</span>
+        <span data-ico="repetir"></span>
         <strong>Reiniciar progresso</strong>
       </button>
     </div>
 
     <!-- Prévia dos cômodos -->
     <section class="inicio-comodos" aria-label="Cômodos do jogo">
-      <p class="inicio-comodos__titulo">Cômodos da Casa</p>
+      <h2 class="inicio-comodos__titulo">Cômodos da Casa</h2>
       <div class="inicio-comodos__lista">
         <article class="inicio-comodo">
           <img src="assets/img/icone-sala.png" alt="" class="inicio-comodo__icone-img">
@@ -90,7 +90,7 @@
   <div class="modal-overlay" id="modal-como-jogar" role="dialog" aria-modal="true"
        aria-labelledby="cj-titulo" style="display:none;">
     <section class="modal cj-modal">
-      <button class="modal-fechar" id="btn-fechar-cj-x" type="button" aria-label="Fechar como jogar">✕</button>
+      <button class="modal-fechar" id="btn-fechar-cj-x" type="button" aria-label="Fechar como jogar"><span data-ico="x"></span></button>
       <h2 class="modal-titulo cj-titulo" id="cj-titulo">Como jogar</h2>
 
       <div id="cj-raiz"></div>
@@ -102,6 +102,7 @@
     </section>
   </div>
 
+  <script src="assets/js/icones.js"></script>
   <script src="assets/js/plataforma.js"></script>
   <script src="assets/js/gameState.js"></script>
   <script src="assets/js/audio.js"></script>
@@ -127,7 +128,8 @@
       if (!el) return;
       if (state.completed[id]) {
         el.classList.remove('inicio-comodo__label--cinza');
-        el.textContent = el.textContent.replace(' ✓', '') + ' ✓';
+        /* Marca de concluído: desenho só visual + texto para o leitor de tela */
+        if (!el.querySelector('.ico')) el.insertAdjacentHTML('beforeend', ` ${Icones.svg('check')}<span class="sr-only">, concluído</span>`);
       }
     });
   }
@@ -147,9 +149,11 @@
     modalAberto = modal;
     acionadorModal = acionador || document.activeElement;
     modal.style.display = 'flex';
+    isolarFundo(modal);   /* o leitor de tela lê só a janela, não a tela de trás */
     if (acionadorModal?.hasAttribute('aria-expanded')) {
       acionadorModal.setAttribute('aria-expanded', 'true');
     }
+    /* O foco vai direto para o botão Fechar (primeiro da janela) */
     requestAnimationFrame(() => elementosFocaveis(modal)[0]?.focus());
   }
 
@@ -157,6 +161,7 @@
     const modal = document.getElementById(id);
     if (modal.style.display === 'none') return;
     modal.style.display = 'none';
+    restaurarFundo(modal);
     const acionador = acionadorModal;
     if (acionador?.hasAttribute('aria-expanded')) {
       acionador.setAttribute('aria-expanded', 'false');
@@ -239,6 +244,9 @@
   document.addEventListener('preferencias:mudou', saudacao);
   document.addEventListener('progresso:mudou', () => location.reload());
   saudacao();
+
+  /* Foco inicial no botão Jogar: o leitor de tela começa por ele, sem ler a tela toda */
+  focoInicial(document.getElementById('btn-jogar'));
   </script>
 
 </body>

@@ -18,19 +18,19 @@
     <section class="hud despensa-hud">
       <button class="btn-voltar-mapa despensa-voltar"
               onclick="gameState.sairMiniGame('despensa','MapaCasa.html')"
-              aria-label="Voltar ao mapa">← Mapa</button>
+              aria-label="Voltar ao mapa"><span data-ico="seta-esq"></span><span class="voltar-txt">Mapa</span></button>
 
       <section class="hud__info despensa-hud__info">
         <img src="../img/icone-despensa.png" alt="" class="hud__icone-img despensa-hud__icone">
         <section>
-          <p class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa<span class="despensa-hud__skill"> — Estoque Inteligente</span></p>
+          <h1 class="hud__titulo hud__titulo--marrom despensa-hud__titulo">Despensa<span class="despensa-hud__skill"> — Estoque Inteligente</span></h1>
           <p class="hud__subtitulo hud__subtitulo--marrom despensa-hud__subtitulo" id="hud-subtitulo">Mini-jogo 4</p>
         </section>
       </section>
 
-      <span class="badge badge--marrom despensa-badge" id="badge-pts" aria-live="polite">0 pts</span>
+      <span class="badge badge--marrom despensa-badge" id="badge-pts">0 pts</span>
 
-      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
+      <button class="btn-ajuda btn-preferencias" id="btn-preferencias" type="button" aria-label="Abrir minhas preferências" title="Minhas preferências"><span data-ico="engrenagem"></span></button>
       <button class="btn-ajuda" id="btn-ajuda" type="button" aria-haspopup="dialog" aria-controls="modal-ajuda" aria-expanded="false" aria-label="Como jogar e objetivo">?</button>
     </section>
 
@@ -54,7 +54,7 @@
         <section class="despensa-work-grid" id="despensa-work-grid">
           <!-- Painel: itens para selecionar ou arrastar -->
           <section class="painel despensa-card despensa-card--itens" id="painel-itens">
-            <p class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</p>
+            <h2 class="painel__label despensa-card__titulo" id="painel-itens-label">Itens para organizar</h2>
             <section class="itens-grid despensa-itens-grid" id="itens-grid" role="group" aria-label="Frutas disponíveis"></section>
 
             <button type="button" class="btn-dica despensa-btn-dica" id="btn-dica" aria-label="Dica">
@@ -65,7 +65,7 @@
 
           <!-- Painel: prateleira (oculto no nível Fácil) -->
           <section class="painel despensa-card despensa-card--prateleira" id="painel-prateleira">
-            <p class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</p>
+            <h2 class="painel__label despensa-card__titulo" id="prateleira-label">Prateleira</h2>
             <section class="prateleira despensa-prateleira" id="prateleira" role="group" aria-label="Prateleira"></section>
             <section class="prateleira__legenda despensa-prateleira__legenda" aria-hidden="true">
               <span class="prateleira__leg-txt" id="leg-esq">menor</span>
@@ -78,7 +78,7 @@
         <!-- Feedback granular -->
         <section id="feedback-area" class="despensa-feedback" aria-label="Resposta" style="display:none;">
           <section class="dica" id="feedback-dica">
-            <span class="dica__emoji" id="feedback-emoji" aria-hidden="true">💡</span>
+            <span class="dica__emoji" id="feedback-emoji" data-ico="lampada"></span>
             <p class="dica__texto" id="feedback-texto"></p>
           </section>
         </section>
@@ -86,7 +86,7 @@
         <!-- Botões -->
         <section class="btn-grupo despensa-actions">
           <button class="btn btn--marrom btn--confirmar despensa-btn" id="btn-confirmar" aria-label="Confirmar organização">
-            ✓ Confirmar!
+            <span data-ico="check"></span> Confirmar!
           </button>
           <button class="btn btn--outline despensa-btn despensa-btn--limpar" id="btn-limpar" aria-label="Limpar seleção">Limpar</button>
         </section>
@@ -99,7 +99,7 @@
   <!-- Modal de Como jogar / Objetivo -->
   <div class="modal-overlay" id="modal-ajuda" role="dialog" aria-modal="true" aria-labelledby="modal-ajuda-titulo" style="display:none;">
     <section class="modal modal-ajuda cj-modal">
-      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="modal-fechar" id="modal-ajuda-fechar" type="button" aria-label="Fechar ajuda"><span data-ico="x"></span></button>
       <h2 class="modal-titulo cj-titulo" id="modal-ajuda-titulo">Como jogar</h2>
       <div id="cj-raiz"></div>
     </section>
@@ -120,6 +120,7 @@
     </section>
   </div>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
@@ -373,7 +374,7 @@
         ? `Escolha as frutas ${({ vermelho: 'vermelhas', amarelo: 'amarelas', verde: 'verdes', roxo: 'roxas', azul: 'azuis' })[nivel.itens.find(it => it.id === nivel.corretos[0])?.cor] || 'certas'}`
         : nivel.criterio === 'selecao-sementes'
           ? 'Clique ou arraste as frutas com sementes'
-          : 'Itens para organizar — clique ou arraste para a prateleira';
+          : 'Itens para organizar: clique ou arraste para a prateleira';
 
     /* Legenda da prateleira */
     if (mostraPrateleira) {
@@ -393,8 +394,8 @@
     pararAtencaoDica();
     atualizarBadge();
     descreverDespensa(nivel);
-    /* Tutorial do Logi: só no nível Fácil, e só na 1ª vez */
-    Tutorial.auto(despensaTutorial.tutorialDaFase());
+    /* Tutorial do Logi: um por nível, só na 1ª vez. Sem treino, o foco vai direto para a primeira fruta. */
+    if (!Tutorial.auto(despensaTutorial.tutorialDaFase()) && !restaurando) focoInicial(despensaTutorial.primeiroFoco);
   }
 
   /* Descrição do cômodo para leitor de tela: lida ao entrar e a cada nível; a tecla D repete */
@@ -463,7 +464,7 @@
       else if (i === nivelIdx) span.className = 'nivel nivel--ativo';
       else                     span.className = 'nivel nivel--bloq';
       const situacao = i < nivelIdx ? 'concluído' : i === nivelIdx ? 'atual' : 'bloqueado';
-      span.innerHTML = `${n.nivel}<span aria-hidden="true">${i < nivelIdx ? ' ✓' : i === nivelIdx ? ' ←' : ''}</span><span class="sr-only">, ${situacao}</span>`;
+      span.innerHTML = `${n.nivel}${i < nivelIdx ? Icones.svg('check', 'nivel__ico') : ''}<span class="sr-only">, ${situacao}</span>`;
       span.setAttribute('role', 'listitem');
       if (i === nivelIdx) span.setAttribute('aria-current', 'step');
       cont.appendChild(span);
@@ -622,7 +623,8 @@
     }
     audio.clique();
     atualizarGrupoCor();
-    if (origem !== 'tutorial') falar(txt(idx >= 0 ? 'tiradaCor' : 'escolhida', { nome: nomeDoItem(id), resumo: resumoDaEscolha() }));
+    /* Por voz, só a fruta que mudou (a lista inteira fica no Alt+S) */
+    if (origem !== 'tutorial') falar(txt(idx >= 0 ? 'tiradaCor' : 'escolhida', { nome: nomeDoItem(id), resumo: '' }).trim());
 
     const grid = document.getElementById('itens-grid');
     /* Item 8 — esmaecer não-selecionados quando há seleção ativa */
@@ -722,8 +724,8 @@
           <img src="${imgSrc}" alt="" class="prateleira__slot-img" style="--slot-img:${imgSize}px;">
           <span class="prateleira__slot-pos">${i+1}º</span>
           ${textoStatus
-            ? `<span class="prateleira__slot-status" aria-hidden="true">${status === 'erro' ? '✕' : '✓'}</span>`
-            : '<span class="bloco-remover" aria-hidden="true">×</span>'}
+            ? `<span class="prateleira__slot-status" aria-hidden="true">${Icones.svg(status === 'erro' ? 'x' : 'check')}</span>`
+            : `<span class="bloco-remover" aria-hidden="true">${Icones.svg('x')}</span>`}
         `;
         slot.addEventListener('click', () => removerItem(i));
 
@@ -785,7 +787,8 @@
     prateleiraStatus = []; // limpa status ao adicionar novo item
     audio.clique();
     renderPrateleira(nivel);
-    falar(txt('colocada', { nome: nomeDoItem(id), pos: prateleira.length, falta: limite - prateleira.length ? txt('faltam', { n: limite - prateleira.length }) : txt('cheia') }));
+    /* Por voz, só a fruta que entrou (e o aviso de prateleira cheia) */
+    falar(txt('colocada', { nome: nomeDoItem(id), pos: prateleira.length, falta: limite - prateleira.length ? '' : txt('cheia') }).trim());
     document.getElementById('feedback-area').style.display = 'none';
   }
 
@@ -795,7 +798,8 @@
     prateleiraStatus = [];
     renderPrateleira(nivelAtual());
     document.getElementById('feedback-area').style.display = 'none';
-    falar(txt('tirada', { nome: nomeDoItem(tirado), resto: prateleira.length ? txt('ficaram', { n: prateleira.length }) : txt('vazia') }));
+    /* Por voz, só a fruta que saiu (e o aviso de prateleira vazia) */
+    falar(txt('tirada', { nome: nomeDoItem(tirado), resto: prateleira.length ? '' : txt('vazia') }).trim());
     /* O botão em foco sumiu: o foco vai para o vizinho (ou para a fruta que saiu) */
     (document.querySelector(`#prateleira button.prateleira__slot:nth-child(${Math.min(idx, prateleira.length - 1) + 1})`)
       || document.querySelector(`#itens-grid [data-item-id="${tirado}"]`))?.focus();
@@ -925,14 +929,14 @@
 
     if (erradoId === 'morango') {
       mostrarFeedback(
-        'No morango, os pontinhos de fora são aquênios. Neste desafio, ele não conta como fruta com sementes por dentro. Remova o morango (marcado com ✕) e tente de novo!',
+        'No morango, os pontinhos de fora são aquênios. Neste desafio, ele não conta como fruta com sementes por dentro. Remova o morango (marcado com erro) e tente de novo!',
         'erro'
       );
       return;
     }
 
     mostrarFeedback(
-      `${erradoItem?.nome || erradoId} não é uma das frutas com sementes por dentro neste desafio. Remova ${erradoItem?.nome || erradoId} (o item marcado com ✕) e tente de novo!`,
+      `${erradoItem?.nome || erradoId} não é uma das frutas com sementes por dentro neste desafio. Remova ${erradoItem?.nome || erradoId} (o item marcado com erro) e tente de novo!`,
       'erro'
     );
   }
@@ -976,7 +980,7 @@
           break;
         }
       }
-      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens marcados com ✕!`;
+      if (!msg) msg = `${acertos} de ${total} certos. Ajuste os itens marcados com erro!`;
       msg += ` Posições erradas: ${prateleira.map((id, i) => prateleira[i] !== correta[i] ? `${i + 1}º ${nomeDoItem(id)}` : null).filter(Boolean).join('; ')}.`;
 
       mostrarFeedback(msg, 'erro');
@@ -1076,13 +1080,8 @@
     if (e.target.id === 'modal-ajuda') fecharModalAjuda();
   });
 
-  /* ---- Item 2.2 — ESC sai do mini-game (ou só fecha o modal de ajuda, se estiver aberto) ---- */
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'Escape') return;
-    if (document.getElementById('modal-ajuda').style.display === 'flex') { fecharModalAjuda(); return; }
-    if (document.getElementById('modal-conclusao').style.display === 'flex') return;
-    gameState.sairMiniGame('despensa', 'MapaCasa.html');
-  });
+  /* ---- Esc: fecha a janela aberta; sem janela, pergunta antes de sair do cômodo (plataforma.js) ---- */
+  ativarSaidaComEsc('despensa');
 
   document.getElementById('btn-confirmar').addEventListener('click', () => { if (gameData) confirmar(); });
 
@@ -1195,7 +1194,7 @@
     acoes: {
       selecionar: id => toggleSelecao(id, 'tutorial'),
       adicionar: id => adicionarItem(id, false, 'tutorial'),
-      /* Fim do treino: as frutas da prateleira ficam com ✓ verde (sem contar erro nem ponto) */
+      /* Fim do treino: as frutas da prateleira ficam com a marca verde (sem contar erro nem ponto) */
       marcarCertas() {
         prateleiraStatus = prateleira.map(() => 'ok');
         renderPrateleira();

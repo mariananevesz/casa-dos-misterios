@@ -16,11 +16,11 @@
       <button class="mapa-voltar"
               onclick="window.location.href='../../index.html'"
               aria-label="Voltar ao menu principal">
-        <span aria-hidden="true">←</span>
+        <span data-ico="seta-esq"></span>
         Voltar
       </button>
 
-      <section class="mapa-titulo-area" aria-label="Título do mapa">
+      <section class="mapa-titulo-area">
         <div class="mapa-titulo-linha">
           
           <h1>Mapa da Casa</h1>
@@ -29,12 +29,12 @@
       </section>
 
       <div class="mapa-acoes">
-        <span class="mapa-pontos" id="badge-total" aria-live="polite">
+        <span class="mapa-pontos" id="badge-total">
           <img src="../img/estrela.png" alt="">
-          <span id="total-pts">0</span>
+          <span class="sr-only">Pontos: </span><span id="total-pts">0</span>
         </span>
         <!-- o botão de música é colocado aqui pelo audio.js, antes da engrenagem -->
-        <button type="button" class="btn-musica mapa-preferencias" id="btn-preferencias" aria-label="Abrir minhas preferências" title="Minhas preferências"><span aria-hidden="true">⚙️</span></button>
+        <button type="button" class="btn-musica mapa-preferencias" id="btn-preferencias" aria-label="Abrir minhas preferências" title="Minhas preferências"><span data-ico="engrenagem"></span></button>
       </div>
     </section>
 
@@ -45,7 +45,8 @@
       </div>
     </section>
 
-    <section class="mapa-grid" id="mapa-grid" aria-label="Cômodos da casa"></section>
+    <h2 class="sr-only" id="mapa-grid-titulo">Cômodos da casa</h2>
+    <section class="mapa-grid" id="mapa-grid" aria-labelledby="mapa-grid-titulo"></section>
 
     <section class="mapa-progresso-geral" aria-label="Progresso geral do jogo">
       <div>
@@ -71,11 +72,12 @@
         <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>1</kbd> / <kbd>2</kbd></span><span aria-hidden="true">Verdadeiro / Falso (Cozinha)</span><span class="sr-only">Alt mais 1: Verdadeiro. Alt mais 2: Falso. Só na Cozinha.</span></li>
         <li><span aria-hidden="true" class="atalhos-teclas"><kbd>Alt</kbd> + <kbd>A</kbd></span><span aria-hidden="true">Preferências</span><span class="sr-only">Alt mais A: abrir as preferências.</span></li>
       </ul>
-      <button class="modal-fechar" id="atalhos-fechar" type="button" aria-label="Fechar">✕</button>
+      <button class="modal-fechar" id="atalhos-fechar" type="button" aria-label="Fechar atalhos"><span data-ico="x"></span></button>
       <button class="btn btn--laranja" id="atalhos-ok" type="button">Entendi!</button>
     </section>
   </div>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
@@ -140,12 +142,12 @@
       const totalEstrelas = gameState.getRoomStarGoal(c.id);
       const anterior     = idx > 0 ? COMODOS[idx - 1].nome : null;
 
-      const card = document.createElement('article');
-      card.setAttribute('aria-label', `${c.nome} — ${desbloqueado ? 'disponível' : 'bloqueado'}${desbloqueado && estrelas ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`);
+      /* Cômodo aberto: <button> nativo (Enter e Espaço funcionam sozinhos, sem role nem tabindex).
+         Cômodo fechado: só texto, fora do Tab, com a palavra "Bloqueado" para quem ouve. */
+      const card = document.createElement(desbloqueado ? 'button' : 'article');
 
       if (!desbloqueado) {
         card.className = 'comodo-card comodo-card--bloq';
-        card.setAttribute('aria-disabled', 'true');
         card.innerHTML = `
           <div class="comodo-card__imagem-box">
             <img src="${c.img}" alt="" class="comodo-card__icone-img">
@@ -153,20 +155,18 @@
           <div class="comodo-card__conteudo">
             <p class="comodo-card__nome">${c.nome}</p>
             <p class="comodo-card__skill comodo-card__skill--cinza">${c.skill}</p>
-            <p class="comodo-card__bloq-aviso">🔒 Complete ${anterior ? anterior : 'o anterior'}</p>
+            <p class="comodo-card__bloq-aviso">${Icones.svg('cadeado')} <span class="sr-only">Bloqueado. </span>Complete ${anterior ? anterior : 'o anterior'}</p>
           </div>
         `;
       } else {
+        card.type = 'button';
         card.className = `comodo-card ${c.corCard}`;
-        card.setAttribute('role', 'button');
-        card.setAttribute('tabindex', '0');
+        card.dataset.comodo = c.id;
+        /* Nome curto e completo: o leitor diz isto e não lê os enfeites de dentro do cartão */
+        card.setAttribute('aria-label', `${c.nome}, ${c.skill}. ${score !== null
+          ? `${score} pontos${concluido ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`
+          : 'Ainda não iniciado'}. Explorar`);
         card.addEventListener('click', () => { window.location.href = c.pagina; });
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            window.location.href = c.pagina;
-          }
-        });
 
         let tagHtml = '';
         if (c.tag) tagHtml = `<span class="comodo-card__tag comodo-card__tag--verde">${c.tag}</span>`;
@@ -212,7 +212,7 @@
     const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
     const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';
     const v3 = score !== null && score >= 25 ? '--ok'   : '--vazio';
-    return `<section class="progresso">
+    return `<section class="progresso" aria-hidden="true">
       <span class="progresso__bolinha progresso__bolinha${v1}"></span>
       <span class="progresso__bolinha progresso__bolinha${v2}"></span>
       <span class="progresso__bolinha progresso__bolinha${v3}"></span>
@@ -236,7 +236,14 @@
   }
   function fecharAtalhos() {
     fecharModalFluxoAcessivel(modalAtalhos);
-    document.querySelector('.comodo-card[tabindex="0"]')?.focus();
+    focarCartaoAtual();
+  }
+  /* Foco no cômodo da vez: o primeiro aberto e ainda não concluído (ou o primeiro da lista) */
+  function focarCartaoAtual() {
+    const st = gameState.get();
+    const vez = COMODOS.find(c => st.unlocked[c.id] && !st.completed[c.id]) || COMODOS[0];
+    const alvo = document.querySelector(`button.comodo-card[data-comodo="${vez.id}"]`) || document.querySelector('button.comodo-card');
+    try { alvo?.focus({ preventScroll: true }); } catch (e) {}
   }
   document.getElementById('atalhos-ok').addEventListener('click', fecharAtalhos);
   document.getElementById('atalhos-fechar').addEventListener('click', fecharAtalhos);
@@ -252,12 +259,17 @@
     e.preventDefault();
     if (modalAtalhos.style.display === 'flex') fecharAtalhos(); else if (!existeModalVisivel()) abrirAtalhos();
   });
+  let abreAtalhos = false;
   try {
     if (!gameState.tutorialVisto('atalhos-mapa') && atalhosLigados()) {
       gameState.marcarTutorialVisto('atalhos-mapa');   /* conta como visto ao abrir: não obriga a repetir */
+      abreAtalhos = true;
       window.setTimeout(abrirAtalhos, 400);
     }
   } catch (e) {}
+  /* Foco inicial no cômodo da vez (o leitor de tela fala o cômodo, sem ler a página inteira).
+     Na 1ª visita quem recebe o foco é a janela de atalhos. */
+  if (!abreAtalhos) window.requestAnimationFrame(() => { if (!existeModalVisivel()) focarCartaoAtual(); });
   </script>
 
 </body>

@@ -717,8 +717,10 @@ button.prateleira__slot {
 }
 
 @media (max-width: 360px) {
-  .despensa-voltar { font-size: 0; gap: 0; }
-  .despensa-voltar::before { content: '←'; font-size: calc(16px * var(--escala-fonte)); }
+  /* Tela bem estreita: o botão Mapa fica só com a seta (o nome "Voltar ao mapa" continua no aria-label) */
+  .despensa-voltar { gap: 0; }
+  .despensa-voltar .voltar-txt { display: none; }
+  .despensa-voltar .ico { width: calc(18px * var(--escala-fonte)); height: calc(18px * var(--escala-fonte)); }
 }
 
 /* Notebook com pouca altura */
@@ -797,3 +799,52 @@ button.item-card {
   -webkit-appearance: none;
 }
 .item-card__nome { display: block; }
+
+/* Marca de escolhida: desenho em SVG no lugar do símbolo de texto (não é lido pelo leitor de tela) */
+.item-card--selecionado::after,
+.item-card--na-prateleira::after {
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.5 12.5l5 5L19.5 7' fill='none' stroke='%23fff' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 68% !important;
+}
+
+/* Notebook pequeno / janela baixa (ex.: 1024×600): tudo cabe sem rolagem */
+@media (max-height: 660px) and (min-width: 1021px) {
+  .despensa-logi { padding-block: 0.2rem; }
+  .despensa-logi__img { width: 52px; height: 46px; }
+  .despensa-page { padding: 0.4rem; gap: 0.3rem; }
+  .despensa-main, .despensa-work-grid { gap: 0.3rem; }
+  .despensa-hud__icone { width: 34px; height: 34px; }
+  .despensa-niveis { padding-block: 0.15rem; }
+  .despensa-card { padding: 0.35rem 0.5rem; }
+  .prateleira, .despensa-prateleira,
+  .despensa-work-grid--prateleira-acima .despensa-prateleira { min-height: 58px; padding: 0.25rem 0.5rem; }
+  .prateleira__slot { min-height: 46px; }
+  .prateleira__slot-img { --slot-escala: 0.45; }
+  .item-card { min-height: 52px; padding-block: 0.15rem; }
+  .item-card--tamanho { min-height: calc(var(--item-card-height, 120px) * 0.4); }
+  .item-card__emoji--tamanho { width: calc(var(--item-img-size, 54px) * 0.45); height: calc(var(--item-img-size, 54px) * 0.45); }
+  .balao__instrucao, .despensa-logi__instrucao { font-size: calc(15px * var(--escala-fonte)); }
+  .despensa-page .btn-dica { height: 42px; min-height: 42px; }
+  .btn--confirmar, .despensa-btn { min-height: 40px; }
+}
+/* Celular baixo (360×640) no nível com prateleira: sobra menos margem */
+@media (max-width: 620px) and (max-height: 660px) {
+  .despensa-page .btn-dica { height: 44px; min-height: 44px; }
+  .despensa-card { padding-block: 0.3rem; }
+}
+
+/* Nível de tamanho em notebook de 720 px de altura */
+@media (max-height: 730px) and (min-width: 1021px) {
+  .item-card--tamanho { min-height: calc(var(--item-card-height, 120px) * 0.75); }
+  .item-card__emoji--tamanho { width: calc(var(--item-img-size, 54px) * 0.75); height: calc(var(--item-img-size, 54px) * 0.75); }
+  .despensa-page .btn-dica { height: 48px; min-height: 48px; }
+  .despensa-work-grid--prateleira-acima .despensa-prateleira { min-height: 104px; }
+}
+@media (max-height: 660px) and (min-width: 1021px) {
+  .item-card--tamanho { min-height: calc(var(--item-card-height, 120px) * 0.4); }
+  .item-card__emoji--tamanho { width: calc(var(--item-img-size, 54px) * 0.45); height: calc(var(--item-img-size, 54px) * 0.45); }
+  .despensa-page .btn-dica { height: 42px; min-height: 42px; }
+}

@@ -12,8 +12,8 @@
 
     <section class="resultado-header">
       <img src="../img/logi_feliz.png" alt="" class="resultado-header__logi" id="resultado-logi">
-      <span class="resultado-header__icone" id="resultado-icone" role="img" aria-label="Troféu"></span>
-      <h1 class="resultado-header__titulo" id="resultado-titulo">Continue explorando!</h1>
+      <span class="resultado-header__icone" id="resultado-icone" aria-hidden="true"></span>
+      <h1 class="resultado-header__titulo" id="resultado-titulo" tabindex="-1">Continue explorando!</h1>
       <p class="resultado-header__sub" id="resultado-sub"></p>
     </section>
 
@@ -24,7 +24,8 @@
       <div class="pontuacao-barra" aria-hidden="true"><span id="pontuacao-barra"></span></div>
     </section>
 
-    <section class="pontuacao-grid" id="pontuacao-grid" aria-label="Pontuação por cômodo"></section>
+    <h2 class="sr-only" id="pontuacao-grid-titulo">Pontuação por cômodo</h2>
+    <section class="pontuacao-grid" id="pontuacao-grid" aria-labelledby="pontuacao-grid-titulo"></section>
 
     <section class="dica dica--ambar pontuacao-feedback" id="dica-feedback">
       <img src="../img/logi_feliz.png" alt="" class="pontuacao-logi-img">
@@ -37,6 +38,7 @@
     </section>
   </section>
 
+  <script src="../js/icones.js"></script>
   <script src="../js/plataforma.js"></script>
   <script src="../js/gameState.js"></script>
   <script src="../js/audio.js"></script>
