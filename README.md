@@ -26,7 +26,7 @@ casa-dos-misterios/
 │   │   ├── Despensa.html        # Mini-jogo 4: Padrões e Organização
 │   │   └── TelaPontuacao.html   # Tela de resultado final
 │   ├── img/                     # Imagens (a popular conforme desenvolvimento)
-│   └── audio/                   # Áudios (a popular conforme desenvolvimento)
+│   └── audio/                   # Músicas: musica_sistema.mp3 (telas gerais) e uma por mini-jogo
 ├── index.html                   # Ponto de entrada obrigatório (Tela Inicial)
 └── README.md                    # Este arquivo
 ```

@@ -5,15 +5,67 @@
    O jogo não tem narração nem voz: só efeitos sonoros e música de
    fundo. A música tem um botão visível para pausar/ligar em todas as
    páginas (criarBotaoMusica).
+
+   Música de fundo (assets/audio/):
+   - musica_sistema.mp3 toca em todas as telas fora dos mini-jogos
+     (início, mapa, pontuação) sem recomeçar ao trocar de tela: a nova tela
+     segue do ponto exato em que a anterior estava, com uma entrada curtinha;
+   - cada mini-jogo (Sala, Quarto, Cozinha, Despensa) tem a sua faixa.
+   Para não começar "estourada" nem ficar baixa demais:
+   - a música sempre entra com fade-in e sai com fade-out (nada de pulo);
+   - o volume de cada faixa é equalizado pela sua intensidade média medida;
+   - o controle de volume (1 a 10) vai de um piso audível a um teto
+     confortável — nunca chega ao volume máximo do arquivo.
    ============================================================= */
 
 const audio = (() => {
   let ctx = null;
-  let musicaTocando = false;
-  let musicaTimer = null;
-  let usuarioInteragiu = false;
-  const osciladoresMusica = new Set();
-  const NOTAS_MUSICA = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23];
+
+  /* ---- Faixas ---- */
+  const PASTA_AUDIO = (() => {
+    try { return new URL('../audio/', document.currentScript.src).href; }
+    catch { return /\/pages\//.test(location.pathname) ? '../audio/' : 'assets/audio/'; }
+  })();
+
+  const FAIXA_SISTEMA = 'musica_sistema';
+  const FAIXAS_MINIJOGO = { 'sala.html': 'sala', 'quarto.html': 'quarto', 'cozinha.html': 'cozinha', 'despensa.html': 'despensa' };
+
+  /* Intensidade média (dB RMS) de cada arquivo, medida ao decodificar as faixas.
+     Todas foram masterizadas "quentes" (picos em 0 dB); o ganho abaixo iguala
+     cada uma à referência, para nenhuma soar mais alta que as outras.
+     Se trocar um arquivo, meça de novo e atualize o valor. */
+  const INTENSIDADE_DB = { musica_sistema: -14.2, sala: -14.2, quarto: -14.2, cozinha: -14.2, despensa: -14.1 };
+  const REFERENCIA_DB = -14.2;
+  /* Reforço por faixa, em dB, aplicado depois da equalização */
+  const REALCE_DB = { musica_sistema: 2.5 };
+
+  /* Volume da preferência (0–10) → ganho, em dB. 0 = mudo; 1 = piso ainda
+     audível; 5 (padrão) = fundo confortável abaixo dos efeitos; 10 = teto. */
+  const CURVA_VOLUME_DB = [null, -27, -24, -21, -18.5, -16, -14, -12, -10, -8, -6];
+
+  const FADE_ENTRADA_MS   = 3000;
+  const FADE_CONTINUAR_MS = 250;   /* música do sistema seguindo de uma tela para outra */
+  const FADE_SAIDA_MS     = 600;
+  const FADE_AJUSTE_MS    = 400;
+  const CHAVE_POSICAO     = 'casaMisterios_posMusica';
+  /* Até quanto tempo depois de sair de uma tela a próxima "continua" a
+     música no mesmo ponto (troca direta de tela). Mais que isso — ex.: voltou
+     de um mini-jogo — ela retoma de onde parou, com o fade-in normal. */
+  const JANELA_CONTINUAR_MS = 8000;
+
+  function faixaDaPagina() {
+    const arquivo = (location.pathname.split('/').pop() || '').toLowerCase();
+    return FAIXAS_MINIJOGO[arquivo] || FAIXA_SISTEMA;
+  }
+
+  const faixa = faixaDaPagina();
+  let elMusica = null;
+  let musicaTocando = false;   /* quer tocar (ou está tocando) */
+  let fadeTimer = null;
+  let volumeAtual = 0;         /* volume aplicado ao <audio> agora (0–1) */
+  let aguardandoGesto = false; /* o navegador bloqueou o play automático */
+  let continuando = false;     /* esta tela está seguindo a música da tela anterior */
+  let salvarTimer = null;
 
   function getCtx() {
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -62,52 +114,143 @@ const audio = (() => {
     });
   }
 
-  function tocarNotaMusica(freq) {
-    if (!musicaTocando || !isMusicaAtivada()) return;
+  /* ---- Música de fundo (arquivos MP3) ---- */
+
+  /* Volume final (0–1) para a faixa desta página, já equalizado e limitado */
+  function volumeAlvo() {
+    if (!isMusicaAtivada()) return 0;
+    let nivel = 5;
     try {
-      const c = getCtx();
-      const osc = c.createOscillator();
-      const gain = c.createGain();
-      osc.connect(gain);
-      gain.connect(c.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, c.currentTime);
-      const volMusica = 0.025 * fator('volumeMusica', 5);
-      if (volMusica <= 0.0002) return;
-      gain.gain.setValueAtTime(volMusica, c.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.38);
-      osciladoresMusica.add(osc);
-      osc.addEventListener('ended', () => osciladoresMusica.delete(osc), { once: true });
-      osc.start(c.currentTime);
-      osc.stop(c.currentTime + 0.4);
+      const v = Number(gameState.getSettings().volumeMusica);
+      if (Number.isFinite(v)) nivel = Math.round(Math.max(0, Math.min(10, v)));
+    } catch {}
+    const db = CURVA_VOLUME_DB[nivel];
+    if (db === null || db === undefined) return 0;
+    const ajusteFaixa = REFERENCIA_DB - (INTENSIDADE_DB[faixa] ?? REFERENCIA_DB) + (REALCE_DB[faixa] || 0);
+    return Math.min(1, Math.pow(10, (db + ajusteFaixa) / 20));
+  }
+
+  function getElMusica() {
+    if (elMusica) return elMusica;
+    elMusica = new Audio(PASTA_AUDIO + faixa + '.mp3');
+    elMusica.loop = true;
+    elMusica.preload = 'auto';
+    elMusica.volume = 0;
+    volumeAtual = 0;
+    /* A música do sistema não recomeça ao trocar de tela: segue do ponto
+       em que estaria se nunca tivesse parado (ou de onde parou, se faz tempo). */
+    if (faixa === FAIXA_SISTEMA) {
+      try {
+        const salvo = JSON.parse(sessionStorage.getItem(CHAVE_POSICAO) || 'null');
+        if (salvo && salvo.faixa === faixa && salvo.t > 0) {
+          const passou = Date.now() - (salvo.at || 0);
+          let t = salvo.t;
+          if (salvo.tocando && passou >= 0 && passou < JANELA_CONTINUAR_MS) {
+            continuando = true;
+            t += passou / 1000;
+          }
+          if (salvo.dur > 0) t %= salvo.dur;
+          elMusica.currentTime = t;
+        }
+      } catch {}
+    }
+    return elMusica;
+  }
+
+  function salvarPosicao(tocando) {
+    if (faixa !== FAIXA_SISTEMA || !elMusica) return;
+    try {
+      sessionStorage.setItem(CHAVE_POSICAO, JSON.stringify({
+        faixa,
+        t: elMusica.currentTime || 0,
+        dur: Number.isFinite(elMusica.duration) ? elMusica.duration : 0,
+        at: Date.now(),
+        tocando: tocando === undefined ? !elMusica.paused : !!tocando
+      }));
     } catch {}
   }
 
-  function iniciarMusica() {
-    if (musicaTocando || !usuarioInteragiu || !isMusicaAtivada() || document.hidden) return;
-    musicaTocando = true;
-    let indice = 0;
-
-    const tocarProxima = () => {
-      if (!musicaTocando || !isMusicaAtivada()) return;
-      tocarNotaMusica(NOTAS_MUSICA[indice]);
-      indice = (indice + 1) % NOTAS_MUSICA.length;
-      musicaTimer = window.setTimeout(tocarProxima, 520);
-    };
-
-    tocarProxima();
+  /* Enquanto a música do sistema toca, a posição fica sempre atualizada,
+     para a próxima tela pegar exatamente daqui. */
+  function vigiarPosicao(ligar) {
+    if (faixa !== FAIXA_SISTEMA) return;
+    if (salvarTimer !== null) { window.clearInterval(salvarTimer); salvarTimer = null; }
+    if (ligar) salvarTimer = window.setInterval(() => salvarPosicao(), 250);
   }
 
-  function pararMusica() {
-    musicaTocando = false;
-    if (musicaTimer !== null) {
-      window.clearTimeout(musicaTimer);
-      musicaTimer = null;
+  function aplicarVolume(v) {
+    volumeAtual = Math.max(0, Math.min(1, v));
+    if (elMusica) elMusica.volume = volumeAtual;
+  }
+
+  /* Leva o volume até `destino` aos poucos. Subindo, começa bem devagar
+     (curva quadrática) para a música "entrar" sem susto. */
+  function fadePara(destino, duracao, aoTerminar) {
+    if (fadeTimer !== null) { window.clearInterval(fadeTimer); fadeTimer = null; }
+    const origem = volumeAtual;
+    const subindo = destino > origem;
+    const inicio = performance.now();
+    if (duracao <= 0 || Math.abs(destino - origem) < 0.001) {
+      aplicarVolume(destino);
+      if (aoTerminar) aoTerminar();
+      return;
     }
-    osciladoresMusica.forEach(osc => {
-      try { osc.stop(); } catch {}
-    });
-    osciladoresMusica.clear();
+    fadeTimer = window.setInterval(() => {
+      const t = Math.min(1, (performance.now() - inicio) / duracao);
+      const e = subindo ? t * t : 1 - (1 - t) * (1 - t);
+      aplicarVolume(origem + (destino - origem) * e);
+      if (t >= 1) {
+        window.clearInterval(fadeTimer);
+        fadeTimer = null;
+        if (aoTerminar) aoTerminar();
+      }
+    }, 30);
+  }
+
+  function iniciarMusica() {
+    const alvo = volumeAlvo();
+    if (alvo <= 0 || document.hidden) return;
+    const el = getElMusica();
+    if (musicaTocando && !el.paused) {
+      /* Já tocando: só ajusta o volume (ex.: mexeu no controle), sem pulo */
+      fadePara(alvo, FADE_AJUSTE_MS);
+      return;
+    }
+    musicaTocando = true;
+    aplicarVolume(el.paused ? 0 : volumeAtual);
+    let promessa;
+    try { promessa = el.play(); } catch { promessa = null; }
+    const comecou = () => {
+      aguardandoGesto = false;
+      if (!musicaTocando) { try { el.pause(); } catch {} return; }   /* desligaram enquanto carregava */
+      fadePara(volumeAlvo(), continuando ? FADE_CONTINUAR_MS : FADE_ENTRADA_MS);
+      continuando = false;   /* se pausar e voltar nesta tela, entra com fade-in normal */
+      vigiarPosicao(true);
+    };
+    if (promessa && typeof promessa.then === 'function') {
+      promessa.then(comecou).catch(() => {
+        /* Bloqueado pelo navegador até a criança tocar/clicar na tela */
+        musicaTocando = false;
+        aguardandoGesto = true;
+        aplicarVolume(0);
+      });
+    } else {
+      comecou();
+    }
+  }
+
+  function pararMusica(imediato = false) {
+    musicaTocando = false;
+    if (!elMusica) return;
+    const el = elMusica;
+    vigiarPosicao(false);
+    const pausar = () => {
+      if (musicaTocando) return;   /* voltou a tocar durante o fade-out */
+      try { el.pause(); } catch {}
+      salvarPosicao(false);
+    };
+    if (imediato || el.paused) { fadePara(0, 0); pausar(); }
+    else fadePara(0, FADE_SAIDA_MS, pausar);
   }
 
   /* ---- Botão visível de pausar/ligar a música ---- */
@@ -161,25 +304,45 @@ const audio = (() => {
   }
 
   function sincronizarConfiguracoes() {
-    if (isMusicaAtivada()) iniciarMusica();
+    if (volumeAlvo() > 0) iniciarMusica();
     else pararMusica();
     atualizarBotaoMusica();
   }
 
+  /* A música começa sozinha assim que o jogo abre. Se o navegador não
+     deixar tocar som antes de um gesto, ela começa no primeiro toque,
+     clique ou tecla — em qualquer lugar da tela. */
+  const EVENTOS_GESTO = ['pointerdown', 'mousedown', 'touchstart', 'keydown', 'click'];
+
   function registrarInteracao() {
-    if (usuarioInteragiu) return;
-    usuarioInteragiu = true;
-    document.removeEventListener('pointerdown', registrarInteracao, true);
-    document.removeEventListener('keydown', registrarInteracao, true);
-    sincronizarConfiguracoes();
+    if (aguardandoGesto || (!musicaTocando && volumeAlvo() > 0)) sincronizarConfiguracoes();
+    if (!aguardandoGesto) EVENTOS_GESTO.forEach(ev => document.removeEventListener(ev, registrarInteracao, true));
   }
 
-  document.addEventListener('pointerdown', registrarInteracao, true);
-  document.addEventListener('keydown', registrarInteracao, true);
+  EVENTOS_GESTO.forEach(ev => document.addEventListener(ev, registrarInteracao, { capture: true, passive: true }));
+
+  let saindo = false;   /* a tela está sendo trocada: não mexer mais na posição salva */
   document.addEventListener('visibilitychange', () => {
+    if (saindo) return;
     if (document.hidden) pararMusica();
     else sincronizarConfiguracoes();
   });
+  window.addEventListener('pagehide', () => {
+    if (saindo) return;
+    const tocava = !!elMusica && !elMusica.paused;
+    pararMusica(true);
+    salvarPosicao(tocava);   /* a próxima tela segue deste ponto */
+    saindo = true;
+  });
+  /* Voltando pelo botão "voltar" do navegador (página restaurada do cache) */
+  window.addEventListener('pageshow', e => {
+    if (!e.persisted) return;
+    saindo = false;
+    sincronizarConfiguracoes();
+  });
+
+  /* Começa a tocar já, sem esperar o resto da página carregar */
+  if (!document.hidden) sincronizarConfiguracoes();
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', criarBotaoMusica);
   else criarBotaoMusica();
@@ -192,6 +355,11 @@ const audio = (() => {
     conclusao()   { sequencia([[523,0.15],[659,0.15],[784,0.15],[1047,0.15],[1319,0.3]], 120); },
     passo()       { beep(330, 0.05, 'sine', 0.1); },
     sincronizarConfiguracoes,
+    /* Para conferir no console: qual faixa, volume atual e posição */
+    estadoMusica() {
+      return { faixa, tocando: !!elMusica && !elMusica.paused, volume: +volumeAtual.toFixed(3),
+               alvo: +volumeAlvo().toFixed(3), tempo: elMusica ? +elMusica.currentTime.toFixed(1) : 0 };
+    },
     iniciarMusica,
     pararMusica
   };
