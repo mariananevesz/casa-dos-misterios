@@ -238,10 +238,13 @@ body {
 /* ---------- Comandos disponíveis (menores) ---------- */
 .sala-comandos {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …): as colunas nunca passam da largura do painel */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   min-height: auto;
 }
+
+.sala-page #blocos-disponiveis .bloco { min-width: 0; }
 
 /* Com um único bloco "Repetir", ele ocupa a linha inteira */
 .sala-page #blocos-disponiveis .bloco[data-bloco-id="repetir2"] { grid-column: 1 / -1; }
@@ -623,9 +626,11 @@ body {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     column-gap: 8px;
+    /* Folga entre a Dica e as setas: o brilho/pulso da Dica não encosta nos blocos */
+    row-gap: 14px;
   }
   .sala-comandos-panel > .sala-panel__title { grid-column: 1; grid-row: 1; }
-  .sala-comandos-panel > .sala-btn-dica { grid-column: 2; grid-row: 1; margin: 0; }
+  .sala-comandos-panel > .sala-btn-dica { grid-column: 2; grid-row: 1; margin: 4px 4px 0 0; }
   .sala-comandos-panel > #blocos-disponiveis { grid-column: 1 / -1; grid-row: 2; }
   .sala-comandos-panel .sala-comandos { margin-bottom: 0; }
   .sala-panel__hint { display: none; }
@@ -634,7 +639,7 @@ body {
   .sala-comandos {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 0;
   }
 
   .sala-page #blocos-disponiveis .bloco { min-height: 72px; gap: 4px; }
@@ -701,6 +706,10 @@ body {
 
   .sala-panel__title { font-size: calc(11px * var(--escala-fonte)); }
 
+  /* Dica mais compacta no celular (continua alvo de toque ≥ 44px) */
+  .sala-page .sala-btn-dica { min-height: 44px; min-width: 0; padding: 4px 16px; gap: 8px; font-size: calc(17px * var(--escala-fonte)); }
+  .sala-page .sala-btn-dica .btn-dica__icone { width: 24px; height: 24px; }
+
   .sala-comandos { gap: 6px; }
   .sala-page #blocos-disponiveis .bloco {
     min-height: 68px;
@@ -760,7 +769,8 @@ body {
 /* Celulares bem estreitos */
 @media (max-width: 360px) {
   .sala-voltar strong { display: none; }
-  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(12px * var(--escala-fonte)); }
+  /* "ESQUERDA" precisa caber no bloco (¼ da largura) sem encostar nas bordas */
+  .sala-page #blocos-disponiveis .bloco-label { font-size: calc(11px * var(--escala-fonte)); letter-spacing: -0.3px; }
   .sala-page #blocos-disponiveis .bloco-emoji { font-size: calc(26px * var(--escala-fonte)); }
 }
 
@@ -874,7 +884,9 @@ body {
   .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco-emoji { font-size: calc(26px * var(--escala-fonte)); }
 }
 @media (max-height: 660px) and (min-width: 821px) {
-  .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco { min-height: 38px; flex-direction: row; gap: 6px; }
-  .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco-emoji { font-size: calc(20px * var(--escala-fonte)); }
+  /* Ícone e texto lado a lado: menores para "ESQUERDA" caber na meia coluna do painel */
+  .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco { min-height: 38px; flex-direction: row; gap: 4px; padding-inline: 4px; }
+  .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco-emoji { font-size: calc(18px * var(--escala-fonte)); min-width: 0; }
+  .sala-page #blocos-disponiveis:has(.bloco:nth-child(5)) .bloco-label { font-size: calc(12px * var(--escala-fonte)); letter-spacing: 0; }
   .sala-page .btn-dica { height: 42px; min-height: 42px; }
 }

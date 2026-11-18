@@ -39,8 +39,9 @@
     "resumoPrateleiraVazio": "A prateleira está vazia. Há {total} lugares.",
     "limpaCor": "Escolha limpa.",
     "limpaPrateleira": "Prateleira limpa.",
-    "dicaFruta": "Fruta apontada: {nome}.",
-    "dicaFrutaPos": "Fruta apontada: {nome}, na posição {pos} da prateleira."
+    "dicaFruta": "{nome}: {explicacao}",
+    "dicaFrutaPos": "{nome}, no lugar {pos} da prateleira: {explicacao}",
+    "dicaFrutaPrateleira": "{nome}, na prateleira: {explicacao}"
   },
   "niveis": [
     {

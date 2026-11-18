@@ -52,6 +52,11 @@ const audio = (() => {
      música no mesmo ponto (troca direta de tela). Mais que isso — ex.: voltou
      de um mini-jogo — ela retoma de onde parou, com o fade-in normal. */
   const JANELA_CONTINUAR_MS = 8000;
+  /* Só uma página do jogo toca música por vez: com duas abas/janelas abertas
+     (ex.: Sala numa, Quarto na outra), a que começa a tocar avisa as outras
+     por aqui (evento "storage") e elas se calam. */
+  const CHAVE_DONA = 'casaMisterios_musicaDona';
+  const idPagina = Date.now().toString(36) + Math.random().toString(36).slice(2);
 
   function faixaDaPagina() {
     const arquivo = (location.pathname.split('/').pop() || '').toLowerCase();
@@ -223,6 +228,7 @@ const audio = (() => {
     const comecou = () => {
       aguardandoGesto = false;
       if (!musicaTocando) { try { el.pause(); } catch {} return; }   /* desligaram enquanto carregava */
+      assumirMusica();
       fadePara(volumeAlvo(), continuando ? FADE_CONTINUAR_MS : FADE_ENTRADA_MS);
       continuando = false;   /* se pausar e voltar nesta tela, entra com fade-in normal */
       vigiarPosicao(true);
@@ -238,6 +244,19 @@ const audio = (() => {
       comecou();
     }
   }
+
+  /* Esta página passa a ser a única tocando: as outras abas do jogo param */
+  function assumirMusica() {
+    try { localStorage.setItem(CHAVE_DONA, JSON.stringify({ id: idPagina, at: Date.now() })); } catch {}
+  }
+
+  window.addEventListener('storage', e => {
+    if (e.key !== CHAVE_DONA || !e.newValue) return;
+    let dona = null;
+    try { dona = JSON.parse(e.newValue); } catch { return; }
+    if (!dona || dona.id === idPagina) return;
+    if (musicaTocando || (elMusica && !elMusica.paused)) pararMusica(document.hidden);
+  });
 
   function pararMusica(imediato = false) {
     musicaTocando = false;
@@ -326,6 +345,10 @@ const audio = (() => {
     if (saindo) return;
     if (document.hidden) pararMusica();
     else sincronizarConfiguracoes();
+  });
+  /* Voltou para esta janela (calada por outra aba do jogo): a música volta aqui */
+  window.addEventListener('focus', () => {
+    if (!saindo && !document.hidden && !musicaTocando) sincronizarConfiguracoes();
   });
   window.addEventListener('pagehide', () => {
     if (saindo) return;

@@ -181,8 +181,9 @@
     "resumoPrateleiraVazio": "A prateleira está vazia. Há {total} lugares.",
     "limpaCor": "Escolha limpa.",
     "limpaPrateleira": "Prateleira limpa.",
-    "dicaFruta": "Fruta apontada: {nome}.",
-    "dicaFrutaPos": "Fruta apontada: {nome}, na posição {pos} da prateleira."
+    "dicaFruta": "{nome}: {explicacao}",
+    "dicaFrutaPos": "{nome}, no lugar {pos} da prateleira: {explicacao}",
+    "dicaFrutaPrateleira": "{nome}, na prateleira: {explicacao}"
   },
     "niveis": [
       {
@@ -1114,28 +1115,37 @@
     const d = nivel.dica || {};
     const marcas = txt => txt.match(/(?<!\p{L})\p{Lu}{3,}(?!\p{L})/gu) || [];
     const nomeCarta = id => nivel.itens.find(it => it.id === id)?.nome || id;
-    const passo = (destaque, fala, audiodescricao) => ({ destaque, fala, palavraChave: marcas(fala), audiodescricao });
     const carta = id => document.querySelector(`#itens-grid [data-item-id="${id}"]`);
     const casa = i => document.querySelector(`#prateleira .prateleira__slot:nth-child(${i + 1})`);
+    /* Voz da dica = qual fruta + a MESMA explicação do balão (antes o leitor ouvia só
+       "Fruta apontada: X, na posição N" e não sabia o porquê). Maiúsculas de destaque viram
+       minúsculas na voz, para o leitor não soletrar "N-Ã-O". */
+    const falada = f => String(f || '')
+      .replace(/\p{Lu}{2,}/gu, w => w.toLocaleLowerCase('pt-BR'))
+      .replace(/^\p{Lu}/u, c => c.toLocaleLowerCase('pt-BR'));
+    const passo = (destaque, fala, chave, vars) => ({
+      destaque, fala, palavraChave: marcas(fala),
+      audiodescricao: chave ? txt(chave, Object.assign({ explicacao: falada(fala) }, vars)) : undefined
+    });
     const confirmar = () => [passo('#btn-confirmar', 'Tudo certo! Toque em CONFIRMAR.')];
 
     if (nivel.criterio === 'selecao-cor') {
       const errada = selecionados.find(id => !nivel.corretos.includes(id));
-      if (errada) return [passo(carta(errada), d.errado, txt('dicaFruta', { nome: nomeCarta(errada) }))];
+      if (errada) return [passo(carta(errada), d.errado, 'dicaFruta', { nome: nomeCarta(errada) })];
       const falta = nivel.corretos.find(id => !selecionados.includes(id));
-      return falta ? [passo(carta(falta), d.certo, txt('dicaFruta', { nome: nomeCarta(falta) }))] : confirmar();
+      return falta ? [passo(carta(falta), d.certo, 'dicaFruta', { nome: nomeCarta(falta) })] : confirmar();
     }
     if (nivel.criterio === 'tamanho') {
       const i = prateleira.findIndex((id, k) => id !== nivel.ordemCorreta[k]);
-      if (i >= 0) return [passo(casa(i), d.errado, txt('dicaFrutaPos', { nome: nomeCarta(prateleira[i]), pos: i + 1 }))];
-      if (prateleira.length < nivel.ordemCorreta.length) return [passo(carta(nivel.ordemCorreta[prateleira.length]), d.certo, txt('dicaFruta', { nome: nomeCarta(nivel.ordemCorreta[prateleira.length]) }))];
+      if (i >= 0) return [passo(casa(i), d.errado, 'dicaFrutaPos', { nome: nomeCarta(prateleira[i]), pos: i + 1 })];
+      if (prateleira.length < nivel.ordemCorreta.length) return [passo(carta(nivel.ordemCorreta[prateleira.length]), d.certo, 'dicaFruta', { nome: nomeCarta(nivel.ordemCorreta[prateleira.length]) })];
       return confirmar();
     }
-    /* selecao-sementes */
+    /* selecao-sementes: aqui a ordem não importa, então a voz não fala em "posição" */
     const i = prateleira.findIndex(id => !nivel.corretos.includes(id));
-    if (i >= 0) return [passo(casa(i), d.errado, txt('dicaFrutaPos', { nome: nomeCarta(prateleira[i]), pos: i + 1 }))];
+    if (i >= 0) return [passo(casa(i), d.errado, 'dicaFrutaPrateleira', { nome: nomeCarta(prateleira[i]) })];
     const falta = nivel.corretos.find(id => !prateleira.includes(id));
-    return falta ? [passo(carta(falta), d.certo, txt('dicaFruta', { nome: nomeCarta(falta) }))] : confirmar();
+    return falta ? [passo(carta(falta), d.certo, 'dicaFruta', { nome: nomeCarta(falta) })] : confirmar();
   }
 
   document.getElementById('btn-dica').addEventListener('click', () => {

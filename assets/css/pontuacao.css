@@ -53,6 +53,9 @@
   margin-bottom: 0.45rem;
   letter-spacing: 0.2px;
 }
+/* O título é item do Tab (o leitor lê o resultado inteiro nele): contorno só no foco por teclado */
+.resultado-header__titulo:focus { outline: none; }
+.resultado-header__titulo:focus-visible { outline: 3px solid var(--marrom-medio); outline-offset: 4px; border-radius: 8px; }
 
 .resultado-header__sub {
   font-size: calc(16px * var(--escala-fonte));

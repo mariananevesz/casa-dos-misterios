@@ -7,7 +7,7 @@ const ROOMS = ['sala', 'quarto', 'cozinha', 'despensa'];
 const STORAGE_KEY = 'casaMisterios_state';
 
 /* Chaves de estágio (fase/nível) por cômodo — usadas por getEstagio/setEstagio/limparEstagio */
-const STAGE_KEYS = { sala: 'sala_fase', quarto: 'quarto_fase', despensa: 'despensa_nivel' };
+const STAGE_KEYS = { sala: 'sala_fase', quarto: 'quarto_fase', cozinha: 'cozinha_nivel', despensa: 'despensa_nivel' };
 
 const DEFAULT_STATE = {
   scores:    { sala: null, quarto: null, cozinha: null, despensa: null },
@@ -273,6 +273,8 @@ const gameState = {
       'sala_scores_fases',
       'quarto_fase',
       'quarto_scores_fases',
+      'cozinha_nivel',
+      'cozinha_acertos',
       'despensa_nivel',
       'despensa_erros'
     ].forEach(key => {

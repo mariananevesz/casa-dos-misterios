@@ -904,7 +904,11 @@ const Tutorial = (() => {
     /* Foco volta para o primeiro elemento da fase (na dica, para o botão Dica) */
     window.setTimeout(() => {
       let alvo = null;
-      if (eraDica && focoAnterior && document.contains(focoAnterior)) alvo = focoAnterior;
+      const focoValido = focoAnterior && focoAnterior !== document.body && document.contains(focoAnterior);
+      if (eraDica && focoValido) alvo = focoAnterior;
+      /* Dica sem foco guardado (ex.: aberta por toque/mouse): volta para o botão Dica, e não para a
+         1ª fruta/bloco da fase — o leitor lia o nome de outra fruta ("Maçã") como se fosse parte da dica */
+      if (!alvo && eraDica) alvo = document.getElementById('btn-dica');
       if (!alvo) { try { alvo = pagina.primeiroFoco && pagina.primeiroFoco(); } catch {} }
       if (!alvo && focoAnterior && document.contains(focoAnterior)) alvo = focoAnterior;
       if (!alvo) alvo = document.querySelector('[tabindex="0"], button:not([disabled])');

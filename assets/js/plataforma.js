@@ -382,9 +382,10 @@ function manterOrdemDoTab(grupo, seletor) {
   grupo.querySelectorAll(seletor).forEach(el => el.removeAttribute('tabindex'));
 }
 
-/* Tab circular: depois do último botão da página o foco volta para o primeiro (o botão Mapa), em vez de
-   sair para as abas e a barra de endereço do navegador. Shift+Tab no primeiro vai para o último.
-   (Para sair da página: F6 ou Ctrl+L.) Com janela ou treino abertos, quem cuida do foco é ela. */
+/* Tab circular em TODAS as telas (início, mapa, cômodos, pontuação), também com o treino do Logi ou uma
+   janela aberta: depois do último item o foco volta para o primeiro, em vez de sair para as abas e a
+   barra de endereço do navegador. Shift+Tab no primeiro vai para o último. (Para sair da página: F6 ou
+   Ctrl+L.) Com janela/treino abertos, o fundo está inert, então a volta acontece só entre os itens dela. */
 function elementosDoTab() {
   return [...document.querySelectorAll('a[href], button, input, select, textarea, [tabindex]')].filter(el => {
     if (el.disabled || el.hidden || el.tabIndex < 0) return false;
@@ -396,13 +397,29 @@ function elementosDoTab() {
 
 document.addEventListener('keydown', event => {
   if (event.key !== 'Tab' || event.altKey || event.ctrlKey || event.metaKey) return;
-  if (existeModalVisivel() || window.Tutorial?.ativo || document.body.classList.contains('tut-aberto')) return;
-  if (!document.getElementById('btn-ajuda')) return;   /* só nos cômodos */
+  if (event.defaultPrevented) return;   /* uma janela/treino já moveu o foco nesta tecla */
   const lista = elementosDoTab();
-  if (lista.length < 2) return;
+  if (!lista.length) return;
   const primeiro = lista[0], ultimo = lista[lista.length - 1];
-  if (!event.shiftKey && document.activeElement === ultimo) { event.preventDefault(); primeiro.focus(); }
-  else if (event.shiftKey && document.activeElement === primeiro) { event.preventDefault(); ultimo.focus(); }
+  const atual = document.activeElement;
+  const ir = el => { event.preventDefault(); el.focus(); };
+
+  /* Foco num item do Tab: só intervém nas pontas */
+  if (lista.includes(atual)) {
+    if (!event.shiftKey && atual === ultimo) ir(primeiro);
+    else if (event.shiftKey && atual === primeiro) ir(ultimo);
+    return;
+  }
+
+  /* Foco fora da lista (página, título com tabindex=-1, item que sumiu ou ficou inert):
+     segue para o próximo/anterior pela posição na tela; sem nenhum, dá a volta */
+  if (!atual || atual === document.body || atual === document.documentElement || !atual.isConnected) {
+    ir(event.shiftKey ? ultimo : primeiro);
+    return;
+  }
+  const depois = el => atual.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING;
+  const prox = event.shiftKey ? [...lista].reverse().find(el => !depois(el) && !el.contains(atual)) : lista.find(el => depois(el));
+  ir(prox || (event.shiftKey ? ultimo : primeiro));
 });
 
 /* Avisos em FILA (role="log"): cada texto novo é lido depois do anterior, sem cortar.

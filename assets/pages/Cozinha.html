@@ -263,6 +263,7 @@
   let perguntaIdx = 0;
   let acertos     = 0;
   let respondendo = false;
+  const ACERTOS_KEY = 'cozinha_acertos';
 
   async function init() {
     let fonte = COZINHA_INLINE;
@@ -295,6 +296,14 @@
       perguntas,
       tamFase: 3   /* perguntas por fase */
     };
+
+    /* Volta do nível em que parou (igual Sala, Quarto e Despensa): o nível já
+       vencido não se repete, e os acertos dele continuam contando */
+    const nivelSalvo = Math.min(gameState.getEstagio('cozinha'), NIVEIS.length - 1);
+    perguntaIdx = nivelSalvo * gameData.tamFase;
+    acertos = nivelSalvo > 0
+      ? Math.min(perguntaIdx, Math.max(0, parseInt(localStorage.getItem(ACERTOS_KEY) || '0', 10) || 0))
+      : 0;
 
     document.getElementById('logi-texto').textContent = gameData.instrucaoInstrutor;
     renderPergunta();
@@ -434,6 +443,14 @@
 
     atualizarBadge();
 
+    /* Respondeu a última pergunta de Fácil ou Médio: o próximo nível fica salvo,
+       mesmo que a criança saia antes de tocar em "Próxima" */
+    const proxIdx = perguntaIdx + 1;
+    if (proxIdx % gameData.tamFase === 0 && proxIdx < gameData.perguntas.length) {
+      gameState.setEstagio('cozinha', proxIdx / gameData.tamFase);
+      try { localStorage.setItem(ACERTOS_KEY, acertos); } catch {}
+    }
+
     /* Não passa sozinha: a criança lê o feedback com calma e toca em "Próxima" quando quiser */
     const ultima = perguntaIdx >= gameData.perguntas.length - 1;
     const btn = document.getElementById('btn-proxima');
@@ -491,6 +508,9 @@
     const erros = gameData.perguntas.length - acertos;
     const score = gameState.calcularScore(erros);
     gameState.setRoomScore('cozinha', score);
+    /* Terminou os 3 níveis: a próxima entrada começa do Fácil */
+    gameState.limparEstagio('cozinha');
+    try { localStorage.removeItem(ACERTOS_KEY); } catch {}
     atualizarBadge(score);
 
     const estrelas = gameState.getStars(score);

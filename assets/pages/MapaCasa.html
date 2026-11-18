@@ -163,9 +163,13 @@
         card.className = `comodo-card ${c.corCard}`;
         card.dataset.comodo = c.id;
         /* Nome curto e completo: o leitor diz isto e não lê os enfeites de dentro do cartão */
+        /* Saiu no meio do cômodo: o cartão diz em que nível vai continuar */
+        const estagio = gameState.getEstagio(c.id);
+        const emAndamento = score === null && estagio > 0;
+        const textoAndamento = `Em andamento: nível ${estagio + 1} de 3`;
         card.setAttribute('aria-label', `${c.nome}, ${c.skill}. ${score !== null
           ? `${score} pontos${concluido ? `, ${estrelas} de ${totalEstrelas} estrelas` : ''}`
-          : 'Ainda não iniciado'}. Explorar`);
+          : emAndamento ? textoAndamento : 'Ainda não iniciado'}. Explorar`);
         card.addEventListener('click', () => { window.location.href = c.pagina; });
 
         let tagHtml = '';
@@ -184,7 +188,9 @@
 
         const ptsHtml = score !== null
           ? `<p class="comodo-card__pts">${score} pts</p>`
-          : '<p class="comodo-card__pts comodo-card__pts--vazio">Ainda não iniciado</p>';
+          : emAndamento
+            ? `<p class="comodo-card__pts comodo-card__pts--vazio">Nível ${estagio + 1} de 3</p>`
+            : '<p class="comodo-card__pts comodo-card__pts--vazio">Ainda não iniciado</p>';
 
         card.innerHTML = `
           ${tagHtml}
@@ -208,6 +214,14 @@
   function renderBolinhas(id, state) {
     const concluido = state.completed[id];
     const score     = state.scores[id];
+    /* Partida em andamento (saiu no meio): uma bolinha por nível —
+       verdes = níveis vencidos, clara = nível em que vai continuar */
+    const estagio = gameState.getEstagio(id);
+    if (estagio > 0) {
+      const dots = [0, 1, 2].map(i =>
+        `<span class="progresso__bolinha progresso__bolinha--${i < estagio ? 'ok' : i === estagio ? 'meio' : 'vazio'}"></span>`).join('');
+      return `<section class="progresso" aria-hidden="true">${dots}</section>`;
+    }
     // 3 bolinhas representando 0/1/2 etapas
     const v1 = score !== null && score >= 10 ? '--ok'   : '--vazio';
     const v2 = score !== null && score >= 20 ? '--ok'   : score !== null ? '--meio' : '--vazio';

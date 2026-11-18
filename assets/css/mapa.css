@@ -304,6 +304,8 @@
 /* Bolinhas de progresso no mapa */
 .tela--mapa .progresso           { justify-content: flex-start; margin-top: 0; }
 .tela--mapa .progresso__bolinha  { width: 12px; height: 12px; }
+/* Nível em que vai continuar: anel verde (o verde-claro sumia ao lado do cinza) */
+.tela--mapa .progresso__bolinha--meio { background: #fff; box-shadow: inset 0 0 0 3px #639922; }
 
 /* Card bloqueado */
 .tela--mapa .comodo-card--bloq {

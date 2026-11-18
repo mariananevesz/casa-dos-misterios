@@ -60,7 +60,8 @@ function renderScoreScreen() {
   const subtitle = document.getElementById('resultado-sub');
   if (fullyCompleted) {
     title.textContent = 'Parabéns!';
-    subtitle.innerHTML = '<strong>Você concluiu a Casa dos Mistérios!</strong>Você concluiu os 4 cômodos e finalizou 100% do jogo!';
+    /* O espaço entre as frases evita que o leitor junte "Mistérios!Você" */
+    subtitle.innerHTML = '<strong>Você concluiu a Casa dos Mistérios!</strong> Você concluiu os 4 cômodos e finalizou 100% do jogo!';
   } else {
     title.textContent = completedRooms >= 2 ? 'Bom progresso!' : 'Continue explorando!';
     subtitle.textContent = `Você concluiu ${completedRooms} de 4 cômodos.`;
@@ -94,6 +95,25 @@ function renderScoreScreen() {
   document.getElementById('acoes-resultado').classList.toggle('btn-grupo--final', fullyCompleted);
   document.getElementById('btn-jogar-novamente').addEventListener('click', resetGame, { once: true });
 
+  /* Resumo completo para o leitor de tela: é o NOME do título (item do Tab), lido de uma vez
+     quando ele recebe o foco — mesmo padrão da janela de atalhos do Mapa e do OK do treino.
+     (Antes: o título só dizia "Parabéns!" e um aviso por voz saía junto e era cortado.) */
+  const porComodo = COMODOS.map(room => {
+    const pts = state.scores[room.id];
+    const situacao = state.completed[room.id] === true ? ', concluído' : '';
+    return pts !== null ? `${room.nome}: ${pts || 0} pontos${situacao}.` : `${room.nome}: ainda não jogado.`;
+  }).join(' ');
+  const resumo = [
+    title.textContent.trim(),
+    subtitle.textContent.replace(/\s+/g, ' ').trim(),
+    `Pontuação total: ${total} de 100 pontos.`,
+    porComodo,
+    feedback.textContent.trim(),
+    'Aperte Tab para ir ao botão Jogar novamente.'
+  ].filter(Boolean).join(' ');
+  title.setAttribute('aria-label', resumo);
+  window.resumoPontuacao = resumo;
+
   if (fullyCompleted) {
     sendFinalScore({ score: total, difficulty: getPlatformDifficulty() });
     if (!gameState.hasShownFinalCelebration()) {
@@ -105,9 +125,16 @@ function renderScoreScreen() {
 
 renderScoreScreen();
 
-/* Foco inicial no título (o leitor de tela começa pelo resultado) e resumo curto por voz */
+/* Foco inicial no título: o leitor lê o resumo completo (nome do título) uma vez só.
+   Sem aviso por voz junto — falar e mudar o foco ao mesmo tempo fazia o leitor cortar a fala. */
 window.requestAnimationFrame(() => {
   const titulo = document.getElementById('resultado-titulo');
   try { titulo.focus({ preventScroll: true }); } catch (e) {}
-  anunciarAcessivel(`${document.getElementById('resultado-sub').textContent.trim()} Pontuação total: ${gameState.getTotalScore()} de 100 pontos.`);
+});
+
+/* Alt + R: lê o resultado inteiro de novo (os atalhos de plataforma.js valem só nos cômodos) */
+document.addEventListener('keydown', e => {
+  if (e.repeat || !e.altKey || e.ctrlKey || e.metaKey || e.shiftKey || e.code !== 'KeyR') return;
+  e.preventDefault();
+  if (window.resumoPontuacao) anunciarAcessivel(window.resumoPontuacao);
 });
